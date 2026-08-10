@@ -40,7 +40,13 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            // En Hostinger, el webroot real es "public_html" (sibling de este proyecto),
+            // no "laravel_app/public". Si existe ese directorio hermano, los archivos se
+            // guardan ahí directamente para que las URLs públicas (APP_URL/storage/...)
+            // sirvan el archivo recién subido sin depender de symlinks ni copias manuales.
+            'root' => is_dir(base_path('../public_html'))
+                ? base_path('../public_html/storage')
+                : storage_path('app/public'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
