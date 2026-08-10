@@ -4,13 +4,18 @@ use App\Http\Controllers\Admin\AdministratorController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
+use App\Http\Controllers\Admin\CompanyController as AdminCompanyController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ExamController as AdminExamController;
 use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\ModuleController;
+use App\Http\Controllers\Admin\ProjectCertificateController as AdminProjectCertificateController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
+use App\Http\Controllers\Admin\ProjectParticipantController as AdminProjectParticipantController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\StudentAuthController;
@@ -47,6 +52,8 @@ Route::get('/verificar/{code}', [CertificateVerificationController::class, 'show
 
 Route::get('/cursos', [CatalogController::class, 'index'])->name('courses.catalog');
 Route::get('/cursos/{course:slug}', [LearningCourseController::class, 'show'])->name('courses.show');
+
+Route::get('/proyectos/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
 
 Route::get('/blog', [BlogArticleController::class, 'index'])->name('blog.index');
 Route::get('/blog/autor/{user}', [BlogArticleController::class, 'author'])->name('blog.author');
@@ -106,6 +113,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/certificados/{certificate}/revocar', [AdminCertificateController::class, 'revoke'])->name('certificates.revoke');
     Route::post('/certificados/{certificate}/reemitir', [AdminCertificateController::class, 'reissue'])->name('certificates.reissue');
     Route::post('/certificados/pendientes/{enrollment}/emitir', [AdminCertificateController::class, 'issuePending'])->name('certificates.issue-pending');
+
+    Route::resource('empresas', AdminCompanyController::class)->except(['show'])->parameters(['empresas' => 'company']);
+
+    Route::resource('proyectos', AdminProjectController::class)->parameters(['proyectos' => 'project']);
+    Route::post('/proyectos/{project}/participantes', [AdminProjectParticipantController::class, 'store'])->name('projects.participants.store');
+    Route::delete('/proyectos/{project}/participantes/{participant}', [AdminProjectParticipantController::class, 'destroy'])->name('projects.participants.destroy');
+    Route::post('/proyectos/{project}/certificados', [AdminProjectCertificateController::class, 'store'])->name('projects.certificates.store');
 
     Route::resource('articulos', AdminArticleController::class)->except(['show'])->parameters(['articulos' => 'article']);
 

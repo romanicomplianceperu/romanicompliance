@@ -55,7 +55,7 @@
         @foreach($certificates as $certificate)
           <tr>
             <td>{{ $certificate->code }}</td>
-            <td>{{ $certificate->user->name }}</td>
+            <td>{{ $certificate->holderDisplayName() }}@if($certificate->isManual()) <span class="badge badge-gray" style="margin-left:4px;">Manual</span>@endif</td>
             <td>{{ $certificate->course->title }}</td>
             <td>{{ $certificate->issued_at->format('d/m/Y') }}</td>
             <td>

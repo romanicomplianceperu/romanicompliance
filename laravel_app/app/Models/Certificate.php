@@ -11,6 +11,8 @@ class Certificate extends Model
         'user_id',
         'holder_name',
         'course_id',
+        'project_id',
+        'project_participant_id',
         'exam_attempt_id',
         'code',
         'pdf_path',
@@ -41,8 +43,28 @@ class Certificate extends Model
         return $this->belongsTo(Course::class);
     }
 
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function projectParticipant(): BelongsTo
+    {
+        return $this->belongsTo(ProjectParticipant::class);
+    }
+
     public function examAttempt(): BelongsTo
     {
         return $this->belongsTo(ExamAttempt::class);
+    }
+
+    public function isManual(): bool
+    {
+        return $this->user_id === null;
+    }
+
+    public function holderDisplayName(): string
+    {
+        return $this->holder_name ?: $this->user?->name ?? '—';
     }
 }

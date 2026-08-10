@@ -271,7 +271,7 @@ h1.title {
         <h1 class="title">Certificado</h1>
 
         <div class="intro">Romani Compliance otorga el presente certificado a:</div>
-        <div class="name">{{ $certificate->holder_name ?: $certificate->user->name }}</div>
+        <div class="name">{{ $certificate->holderDisplayName() }}</div>
 
         <div class="body-text">
           Por haber culminado satisfactoriamente el curso <strong>&laquo;{{ $certificate->course->title }}&raquo;</strong>,

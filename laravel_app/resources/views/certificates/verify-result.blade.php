@@ -25,7 +25,7 @@
       <div class="verify-icon valid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>
       <h1>Certificado válido</h1>
       <div class="verify-details">
-        <div class="row"><span class="label">Nombre</span><span class="value">{{ $certificate->user->name }}</span></div>
+        <div class="row"><span class="label">Nombre</span><span class="value">{{ $certificate->holderDisplayName() }}</span></div>
         <div class="row"><span class="label">Curso</span><span class="value">{{ $certificate->course->title }}</span></div>
         <div class="row"><span class="label">Emitido</span><span class="value">{{ $certificate->issued_at->format('d/m/Y') }}</span></div>
         <div class="row"><span class="label">Código</span><span class="value">{{ $certificate->code }}</span></div>
