@@ -39,7 +39,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $project->load('company', 'course', 'participants', 'certificates' => fn ($q) => $q->latest('issued_at'));
+        $project->load(['company', 'course', 'participants', 'certificates' => fn ($q) => $q->latest('issued_at')]);
 
         return view('admin.projects.show', compact('project'));
     }
