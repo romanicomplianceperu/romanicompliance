@@ -94,7 +94,7 @@ class RedDigitalProjectSeeder extends Seeder
                 'modality' => 'Presencial',
                 'duration_hours' => 3,
                 'status' => 'active',
-                'commercial_info' => "US$ 250 + IGV.\nIncluye material de trabajo editable, certificado gratuito y verificable mediante QR, y acompañamiento posterior de 10 días.",
+                'commercial_info' => "Incluye material de trabajo editable, certificado gratuito y verificable mediante QR, y acompañamiento posterior de 10 días.",
             ]
         );
 

@@ -13,7 +13,7 @@ class CourseController extends Controller
         $user = $request->user();
         abort_unless($course->is_published || ($user && $user->isAdmin()), 404);
 
-        $course->load('modules.lessons', 'category', 'exam', 'instructor');
+        $course->load('modules.lessons', 'category', 'exam', 'instructor', 'project.company');
         $enrollment = $user ? $course->enrollmentFor($user) : null;
 
         $completedLessonIds = $enrollment

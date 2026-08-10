@@ -10,7 +10,7 @@ class HomeController extends Controller
     public function index()
     {
         $featuredCourses = Course::where('is_published', true)
-            ->with('category')
+            ->with('category', 'project.company')
             ->latest()
             ->take(3)
             ->get();

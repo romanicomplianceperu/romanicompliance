@@ -63,7 +63,7 @@
                 <div class="course-category">{{ $course->category->name }}</div>
               @endif
               <h4>{{ $course->title }}</h4>
-              <div style="margin-bottom:0.6rem;">@include('courses._certificate-badge')</div>
+              <div style="margin-bottom:0.6rem;display:flex;gap:6px;flex-wrap:wrap;">@include('courses._certificate-badge') @include('courses._exclusive-badge')</div>
               <div class="course-meta">
                 @if($course->instructor_name) {{ $course->instructor_name }} @endif
                 @if($course->duration_minutes) · {{ $course->lectiveHours() }} {{ $course->lectiveHours() === 1 ? 'hora' : 'horas' }} @endif

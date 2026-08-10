@@ -11,7 +11,7 @@ class CatalogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Course::where('is_published', true)->with('category');
+        $query = Course::where('is_published', true)->with('category', 'project.company');
 
         if ($request->filled('categoria')) {
             $query->whereHas('category', fn ($q) => $q->where('slug', $request->string('categoria')));

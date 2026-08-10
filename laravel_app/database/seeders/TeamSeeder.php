@@ -24,7 +24,7 @@ class TeamSeeder extends Seeder
                 'team_order' => 1,
             ],
             [
-                'email' => 'omaroliden1@gmail.com',
+                'email' => 'omaroliden@romanicompliance.com',
                 'name' => 'Ángel Omar Oliden Pacherrez',
                 'role' => 'admin',
                 'title' => 'Asistente Legal',

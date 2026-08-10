@@ -21,7 +21,7 @@ class ProjectCertificateController extends Controller
             ? ProjectParticipant::where('project_id', $project->id)->findOrFail($data['participant_id'])
             : null;
 
-        $holderName = $data['holder_name'] ?: $participant?->full_name;
+        $holderName = ($data['holder_name'] ?? null) ?: $participant?->full_name;
 
         abort_if(! $holderName, 422, 'Falta el nombre del participante.');
 

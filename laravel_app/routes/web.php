@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ProjectCertificateController as AdminProjectCerti
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ProjectParticipantController as AdminProjectParticipantController;
 use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Auth\AdminAuthController;
@@ -124,4 +125,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('articulos', AdminArticleController::class)->except(['show'])->parameters(['articulos' => 'article']);
 
     Route::resource('administradores', AdministratorController::class)->only(['index', 'create', 'store', 'destroy'])->parameters(['administradores' => 'administrator']);
+
+    Route::get('/personalizacion', [SiteSettingController::class, 'index'])->name('settings.index');
+    Route::put('/personalizacion', [SiteSettingController::class, 'update'])->name('settings.update');
 });

@@ -145,9 +145,9 @@
 <section class="hero">
   <div class="wrap">
     <div class="hero-content">
-      <div class="hero-eyebrow">Compliance · ALA/CFT · Due Diligence</div>
-      <h1>Protegemos su organización con <em>estrategia legal</em> y cumplimiento normativo</h1>
-      <p class="hero-sub">Asesoría especializada en compliance corporativo, prevención de lavado de activos, derecho penal y due diligence para empresas que operan bajo estándares rigurosos.</p>
+      <div class="hero-eyebrow">{{ \App\Models\SiteSetting::get('home_hero_eyebrow', 'Compliance · ALA/CFT · Due Diligence') }}</div>
+      <h1>{!! \App\Models\SiteSetting::get('home_hero_title', 'Protegemos su organización con <em>estrategia legal</em> y cumplimiento normativo') !!}</h1>
+      <p class="hero-sub">{{ \App\Models\SiteSetting::get('home_hero_subtitle', 'Asesoría especializada en compliance corporativo, prevención de lavado de activos, derecho penal y due diligence para empresas que operan bajo estándares rigurosos.') }}</p>
       <div class="hero-actions">
         <button class="btn btn-gold" onclick="abrirModal()">Solicitar asesoría</button>
         <a href="#servicios" class="btn btn-ghost">Conocer servicios</a>
@@ -161,12 +161,12 @@
     <div class="about-grid">
       <div class="about-block reveal-left">
         <h3>Nuestra <span>misión</span></h3>
-        <p>Brindar asesoría jurídica especializada y de alto nivel en materia de cumplimiento normativo, prevención de lavado de activos y financiamiento del terrorismo, y derecho penal, acompañando a las organizaciones en el diseño, implementación y fortalecimiento de sus sistemas de prevención conforme a las exigencias regulatorias nacionales e internacionales.</p>
+        <p>{{ \App\Models\SiteSetting::get('home_mission', 'Brindar asesoría jurídica especializada y de alto nivel en materia de cumplimiento normativo, prevención de lavado de activos y financiamiento del terrorismo, y derecho penal, acompañando a las organizaciones en el diseño, implementación y fortalecimiento de sus sistemas de prevención conforme a las exigencias regulatorias nacionales e internacionales.') }}</p>
       </div>
       <div class="about-divider"></div>
       <div class="about-block reveal-right">
         <h3>Nuestra <span>visión</span></h3>
-        <p>Ser el referente peruano en consultoría de compliance corporativo y ALA/CFT, reconocido por la rigurosidad técnica de nuestro equipo, la calidad de nuestros entregables y el compromiso con la cultura de cumplimiento de cada organización que acompañamos.</p>
+        <p>{{ \App\Models\SiteSetting::get('home_vision', 'Ser el referente peruano en consultoría de compliance corporativo y ALA/CFT, reconocido por la rigurosidad técnica de nuestro equipo, la calidad de nuestros entregables y el compromiso con la cultura de cumplimiento de cada organización que acompañamos.') }}</p>
       </div>
     </div>
   </div>
@@ -225,8 +225,8 @@
   <div class="wrap">
     <div class="section-header reveal">
       <div class="gold-line"></div>
-      <h2>Cursos y capacitaciones online</h2>
-      <p>Explore nuestro catálogo de cursos y avance a su propio ritmo. Cree una cuenta gratuita para inscribirse.</p>
+      <h2>{{ \App\Models\SiteSetting::get('home_courses_title', 'Cursos y capacitaciones online') }}</h2>
+      <p>{{ \App\Models\SiteSetting::get('home_courses_subtitle', 'Explore nuestro catálogo de cursos y avance a su propio ritmo. Cree una cuenta gratuita para inscribirse.') }}</p>
     </div>
     <div class="courses-online-grid">
       @foreach($featuredCourses as $course)
@@ -241,7 +241,7 @@
               <div class="course-preview-category">{{ $course->category->name }}</div>
             @endif
             <h4>{{ $course->title }}</h4>
-            <div style="margin-bottom:0.6rem;">@include('courses._certificate-badge')</div>
+            <div style="margin-bottom:0.6rem;display:flex;gap:6px;flex-wrap:wrap;">@include('courses._certificate-badge') @include('courses._exclusive-badge')</div>
             <p>{{ $course->description }}</p>
             <div class="course-preview-meta">
               @if($course->instructor_name){{ $course->instructor_name }}@endif

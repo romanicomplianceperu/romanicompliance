@@ -64,6 +64,11 @@ class Course extends Model
         return $this->hasOne(Exam::class);
     }
 
+    public function project(): HasOne
+    {
+        return $this->hasOne(Project::class);
+    }
+
     public function certificates(): HasMany
     {
         return $this->hasMany(Certificate::class);

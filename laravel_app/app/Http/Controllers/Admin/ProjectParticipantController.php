@@ -18,7 +18,7 @@ class ProjectParticipantController extends Controller
         ]);
 
         $data['project_id'] = $project->id;
-        $data['user_id'] = $data['email']
+        $data['user_id'] = ($data['email'] ?? null)
             ? \App\Models\User::where('email', $data['email'])->value('id')
             : null;
 

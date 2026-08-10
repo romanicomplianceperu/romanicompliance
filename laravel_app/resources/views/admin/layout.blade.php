@@ -110,6 +110,7 @@ img { max-width: 100%; display: block; }
       <a href="{{ route('admin.empresas.index') }}" class="{{ request()->routeIs('admin.empresas.*') ? 'active' : '' }}">Empresas</a>
       <a href="{{ route('admin.articulos.index') }}" class="{{ request()->routeIs('admin.articulos.*') ? 'active' : '' }}">Artículos</a>
       <a href="{{ route('admin.administradores.index') }}" class="{{ request()->routeIs('admin.administradores.*') ? 'active' : '' }}">Administradores</a>
+      <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">Personalización</a>
     </nav>
     <div class="sidebar-foot">
       <a href="{{ route('home') }}">← Volver al sitio</a>

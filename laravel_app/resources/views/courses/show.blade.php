@@ -76,7 +76,7 @@
         <div class="course-hero-category">{{ $course->category->name }}</div>
       @endif
       <h1>{{ $course->title }}</h1>
-      <div style="margin-bottom:1rem;">@include('courses._certificate-badge')</div>
+      <div style="margin-bottom:1rem;display:flex;gap:6px;flex-wrap:wrap;">@include('courses._certificate-badge') @include('courses._exclusive-badge')</div>
       @if(($course->certificate_type ?? 'gratuita') === 'opcional')
         <p class="course-cert-clarify">Este curso es <strong>gratuito</strong>. Solo la certificación oficial tiene un costo de <strong>S/ {{ number_format($course->certificate_price ?? 0, 2) }}</strong>, y es completamente opcional.</p>
       @endif
