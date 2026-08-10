@@ -45,14 +45,14 @@ class RedDigitalProjectSeeder extends Seeder
             ]
         );
 
+        // 9 lecciones en total (~20 min cada una) para calzar con las 3 horas
+        // reales del programa: 3 lecciones por módulo, agrupando subtemas
+        // relacionados en vez de una lección por cada norma o concepto suelto.
         $structure = [
             'Módulo 1 — Fundamentos normativos' => [
-                'Ley N.° 27693 y su reglamento',
-                'D.L. 1106 y D.L. 1249: régimen penal de lavado de activos',
-                'Resoluciones SBS aplicables al sistema de prevención',
-                'Obligaciones del sujeto obligado',
-                'Tipologías de LA/FT y señales de alerta',
-                'Análisis de casos prácticos',
+                'Marco legal: Ley N.° 27693, D.L. 1106 y D.L. 1249, resoluciones SBS',
+                'Obligaciones del sujeto obligado y tipologías de LA/FT',
+                'Señales de alerta y análisis de casos prácticos',
             ],
             'Módulo 2 — Operativa y documentación UIF' => [
                 'Documentación exigida por la UIF',
@@ -61,10 +61,8 @@ class RedDigitalProjectSeeder extends Seeder
             ],
             'Módulo 3 — El Oficial de Cumplimiento' => [
                 'Designación y funciones del Oficial de Cumplimiento',
-                'Manual de Prevención del Sistema SPLAFT',
-                'Código de Conducta',
-                'Matriz de Riesgos',
-                'Capacitación interna y cultura de cumplimiento',
+                'Manual de Prevención y Código de Conducta',
+                'Matriz de Riesgos, capacitación interna y cultura de cumplimiento',
             ],
         ];
 
@@ -77,6 +75,7 @@ class RedDigitalProjectSeeder extends Seeder
                     [
                         'type' => 'text',
                         'content' => 'Contenido en preparación. Se reemplazará por el material definitivo (video, PDF o diapositiva) desde el panel de administración.',
+                        'duration_minutes' => 20,
                         'order' => $lessonOrder + 1,
                     ]
                 );
