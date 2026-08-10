@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class ExamAttempt extends Model
+{
+    protected $fillable = [
+        'user_id',
+        'holder_name',
+        'exam_id',
+        'attempt_number',
+        'score',
+        'status',
+        'started_at',
+        'finished_at',
+        'time_spent_seconds',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'started_at' => 'datetime',
+            'finished_at' => 'datetime',
+            'score' => 'decimal:2',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function exam(): BelongsTo
+    {
+        return $this->belongsTo(Exam::class);
+    }
+
+    public function answers(): HasMany
+    {
+        return $this->hasMany(ExamAttemptAnswer::class);
+    }
+}
