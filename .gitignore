@@ -32,3 +32,6 @@ public_html/storage/*
 Thumbs.db
 .idea/
 .vscode/
+
+# Backup zip suelto, no forma parte del código de la app
+laravel_app/lms.zip
