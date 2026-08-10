@@ -16,7 +16,7 @@ class LessonController extends Controller
 
         abort_unless($course->isEnrolledBy($user) || $user->isAdmin(), 403, 'Debes inscribirte en el curso para ver esta lección.');
 
-        $course->load('modules.lessons', 'exam');
+        $course->load('modules.lessons', 'exam', 'project.company', 'instructor');
 
         $flatLessons = $course->modules->flatMap->lessons->values();
         $currentIndex = $flatLessons->search(fn ($l) => $l->id === $lesson->id);
@@ -35,7 +35,9 @@ class LessonController extends Controller
         $certificate = $course->certificates()->where('user_id', $user->id)->whereNull('revoked_at')->first();
         $pendingCertificate = ! $certificate && $course->hasPassedExamFor($user);
 
-        return view('courses.lesson', compact(
+        $view = $course->project ? 'courses.lesson-project' : 'courses.lesson';
+
+        return view($view, compact(
             'course', 'lesson', 'previousLesson', 'nextLesson', 'completedLessonIds', 'isCompleted', 'progressPercent', 'certificate', 'pendingCertificate'
         ));
     }

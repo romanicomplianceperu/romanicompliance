@@ -22,6 +22,7 @@ class User extends Authenticatable
         'google_id',
         'avatar',
         'role',
+        'is_guest',
         'title',
         'bio',
         'photo',
@@ -43,6 +44,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_team_member' => 'boolean',
+            'is_guest' => 'boolean',
         ];
     }
 
@@ -91,5 +93,15 @@ class User extends Authenticatable
     public function articles(): HasMany
     {
         return $this->hasMany(Article::class, 'author_id');
+    }
+
+    public function courseQuestions(): HasMany
+    {
+        return $this->hasMany(CourseQuestion::class);
+    }
+
+    public function isGuest(): bool
+    {
+        return (bool) $this->is_guest;
     }
 }

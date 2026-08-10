@@ -29,7 +29,9 @@ class CourseController extends Controller
         $certificateStage = $user ? $course->certificateStageFor($user) : 'none';
         $pendingCertificate = $certificateStage === 'processing';
 
-        return view('courses.show', compact('course', 'enrollment', 'completedLessonIds', 'certificate', 'pendingCertificate', 'certificateStage'));
+        $view = $course->project ? 'courses.show-project' : 'courses.show';
+
+        return view($view, compact('course', 'enrollment', 'completedLessonIds', 'certificate', 'pendingCertificate', 'certificateStage'));
     }
 
     public function enroll(Request $request, Course $course)

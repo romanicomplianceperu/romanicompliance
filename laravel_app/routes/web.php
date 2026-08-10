@@ -20,8 +20,12 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\StudentAuthController;
+use App\Http\Controllers\Admin\CourseQuestionController as AdminCourseQuestionController;
 use App\Http\Controllers\Blog\ArticleController as BlogArticleController;
 use App\Http\Controllers\CertificateVerificationController;
+use App\Http\Controllers\ClaimAccountController;
+use App\Http\Controllers\CourseQuestionController;
+use App\Http\Controllers\GuestEnrollController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\Learning\CatalogController;
@@ -53,6 +57,7 @@ Route::get('/verificar/{code}', [CertificateVerificationController::class, 'show
 
 Route::get('/cursos', [CatalogController::class, 'index'])->name('courses.catalog');
 Route::get('/cursos/{course:slug}', [LearningCourseController::class, 'show'])->name('courses.show');
+Route::post('/cursos/{course:slug}/inicio-rapido', [GuestEnrollController::class, 'start'])->name('courses.guest-start');
 
 Route::get('/proyectos/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
 
@@ -90,6 +95,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/intentos/{attempt}/resultado', [LearningExamController::class, 'result'])->name('exams.result');
 
     Route::get('/certificados/{certificate}/descargar', [LearningCertificateController::class, 'download'])->name('certificates.download');
+
+    Route::get('/panel/preguntas', [CourseQuestionController::class, 'index'])->name('panel.questions.index');
+    Route::post('/panel/preguntas', [CourseQuestionController::class, 'store'])->name('panel.questions.store');
+
+    Route::get('/crear-cuenta', [ClaimAccountController::class, 'show'])->name('claim-account.show');
+    Route::post('/crear-cuenta', [ClaimAccountController::class, 'store'])->name('claim-account.store');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
@@ -128,4 +139,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     Route::get('/personalizacion', [SiteSettingController::class, 'index'])->name('settings.index');
     Route::put('/personalizacion', [SiteSettingController::class, 'update'])->name('settings.update');
+
+    Route::get('/preguntas-alumnos', [AdminCourseQuestionController::class, 'index'])->name('questions-support.index');
+    Route::post('/preguntas-alumnos/{question}/responder', [AdminCourseQuestionController::class, 'answer'])->name('questions-support.answer');
 });
