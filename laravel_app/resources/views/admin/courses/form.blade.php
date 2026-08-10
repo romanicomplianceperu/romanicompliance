@@ -115,13 +115,58 @@ details.add-panel .add-panel-body { margin-top: 0.8rem; padding: 1rem; backgroun
       </div>
 
       @forelse($module->lessons as $lesson)
-        <div class="lesson-row">
-          <span>{{ $lesson->title }} <span class="lesson-type">{{ $lesson->typeLabel() }}</span></span>
-          <form action="{{ route('admin.lessons.destroy', $lesson) }}" method="POST" onsubmit="return confirm('¿Eliminar esta lección?');">
-            @csrf @method('DELETE')
-            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-          </form>
-        </div>
+        <details class="add-panel" style="margin-bottom:6px;">
+          <summary style="list-style:none;cursor:pointer;">
+            <div class="lesson-row" style="margin-bottom:0;">
+              <span>{{ $lesson->title }} <span class="lesson-type">{{ $lesson->typeLabel() }}</span></span>
+              <span class="form-hint" style="text-transform:none;">Editar ▾</span>
+            </div>
+          </summary>
+          <div class="add-panel-body">
+            <form action="{{ route('admin.lessons.update', $lesson) }}" method="POST" enctype="multipart/form-data">
+              @csrf @method('PUT')
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Título</label>
+                  <input type="text" name="title" value="{{ $lesson->title }}" required>
+                </div>
+                <div class="form-group">
+                  <label>Tipo</label>
+                  <select name="type" onchange="toggleLessonFields(this)">
+                    <option value="text" @selected($lesson->type === 'text')>Contenido teórico</option>
+                    <option value="video" @selected($lesson->type === 'video')>Video</option>
+                    <option value="pdf" @selected($lesson->type === 'pdf')>Documento PDF</option>
+                    <option value="file" @selected($lesson->type === 'file')>Diapositiva</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group lf-video" style="display:{{ $lesson->type === 'video' ? 'block' : 'none' }}">
+                <label>URL del video (YouTube, Vimeo, etc.)</label>
+                <input type="url" name="video_url" value="{{ $lesson->video_url }}" placeholder="https://...">
+              </div>
+              <div class="form-group lf-file" style="display:{{ in_array($lesson->type, ['pdf', 'file']) ? 'block' : 'none' }}">
+                <label>Archivo (PDF o diapositiva)</label>
+                @if($lesson->file_path)
+                  <div class="form-hint">Archivo actual: <a href="{{ asset('storage/'.$lesson->file_path) }}" target="_blank">ver</a></div>
+                @endif
+                <input type="file" name="upload">
+              </div>
+              <div class="form-group lf-text" style="display:{{ $lesson->type === 'text' ? 'block' : 'none' }}">
+                <label>Contenido</label>
+                <textarea name="content">{{ $lesson->content }}</textarea>
+              </div>
+              <div class="form-group">
+                <label>Duración (minutos)</label>
+                <input type="number" name="duration_minutes" min="0" value="{{ $lesson->duration_minutes }}" style="max-width:140px">
+              </div>
+              <button type="submit" class="btn btn-gold btn-sm">Guardar cambios</button>
+            </form>
+            <form action="{{ route('admin.lessons.destroy', $lesson) }}" method="POST" onsubmit="return confirm('¿Eliminar esta lección?');" style="margin-top:8px;">
+              @csrf @method('DELETE')
+              <button type="submit" class="btn btn-danger btn-sm">Eliminar lección</button>
+            </form>
+          </div>
+        </details>
       @empty
         <p class="form-hint">Sin lecciones todavía.</p>
       @endforelse
