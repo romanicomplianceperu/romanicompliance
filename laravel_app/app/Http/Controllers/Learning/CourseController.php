@@ -34,7 +34,7 @@ class CourseController extends Controller
 
     public function enroll(Request $request, Course $course)
     {
-        abort_unless($course->is_published, 404);
+        abort_unless($course->is_published || $request->user()->isAdmin(), 404);
 
         if (! $request->user()->hasCompletedPhoneProfile()) {
             return redirect()->route('profile.complete', ['next' => route('courses.show', $course)])
