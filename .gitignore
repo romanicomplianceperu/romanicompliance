@@ -1,5 +1,6 @@
 # Laravel app
-laravel_app/vendor/
+# vendor/ SE INCLUYE A PROPÓSITO: el hosting compartido despliega por
+# "git pull" de hPanel sin garantía de tener composer por SSH.
 laravel_app/node_modules/
 laravel_app/.env
 laravel_app/.env.backup
