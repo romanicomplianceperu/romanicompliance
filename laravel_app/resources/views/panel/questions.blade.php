@@ -3,7 +3,10 @@
 @section('title', 'Preguntas y dudas')
 
 @section('content')
-<h1 style="font-size:1.3rem;margin-bottom:1.4rem;">💬 Preguntas y dudas</h1>
+<h1 style="font-size:1.3rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:10px;">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+  Preguntas y dudas
+</h1>
 
 @if(session('success'))
   <div style="padding:12px 16px;border-radius:4px;font-size:0.85rem;margin-bottom:1.5rem;background:rgba(37,150,90,0.08);color:#1F7A4D;border:1px solid rgba(37,150,90,0.2);">{{ session('success') }}</div>

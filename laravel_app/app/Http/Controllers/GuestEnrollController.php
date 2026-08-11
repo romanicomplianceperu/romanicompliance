@@ -48,6 +48,6 @@ class GuestEnrollController extends Controller
             ['status' => 'active', 'progress_percent' => 0]
         );
 
-        return redirect()->route('courses.show', $course);
+        return redirect()->route('courses.show', ['course' => $course, 'bienvenida' => 1]);
     }
 }

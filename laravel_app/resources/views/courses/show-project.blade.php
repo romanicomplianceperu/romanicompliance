@@ -72,6 +72,23 @@
 .rd-form-group label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
 .rd-form-group input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; font-size: 0.9rem; }
 .rd-form-hint { font-size: 0.76rem; color: var(--slate-light); margin-top: 4px; }
+
+#rdOnboard { position: fixed; inset: 0; z-index: 500; background: var(--ink); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease; }
+#rdOnboard.active { opacity: 1; visibility: visible; }
+.rd-ob-inner { max-width: 560px; width: 90%; text-align: center; padding: 2rem; }
+.rd-ob-logo { font-family: Georgia, 'Times New Roman', serif; font-size: 1.4rem; font-weight: bold; color: var(--white); letter-spacing: 2px; margin-bottom: 3rem; opacity: 0; animation: rdObFade 0.8s ease forwards; }
+.rd-ob-slide { display: none; }
+.rd-ob-slide.active { display: block; animation: rdObFade 0.7s ease; }
+.rd-ob-slide h2 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.1rem); color: var(--white); margin-bottom: 1rem; letter-spacing: -0.01em; }
+.rd-ob-slide p { font-size: 0.98rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 440px; margin: 0 auto; }
+.rd-ob-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(184,154,86,0.14); color: var(--gold-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.4rem; }
+.rd-ob-icon svg { width: 26px; height: 26px; }
+@keyframes rdObFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.rd-ob-dots { display: flex; gap: 7px; justify-content: center; margin-top: 2.4rem; }
+.rd-ob-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: background 0.3s, transform 0.3s; }
+.rd-ob-dot.on { background: var(--gold-light); transform: scale(1.3); }
+.rd-ob-actions { margin-top: 2.2rem; display: flex; gap: 12px; justify-content: center; align-items: center; }
+.rd-ob-skip { font-size: 0.78rem; color: rgba(255,255,255,0.35); background: none; border: none; cursor: pointer; }
 @endsection
 
 @section('content')
@@ -191,7 +208,7 @@
 
 <section class="rd-section rd-section-alt" id="material-extra">
   <div class="wrap" style="max-width:720px;">
-    <div class="rd-eyebrow">📚 Material extra</div>
+    <div class="rd-eyebrow">Material extra</div>
     <h2>Recursos complementarios</h2>
     <div style="background:var(--white);border:1px dashed var(--line);border-radius:12px;padding:2rem;margin-top:1.4rem;">
       <p style="font-weight:600;margin-bottom:6px;">Próximamente</p>
@@ -217,6 +234,59 @@
 @endsection
 
 @section('scripts')
+@auth
+<div id="rdOnboard">
+  <div class="rd-ob-inner">
+    <div class="rd-ob-logo">ROMANI COMPLIANCE</div>
+
+    <div class="rd-ob-slide" data-slide="0">
+      <h2>Hola, {{ explode(' ', auth()->user()->name)[0] }}</h2>
+    </div>
+    <div class="rd-ob-slide" data-slide="1">
+      <h2>Gracias por confiar en Romani Compliance</h2>
+    </div>
+    <div class="rd-ob-slide" data-slide="2">
+      <h2>Estás a punto de comenzar una nueva experiencia de aprendizaje</h2>
+      <p>Bienvenido a la capacitación {{ \Illuminate\Support\Str::upper($company->name) }}.</p>
+    </div>
+
+    <div class="rd-ob-slide" data-slide="3">
+      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div>
+      <h2>Explora los módulos</h2>
+      <p>Encontrarás el contenido organizado por módulos y lecciones. Puedes consultar tu progreso en todo momento desde la barra lateral.</p>
+    </div>
+    <div class="rd-ob-slide" data-slide="4">
+      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <h2>Avanza a tu ritmo</h2>
+      <p>Usa los botones Anterior y Siguiente para moverte entre los contenidos y completa progresivamente cada módulo.</p>
+    </div>
+    <div class="rd-ob-slide" data-slide="5">
+      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M11 11l-7 7"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h11"/></svg></div>
+      <h2>Comprueba lo aprendido</h2>
+      <p>Al finalizar el contenido podrás realizar una autoevaluación y conocer tu resultado de inmediato.</p>
+    </div>
+    <div class="rd-ob-slide" data-slide="6">
+      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 21l5-2.5L17 21l-1.5-8.5"/></svg></div>
+      <h2>Obtén tu certificado</h2>
+      <p>Cuando completes los requisitos de la capacitación, podrás desbloquear y generar tu certificado, verificable por QR.</p>
+    </div>
+    <div class="rd-ob-slide" data-slide="7">
+      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
+      <h2>¿Tienes una pregunta?</h2>
+      <p>Podrás enviar tus dudas directamente desde tu panel y consultar material adicional cuando esté disponible.</p>
+      <div class="rd-ob-actions">
+        <button type="button" class="rd-btn-primary" onclick="rdOnboardFinish()">Comenzar capacitación</button>
+      </div>
+    </div>
+
+    <div class="rd-ob-dots" id="rdObDots"></div>
+    <div class="rd-ob-actions" id="rdObSkipRow">
+      <button type="button" class="rd-ob-skip" onclick="rdOnboardFinish()">Saltar introducción</button>
+    </div>
+  </div>
+</div>
+@endauth
+
 @if(!$enrollment)
 <div class="modal-overlay" id="rdWelcomeModal">
   <div class="modal-backdrop" onclick="rdCloseWelcome()"></div>
@@ -233,7 +303,7 @@
         </svg>
       </div>
       <h3>Antes de empezar</h3>
-      <p class="modal-sub">{{ \Illuminate\Support\Str::limit($course->description, 140) }}</p>
+      <p class="modal-sub">Una capacitación práctica preparada especialmente para {{ $company->name }}, con módulos breves, autoevaluación y certificado al finalizar.</p>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> {{ $course->modules->count() }} módulos con contenido práctico</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Autoevaluación al finalizar</li>
@@ -275,5 +345,67 @@ function rdGoStep2() {
   document.getElementById('rdStep2').classList.add('active');
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') rdCloseWelcome(); });
+
+(function rdOnboarding() {
+  const overlay = document.getElementById('rdOnboard');
+  if (!overlay) return;
+
+  const courseKey = 'rd_onboard_seen_{{ $course->id }}';
+  const params = new URLSearchParams(window.location.search);
+  const justJoined = params.get('bienvenida') === '1';
+
+  if (!justJoined || localStorage.getItem(courseKey)) return;
+
+  const slides = Array.from(overlay.querySelectorAll('.rd-ob-slide'));
+  const dotsWrap = document.getElementById('rdObDots');
+  const skipRow = document.getElementById('rdObSkipRow');
+  const AUTO_ADVANCE_UNTIL = 3; // slides 0,1,2 auto-advance; from 3 onward the dots/skip control shows
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.className = 'rd-ob-dot';
+    dot.dataset.i = i;
+    dotsWrap.appendChild(dot);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    dots.forEach((d, i) => d.classList.toggle('on', i === current));
+    dotsWrap.style.display = current >= AUTO_ADVANCE_UNTIL ? 'flex' : 'none';
+    skipRow.style.display = (current >= AUTO_ADVANCE_UNTIL && current < slides.length - 1) ? 'flex' : (current < AUTO_ADVANCE_UNTIL ? 'none' : 'none');
+  }
+
+  overlay.classList.add('active');
+  render();
+
+  function advance() {
+    if (current < AUTO_ADVANCE_UNTIL) {
+      current++;
+      render();
+      if (current < AUTO_ADVANCE_UNTIL) setTimeout(advance, 1700);
+    }
+  }
+  setTimeout(advance, 1400);
+
+  window.rdOnboardNext = function () {
+    if (current < slides.length - 1) { current++; render(); }
+  };
+
+  overlay.addEventListener('click', (e) => {
+    if (current >= AUTO_ADVANCE_UNTIL && current < slides.length - 1 && !e.target.closest('button')) {
+      window.rdOnboardNext();
+    }
+  });
+})();
+
+function rdOnboardFinish() {
+  localStorage.setItem('rd_onboard_seen_{{ $course->id }}', '1');
+  document.getElementById('rdOnboard')?.classList.remove('active');
+  const url = new URL(window.location.href);
+  url.searchParams.delete('bienvenida');
+  window.history.replaceState({}, '', url);
+}
 </script>
 @endsection
