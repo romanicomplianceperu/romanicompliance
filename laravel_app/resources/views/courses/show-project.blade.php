@@ -5,8 +5,11 @@
   $company = $course->project->company;
 
   $rdGreetingWord = 'Bienvenido';
+  $rdDisplayFirstName = '';
   if (auth()->check()) {
-      $rdFirstName = mb_strtolower(trim(explode(' ', trim(auth()->user()->name))[0] ?? ''));
+      $rdFirstNameRaw = trim(explode(' ', trim(auth()->user()->name))[0] ?? '');
+      $rdDisplayFirstName = mb_convert_case(mb_strtolower($rdFirstNameRaw), MB_CASE_TITLE, 'UTF-8');
+      $rdFirstName = mb_strtolower($rdFirstNameRaw);
       $rdFemaleNames = ['rosario', 'laura', 'maria', 'ana', 'carmen', 'lucia', 'sofia', 'valentina', 'camila',
           'daniela', 'gabriela', 'alejandra', 'andrea', 'patricia', 'claudia', 'monica', 'sandra',
           'karen', 'diana', 'paola', 'fiorella', 'milagros', 'jazmin', 'katherine', 'melissa', 'carla',
@@ -108,13 +111,17 @@
 @keyframes rdObBlink { 50% { opacity: 0; } }
 
 /* Barra única de progreso de toda la bienvenida */
-.rd-ob-master-track { position: absolute; bottom: 2.2rem; left: 50%; transform: translateX(-50%); width: min(280px, 70%); height: 2px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; z-index: 2; }
+.rd-ob-progress-row { position: absolute; bottom: 2.2rem; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; z-index: 2; }
+.rd-ob-mini-spinner { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.18); border-top-color: var(--gold-light); border-radius: 50%; animation: rd-spin 0.8s linear infinite; flex-shrink: 0; }
+.rd-ob-count { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; white-space: nowrap; }
+.rd-ob-master-track { width: min(220px, 55vw); height: 2px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
 .rd-ob-master-fill { height: 100%; width: 0%; background: var(--gold-light); }
 
 /* Carrusel automático — tarjetas claras, tipo la referencia enviada */
-.rd-ob-carousel { position: relative; width: 100%; max-width: 560px; min-height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.9s ease; margin-top: 5rem; }
+.rd-ob-carousel { position: relative; width: 100%; max-width: 560px; min-height: 440px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.9s ease; margin-top: 4.5rem; margin-bottom: 3rem; }
 .rd-ob-carousel.show { opacity: 1; visibility: visible; }
-.rd-ob-track { position: relative; width: 100%; flex: 1; min-height: 300px; }
+.rd-ob-track { position: relative; width: 100%; flex: 1; min-height: 400px; }
+.rd-ob-highlight { margin-top: 1.1rem; font-family: var(--serif); font-weight: 600; font-size: 1.05rem; color: var(--gold); letter-spacing: 0.01em; padding: 0.6rem 1rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.4rem 2.2rem; opacity: 0; visibility: hidden; filter: blur(6px); transition: opacity 0.6s ease, filter 0.6s ease; background: rgba(250,250,246,0.88); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border: 1px solid rgba(255,255,255,0.6); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); overflow-y: auto; }
 .rd-ob-card.active { opacity: 1; visibility: visible; filter: blur(0); }
 .rd-ob-card.leaving { opacity: 0; filter: blur(6px); }
@@ -317,49 +324,76 @@
     <div class="rd-ob-subtext" id="rdObSubtext"></div>
   </div>
 
-  <div class="rd-ob-master-track"><div class="rd-ob-master-fill" id="rdObMasterFill"></div></div>
   <div class="rd-ob-confetti" id="rdObConfetti"></div>
 
   <div class="rd-ob-carousel" id="rdObCarousel">
     <div class="rd-ob-track" id="rdObTrack">
 
       <div class="rd-ob-card" data-card="0">
-        <div class="rd-ob-eyebrow">El propósito</div>
-        <h2>Comprender es prevenir.</h2>
-        <p>El sistema de prevención LA/FT te permite identificar riesgos, reconocer señales de alerta y actuar antes de que una operación se convierta en un problema.</p>
-        <ul class="rd-ob-benefits" style="margin-top:0.9rem;">
-          <li><span class="n">01</span> Comprenderás el marco normativo aplicable.</li>
-          <li><span class="n">02</span> Reconocerás señales de alerta en la práctica.</li>
-        </ul>
+        <div class="rd-ob-eyebrow">Bienvenida</div>
+        <h2>Bienvenido a tu capacitación</h2>
+        <p>Una experiencia diseñada para aprender, comprender y aplicar.</p>
+        <div class="rd-ob-highlight">APRENDER · IDENTIFICAR · PREVENIR</div>
+      </div>
+
+      <div class="rd-ob-card" data-card="1">
+        <div class="rd-ob-eyebrow">Prevención LA/FT</div>
+        <h2>El riesgo puede estar donde menos lo esperas</h2>
+        <p>Prevenir no es solamente cumplir una obligación. Es reconocer señales, evaluar riesgos y actuar oportunamente.</p>
+        <div class="rd-ob-highlight">PREVENIR ES ACTUAR ANTES DEL RIESGO</div>
       </div>
 
       @if($course->instructor)
-        <div class="rd-ob-card" data-card="1" data-duration="long">
-          <div class="rd-ob-eyebrow">Aprende de un especialista</div>
+        <div class="rd-ob-card" data-card="2" data-duration="long">
+          <div class="rd-ob-eyebrow">Tu capacitador</div>
           <img src="{{ $course->instructor->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $course->instructor->name }}" class="rd-ob-instructor-photo">
           <h2>{{ $course->instructor->name }}</h2>
           <p style="color:var(--gold);font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
-          <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 150) }}</p>
+          <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 130) }}</p>
         </div>
       @endif
 
-      <div class="rd-ob-card" data-card="2">
+      <div class="rd-ob-card" data-card="3">
         <div class="rd-ob-eyebrow">Certificación</div>
-        <h2>Tu aprendizaje deja una constancia.</h2>
+        <h2>Tu capacitación, con respaldo verificable</h2>
+        <p>Al completar la capacitación podrás obtener tu certificación digital.</p>
         <div class="rd-ob-cert-badge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="6" y="6" width="4" height="4"/><rect x="14" y="6" width="4" height="4"/><rect x="6" y="14" width="4" height="4"/><path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg>
           <div>CERTIFICACIÓN DIGITAL<br>VERIFICABLE POR QR</div>
         </div>
       </div>
 
-      <div class="rd-ob-card" data-card="3">
-        <h2>Todo listo.</h2>
-        <p>{{ $course->modules->count() }} módulos &middot; {{ $course->modules->sum(fn($m) => $m->lessons->count()) }} contenidos @if($course->duration_minutes) &middot; {{ $course->lectiveHours() }}h @endif</p>
+      <div class="rd-ob-card" data-card="4">
+        <div class="rd-ob-eyebrow">Beneficios</div>
+        <h2>¿Qué te llevarás de esta capacitación?</h2>
+        <ul class="rd-ob-benefits" style="margin-top:0.6rem;">
+          <li><span class="n">01</span> Comprender los principales riesgos de LA/FT.</li>
+          <li><span class="n">02</span> Reconocer señales de alerta.</li>
+          <li><span class="n">03</span> Aplicar criterios a casos prácticos.</li>
+        </ul>
+      </div>
+
+      <div class="rd-ob-card" data-card="5">
+        <div class="rd-ob-eyebrow">Tu ruta</div>
+        <h2>Tu recorrido comienza aquí</h2>
+        <div class="rd-ob-route">
+          @foreach($course->modules as $module)
+            <div class="step"><span class="n">MÓDULO {{ sprintf('%02d', $loop->iteration) }}</span>{{ $module->title }}</div>
+            <div class="down">↓</div>
+          @endforeach
+          <div class="step cert"><span class="n">FINAL</span>Certificación</div>
+        </div>
         <div class="rd-ob-cta">
           <button type="button" class="rd-btn-primary rd-ob-final-btn" onclick="rdOnboardFinish()">Comenzar capacitación →</button>
         </div>
       </div>
 
+    </div>
+
+    <div class="rd-ob-progress-row">
+      <div class="rd-ob-mini-spinner"></div>
+      <div class="rd-ob-master-track"><div class="rd-ob-master-fill" id="rdObMasterFill"></div></div>
+      <div class="rd-ob-count" id="rdObCount">01 / 06</div>
     </div>
   </div>
 </div>
@@ -430,7 +464,7 @@ let rdObAutoTimer = null;
 let rdObDurations = [];
 let rdObTotalMs = 0;
 let rdObMasterRaf = null;
-const RD_OB_NAME = "{{ $rdGreetingWord }}, {{ addslashes(explode(' ', auth()->user()?->name ?? '')[0]) }}.";
+const RD_OB_NAME = "{{ $rdGreetingWord }}, {{ addslashes($rdDisplayFirstName) }}.";
 const RD_OB_NORMAL_MS = 4200; // un poco más rápido
 const RD_OB_INSTRUCTOR_MS = 6200;
 const RD_OB_NAME_DOCK_DELAY = 5500; // escritura del saludo + 2 frases de transición
@@ -526,8 +560,14 @@ function rdObTypewriteCardTitle(card) {
   rdTypewrite(h2, text, 16);
 }
 
+function rdObRenderCount() {
+  const el = document.getElementById('rdObCount');
+  if (el) el.textContent = String(rdObIndex + 1).padStart(2, '0') + ' / ' + String(rdObCards.length).padStart(2, '0');
+}
+
 function rdObStartAuto() {
   rdObTypewriteCardTitle(rdObCards[0]);
+  rdObRenderCount();
   const advance = () => {
     if (rdObIndex < rdObCards.length - 1) {
       rdObCards[rdObIndex].classList.remove('active');
@@ -535,6 +575,7 @@ function rdObStartAuto() {
       rdObIndex++;
       rdObCards[rdObIndex].classList.add('active');
       rdObTypewriteCardTitle(rdObCards[rdObIndex]);
+      rdObRenderCount();
       setTimeout(() => rdObCards[rdObIndex - 1]?.classList.remove('leaving'), 750);
       rdObAutoTimer = setTimeout(advance, rdObDurations[rdObIndex]);
     }

@@ -32,7 +32,7 @@ class GuestEnrollController extends Controller
 
             if (! $user) {
                 $user = User::create([
-                    'name' => $data['full_name'],
+                    'name' => Str::title(Str::lower(trim($data['full_name']))),
                     'email' => $data['email'] ?: 'invitado-'.Str::random(12).'@guest.romanicompliance.com',
                     'role' => 'student',
                     'is_guest' => true,
