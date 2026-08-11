@@ -81,51 +81,57 @@
 .rd-ob-skip { position: absolute; top: 1.7rem; right: 1.8rem; z-index: 3; font-size: 0.72rem; color: rgba(255,255,255,0.32); background: none; border: none; cursor: pointer; letter-spacing: 0.02em; }
 .rd-ob-skip:hover { color: rgba(255,255,255,0.6); }
 
-/* Nombre: hero centrado -> se ancla arriba y permanece fijo */
-.rd-ob-name { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); text-align: center; transition: top 0.9s cubic-bezier(0.22,0.61,0.36,1), transform 0.9s cubic-bezier(0.22,0.61,0.36,1); z-index: 2; }
-.rd-ob-name.docked { top: 3.4rem; transform: translate(-50%, 0) scale(0.42); }
-.rd-ob-name h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 6vw, 3.4rem); color: var(--white); letter-spacing: 0.01em; white-space: nowrap; }
-.rd-ob-preparing { position: absolute; left: 50%; top: calc(50% + 5rem); transform: translateX(-50%); font-size: 0.92rem; color: rgba(255,255,255,0.45); text-align: center; opacity: 0; transition: opacity 0.8s ease; }
-.rd-ob-preparing.show { opacity: 1; }
+/* Nombre: hero centrado -> se desliza arriba y permanece fijo, a la vez
+   que aparecen las tarjetas (movimiento sincronizado, no secuencial) */
+.rd-ob-name { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); text-align: center; transition: top 1.1s cubic-bezier(0.16,0.84,0.3,1), transform 1.1s cubic-bezier(0.16,0.84,0.3,1); z-index: 2; }
+.rd-ob-name.docked { top: 2.6rem; transform: translate(-50%, 0) scale(0.4); }
+.rd-ob-name h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 6vw, 3.4rem); color: var(--white); letter-spacing: 0.01em; white-space: nowrap; min-height: 1.2em; }
+.rd-ob-cursor { display: inline-block; width: 2px; background: var(--gold-light); margin-left: 2px; animation: rdObBlink 0.9s steps(1) infinite; }
+@keyframes rdObBlink { 50% { opacity: 0; } }
 
 /* Barra única de progreso de toda la bienvenida */
 .rd-ob-master-track { position: absolute; bottom: 2.2rem; left: 50%; transform: translateX(-50%); width: min(280px, 70%); height: 2px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; z-index: 2; }
 .rd-ob-master-fill { height: 100%; width: 0%; background: var(--gold-light); }
 
-/* Carrusel automático */
-.rd-ob-carousel { position: relative; width: 100%; max-width: 620px; height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.9s ease; margin-top: 5.5rem; }
-.rd-ob-carousel.show { opacity: 1; visibility: visible; }
-.rd-ob-track { position: relative; width: 100%; flex: 1; }
-.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.2rem 2rem; opacity: 0; visibility: hidden; transform: translateY(14px) scale(0.98); filter: blur(4px); transition: opacity 0.9s cubic-bezier(0.22,0.61,0.36,1), transform 0.9s cubic-bezier(0.22,0.61,0.36,1), filter 0.9s ease; background: rgba(255,255,255,0.055); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+/* Carrusel automático — tarjetas claras, tipo la referencia enviada */
+.rd-ob-carousel { position: relative; width: 100%; max-width: 620px; min-height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity 1.1s cubic-bezier(0.16,0.84,0.3,1), transform 1.1s cubic-bezier(0.16,0.84,0.3,1); margin-top: 5rem; }
+.rd-ob-carousel.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.rd-ob-track { position: relative; width: 100%; flex: 1; min-height: 340px; }
+.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.4rem 2.2rem; opacity: 0; visibility: hidden; transform: translateY(14px) scale(0.98); filter: blur(4px); transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1), filter 0.7s ease; background: var(--white); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); overflow-y: auto; }
 .rd-ob-card.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); filter: blur(0); }
 .rd-ob-card.leaving { opacity: 0; transform: translateY(-10px) scale(0.98); filter: blur(4px); }
-.rd-ob-eyebrow { font-size: 0.66rem; font-weight: 700; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.9rem; }
-.rd-ob-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(184,154,86,0.16); color: var(--gold-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
+.rd-ob-eyebrow { font-size: 0.66rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.9rem; }
+.rd-ob-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--gold-pale); color: var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
 .rd-ob-icon svg { width: 26px; height: 26px; }
-.rd-ob-card h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.4rem, 3.6vw, 1.9rem); color: var(--white); margin-bottom: 0.8rem; letter-spacing: 0; }
-.rd-ob-card p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 440px; margin: 0 auto 0.4rem; }
+.rd-ob-card h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.4rem, 3.6vw, 1.9rem); color: var(--ink); margin-bottom: 0.8rem; letter-spacing: 0; min-height: 1.3em; }
+.rd-ob-card p { font-size: 0.9rem; color: var(--slate); line-height: 1.7; max-width: 440px; margin: 0 auto 0.4rem; }
 .rd-ob-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
-.rd-ob-tags span { font-size: 0.7rem; font-weight: 700; color: var(--gold-light); background: rgba(184,154,86,0.12); border: 1px solid rgba(184,154,86,0.25); padding: 5px 11px; border-radius: 20px; letter-spacing: 0.04em; }
+.rd-ob-tags span { font-size: 0.7rem; font-weight: 700; color: var(--gold); background: var(--gold-pale); border: 1px solid rgba(139,115,64,0.25); padding: 5px 11px; border-radius: 20px; letter-spacing: 0.04em; }
 .rd-ob-meta-row { display: flex; gap: 1.6rem; justify-content: center; margin-top: 1.2rem; }
-.rd-ob-meta-row div { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
-.rd-ob-meta-row strong { display: block; color: var(--white); font-size: 1rem; font-family: var(--serif); }
-.rd-ob-instructor-photo { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(184,154,86,0.35); margin: 0 auto 1rem; display: block; }
+.rd-ob-meta-row div { font-size: 0.78rem; color: var(--slate); }
+.rd-ob-meta-row strong { display: block; color: var(--ink); font-size: 1rem; font-family: var(--serif); }
+.rd-ob-instructor-photo { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold-pale); margin: 0 auto 1rem; display: block; }
 .rd-ob-modules, .rd-ob-route { text-align: left; max-width: 360px; margin: 1rem auto 0; }
-.rd-ob-modules div { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.84rem; color: rgba(255,255,255,0.75); }
-.rd-ob-modules span.n { width: 22px; height: 22px; border-radius: 6px; background: rgba(184,154,86,0.14); color: var(--gold-light); font-size: 0.68rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rd-ob-modules div { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 0.84rem; color: var(--ink); }
+.rd-ob-modules span.n { width: 22px; height: 22px; border-radius: 6px; background: var(--gold-pale); color: var(--gold); font-size: 0.68rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .rd-ob-route { display: flex; flex-direction: column; align-items: center; gap: 2px; max-width: 320px; }
-.rd-ob-route .step { font-size: 0.82rem; font-weight: 600; color: var(--white); }
-.rd-ob-route .step .n { color: var(--gold-light); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.06em; display: block; }
-.rd-ob-route .step.cert { color: var(--gold-light); }
-.rd-ob-route .down { color: rgba(255,255,255,0.25); font-size: 0.75rem; }
+.rd-ob-route .step { font-size: 0.82rem; font-weight: 600; color: var(--ink); }
+.rd-ob-route .step .n { color: var(--gold); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.06em; display: block; }
+.rd-ob-route .step.cert { color: var(--gold); }
+.rd-ob-route .down { color: var(--slate-light); font-size: 0.75rem; }
 .rd-ob-benefits { text-align: left; max-width: 380px; margin: 1rem auto 0; list-style: none; }
-.rd-ob-benefits li { display: flex; align-items: start; gap: 9px; font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-bottom: 8px; line-height: 1.5; }
-.rd-ob-benefits li .n { font-family: var(--serif); color: var(--gold-light); font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
-.rd-ob-cert-badge { display: flex; align-items: center; gap: 12px; background: rgba(184,154,86,0.1); border: 1px solid rgba(184,154,86,0.3); border-radius: 12px; padding: 0.9rem 1.3rem; margin-top: 1rem; }
-.rd-ob-cert-badge svg { width: 30px; height: 30px; color: var(--gold-light); flex-shrink: 0; }
-.rd-ob-cert-badge div { text-align: left; font-size: 0.72rem; font-weight: 700; color: var(--gold-light); letter-spacing: 0.04em; line-height: 1.5; }
+.rd-ob-benefits li { display: flex; align-items: start; gap: 9px; font-size: 0.85rem; color: var(--ink); margin-bottom: 8px; line-height: 1.5; }
+.rd-ob-benefits li .n { font-family: var(--serif); color: var(--gold); font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+.rd-ob-cert-badge { display: flex; align-items: center; gap: 12px; background: var(--gold-pale); border: 1px solid rgba(139,115,64,0.25); border-radius: 12px; padding: 0.9rem 1.3rem; margin-top: 1rem; }
+.rd-ob-cert-badge svg { width: 30px; height: 30px; color: var(--gold); flex-shrink: 0; }
+.rd-ob-cert-badge div { text-align: left; font-size: 0.72rem; font-weight: 700; color: var(--gold); letter-spacing: 0.04em; line-height: 1.5; }
 
 .rd-ob-cta { margin-top: 1.6rem; }
+
+/* Confeti discreto */
+.rd-ob-confetti { position: fixed; inset: 0; pointer-events: none; z-index: 600; overflow: hidden; }
+.rd-ob-confetti span { position: absolute; top: -10px; width: 6px; height: 10px; opacity: 0.9; animation: rdConfettiFall 1.3s ease-in forwards; }
+@keyframes rdConfettiFall { to { transform: translateY(105vh) rotate(200deg); opacity: 0; } }
 @endsection
 
 @section('content')
@@ -278,11 +284,11 @@
   <button type="button" class="rd-ob-skip" onclick="rdOnboardFinish()">Omitir →</button>
 
   <div class="rd-ob-name" id="rdObName">
-    <h1>BIENVENIDO, {{ \Illuminate\Support\Str::upper(explode(' ', auth()->user()->name)[0]) }}.</h1>
+    <h1 id="rdObNameText"></h1>
   </div>
-  <div class="rd-ob-preparing" id="rdObPreparing">Estamos preparando tu experiencia de aprendizaje.</div>
 
   <div class="rd-ob-master-track"><div class="rd-ob-master-fill" id="rdObMasterFill"></div></div>
+  <div class="rd-ob-confetti" id="rdObConfetti"></div>
 
   <div class="rd-ob-carousel" id="rdObCarousel">
     <div class="rd-ob-track" id="rdObTrack">
@@ -418,12 +424,29 @@ let rdObIndex = 0;
 let rdObAutoTimer = null;
 let rdObDurations = [];
 let rdObTotalMs = 0;
-let rdObElapsedMs = 0;
 let rdObMasterRaf = null;
-const RD_OB_NORMAL_MS = 5200; // 4-6s
-const RD_OB_INSTRUCTOR_MS = 7200; // 6-8s
-const RD_OB_NAME_DOCK_DELAY = 1900;
-const RD_OB_PREPARING_MS = 1700;
+const RD_OB_NAME = "Bienvenido, {{ addslashes(explode(' ', auth()->user()->name)[0]) }}.";
+const RD_OB_NORMAL_MS = 4200; // un poco más rápido
+const RD_OB_INSTRUCTOR_MS = 6200;
+const RD_OB_NAME_DOCK_DELAY = 1500;
+
+function rdTypewrite(el, text, speed, onDone) {
+  el.textContent = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'rd-ob-cursor';
+  let i = 0;
+  (function step() {
+    el.textContent = text.slice(0, i);
+    el.appendChild(cursor);
+    i++;
+    if (i <= text.length) {
+      setTimeout(step, speed);
+    } else {
+      cursor.remove();
+      if (onDone) onDone();
+    }
+  })();
+}
 
 (function rdOnboarding() {
   const overlay = document.getElementById('rdOnboard');
@@ -440,26 +463,23 @@ const RD_OB_PREPARING_MS = 1700;
   // la primera tarjeta nunca aparezca vacía.
   rdObCards = Array.from(document.querySelectorAll('#rdObTrack .rd-ob-card'));
   rdObDurations = rdObCards.map(c => c.dataset.duration === 'long' ? RD_OB_INSTRUCTOR_MS : RD_OB_NORMAL_MS);
-  rdObTotalMs = RD_OB_NAME_DOCK_DELAY + RD_OB_PREPARING_MS + rdObDurations.reduce((a, b) => a + b, 0);
+  rdObTotalMs = RD_OB_NAME_DOCK_DELAY + rdObDurations.reduce((a, b) => a + b, 0);
   rdObCards[0].classList.add('active');
 
   overlay.classList.add('active');
   rdObStartMasterProgress();
 
-  // El nombre aparece centrado y grande, luego sube y queda fijo arriba.
+  // El saludo se escribe con máquina de escribir (lento), luego el
+  // nombre se desliza suavemente hacia arriba MIENTRAS aparecen las
+  // tarjetas (movimiento sincronizado, no secuencial).
   const nameEl = document.getElementById('rdObName');
-  setTimeout(() => {
-    nameEl.classList.add('docked');
-
-    const preparing = document.getElementById('rdObPreparing');
-    preparing.classList.add('show');
-
+  rdTypewrite(document.getElementById('rdObNameText'), RD_OB_NAME, 55, () => {
     setTimeout(() => {
-      preparing.classList.remove('show');
+      nameEl.classList.add('docked');
       document.getElementById('rdObCarousel').classList.add('show');
       rdObStartAuto();
-    }, RD_OB_PREPARING_MS);
-  }, RD_OB_NAME_DOCK_DELAY);
+    }, 550);
+  });
 })();
 
 function rdObStartMasterProgress() {
@@ -473,25 +493,51 @@ function rdObStartMasterProgress() {
   rdObMasterRaf = requestAnimationFrame(tick);
 }
 
+function rdObTypewriteCardTitle(card) {
+  const h2 = card.querySelector('h2');
+  if (!h2 || h2.dataset.typed) return;
+  h2.dataset.typed = '1';
+  const text = h2.textContent;
+  rdTypewrite(h2, text, 16);
+}
+
 function rdObStartAuto() {
+  rdObTypewriteCardTitle(rdObCards[0]);
   const advance = () => {
     if (rdObIndex < rdObCards.length - 1) {
       rdObCards[rdObIndex].classList.remove('active');
       rdObCards[rdObIndex].classList.add('leaving');
       rdObIndex++;
       rdObCards[rdObIndex].classList.add('active');
-      setTimeout(() => rdObCards[rdObIndex - 1]?.classList.remove('leaving'), 950);
+      rdObTypewriteCardTitle(rdObCards[rdObIndex]);
+      setTimeout(() => rdObCards[rdObIndex - 1]?.classList.remove('leaving'), 750);
       rdObAutoTimer = setTimeout(advance, rdObDurations[rdObIndex]);
     }
   };
   rdObAutoTimer = setTimeout(advance, rdObDurations[rdObIndex]);
 }
 
+function rdObFireConfetti() {
+  const wrap = document.getElementById('rdObConfetti');
+  const colors = ['#B89A56', '#8B7340', '#FAFAF6', '#6FCF97'];
+  for (let i = 0; i < 26; i++) {
+    const s = document.createElement('span');
+    s.style.left = (Math.random() * 100) + 'vw';
+    s.style.background = colors[i % colors.length];
+    s.style.animationDelay = (Math.random() * 0.3) + 's';
+    s.style.animationDuration = (1 + Math.random() * 0.6) + 's';
+    s.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+    wrap.appendChild(s);
+  }
+  setTimeout(() => { wrap.innerHTML = ''; }, 2200);
+}
+
 function rdOnboardFinish() {
   clearTimeout(rdObAutoTimer);
   cancelAnimationFrame(rdObMasterRaf);
+  rdObFireConfetti();
   const overlay = document.getElementById('rdOnboard');
-  overlay.classList.add('leaving');
+  setTimeout(() => overlay.classList.add('leaving'), 500);
   setTimeout(() => {
     @php $firstLesson = $course->modules->flatMap->lessons->first(); @endphp
     @if($firstLesson)
@@ -502,7 +548,7 @@ function rdOnboardFinish() {
       url.searchParams.delete('bienvenida');
       window.history.replaceState({}, '', url);
     @endif
-  }, 450);
+  }, 950);
 }
 </script>
 @endsection
