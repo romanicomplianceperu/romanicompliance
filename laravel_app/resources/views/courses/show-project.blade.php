@@ -75,7 +75,10 @@
 
 #rdOnboard { position: fixed; inset: 0; z-index: 500; background: radial-gradient(120% 100% at 50% 0%, #16283F 0%, #0B1829 60%); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease; padding: 1.5rem; }
 #rdOnboard.active { opacity: 1; visibility: visible; }
-.rd-ob-logo { position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); font-family: Georgia, 'Times New Roman', serif; font-weight: bold; font-size: 1.05rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
+.rd-ob-logo { position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); }
+.rd-ob-logo img { height: 24px; filter: brightness(0) invert(1); opacity: 0.6; }
+.rd-ob-timer-track { width: 100%; max-width: 200px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 0 auto 1.6rem; overflow: hidden; }
+.rd-ob-timer-fill { height: 100%; background: var(--gold-light); width: 0%; transition: width 5s linear; }
 .rd-ob-card { max-width: 640px; width: 100%; padding: 2.6rem 1rem 1rem; }
 .rd-ob-progress-label { font-size: 0.68rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.4rem; text-align: center; }
 .rd-ob-slide { display: none; text-align: center; min-height: 260px; }
@@ -251,12 +254,18 @@
 @section('scripts')
 @auth
 <div id="rdOnboard">
-  <div class="rd-ob-logo">ROMANI COMPLIANCE</div>
+  <div class="rd-ob-logo"><img src="{{ asset('images/logos.png') }}" alt="Romani Compliance"></div>
   <div class="rd-ob-card">
-    <div class="rd-ob-progress-label" id="rdObLabel">Introducción 1 de 4</div>
+    <div class="rd-ob-progress-label" id="rdObLabel">Introducción 1 de 5</div>
+    <div class="rd-ob-timer-track"><div class="rd-ob-timer-fill" id="rdObTimerFill"></div></div>
 
     <div class="rd-ob-slide active" data-slide="0">
-      <h2>Hola, {{ explode(' ', auth()->user()->name)[0] }} — bienvenido a {{ $course->title }}</h2>
+      <h2>Hola, {{ explode(' ', auth()->user()->name)[0] }}</h2>
+      <p>Gracias por confiar en Romani Compliance.</p>
+    </div>
+
+    <div class="rd-ob-slide" data-slide="1">
+      <h2>Bienvenido a {{ $course->title }}</h2>
       <p>{{ $company->name }}</p>
       <div class="rd-ob-meta-row">
         <div><strong>{{ $course->modules->count() }}</strong>módulos</div>
@@ -268,7 +277,7 @@
     </div>
 
     @if($course->instructor)
-      <div class="rd-ob-slide" data-slide="1">
+      <div class="rd-ob-slide" data-slide="2">
         <img src="{{ $course->instructor->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $course->instructor->name }}" class="rd-ob-instructor-photo">
         <h2>{{ $course->instructor->name }}</h2>
         <p style="color:var(--gold-light);font-weight:600;font-size:0.85rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
@@ -374,11 +383,12 @@ let rdObAutoTimer = null;
   const overlay = document.getElementById('rdOnboard');
   if (!overlay) return;
 
-  const courseKey = 'rd_onboard_seen_{{ $course->id }}';
   const params = new URLSearchParams(window.location.search);
   const justJoined = params.get('bienvenida') === '1';
 
-  if (!justJoined || localStorage.getItem(courseKey)) return;
+  // Se muestra cada vez que la persona entra al curso desde el flujo de
+  // inscripción (a propósito, por pedido explícito), no solo una vez.
+  if (!justJoined) return;
 
   rdObSlides = Array.from(overlay.querySelectorAll('.rd-ob-slide'));
   const dotsWrap = document.getElementById('rdObDots');
@@ -407,13 +417,29 @@ function rdObRender() {
   document.getElementById('rdObNext').textContent = rdObCurrent === rdObSlides.length - 1 ? 'Comenzar capacitación' : 'Siguiente →';
 }
 
+function rdObTickTimer() {
+  const fill = document.getElementById('rdObTimerFill');
+  if (!fill) return;
+  fill.style.transition = 'none';
+  fill.style.width = '0%';
+  requestAnimationFrame(() => {
+    fill.style.transition = 'width 5s linear';
+    fill.style.width = '100%';
+  });
+}
+
 function rdObStartAuto() {
+  rdObTickTimer();
   rdObAutoTimer = setInterval(() => {
-    if (rdObCurrent < rdObSlides.length - 1) { rdObCurrent++; rdObRender(); }
+    if (rdObCurrent < rdObSlides.length - 1) { rdObCurrent++; rdObRender(); rdObTickTimer(); }
     else rdObStopAuto();
   }, 5000);
 }
-function rdObStopAuto() { clearInterval(rdObAutoTimer); }
+function rdObStopAuto() {
+  clearInterval(rdObAutoTimer);
+  const fill = document.getElementById('rdObTimerFill');
+  if (fill) fill.style.transition = 'none';
+}
 
 function rdObNext() {
   rdObStopAuto();

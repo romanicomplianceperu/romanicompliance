@@ -127,20 +127,15 @@
 .rdp-main-fade { animation: rd-fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; }
 @keyframes rd-fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-.rdp-toast { position: fixed; top: 84px; right: 20px; z-index: 300; background: var(--white); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; box-shadow: var(--shadow-m); max-width: 300px; opacity: 0; transform: translateY(-8px); transition: opacity 0.4s ease, transform 0.4s ease; pointer-events: none; }
-.rdp-toast.show { opacity: 1; transform: translateY(0); }
-.rdp-toast .t { font-size: 0.85rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-.rdp-toast .s { font-size: 0.74rem; color: var(--slate); }
+.rdp-welcome-pill { display: inline-flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--line); border-radius: 30px; padding: 8px 16px 8px 8px; box-shadow: var(--shadow-s); margin-bottom: 1.2rem; }
+.rdp-welcome-pill .av { width: 30px; height: 30px; border-radius: 50%; background: var(--gold); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+.rdp-welcome-pill .t { font-size: 0.82rem; font-weight: 700; color: var(--ink); }
+.rdp-welcome-pill .s { font-size: 0.72rem; color: var(--slate-light); }
 
 @media (max-width: 900px) { .rdp-main { padding: 1.4rem 1.2rem 2.4rem; } .rdp-pdf { height: 55vh; } .rdp-nav { flex-wrap: wrap; } .rdp-toast { right: 12px; left: 12px; max-width: none; top: 76px; } }
 @endsection
 
 @section('content')
-<div class="rdp-toast" id="rdpToast">
-  <div class="t">Bienvenido, {{ explode(' ', auth()->user()->name)[0] }}</div>
-  <div class="s">Tu avance se guarda automáticamente en tu cuenta.</div>
-</div>
-
 <div class="rdp-drawer-backdrop" id="rdpBackdrop" onclick="rdpToggleDrawer()"></div>
 <button type="button" class="rdp-drawer-toggle" id="rdpFloatingToggle" onclick="rdpToggleDrawer()">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -150,6 +145,13 @@
 <div class="rdp-shell">
   <div>
     <div class="rdp-main rdp-main-fade">
+      <div class="rdp-welcome-pill">
+        <span class="av">{{ \Illuminate\Support\Str::of(auth()->user()->name)->explode(' ')->map(fn($p) => mb_substr($p, 0, 1))->take(2)->implode('') }}</span>
+        <span>
+          <span class="t">Bienvenido, {{ explode(' ', auth()->user()->name)[0] }}</span><br>
+          <span class="s">Tu avance se guarda automáticamente en tu cuenta.</span>
+        </span>
+      </div>
       <div class="rdp-eyebrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
         {{ $course->title }}
@@ -358,14 +360,6 @@ function rdpTab(name) {
   document.querySelectorAll('.rdp-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   document.querySelectorAll('.rdp-tabpanel').forEach(p => p.classList.toggle('active', p.dataset.panel === name));
 }
-
-(function rdpToast() {
-  if (sessionStorage.getItem('rdp_toast_seen')) return;
-  sessionStorage.setItem('rdp_toast_seen', '1');
-  const t = document.getElementById('rdpToast');
-  setTimeout(() => t?.classList.add('show'), 500);
-  setTimeout(() => t?.classList.remove('show'), 6000);
-})();
 
 (function rdpNotes() {
   const box = document.getElementById('rdpNotesBox');
