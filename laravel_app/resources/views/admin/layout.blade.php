@@ -122,7 +122,11 @@ img { max-width: 100%; display: block; }
       <h1>@yield('title', 'Panel administrativo')</h1>
       <div class="topbar-user">
         <span>{{ auth()->user()->name }}</span>
-        <img src="{{ auth()->user()->avatar ?? asset('images/logos.png') }}" alt="{{ auth()->user()->name }}">
+        @if(auth()->user()->displayPhoto())
+          <img src="{{ auth()->user()->displayPhoto() }}" alt="{{ auth()->user()->name }}">
+        @else
+          <span style="width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--gold);color:var(--white);font-size:0.72rem;font-weight:700;">{{ \Illuminate\Support\Str::of(auth()->user()->name)->explode(' ')->map(fn($p) => mb_substr($p, 0, 1))->take(2)->implode('') }}</span>
+        @endif
         <form action="{{ route('logout') }}" method="POST">
           @csrf
           <button type="submit" class="btn btn-outline btn-sm">Salir</button>

@@ -53,6 +53,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; line-height: 1.2; 
 .nav-cta { font-size: 0.75rem !important; font-weight: 600 !important; color: var(--white) !important; background: var(--ink); padding: 8px 20px; border-radius: var(--radius); transition: background 0.2s; }
 .nav-cta:hover { background: var(--ink-light) !important; }
 .nav-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
+.nav-avatar-initials { display: flex; align-items: center; justify-content: center; background: var(--gold); color: var(--white); font-size: 0.72rem; font-weight: 700; border: none; }
 .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
 .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); margin: 5px 0; transition: 0.3s; }
 
@@ -178,7 +179,13 @@ footer { background: var(--ink-90); padding: 2.5rem 0; border-top: 1px solid rgb
       <a href="{{ route('home') }}#contacto">Contacto</a>
       <a href="{{ route('courses.catalog') }}" class="{{ request()->routeIs('courses.*', 'lessons.*') ? 'active' : '' }}">Cursos</a>
       @auth
-        <a href="{{ route('dashboard') }}" title="Mi panel"><img src="{{ auth()->user()->avatar ?? asset('images/logos.png') }}" alt="{{ auth()->user()->name }}" class="nav-avatar"></a>
+        <a href="{{ route('dashboard') }}" title="Mi panel">
+          @if(auth()->user()->displayPhoto())
+            <img src="{{ auth()->user()->displayPhoto() }}" alt="{{ auth()->user()->name }}" class="nav-avatar">
+          @else
+            <span class="nav-avatar nav-avatar-initials">{{ \Illuminate\Support\Str::of(auth()->user()->name)->explode(' ')->map(fn($p) => mb_substr($p, 0, 1))->take(2)->implode('') }}</span>
+          @endif
+        </a>
         <form action="{{ route('logout') }}" method="POST" style="display:inline">
           @csrf
           <button type="submit" class="nav-cta" style="border:none;cursor:pointer;">Salir</button>

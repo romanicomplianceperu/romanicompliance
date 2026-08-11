@@ -73,9 +73,10 @@
 .rd-form-group input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; font-size: 0.9rem; }
 .rd-form-hint { font-size: 0.76rem; color: var(--slate-light); margin-top: 4px; }
 
-#rdOnboard { position: fixed; inset: 0; z-index: 500; background: var(--ink); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease; padding: 1.5rem; }
+#rdOnboard { position: fixed; inset: 0; z-index: 500; background: radial-gradient(120% 100% at 50% 0%, #16283F 0%, #0B1829 60%); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease; padding: 1.5rem; }
 #rdOnboard.active { opacity: 1; visibility: visible; }
-.rd-ob-card { max-width: 560px; width: 100%; background: var(--ink-90); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 2.6rem 2.4rem 2rem; box-shadow: 0 30px 80px rgba(0,0,0,0.4); }
+.rd-ob-logo { position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); font-family: Georgia, 'Times New Roman', serif; font-weight: bold; font-size: 1.05rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
+.rd-ob-card { max-width: 640px; width: 100%; padding: 2.6rem 1rem 1rem; }
 .rd-ob-progress-label { font-size: 0.68rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.4rem; text-align: center; }
 .rd-ob-slide { display: none; text-align: center; min-height: 260px; }
 .rd-ob-slide.active { display: block; animation: rdObFade 0.5s ease; }
@@ -250,6 +251,7 @@
 @section('scripts')
 @auth
 <div id="rdOnboard">
+  <div class="rd-ob-logo">ROMANI COMPLIANCE</div>
   <div class="rd-ob-card">
     <div class="rd-ob-progress-label" id="rdObLabel">Introducción 1 de 4</div>
 
