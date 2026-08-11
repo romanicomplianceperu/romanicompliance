@@ -28,22 +28,9 @@ class LessonController extends Controller
             ->whereIn('lesson_id', $flatLessons->pluck('id'))
             ->pluck('lesson_id');
 
-        // Bloqueo secuencial: solo para cursos ligados a un Proyecto (la
-        // experiencia especial tipo "Red Digital"). Los cursos normales
-        // conservan la navegación libre que ya tenían sus alumnos.
+        // Todas las lecciones quedan libres de navegar; solo el certificado
+        // se bloquea hasta completar el curso.
         $lockedLessonIds = collect();
-        if ($course->project && ! $user->isAdmin()) {
-            $blocked = false;
-            foreach ($flatLessons as $l) {
-                if ($blocked) {
-                    $lockedLessonIds->push($l->id);
-                } elseif (! $completedLessonIds->contains($l->id)) {
-                    $blocked = true;
-                }
-            }
-        }
-
-        abort_if($lockedLessonIds->contains($lesson->id), 403, 'Completa las lecciones anteriores para desbloquear esta.');
 
         $isCompleted = $completedLessonIds->contains($lesson->id);
 
