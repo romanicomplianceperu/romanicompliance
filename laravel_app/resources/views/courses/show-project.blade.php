@@ -73,7 +73,7 @@
 .rd-form-group input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; font-size: 0.9rem; }
 .rd-form-hint { font-size: 0.76rem; color: var(--slate-light); margin-top: 4px; }
 
-#rdOnboard { position: fixed; inset: 0; z-index: 500; background: radial-gradient(120% 100% at 50% 0%, #16283F 0%, #0B1829 60%); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.6s ease, visibility 0.6s ease; padding: 1.5rem; overflow: hidden; }
+#rdOnboard { position: fixed; inset: 0; z-index: 500; background: radial-gradient(120% 100% at 50% 0%, #16283F 0%, #0B1829 60%); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.6s ease, visibility 0.6s ease; padding: 1.5rem; overflow: hidden; }
 #rdOnboard.active { opacity: 1; visibility: visible; }
 #rdOnboard.leaving { opacity: 0; }
 .rd-ob-logo { position: absolute; top: 1.6rem; left: 50%; transform: translateX(-50%); z-index: 2; }
@@ -97,7 +97,7 @@
 .rd-ob-carousel { position: relative; width: 100%; max-width: 560px; min-height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.9s ease; margin-top: 5rem; }
 .rd-ob-carousel.show { opacity: 1; visibility: visible; }
 .rd-ob-track { position: relative; width: 100%; flex: 1; min-height: 300px; }
-.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.4rem 2.2rem; opacity: 0; visibility: hidden; filter: blur(6px); transition: opacity 0.6s ease, filter 0.6s ease; background: var(--white); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); overflow-y: auto; }
+.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.4rem 2.2rem; opacity: 0; visibility: hidden; filter: blur(6px); transition: opacity 0.6s ease, filter 0.6s ease; background: rgba(250,250,246,0.88); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border: 1px solid rgba(255,255,255,0.6); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); overflow-y: auto; }
 .rd-ob-card.active { opacity: 1; visibility: visible; filter: blur(0); }
 .rd-ob-card.leaving { opacity: 0; filter: blur(6px); }
 .rd-ob-eyebrow { font-size: 0.66rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.9rem; }
@@ -107,8 +107,8 @@
 .rd-ob-card p { font-size: 0.88rem; color: var(--slate); line-height: 1.65; max-width: 400px; margin: 0 auto; }
 .rd-ob-final-btn { font-size: 1rem !important; padding: 18px 40px !important; }
 
-.rd-ob-loading { display: flex; flex-direction: column; align-items: center; gap: 14px; opacity: 1; transition: opacity 0.5s ease; }
-.rd-ob-loading.hide { opacity: 0; pointer-events: none; }
+.rd-ob-loading { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 14px; opacity: 1; transition: opacity 0.5s ease; z-index: 2; }
+.rd-ob-loading.hide { opacity: 0; visibility: hidden; pointer-events: none; }
 .rd-ob-spinner { width: 26px; height: 26px; border: 2.5px solid rgba(184,154,86,0.25); border-top-color: var(--gold-light); border-radius: 50%; animation: rd-spin 0.8s linear infinite; }
 .rd-ob-loading span { font-size: 0.85rem; color: rgba(255,255,255,0.55); letter-spacing: 0.02em; }
 .rd-ob-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
