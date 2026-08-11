@@ -73,40 +73,53 @@
 .rd-form-group input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; font-size: 0.9rem; }
 .rd-form-hint { font-size: 0.76rem; color: var(--slate-light); margin-top: 4px; }
 
-#rdOnboard { position: fixed; inset: 0; z-index: 500; background: radial-gradient(120% 100% at 50% 0%, #16283F 0%, #0B1829 60%); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease; padding: 1.5rem; }
+#rdOnboard { position: fixed; inset: 0; z-index: 500; background: radial-gradient(120% 100% at 50% 0%, #16283F 0%, #0B1829 60%); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.6s ease, visibility 0.6s ease; padding: 1.5rem; overflow: hidden; }
 #rdOnboard.active { opacity: 1; visibility: visible; }
-.rd-ob-logo { position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); }
+.rd-ob-logo { position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); z-index: 2; }
 .rd-ob-logo img { height: 24px; filter: brightness(0) invert(1); opacity: 0.6; }
-.rd-ob-timer-track { width: 100%; max-width: 200px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 0 auto 1.6rem; overflow: hidden; }
-.rd-ob-timer-fill { height: 100%; background: var(--gold-light); width: 0%; transition: width 5s linear; }
-.rd-ob-card { max-width: 640px; width: 100%; padding: 2.6rem 1rem 1rem; }
-.rd-ob-progress-label { font-size: 0.68rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.4rem; text-align: center; }
-.rd-ob-slide { display: none; text-align: center; min-height: 260px; }
-.rd-ob-slide.active { display: block; animation: rdObFade 0.5s ease; }
-@keyframes rdObFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.rd-ob-icon { width: 54px; height: 54px; border-radius: 14px; background: rgba(184,154,86,0.14); color: var(--gold-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.3rem; }
+
+/* Fase 1 y 2: bienvenida y preparación, pantalla completa */
+.rd-ob-phase { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.5rem; opacity: 0; visibility: hidden; transition: opacity 1.1s ease, filter 1.1s ease, transform 1.1s ease; filter: blur(0); }
+.rd-ob-phase.show { opacity: 1; visibility: visible; }
+.rd-ob-phase.fade-out { opacity: 0; filter: blur(6px); transform: scale(1.02); }
+.rd-ob-greet h1 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(2rem, 6vw, 3.2rem); color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.8rem; }
+.rd-ob-greet p { font-size: 1rem; color: rgba(255,255,255,0.45); letter-spacing: 0.04em; }
+.rd-ob-prepare h2 { font-family: 'Inter', sans-serif; font-weight: 700; font-size: clamp(1.2rem, 3.5vw, 1.6rem); color: var(--white); max-width: 480px; margin-bottom: 1.6rem; }
+.rd-ob-loadbar { width: 220px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.rd-ob-loadbar .fill { height: 100%; width: 0%; background: var(--gold-light); border-radius: 3px; transition: width 2.4s cubic-bezier(0.22,0.61,0.36,1); }
+
+/* Fase 3: carrusel automático */
+.rd-ob-carousel { position: relative; width: 100%; max-width: 640px; height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.9s ease; }
+.rd-ob-carousel.show { opacity: 1; visibility: visible; }
+.rd-ob-track { position: relative; width: 100%; flex: 1; }
+.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem 1.5rem; opacity: 0; visibility: hidden; transform: translateX(24px) scale(0.98); filter: blur(4px); transition: opacity 0.9s cubic-bezier(0.22,0.61,0.36,1), transform 0.9s cubic-bezier(0.22,0.61,0.36,1), filter 0.9s ease; }
+.rd-ob-card.active { opacity: 1; visibility: visible; transform: translateX(0) scale(1); filter: blur(0); }
+.rd-ob-card.leaving { opacity: 0; transform: translateX(-24px) scale(0.98); filter: blur(4px); }
+.rd-ob-eyebrow { font-size: 0.68rem; font-weight: 700; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+.rd-ob-icon { width: 54px; height: 54px; border-radius: 14px; background: rgba(184,154,86,0.14); color: var(--gold-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
 .rd-ob-icon svg { width: 27px; height: 27px; }
-.rd-ob-slide h2 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(1.3rem, 3.5vw, 1.7rem); color: var(--white); margin-bottom: 0.7rem; letter-spacing: -0.01em; }
-.rd-ob-slide p { font-size: 0.92rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 440px; margin: 0 auto 0.4rem; }
+.rd-ob-card h2 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(1.3rem, 3.5vw, 1.7rem); color: var(--white); margin-bottom: 0.7rem; letter-spacing: -0.01em; }
+.rd-ob-card p { font-size: 0.92rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 440px; margin: 0 auto 0.4rem; }
 .rd-ob-meta-row { display: flex; gap: 1.6rem; justify-content: center; margin-top: 1.2rem; }
 .rd-ob-meta-row div { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
 .rd-ob-meta-row strong { display: block; color: var(--white); font-size: 1rem; }
 .rd-ob-instructor-photo { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(184,154,86,0.3); margin: 0 auto 1rem; display: block; }
-.rd-ob-modules { text-align: left; max-width: 360px; margin: 1rem auto 0; }
+.rd-ob-modules, .rd-ob-route { text-align: left; max-width: 360px; margin: 1rem auto 0; }
 .rd-ob-modules div { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; color: rgba(255,255,255,0.75); }
 .rd-ob-modules span.n { width: 24px; height: 24px; border-radius: 6px; background: rgba(184,154,86,0.14); color: var(--gold-light); font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rd-ob-route { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 480px; }
+.rd-ob-route .step { font-size: 0.76rem; font-weight: 700; color: var(--white); background: rgba(184,154,86,0.14); border: 1px solid rgba(184,154,86,0.3); padding: 7px 12px; border-radius: 20px; white-space: nowrap; }
+.rd-ob-route .arrow { color: rgba(255,255,255,0.3); font-size: 0.8rem; }
 .rd-ob-benefits { text-align: left; max-width: 380px; margin: 1.1rem auto 0; list-style: none; }
 .rd-ob-benefits li { display: flex; align-items: start; gap: 9px; font-size: 0.86rem; color: rgba(255,255,255,0.7); margin-bottom: 10px; line-height: 1.5; }
 .rd-ob-benefits li svg { width: 15px; height: 15px; flex-shrink: 0; color: #6FCF97; margin-top: 3px; }
 
-.rd-ob-dots { display: flex; gap: 7px; justify-content: center; margin-top: 1.8rem; margin-bottom: 1.4rem; }
-.rd-ob-dot { width: 22px; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.15); transition: background 0.3s; cursor: pointer; border: none; padding: 0; }
-.rd-ob-dot.on { background: var(--gold-light); }
-.rd-ob-nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.rd-ob-btn-ghost { font-size: 0.82rem; color: rgba(255,255,255,0.55); background: none; border: 1px solid rgba(255,255,255,0.15); padding: 10px 18px; border-radius: 8px; cursor: pointer; }
-.rd-ob-btn-ghost:hover { border-color: rgba(255,255,255,0.35); color: var(--white); }
-.rd-ob-btn-ghost:disabled { opacity: 0.3; cursor: not-allowed; }
-.rd-ob-skip { font-size: 0.76rem; color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; text-align: center; display: block; margin: 1.2rem auto 0; }
+.rd-ob-progress { display: flex; gap: 6px; align-items: center; justify-content: center; margin-top: 1.6rem; }
+.rd-ob-seg { width: 30px; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.12); overflow: hidden; position: relative; }
+.rd-ob-seg .fill { position: absolute; inset: 0; width: 0%; background: var(--gold-light); }
+.rd-ob-seg.done .fill { width: 100%; }
+
+.rd-ob-cta { margin-top: 1.6rem; }
 @endsection
 
 @section('content')
@@ -255,62 +268,83 @@
 @auth
 <div id="rdOnboard">
   <div class="rd-ob-logo"><img src="{{ asset('images/logos.png') }}" alt="Romani Compliance"></div>
-  <div class="rd-ob-card">
-    <div class="rd-ob-progress-label" id="rdObLabel">Introducción 1 de 5</div>
-    <div class="rd-ob-timer-track"><div class="rd-ob-timer-fill" id="rdObTimerFill"></div></div>
 
-    <div class="rd-ob-slide active" data-slide="0">
-      <h2>Hola, {{ explode(' ', auth()->user()->name)[0] }}</h2>
-      <p>Gracias por confiar en Romani Compliance.</p>
-    </div>
+  <div class="rd-ob-phase rd-ob-greet" id="rdObGreet">
+    <h1>Bienvenido, {{ explode(' ', auth()->user()->name)[0] }}</h1>
+    <p>Estamos preparando tu experiencia de aprendizaje</p>
+  </div>
 
-    <div class="rd-ob-slide" data-slide="1">
-      <h2>Bienvenido a {{ $course->title }}</h2>
-      <p>{{ $company->name }}</p>
-      <div class="rd-ob-meta-row">
-        <div><strong>{{ $course->modules->count() }}</strong>módulos</div>
-        @if($course->duration_minutes)
-          <div><strong>{{ $course->lectiveHours() }}h</strong>duración</div>
-        @endif
-        <div><strong>Sí</strong>certificado</div>
+  <div class="rd-ob-phase rd-ob-prepare" id="rdObPrepare">
+    <h2>Estamos preparando el contenido para ti, {{ explode(' ', auth()->user()->name)[0] }}</h2>
+    <div class="rd-ob-loadbar"><div class="fill" id="rdObLoadFill"></div></div>
+  </div>
+
+  <div class="rd-ob-carousel" id="rdObCarousel">
+    <div class="rd-ob-track" id="rdObTrack">
+
+      <div class="rd-ob-card" data-card="0">
+        <div class="rd-ob-eyebrow">01 &middot; Bienvenido</div>
+        <h2>Bienvenido a tu capacitación</h2>
+        <p>Estás a punto de comenzar una experiencia diseñada para ayudarte a comprender los fundamentos esenciales de {{ $course->title }}.</p>
       </div>
-    </div>
 
-    @if($course->instructor)
-      <div class="rd-ob-slide" data-slide="2">
-        <img src="{{ $course->instructor->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $course->instructor->name }}" class="rd-ob-instructor-photo">
-        <h2>{{ $course->instructor->name }}</h2>
-        <p style="color:var(--gold-light);font-weight:600;font-size:0.85rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
-        <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 180) }}</p>
+      <div class="rd-ob-card" data-card="1">
+        <div class="rd-ob-eyebrow">02 &middot; Importancia</div>
+        <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5 4 9 9 9s9-4 9-9V7l-9-5z"/></svg></div>
+        <h2>¿Por qué es importante?</h2>
+        <p>Cumple con las obligaciones normativas vigentes y aprende a identificar riesgos que impactan directamente tu labor profesional.</p>
       </div>
-    @endif
 
-    <div class="rd-ob-slide" data-slide="2">
-      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5 4 9 9 9s9-4 9-9V7l-9-5z"/></svg></div>
-      <h2>¿Por qué es importante?</h2>
-      <ul class="rd-ob-benefits">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Cumple con las obligaciones normativas de prevención LA/FT.</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Aprende a identificar señales de alerta y actuar correctamente.</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Obtén un certificado verificable que respalda tu capacitación.</li>
-      </ul>
-    </div>
+      @if($course->instructor)
+        <div class="rd-ob-card" data-card="2">
+          <div class="rd-ob-eyebrow">03 &middot; Tu capacitador</div>
+          <img src="{{ $course->instructor->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $course->instructor->name }}" class="rd-ob-instructor-photo">
+          <h2>{{ $course->instructor->name }}</h2>
+          <p style="color:var(--gold-light);font-weight:600;font-size:0.85rem;margin-bottom:0.6rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
+          <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 160) }}</p>
+        </div>
+      @endif
 
-    <div class="rd-ob-slide" data-slide="3">
-      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div>
-      <h2>¿Qué aprenderás?</h2>
-      <div class="rd-ob-modules">
-        @foreach($course->modules as $module)
-          <div><span class="n">{{ sprintf('%02d', $loop->iteration) }}</span> {{ $module->title }}</div>
-        @endforeach
+      <div class="rd-ob-card" data-card="3">
+        <div class="rd-ob-eyebrow">04 &middot; Contenido</div>
+        <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div>
+        <h2>¿Qué vas a aprender?</h2>
+        <div class="rd-ob-modules">
+          @foreach($course->modules as $module)
+            <div><span class="n">{{ sprintf('%02d', $loop->iteration) }}</span> {{ $module->title }}</div>
+          @endforeach
+        </div>
       </div>
-    </div>
 
-    <div class="rd-ob-dots" id="rdObDots"></div>
-    <div class="rd-ob-nav-row">
-      <button type="button" class="rd-ob-btn-ghost" id="rdObPrev" onclick="rdObPrev()">← Anterior</button>
-      <button type="button" class="rd-btn-primary" id="rdObNext" onclick="rdObNext()">Siguiente →</button>
+      <div class="rd-ob-card" data-card="4">
+        <div class="rd-ob-eyebrow">05 &middot; Ruta de aprendizaje</div>
+        <h2>Tu ruta de aprendizaje</h2>
+        <div class="rd-ob-route">
+          @foreach($course->modules as $module)
+            <span class="step">{{ sprintf('%02d', $loop->iteration) }}. {{ \Illuminate\Support\Str::limit($module->title, 22) }}</span>
+            <span class="arrow">→</span>
+          @endforeach
+          <span class="step">Evaluación</span>
+        </div>
+      </div>
+
+      <div class="rd-ob-card" data-card="5">
+        <div class="rd-ob-eyebrow">06 &middot; Todo listo</div>
+        <h2>Comienza tu aprendizaje</h2>
+        <div class="rd-ob-meta-row">
+          @if($course->duration_minutes)
+            <div><strong>{{ $course->lectiveHours() }}h</strong>duración</div>
+          @endif
+          <div><strong>{{ $course->modules->count() }}</strong>módulos</div>
+          <div><strong>{{ $course->modules->sum(fn($m) => $m->lessons->count()) }}</strong>contenidos</div>
+        </div>
+        <div class="rd-ob-cta">
+          <button type="button" class="rd-btn-primary" onclick="rdOnboardFinish()">Comenzar capacitación →</button>
+        </div>
+      </div>
+
     </div>
-    <button type="button" class="rd-ob-skip" onclick="rdOnboardFinish()">Saltar introducción</button>
+    <div class="rd-ob-progress" id="rdObProgress"></div>
   </div>
 </div>
 @endauth
@@ -374,10 +408,12 @@ function rdGoStep2() {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') rdCloseWelcome(); });
 
-let rdObCurrent = 0;
-let rdObSlides = [];
-let rdObDots = [];
+let rdObCards = [];
+let rdObSegs = [];
+let rdObIndex = 0;
 let rdObAutoTimer = null;
+const RD_OB_CARD_MS = 6500; // 5-8s por tarjeta
+const CARD_SECONDS = RD_OB_CARD_MS / 1000;
 
 (function rdOnboarding() {
   const overlay = document.getElementById('rdOnboard');
@@ -390,70 +426,93 @@ let rdObAutoTimer = null;
   // inscripción (a propósito, por pedido explícito), no solo una vez.
   if (!justJoined) return;
 
-  rdObSlides = Array.from(overlay.querySelectorAll('.rd-ob-slide'));
-  const dotsWrap = document.getElementById('rdObDots');
-  rdObSlides.forEach((_, i) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = 'rd-ob-dot';
-    dot.onclick = () => { rdObCurrent = i; rdObRender(); rdObStopAuto(); };
-    dotsWrap.appendChild(dot);
+  // Precargar/preparar todo el DOM del carrusel ANTES de mostrar nada,
+  // para que la primera tarjeta nunca aparezca vacía.
+  rdObCards = Array.from(document.querySelectorAll('#rdObTrack .rd-ob-card'));
+  const segWrap = document.getElementById('rdObProgress');
+  rdObCards.forEach((_, i) => {
+    const seg = document.createElement('span');
+    seg.className = 'rd-ob-seg';
+    seg.innerHTML = '<span class="fill"></span>';
+    segWrap.appendChild(seg);
   });
-  rdObDots = Array.from(dotsWrap.children);
+  rdObSegs = Array.from(segWrap.children);
+  rdObCards[0].classList.add('active');
 
   overlay.classList.add('active');
-  rdObRender();
-  rdObStartAuto();
 
-  overlay.addEventListener('mouseenter', rdObStopAuto);
-  overlay.addEventListener('touchstart', rdObStopAuto, { passive: true });
+  // Fase 1: bienvenida a pantalla completa (3.5s)
+  const greet = document.getElementById('rdObGreet');
+  requestAnimationFrame(() => greet.classList.add('show'));
+
+  setTimeout(() => {
+    greet.classList.add('fade-out');
+    setTimeout(() => {
+      greet.classList.remove('show');
+
+      // Fase 2: preparando contenido (~2.6s con barra de carga lenta)
+      const prepare = document.getElementById('rdObPrepare');
+      prepare.classList.add('show');
+      requestAnimationFrame(() => {
+        const fill = document.getElementById('rdObLoadFill');
+        if (fill) fill.style.width = '100%';
+      });
+
+      setTimeout(() => {
+        prepare.classList.add('fade-out');
+        setTimeout(() => {
+          prepare.classList.remove('show');
+
+          // Fase 3: carrusel automático de 6 tarjetas
+          document.getElementById('rdObCarousel').classList.add('show');
+          rdObRenderSegs();
+          rdObStartAuto();
+        }, 1100);
+      }, 2600);
+    }, 1100);
+  }, 3800);
 })();
 
-function rdObRender() {
-  rdObSlides.forEach((s, i) => s.classList.toggle('active', i === rdObCurrent));
-  rdObDots.forEach((d, i) => d.classList.toggle('on', i === rdObCurrent));
-  document.getElementById('rdObLabel').textContent = 'Introducción ' + (rdObCurrent + 1) + ' de ' + rdObSlides.length;
-  document.getElementById('rdObPrev').disabled = rdObCurrent === 0;
-  document.getElementById('rdObNext').textContent = rdObCurrent === rdObSlides.length - 1 ? 'Comenzar capacitación' : 'Siguiente →';
+function rdObRenderSegs() {
+  rdObSegs.forEach((s, i) => {
+    s.classList.toggle('done', i < rdObIndex);
+    const fill = s.querySelector('.fill');
+    fill.style.transition = 'none';
+    fill.style.width = i < rdObIndex ? '100%' : '0%';
+  });
 }
 
-function rdObTickTimer() {
-  const fill = document.getElementById('rdObTimerFill');
-  if (!fill) return;
+function rdObAnimateCurrentSeg() {
+  const seg = rdObSegs[rdObIndex];
+  if (!seg) return;
+  const fill = seg.querySelector('.fill');
   fill.style.transition = 'none';
   fill.style.width = '0%';
   requestAnimationFrame(() => {
-    fill.style.transition = 'width 5s linear';
+    fill.style.transition = 'width ' + CARD_SECONDS + 's linear';
     fill.style.width = '100%';
   });
 }
 
 function rdObStartAuto() {
-  rdObTickTimer();
+  rdObAnimateCurrentSeg();
   rdObAutoTimer = setInterval(() => {
-    if (rdObCurrent < rdObSlides.length - 1) { rdObCurrent++; rdObRender(); rdObTickTimer(); }
-    else rdObStopAuto();
-  }, 5000);
-}
-function rdObStopAuto() {
-  clearInterval(rdObAutoTimer);
-  const fill = document.getElementById('rdObTimerFill');
-  if (fill) fill.style.transition = 'none';
-}
-
-function rdObNext() {
-  rdObStopAuto();
-  if (rdObCurrent < rdObSlides.length - 1) { rdObCurrent++; rdObRender(); }
-  else rdOnboardFinish();
-}
-function rdObPrev() {
-  rdObStopAuto();
-  if (rdObCurrent > 0) { rdObCurrent--; rdObRender(); }
+    if (rdObIndex < rdObCards.length - 1) {
+      rdObCards[rdObIndex].classList.remove('active');
+      rdObCards[rdObIndex].classList.add('leaving');
+      rdObIndex++;
+      rdObCards[rdObIndex].classList.add('active');
+      setTimeout(() => rdObCards[rdObIndex - 1]?.classList.remove('leaving'), 950);
+      rdObRenderSegs();
+      rdObAnimateCurrentSeg();
+    } else {
+      clearInterval(rdObAutoTimer);
+    }
+  }, RD_OB_CARD_MS);
 }
 
 function rdOnboardFinish() {
-  localStorage.setItem('rd_onboard_seen_{{ $course->id }}', '1');
-  rdObStopAuto();
+  clearInterval(rdObAutoTimer);
   @php $firstLesson = $course->modules->flatMap->lessons->first(); @endphp
   @if($firstLesson)
     window.location.href = '{{ route('lessons.show', $firstLesson) }}';

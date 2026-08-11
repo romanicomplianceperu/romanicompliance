@@ -113,9 +113,13 @@
 .rdp-main { padding: 2.2rem 2.6rem 3.5rem; }
 .rdp-eyebrow { display: flex; align-items: center; gap: 8px; font-size: 0.72rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
 .rdp-eyebrow svg { width: 14px; height: 14px; }
-.rdp-main h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
-.rdp-main-sub { font-size: 0.88rem; color: var(--slate); margin-bottom: 1.5rem; }
-.rdp-video { position: relative; width: 100%; padding-top: 56.25%; background: var(--ink); border-radius: 12px; overflow: hidden; margin-bottom: 1.6rem; box-shadow: var(--shadow-m); }
+.rdp-main h1 { font-size: 1.7rem; margin-bottom: 0.6rem; }
+.rdp-main-sub { font-size: 0.9rem; color: var(--slate); margin-bottom: 2.2rem; }
+.rdp-viewer-toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 0.6rem; }
+.rdp-viewer-toolbar a, .rdp-viewer-toolbar button { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; color: var(--ink); background: var(--white); border: 1px solid var(--line); padding: 8px 14px; border-radius: 7px; }
+.rdp-viewer-toolbar a:hover, .rdp-viewer-toolbar button:hover { border-color: var(--gold); color: var(--gold); }
+.rdp-viewer-toolbar svg { width: 14px; height: 14px; }
+.rdp-video { position: relative; width: 100%; padding-top: 56.25%; background: var(--ink); border-radius: 12px; overflow: hidden; margin-bottom: 2rem; box-shadow: var(--shadow-m); }
 .rdp-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
 .rdp-pdf { width: 100%; height: 68vh; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 1.6rem; }
 .rdp-text { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.8rem; font-size: 0.92rem; line-height: 1.85; white-space: pre-line; margin-bottom: 1.6rem; box-shadow: var(--shadow-s); }
@@ -157,8 +161,25 @@
         {{ $course->title }}
       </div>
       <h1>{{ $lesson->title }}</h1>
-      @if($lesson->type === 'text')
-        <div class="rdp-main-sub">Lectura &middot; {{ $lesson->duration_minutes ? $lesson->duration_minutes.' min' : 'contenido teórico' }}</div>
+      <div class="rdp-main-sub">
+        @if($lesson->type === 'video') Video @elseif($lesson->type === 'pdf') Documento PDF @elseif($lesson->type === 'file') Archivo descargable @else Lectura @endif
+        @if($lesson->duration_minutes) &middot; {{ $lesson->duration_minutes }} min @endif
+      </div>
+
+      @if(in_array($lesson->type, ['pdf', 'file']) && $lesson->file_path)
+        <div class="rdp-viewer-toolbar">
+          <a href="{{ asset('storage/'.$lesson->file_path) }}" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11m0 0l4-4m-4 4l-4-4M5 19h14"/></svg>
+            Descargar
+          </a>
+        </div>
+      @elseif($lesson->type === 'text')
+        <div class="rdp-viewer-toolbar">
+          <button type="button" onclick="document.execCommand('hiliteColor', false, '#F5E6C8')" title="Resaltar selección">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M3 17l9-9 4 4-9 9H3v-4z"/></svg>
+            Resaltar
+          </button>
+        </div>
       @endif
 
       @if($lesson->type === 'video' && $lesson->embedUrl())
@@ -166,9 +187,12 @@
       @elseif($lesson->type === 'pdf' && $lesson->file_path)
         <iframe src="{{ asset('storage/'.$lesson->file_path) }}" class="rdp-pdf"></iframe>
       @elseif($lesson->type === 'file' && $lesson->file_path)
-        <a href="{{ asset('storage/'.$lesson->file_path) }}" target="_blank" class="rdp-nav-btn primary" style="display:inline-flex;margin-bottom:1.6rem;">Descargar archivo</a>
+        <div class="rdp-text" style="text-align:center;">
+          <p style="margin-bottom:1rem;">Vista previa no disponible para este tipo de archivo.</p>
+          <a href="{{ asset('storage/'.$lesson->file_path) }}" target="_blank" class="rdp-nav-btn primary" style="display:inline-flex;">Descargar archivo</a>
+        </div>
       @elseif($lesson->type === 'text')
-        <div class="rdp-text">{{ $lesson->content }}</div>
+        <div class="rdp-text" contenteditable="true" onfocus="this.dataset.editing=1" style="cursor:text;">{{ $lesson->content }}</div>
       @endif
 
       <div class="rdp-nav">
