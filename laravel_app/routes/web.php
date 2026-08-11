@@ -33,6 +33,7 @@ use App\Http\Controllers\Learning\CertificateController as LearningCertificateCo
 use App\Http\Controllers\Learning\CourseController as LearningCourseController;
 use App\Http\Controllers\Learning\ExamController as LearningExamController;
 use App\Http\Controllers\Learning\LessonController as LearningLessonController;
+use App\Http\Controllers\Learning\LessonNoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/lecciones/{lesson}', [LearningLessonController::class, 'show'])->name('lessons.show');
     Route::post('/lecciones/{lesson}/completar', [LearningLessonController::class, 'complete'])->name('lessons.complete');
+    Route::post('/lecciones/{lesson}/apuntes', [LessonNoteController::class, 'store'])->name('lessons.notes.store');
 
     Route::get('/cursos/{course:slug}/examen', [LearningExamController::class, 'show'])->name('exams.show');
     Route::post('/cursos/{course:slug}/examen/comenzar', [LearningExamController::class, 'start'])->name('exams.start');

@@ -73,22 +73,36 @@
 .rd-form-group input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; font-size: 0.9rem; }
 .rd-form-hint { font-size: 0.76rem; color: var(--slate-light); margin-top: 4px; }
 
-#rdOnboard { position: fixed; inset: 0; z-index: 500; background: var(--ink); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease; }
+#rdOnboard { position: fixed; inset: 0; z-index: 500; background: var(--ink); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease; padding: 1.5rem; }
 #rdOnboard.active { opacity: 1; visibility: visible; }
-.rd-ob-inner { max-width: 560px; width: 90%; text-align: center; padding: 2rem; }
-.rd-ob-logo { font-family: Georgia, 'Times New Roman', serif; font-size: 1.4rem; font-weight: bold; color: var(--white); letter-spacing: 2px; margin-bottom: 3rem; opacity: 0; animation: rdObFade 0.8s ease forwards; }
-.rd-ob-slide { display: none; }
-.rd-ob-slide.active { display: block; animation: rdObFade 0.7s ease; }
-.rd-ob-slide h2 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.1rem); color: var(--white); margin-bottom: 1rem; letter-spacing: -0.01em; }
-.rd-ob-slide p { font-size: 0.98rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 440px; margin: 0 auto; }
-.rd-ob-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(184,154,86,0.14); color: var(--gold-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.4rem; }
-.rd-ob-icon svg { width: 26px; height: 26px; }
-@keyframes rdObFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.rd-ob-dots { display: flex; gap: 7px; justify-content: center; margin-top: 2.4rem; }
-.rd-ob-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: background 0.3s, transform 0.3s; }
-.rd-ob-dot.on { background: var(--gold-light); transform: scale(1.3); }
-.rd-ob-actions { margin-top: 2.2rem; display: flex; gap: 12px; justify-content: center; align-items: center; }
-.rd-ob-skip { font-size: 0.78rem; color: rgba(255,255,255,0.35); background: none; border: none; cursor: pointer; }
+.rd-ob-card { max-width: 560px; width: 100%; background: var(--ink-90); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 2.6rem 2.4rem 2rem; box-shadow: 0 30px 80px rgba(0,0,0,0.4); }
+.rd-ob-progress-label { font-size: 0.68rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.4rem; text-align: center; }
+.rd-ob-slide { display: none; text-align: center; min-height: 260px; }
+.rd-ob-slide.active { display: block; animation: rdObFade 0.5s ease; }
+@keyframes rdObFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.rd-ob-icon { width: 54px; height: 54px; border-radius: 14px; background: rgba(184,154,86,0.14); color: var(--gold-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.3rem; }
+.rd-ob-icon svg { width: 27px; height: 27px; }
+.rd-ob-slide h2 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(1.3rem, 3.5vw, 1.7rem); color: var(--white); margin-bottom: 0.7rem; letter-spacing: -0.01em; }
+.rd-ob-slide p { font-size: 0.92rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 440px; margin: 0 auto 0.4rem; }
+.rd-ob-meta-row { display: flex; gap: 1.6rem; justify-content: center; margin-top: 1.2rem; }
+.rd-ob-meta-row div { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+.rd-ob-meta-row strong { display: block; color: var(--white); font-size: 1rem; }
+.rd-ob-instructor-photo { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(184,154,86,0.3); margin: 0 auto 1rem; display: block; }
+.rd-ob-modules { text-align: left; max-width: 360px; margin: 1rem auto 0; }
+.rd-ob-modules div { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; color: rgba(255,255,255,0.75); }
+.rd-ob-modules span.n { width: 24px; height: 24px; border-radius: 6px; background: rgba(184,154,86,0.14); color: var(--gold-light); font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rd-ob-benefits { text-align: left; max-width: 380px; margin: 1.1rem auto 0; list-style: none; }
+.rd-ob-benefits li { display: flex; align-items: start; gap: 9px; font-size: 0.86rem; color: rgba(255,255,255,0.7); margin-bottom: 10px; line-height: 1.5; }
+.rd-ob-benefits li svg { width: 15px; height: 15px; flex-shrink: 0; color: #6FCF97; margin-top: 3px; }
+
+.rd-ob-dots { display: flex; gap: 7px; justify-content: center; margin-top: 1.8rem; margin-bottom: 1.4rem; }
+.rd-ob-dot { width: 22px; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.15); transition: background 0.3s; cursor: pointer; border: none; padding: 0; }
+.rd-ob-dot.on { background: var(--gold-light); }
+.rd-ob-nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rd-ob-btn-ghost { font-size: 0.82rem; color: rgba(255,255,255,0.55); background: none; border: 1px solid rgba(255,255,255,0.15); padding: 10px 18px; border-radius: 8px; cursor: pointer; }
+.rd-ob-btn-ghost:hover { border-color: rgba(255,255,255,0.35); color: var(--white); }
+.rd-ob-btn-ghost:disabled { opacity: 0.3; cursor: not-allowed; }
+.rd-ob-skip { font-size: 0.76rem; color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; text-align: center; display: block; margin: 1.2rem auto 0; }
 @endsection
 
 @section('content')
@@ -236,53 +250,56 @@
 @section('scripts')
 @auth
 <div id="rdOnboard">
-  <div class="rd-ob-inner">
-    <div class="rd-ob-logo">ROMANI COMPLIANCE</div>
+  <div class="rd-ob-card">
+    <div class="rd-ob-progress-label" id="rdObLabel">Introducción 1 de 4</div>
 
-    <div class="rd-ob-slide" data-slide="0">
-      <h2>Hola, {{ explode(' ', auth()->user()->name)[0] }}</h2>
+    <div class="rd-ob-slide active" data-slide="0">
+      <h2>Hola, {{ explode(' ', auth()->user()->name)[0] }} — bienvenido a {{ $course->title }}</h2>
+      <p>{{ $company->name }}</p>
+      <div class="rd-ob-meta-row">
+        <div><strong>{{ $course->modules->count() }}</strong>módulos</div>
+        @if($course->duration_minutes)
+          <div><strong>{{ $course->lectiveHours() }}h</strong>duración</div>
+        @endif
+        <div><strong>Sí</strong>certificado</div>
+      </div>
     </div>
-    <div class="rd-ob-slide" data-slide="1">
-      <h2>Gracias por confiar en Romani Compliance</h2>
-    </div>
+
+    @if($course->instructor)
+      <div class="rd-ob-slide" data-slide="1">
+        <img src="{{ $course->instructor->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $course->instructor->name }}" class="rd-ob-instructor-photo">
+        <h2>{{ $course->instructor->name }}</h2>
+        <p style="color:var(--gold-light);font-weight:600;font-size:0.85rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
+        <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 180) }}</p>
+      </div>
+    @endif
+
     <div class="rd-ob-slide" data-slide="2">
-      <h2>Estás a punto de comenzar una nueva experiencia de aprendizaje</h2>
-      <p>Bienvenido a la capacitación {{ \Illuminate\Support\Str::upper($company->name) }}.</p>
+      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5 4 9 9 9s9-4 9-9V7l-9-5z"/></svg></div>
+      <h2>¿Por qué es importante?</h2>
+      <ul class="rd-ob-benefits">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Cumple con las obligaciones normativas de prevención LA/FT.</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Aprende a identificar señales de alerta y actuar correctamente.</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Obtén un certificado verificable que respalda tu capacitación.</li>
+      </ul>
     </div>
 
     <div class="rd-ob-slide" data-slide="3">
       <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div>
-      <h2>Explora los módulos</h2>
-      <p>Encontrarás el contenido organizado por módulos y lecciones. Puedes consultar tu progreso en todo momento desde la barra lateral.</p>
-    </div>
-    <div class="rd-ob-slide" data-slide="4">
-      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-      <h2>Avanza a tu ritmo</h2>
-      <p>Usa los botones Anterior y Siguiente para moverte entre los contenidos y completa progresivamente cada módulo.</p>
-    </div>
-    <div class="rd-ob-slide" data-slide="5">
-      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M11 11l-7 7"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h11"/></svg></div>
-      <h2>Comprueba lo aprendido</h2>
-      <p>Al finalizar el contenido podrás realizar una autoevaluación y conocer tu resultado de inmediato.</p>
-    </div>
-    <div class="rd-ob-slide" data-slide="6">
-      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 21l5-2.5L17 21l-1.5-8.5"/></svg></div>
-      <h2>Obtén tu certificado</h2>
-      <p>Cuando completes los requisitos de la capacitación, podrás desbloquear y generar tu certificado, verificable por QR.</p>
-    </div>
-    <div class="rd-ob-slide" data-slide="7">
-      <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
-      <h2>¿Tienes una pregunta?</h2>
-      <p>Podrás enviar tus dudas directamente desde tu panel y consultar material adicional cuando esté disponible.</p>
-      <div class="rd-ob-actions">
-        <button type="button" class="rd-btn-primary" onclick="rdOnboardFinish()">Comenzar capacitación</button>
+      <h2>¿Qué aprenderás?</h2>
+      <div class="rd-ob-modules">
+        @foreach($course->modules as $module)
+          <div><span class="n">{{ sprintf('%02d', $loop->iteration) }}</span> {{ $module->title }}</div>
+        @endforeach
       </div>
     </div>
 
     <div class="rd-ob-dots" id="rdObDots"></div>
-    <div class="rd-ob-actions" id="rdObSkipRow">
-      <button type="button" class="rd-ob-skip" onclick="rdOnboardFinish()">Saltar introducción</button>
+    <div class="rd-ob-nav-row">
+      <button type="button" class="rd-ob-btn-ghost" id="rdObPrev" onclick="rdObPrev()">← Anterior</button>
+      <button type="button" class="rd-btn-primary" id="rdObNext" onclick="rdObNext()">Siguiente →</button>
     </div>
+    <button type="button" class="rd-ob-skip" onclick="rdOnboardFinish()">Saltar introducción</button>
   </div>
 </div>
 @endauth
@@ -346,6 +363,11 @@ function rdGoStep2() {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') rdCloseWelcome(); });
 
+let rdObCurrent = 0;
+let rdObSlides = [];
+let rdObDots = [];
+let rdObAutoTimer = null;
+
 (function rdOnboarding() {
   const overlay = document.getElementById('rdOnboard');
   if (!overlay) return;
@@ -356,56 +378,63 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') rdCloseWelco
 
   if (!justJoined || localStorage.getItem(courseKey)) return;
 
-  const slides = Array.from(overlay.querySelectorAll('.rd-ob-slide'));
+  rdObSlides = Array.from(overlay.querySelectorAll('.rd-ob-slide'));
   const dotsWrap = document.getElementById('rdObDots');
-  const skipRow = document.getElementById('rdObSkipRow');
-  const AUTO_ADVANCE_UNTIL = 3; // slides 0,1,2 auto-advance; from 3 onward the dots/skip control shows
-  let current = 0;
-
-  slides.forEach((_, i) => {
-    const dot = document.createElement('span');
+  rdObSlides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
     dot.className = 'rd-ob-dot';
-    dot.dataset.i = i;
+    dot.onclick = () => { rdObCurrent = i; rdObRender(); rdObStopAuto(); };
     dotsWrap.appendChild(dot);
   });
-  const dots = Array.from(dotsWrap.children);
-
-  function render() {
-    slides.forEach((s, i) => s.classList.toggle('active', i === current));
-    dots.forEach((d, i) => d.classList.toggle('on', i === current));
-    dotsWrap.style.display = current >= AUTO_ADVANCE_UNTIL ? 'flex' : 'none';
-    skipRow.style.display = (current >= AUTO_ADVANCE_UNTIL && current < slides.length - 1) ? 'flex' : (current < AUTO_ADVANCE_UNTIL ? 'none' : 'none');
-  }
+  rdObDots = Array.from(dotsWrap.children);
 
   overlay.classList.add('active');
-  render();
+  rdObRender();
+  rdObStartAuto();
 
-  function advance() {
-    if (current < AUTO_ADVANCE_UNTIL) {
-      current++;
-      render();
-      if (current < AUTO_ADVANCE_UNTIL) setTimeout(advance, 1700);
-    }
-  }
-  setTimeout(advance, 1400);
-
-  window.rdOnboardNext = function () {
-    if (current < slides.length - 1) { current++; render(); }
-  };
-
-  overlay.addEventListener('click', (e) => {
-    if (current >= AUTO_ADVANCE_UNTIL && current < slides.length - 1 && !e.target.closest('button')) {
-      window.rdOnboardNext();
-    }
-  });
+  overlay.addEventListener('mouseenter', rdObStopAuto);
+  overlay.addEventListener('touchstart', rdObStopAuto, { passive: true });
 })();
+
+function rdObRender() {
+  rdObSlides.forEach((s, i) => s.classList.toggle('active', i === rdObCurrent));
+  rdObDots.forEach((d, i) => d.classList.toggle('on', i === rdObCurrent));
+  document.getElementById('rdObLabel').textContent = 'Introducción ' + (rdObCurrent + 1) + ' de ' + rdObSlides.length;
+  document.getElementById('rdObPrev').disabled = rdObCurrent === 0;
+  document.getElementById('rdObNext').textContent = rdObCurrent === rdObSlides.length - 1 ? 'Comenzar capacitación' : 'Siguiente →';
+}
+
+function rdObStartAuto() {
+  rdObAutoTimer = setInterval(() => {
+    if (rdObCurrent < rdObSlides.length - 1) { rdObCurrent++; rdObRender(); }
+    else rdObStopAuto();
+  }, 5000);
+}
+function rdObStopAuto() { clearInterval(rdObAutoTimer); }
+
+function rdObNext() {
+  rdObStopAuto();
+  if (rdObCurrent < rdObSlides.length - 1) { rdObCurrent++; rdObRender(); }
+  else rdOnboardFinish();
+}
+function rdObPrev() {
+  rdObStopAuto();
+  if (rdObCurrent > 0) { rdObCurrent--; rdObRender(); }
+}
 
 function rdOnboardFinish() {
   localStorage.setItem('rd_onboard_seen_{{ $course->id }}', '1');
-  document.getElementById('rdOnboard')?.classList.remove('active');
-  const url = new URL(window.location.href);
-  url.searchParams.delete('bienvenida');
-  window.history.replaceState({}, '', url);
+  rdObStopAuto();
+  @php $firstLesson = $course->modules->flatMap->lessons->first(); @endphp
+  @if($firstLesson)
+    window.location.href = '{{ route('lessons.show', $firstLesson) }}';
+  @else
+    document.getElementById('rdOnboard')?.classList.remove('active');
+    const url = new URL(window.location.href);
+    url.searchParams.delete('bienvenida');
+    window.history.replaceState({}, '', url);
+  @endif
 }
 </script>
 @endsection

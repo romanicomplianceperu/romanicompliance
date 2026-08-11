@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Learning;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lesson;
+use App\Models\LessonNote;
 use App\Models\LessonProgress;
 use Illuminate\Http\Request;
 
@@ -27,6 +28,23 @@ class LessonController extends Controller
             ->whereIn('lesson_id', $flatLessons->pluck('id'))
             ->pluck('lesson_id');
 
+        // Bloqueo secuencial: solo para cursos ligados a un Proyecto (la
+        // experiencia especial tipo "Red Digital"). Los cursos normales
+        // conservan la navegación libre que ya tenían sus alumnos.
+        $lockedLessonIds = collect();
+        if ($course->project && ! $user->isAdmin()) {
+            $blocked = false;
+            foreach ($flatLessons as $l) {
+                if ($blocked) {
+                    $lockedLessonIds->push($l->id);
+                } elseif (! $completedLessonIds->contains($l->id)) {
+                    $blocked = true;
+                }
+            }
+        }
+
+        abort_if($lockedLessonIds->contains($lesson->id), 403, 'Completa las lecciones anteriores para desbloquear esta.');
+
         $isCompleted = $completedLessonIds->contains($lesson->id);
 
         $totalLessons = $flatLessons->count();
@@ -35,10 +53,14 @@ class LessonController extends Controller
         $certificate = $course->certificates()->where('user_id', $user->id)->whereNull('revoked_at')->first();
         $pendingCertificate = ! $certificate && $course->hasPassedExamFor($user);
 
+        $myNotes = LessonNote::where('user_id', $user->id)
+            ->whereIn('lesson_id', $flatLessons->pluck('id'))
+            ->pluck('content', 'lesson_id');
+
         $view = $course->project ? 'courses.lesson-project' : 'courses.lesson';
 
         return view($view, compact(
-            'course', 'lesson', 'previousLesson', 'nextLesson', 'completedLessonIds', 'isCompleted', 'progressPercent', 'certificate', 'pendingCertificate'
+            'course', 'lesson', 'previousLesson', 'nextLesson', 'completedLessonIds', 'lockedLessonIds', 'isCompleted', 'progressPercent', 'certificate', 'pendingCertificate', 'myNotes'
         ));
     }
 
