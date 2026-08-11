@@ -94,17 +94,23 @@
 .rd-ob-master-fill { height: 100%; width: 0%; background: var(--gold-light); }
 
 /* Carrusel automático — tarjetas claras, tipo la referencia enviada */
-.rd-ob-carousel { position: relative; width: 100%; max-width: 620px; min-height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity 1.1s cubic-bezier(0.16,0.84,0.3,1), transform 1.1s cubic-bezier(0.16,0.84,0.3,1); margin-top: 5rem; }
-.rd-ob-carousel.show { opacity: 1; visibility: visible; transform: translateY(0); }
-.rd-ob-track { position: relative; width: 100%; flex: 1; min-height: 340px; }
-.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.4rem 2.2rem; opacity: 0; visibility: hidden; transform: translateY(14px) scale(0.98); filter: blur(4px); transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1), filter 0.7s ease; background: var(--white); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); overflow-y: auto; }
-.rd-ob-card.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); filter: blur(0); }
-.rd-ob-card.leaving { opacity: 0; transform: translateY(-10px) scale(0.98); filter: blur(4px); }
+.rd-ob-carousel { position: relative; width: 100%; max-width: 560px; min-height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.9s ease; margin-top: 5rem; }
+.rd-ob-carousel.show { opacity: 1; visibility: visible; }
+.rd-ob-track { position: relative; width: 100%; flex: 1; min-height: 300px; }
+.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.4rem 2.2rem; opacity: 0; visibility: hidden; filter: blur(6px); transition: opacity 0.6s ease, filter 0.6s ease; background: var(--white); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); overflow-y: auto; }
+.rd-ob-card.active { opacity: 1; visibility: visible; filter: blur(0); }
+.rd-ob-card.leaving { opacity: 0; filter: blur(6px); }
 .rd-ob-eyebrow { font-size: 0.66rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.9rem; }
 .rd-ob-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--gold-pale); color: var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
 .rd-ob-icon svg { width: 26px; height: 26px; }
-.rd-ob-card h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.4rem, 3.6vw, 1.9rem); color: var(--ink); margin-bottom: 0.8rem; letter-spacing: 0; min-height: 1.3em; }
-.rd-ob-card p { font-size: 0.9rem; color: var(--slate); line-height: 1.7; max-width: 440px; margin: 0 auto 0.4rem; }
+.rd-ob-card h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.3rem, 3.4vw, 1.7rem); color: var(--ink); margin-bottom: 0.7rem; letter-spacing: 0; min-height: 1.3em; }
+.rd-ob-card p { font-size: 0.88rem; color: var(--slate); line-height: 1.65; max-width: 400px; margin: 0 auto; }
+.rd-ob-final-btn { font-size: 1rem !important; padding: 18px 40px !important; }
+
+.rd-ob-loading { display: flex; flex-direction: column; align-items: center; gap: 14px; opacity: 1; transition: opacity 0.5s ease; }
+.rd-ob-loading.hide { opacity: 0; pointer-events: none; }
+.rd-ob-spinner { width: 26px; height: 26px; border: 2.5px solid rgba(184,154,86,0.25); border-top-color: var(--gold-light); border-radius: 50%; animation: rd-spin 0.8s linear infinite; }
+.rd-ob-loading span { font-size: 0.85rem; color: rgba(255,255,255,0.55); letter-spacing: 0.02em; }
 .rd-ob-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
 .rd-ob-tags span { font-size: 0.7rem; font-weight: 700; color: var(--gold); background: var(--gold-pale); border: 1px solid rgba(139,115,64,0.25); padding: 5px 11px; border-radius: 20px; letter-spacing: 0.04em; }
 .rd-ob-meta-row { display: flex; gap: 1.6rem; justify-content: center; margin-top: 1.2rem; }
@@ -283,6 +289,11 @@
 
   <button type="button" class="rd-ob-skip" onclick="rdOnboardFinish()">Omitir →</button>
 
+  <div class="rd-ob-loading" id="rdObLoading">
+    <div class="rd-ob-spinner"></div>
+    <span>Cargando tu experiencia...</span>
+  </div>
+
   <div class="rd-ob-name" id="rdObName">
     <h1 id="rdObNameText"></h1>
   </div>
@@ -296,62 +307,33 @@
       <div class="rd-ob-card" data-card="0">
         <div class="rd-ob-eyebrow">El propósito</div>
         <h2>Comprender es prevenir.</h2>
-        <p>El sistema de prevención LA/FT no se limita a cumplir una obligación normativa. Permite identificar riesgos, reconocer señales de alerta y actuar antes de que una operación pueda convertirse en un problema.</p>
+        <p>Identifica riesgos, reconoce señales de alerta y aprende a actuar a tiempo.</p>
         <div class="rd-ob-tags"><span>PREVENCIÓN</span><span>DETECCIÓN</span><span>RESPUESTA</span></div>
       </div>
 
-      <div class="rd-ob-card" data-card="1">
-        <div class="rd-ob-eyebrow">Por qué importa</div>
-        <h2>El riesgo no siempre se ve a simple vista.</h2>
-        <p>Una operación aparentemente normal puede esconder señales que requieren análisis. Esta capacitación te ayudará a reconocer los principales riesgos de LA/FT y los elementos que deben activar una revisión.</p>
-        <div class="rd-ob-tags"><span>IDENTIFICAR</span><span>→</span><span>ANALIZAR</span><span>→</span><span>REPORTAR</span></div>
-      </div>
-
       @if($course->instructor)
-        <div class="rd-ob-card" data-card="2" data-duration="long">
+        <div class="rd-ob-card" data-card="1" data-duration="long">
           <div class="rd-ob-eyebrow">Aprende de un especialista</div>
           <img src="{{ $course->instructor->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $course->instructor->name }}" class="rd-ob-instructor-photo">
           <h2>{{ $course->instructor->name }}</h2>
-          <p style="color:var(--gold-light);font-weight:600;font-size:0.85rem;margin-bottom:0.6rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
-          <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 170) }}</p>
+          <p style="color:var(--gold);font-weight:600;font-size:0.85rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
         </div>
       @endif
 
-      <div class="rd-ob-card" data-card="3">
+      <div class="rd-ob-card" data-card="2">
         <div class="rd-ob-eyebrow">Certificación</div>
-        <h2>Tu aprendizaje también deja una constancia.</h2>
-        <p>Al completar satisfactoriamente la capacitación podrás obtener una certificación digital verificable mediante código QR.</p>
+        <h2>Tu aprendizaje deja una constancia.</h2>
         <div class="rd-ob-cert-badge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="6" y="6" width="4" height="4"/><rect x="14" y="6" width="4" height="4"/><rect x="6" y="14" width="4" height="4"/><path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg>
           <div>CERTIFICACIÓN DIGITAL<br>VERIFICABLE POR QR</div>
         </div>
       </div>
 
-      <div class="rd-ob-card" data-card="4">
-        <div class="rd-ob-eyebrow">Beneficios</div>
-        <h2>Más que completar un curso.</h2>
-        <ul class="rd-ob-benefits">
-          <li><span class="n">01</span> Comprender el marco normativo aplicable.</li>
-          <li><span class="n">02</span> Identificar señales de alerta.</li>
-          <li><span class="n">03</span> Comprender obligaciones y responsabilidades.</li>
-          <li><span class="n">04</span> Aplicar los conocimientos a casos prácticos.</li>
-          <li><span class="n">05</span> Contar con una constancia verificable.</li>
-        </ul>
-      </div>
-
-      <div class="rd-ob-card" data-card="5">
-        <div class="rd-ob-eyebrow">Tu ruta</div>
-        <h2>Una ruta diseñada para avanzar paso a paso.</h2>
-        <div class="rd-ob-route">
-          @foreach($course->modules as $module)
-            <div class="step"><span class="n">MÓDULO {{ sprintf('%02d', $loop->iteration) }}</span>{{ $module->title }}</div>
-            <div class="down">↓</div>
-          @endforeach
-          <div class="step cert"><span class="n">FINAL</span>Certificación</div>
-        </div>
-        <p style="margin-top:1rem;">Todo listo. Comienza tu capacitación.</p>
+      <div class="rd-ob-card" data-card="3">
+        <h2>Todo listo.</h2>
+        <p>{{ $course->modules->count() }} módulos &middot; {{ $course->modules->sum(fn($m) => $m->lessons->count()) }} contenidos @if($course->duration_minutes) &middot; {{ $course->lectiveHours() }}h @endif</p>
         <div class="rd-ob-cta">
-          <button type="button" class="rd-btn-primary" onclick="rdOnboardFinish()">Comenzar capacitación →</button>
+          <button type="button" class="rd-btn-primary rd-ob-final-btn" onclick="rdOnboardFinish()">Comenzar capacitación →</button>
         </div>
       </div>
 
@@ -425,7 +407,7 @@ let rdObAutoTimer = null;
 let rdObDurations = [];
 let rdObTotalMs = 0;
 let rdObMasterRaf = null;
-const RD_OB_NAME = "Bienvenido, {{ addslashes(explode(' ', auth()->user()?->name ?? '')[0]) }}.";
+const RD_OB_NAME = "{{ auth()->user()?->greetingWord() ?? 'Bienvenido' }}, {{ addslashes(explode(' ', auth()->user()?->name ?? '')[0]) }}.";
 const RD_OB_NORMAL_MS = 4200; // un poco más rápido
 const RD_OB_INSTRUCTOR_MS = 6200;
 const RD_OB_NAME_DOCK_DELAY = 1500;
@@ -469,17 +451,25 @@ function rdTypewrite(el, text, speed, onDone) {
   overlay.classList.add('active');
   rdObStartMasterProgress();
 
-  // El saludo se escribe con máquina de escribir (lento), luego el
-  // nombre se desliza suavemente hacia arriba MIENTRAS aparecen las
-  // tarjetas (movimiento sincronizado, no secuencial).
+  // Indicador breve de carga para que el usuario sepa que algo está
+  // pasando, antes de que empiece a escribirse el saludo.
+  const loadingEl = document.getElementById('rdObLoading');
   const nameEl = document.getElementById('rdObName');
-  rdTypewrite(document.getElementById('rdObNameText'), RD_OB_NAME, 55, () => {
-    setTimeout(() => {
-      nameEl.classList.add('docked');
-      document.getElementById('rdObCarousel').classList.add('show');
-      rdObStartAuto();
-    }, 550);
-  });
+
+  setTimeout(() => {
+    loadingEl.classList.add('hide');
+
+    // El saludo se escribe con máquina de escribir (lento), luego el
+    // nombre se desliza suavemente hacia arriba MIENTRAS aparecen las
+    // tarjetas (movimiento sincronizado, no secuencial).
+    rdTypewrite(document.getElementById('rdObNameText'), RD_OB_NAME, 55, () => {
+      setTimeout(() => {
+        nameEl.classList.add('docked');
+        document.getElementById('rdObCarousel').classList.add('show');
+        rdObStartAuto();
+      }, 550);
+    });
+  }, 700);
 })();
 
 function rdObStartMasterProgress() {

@@ -104,4 +104,30 @@ class User extends Authenticatable
     {
         return (bool) $this->is_guest;
     }
+
+    /**
+     * Heurística simple de género por nombre de pila, solo para elegir
+     * "Bienvenido"/"Bienvenida" en saludos. No es exacta; ante la duda
+     * usa la forma masculina como neutra.
+     */
+    public function greetingWord(): string
+    {
+        $first = \Illuminate\Support\Str::of(explode(' ', trim($this->name))[0] ?? '')->lower()->ascii()->toString();
+
+        $female = ['rosario', 'laura', 'maria', 'ana', 'carmen', 'lucia', 'sofia', 'valentina', 'camila',
+            'daniela', 'gabriela', 'alejandra', 'andrea', 'patricia', 'claudia', 'monica', 'sandra',
+            'karen', 'diana', 'paola', 'fiorella', 'milagros', 'jazmin', 'katherine', 'melissa', 'carla',
+            'natalia', 'veronica', 'silvia', 'teresa', 'rosa', 'elena', 'julia', 'kyra', 'alejandra'];
+        $maleEndingInA = ['joshua', 'noa', 'luca', 'matias', 'elias', 'jonas', 'tobias'];
+
+        if (in_array($first, $female, true)) {
+            return 'Bienvenida';
+        }
+
+        if (str_ends_with($first, 'a') && ! in_array($first, $maleEndingInA, true)) {
+            return 'Bienvenida';
+        }
+
+        return 'Bienvenido';
+    }
 }
