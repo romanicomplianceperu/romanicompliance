@@ -1,7 +1,22 @@
 @extends('layouts.app')
 
 @section('title', $course->title.' — Romani Compliance')
-@php $company = $course->project->company; @endphp
+@php
+  $company = $course->project->company;
+
+  $rdGreetingWord = 'Bienvenido';
+  if (auth()->check()) {
+      $rdFirstName = mb_strtolower(trim(explode(' ', trim(auth()->user()->name))[0] ?? ''));
+      $rdFemaleNames = ['rosario', 'laura', 'maria', 'ana', 'carmen', 'lucia', 'sofia', 'valentina', 'camila',
+          'daniela', 'gabriela', 'alejandra', 'andrea', 'patricia', 'claudia', 'monica', 'sandra',
+          'karen', 'diana', 'paola', 'fiorella', 'milagros', 'jazmin', 'katherine', 'melissa', 'carla',
+          'natalia', 'veronica', 'silvia', 'teresa', 'rosa', 'elena', 'julia', 'kyra'];
+      $rdMaleEndingA = ['joshua', 'noa', 'luca', 'matias', 'elias', 'jonas', 'tobias'];
+      if (in_array($rdFirstName, $rdFemaleNames, true) || (str_ends_with($rdFirstName, 'a') && ! in_array($rdFirstName, $rdMaleEndingA, true))) {
+          $rdGreetingWord = 'Bienvenida';
+      }
+  }
+@endphp
 
 @section('styles')
 @font-face { font-display: swap; }
@@ -86,6 +101,9 @@
 .rd-ob-name { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); text-align: center; transition: top 1.1s cubic-bezier(0.16,0.84,0.3,1), transform 1.1s cubic-bezier(0.16,0.84,0.3,1); z-index: 2; }
 .rd-ob-name.docked { top: 2.6rem; transform: translate(-50%, 0) scale(0.4); }
 .rd-ob-name h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 6vw, 3.4rem); color: var(--white); letter-spacing: 0.01em; white-space: nowrap; min-height: 1.2em; }
+.rd-ob-name.docked .rd-ob-subtext { opacity: 0 !important; }
+.rd-ob-subtext { margin-top: 1rem; font-size: 0.92rem; color: rgba(255,255,255,0.45); opacity: 0; transition: opacity 0.7s ease; min-height: 1.4em; }
+.rd-ob-subtext.show { opacity: 1; }
 .rd-ob-cursor { display: inline-block; width: 2px; background: var(--gold-light); margin-left: 2px; animation: rdObBlink 0.9s steps(1) infinite; }
 @keyframes rdObBlink { 50% { opacity: 0; } }
 
@@ -296,6 +314,7 @@
 
   <div class="rd-ob-name" id="rdObName">
     <h1 id="rdObNameText"></h1>
+    <div class="rd-ob-subtext" id="rdObSubtext"></div>
   </div>
 
   <div class="rd-ob-master-track"><div class="rd-ob-master-fill" id="rdObMasterFill"></div></div>
@@ -307,8 +326,11 @@
       <div class="rd-ob-card" data-card="0">
         <div class="rd-ob-eyebrow">El propósito</div>
         <h2>Comprender es prevenir.</h2>
-        <p>Identifica riesgos, reconoce señales de alerta y aprende a actuar a tiempo.</p>
-        <div class="rd-ob-tags"><span>PREVENCIÓN</span><span>DETECCIÓN</span><span>RESPUESTA</span></div>
+        <p>El sistema de prevención LA/FT te permite identificar riesgos, reconocer señales de alerta y actuar antes de que una operación se convierta en un problema.</p>
+        <ul class="rd-ob-benefits" style="margin-top:0.9rem;">
+          <li><span class="n">01</span> Comprenderás el marco normativo aplicable.</li>
+          <li><span class="n">02</span> Reconocerás señales de alerta en la práctica.</li>
+        </ul>
       </div>
 
       @if($course->instructor)
@@ -316,7 +338,8 @@
           <div class="rd-ob-eyebrow">Aprende de un especialista</div>
           <img src="{{ $course->instructor->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $course->instructor->name }}" class="rd-ob-instructor-photo">
           <h2>{{ $course->instructor->name }}</h2>
-          <p style="color:var(--gold);font-weight:600;font-size:0.85rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
+          <p style="color:var(--gold);font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
+          <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 150) }}</p>
         </div>
       @endif
 
@@ -407,10 +430,10 @@ let rdObAutoTimer = null;
 let rdObDurations = [];
 let rdObTotalMs = 0;
 let rdObMasterRaf = null;
-const RD_OB_NAME = "{{ auth()->user()?->greetingWord() ?? 'Bienvenido' }}, {{ addslashes(explode(' ', auth()->user()?->name ?? '')[0]) }}.";
+const RD_OB_NAME = "{{ $rdGreetingWord }}, {{ addslashes(explode(' ', auth()->user()?->name ?? '')[0]) }}.";
 const RD_OB_NORMAL_MS = 4200; // un poco más rápido
 const RD_OB_INSTRUCTOR_MS = 6200;
-const RD_OB_NAME_DOCK_DELAY = 1500;
+const RD_OB_NAME_DOCK_DELAY = 5500; // escritura del saludo + 2 frases de transición
 
 function rdTypewrite(el, text, speed, onDone) {
   el.textContent = '';
@@ -459,15 +482,27 @@ function rdTypewrite(el, text, speed, onDone) {
   setTimeout(() => {
     loadingEl.classList.add('hide');
 
-    // El saludo se escribe con máquina de escribir (lento), luego el
-    // nombre se desliza suavemente hacia arriba MIENTRAS aparecen las
-    // tarjetas (movimiento sincronizado, no secuencial).
+    // El saludo se escribe con máquina de escribir (lento); después
+    // aparecen dos frases breves de transición, y luego el nombre sube
+    // y queda fijo MIENTRAS aparecen las tarjetas (sincronizado).
+    const subtext = document.getElementById('rdObSubtext');
     rdTypewrite(document.getElementById('rdObNameText'), RD_OB_NAME, 55, () => {
+      setTimeout(() => {
+        subtext.textContent = 'Gracias por confiar en Romani Compliance.';
+        subtext.classList.add('show');
+      }, 300);
+      setTimeout(() => {
+        subtext.classList.remove('show');
+        setTimeout(() => {
+          subtext.textContent = 'Estamos preparando el contenido para ti.';
+          subtext.classList.add('show');
+        }, 400);
+      }, 1900);
       setTimeout(() => {
         nameEl.classList.add('docked');
         document.getElementById('rdObCarousel').classList.add('show');
         rdObStartAuto();
-      }, 550);
+      }, 3800);
     });
   }, 700);
 })();
