@@ -75,49 +75,55 @@
 
 #rdOnboard { position: fixed; inset: 0; z-index: 500; background: radial-gradient(120% 100% at 50% 0%, #16283F 0%, #0B1829 60%); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.6s ease, visibility 0.6s ease; padding: 1.5rem; overflow: hidden; }
 #rdOnboard.active { opacity: 1; visibility: visible; }
-.rd-ob-logo { position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); z-index: 2; }
-.rd-ob-logo img { height: 24px; filter: brightness(0) invert(1); opacity: 0.6; }
+#rdOnboard.leaving { opacity: 0; }
+.rd-ob-logo { position: absolute; top: 1.6rem; left: 50%; transform: translateX(-50%); z-index: 2; }
+.rd-ob-logo img { height: 22px; filter: brightness(0) invert(1); opacity: 0.55; }
+.rd-ob-skip { position: absolute; top: 1.7rem; right: 1.8rem; z-index: 3; font-size: 0.72rem; color: rgba(255,255,255,0.32); background: none; border: none; cursor: pointer; letter-spacing: 0.02em; }
+.rd-ob-skip:hover { color: rgba(255,255,255,0.6); }
 
-/* Fase 1 y 2: bienvenida y preparación, pantalla completa */
-.rd-ob-phase { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.5rem; opacity: 0; visibility: hidden; transition: opacity 1.1s ease, filter 1.1s ease, transform 1.1s ease; filter: blur(0); }
-.rd-ob-phase.show { opacity: 1; visibility: visible; }
-.rd-ob-phase.fade-out { opacity: 0; filter: blur(6px); transform: scale(1.02); }
-.rd-ob-greet h1 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(2rem, 6vw, 3.2rem); color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.8rem; }
-.rd-ob-greet p { font-size: 1rem; color: rgba(255,255,255,0.45); letter-spacing: 0.04em; }
-.rd-ob-prepare h2 { font-family: 'Inter', sans-serif; font-weight: 700; font-size: clamp(1.2rem, 3.5vw, 1.6rem); color: var(--white); max-width: 480px; margin-bottom: 1.6rem; }
-.rd-ob-loadbar { width: 220px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-.rd-ob-loadbar .fill { height: 100%; width: 0%; background: var(--gold-light); border-radius: 3px; transition: width 2.4s cubic-bezier(0.22,0.61,0.36,1); }
+/* Nombre: hero centrado -> se ancla arriba y permanece fijo */
+.rd-ob-name { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); text-align: center; transition: top 0.9s cubic-bezier(0.22,0.61,0.36,1), transform 0.9s cubic-bezier(0.22,0.61,0.36,1); z-index: 2; }
+.rd-ob-name.docked { top: 3.4rem; transform: translate(-50%, 0) scale(0.42); }
+.rd-ob-name h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 6vw, 3.4rem); color: var(--white); letter-spacing: 0.01em; white-space: nowrap; }
+.rd-ob-preparing { position: absolute; left: 50%; top: calc(50% + 5rem); transform: translateX(-50%); font-size: 0.92rem; color: rgba(255,255,255,0.45); text-align: center; opacity: 0; transition: opacity 0.8s ease; }
+.rd-ob-preparing.show { opacity: 1; }
 
-/* Fase 3: carrusel automático */
-.rd-ob-carousel { position: relative; width: 100%; max-width: 640px; height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.9s ease; }
+/* Barra única de progreso de toda la bienvenida */
+.rd-ob-master-track { position: absolute; bottom: 2.2rem; left: 50%; transform: translateX(-50%); width: min(280px, 70%); height: 2px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; z-index: 2; }
+.rd-ob-master-fill { height: 100%; width: 0%; background: var(--gold-light); }
+
+/* Carrusel automático */
+.rd-ob-carousel { position: relative; width: 100%; max-width: 620px; height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.9s ease; margin-top: 5.5rem; }
 .rd-ob-carousel.show { opacity: 1; visibility: visible; }
 .rd-ob-track { position: relative; width: 100%; flex: 1; }
-.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem 1.5rem; opacity: 0; visibility: hidden; transform: translateX(24px) scale(0.98); filter: blur(4px); transition: opacity 0.9s cubic-bezier(0.22,0.61,0.36,1), transform 0.9s cubic-bezier(0.22,0.61,0.36,1), filter 0.9s ease; }
-.rd-ob-card.active { opacity: 1; visibility: visible; transform: translateX(0) scale(1); filter: blur(0); }
-.rd-ob-card.leaving { opacity: 0; transform: translateX(-24px) scale(0.98); filter: blur(4px); }
-.rd-ob-eyebrow { font-size: 0.68rem; font-weight: 700; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
-.rd-ob-icon { width: 54px; height: 54px; border-radius: 14px; background: rgba(184,154,86,0.14); color: var(--gold-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
-.rd-ob-icon svg { width: 27px; height: 27px; }
-.rd-ob-card h2 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(1.3rem, 3.5vw, 1.7rem); color: var(--white); margin-bottom: 0.7rem; letter-spacing: -0.01em; }
-.rd-ob-card p { font-size: 0.92rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 440px; margin: 0 auto 0.4rem; }
+.rd-ob-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.2rem 2rem; opacity: 0; visibility: hidden; transform: translateY(14px) scale(0.98); filter: blur(4px); transition: opacity 0.9s cubic-bezier(0.22,0.61,0.36,1), transform 0.9s cubic-bezier(0.22,0.61,0.36,1), filter 0.9s ease; background: rgba(255,255,255,0.055); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+.rd-ob-card.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); filter: blur(0); }
+.rd-ob-card.leaving { opacity: 0; transform: translateY(-10px) scale(0.98); filter: blur(4px); }
+.rd-ob-eyebrow { font-size: 0.66rem; font-weight: 700; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.9rem; }
+.rd-ob-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(184,154,86,0.16); color: var(--gold-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
+.rd-ob-icon svg { width: 26px; height: 26px; }
+.rd-ob-card h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.4rem, 3.6vw, 1.9rem); color: var(--white); margin-bottom: 0.8rem; letter-spacing: 0; }
+.rd-ob-card p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 440px; margin: 0 auto 0.4rem; }
+.rd-ob-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+.rd-ob-tags span { font-size: 0.7rem; font-weight: 700; color: var(--gold-light); background: rgba(184,154,86,0.12); border: 1px solid rgba(184,154,86,0.25); padding: 5px 11px; border-radius: 20px; letter-spacing: 0.04em; }
 .rd-ob-meta-row { display: flex; gap: 1.6rem; justify-content: center; margin-top: 1.2rem; }
 .rd-ob-meta-row div { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
-.rd-ob-meta-row strong { display: block; color: var(--white); font-size: 1rem; }
-.rd-ob-instructor-photo { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(184,154,86,0.3); margin: 0 auto 1rem; display: block; }
+.rd-ob-meta-row strong { display: block; color: var(--white); font-size: 1rem; font-family: var(--serif); }
+.rd-ob-instructor-photo { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(184,154,86,0.35); margin: 0 auto 1rem; display: block; }
 .rd-ob-modules, .rd-ob-route { text-align: left; max-width: 360px; margin: 1rem auto 0; }
-.rd-ob-modules div { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; color: rgba(255,255,255,0.75); }
-.rd-ob-modules span.n { width: 24px; height: 24px; border-radius: 6px; background: rgba(184,154,86,0.14); color: var(--gold-light); font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.rd-ob-route { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 480px; }
-.rd-ob-route .step { font-size: 0.76rem; font-weight: 700; color: var(--white); background: rgba(184,154,86,0.14); border: 1px solid rgba(184,154,86,0.3); padding: 7px 12px; border-radius: 20px; white-space: nowrap; }
-.rd-ob-route .arrow { color: rgba(255,255,255,0.3); font-size: 0.8rem; }
-.rd-ob-benefits { text-align: left; max-width: 380px; margin: 1.1rem auto 0; list-style: none; }
-.rd-ob-benefits li { display: flex; align-items: start; gap: 9px; font-size: 0.86rem; color: rgba(255,255,255,0.7); margin-bottom: 10px; line-height: 1.5; }
-.rd-ob-benefits li svg { width: 15px; height: 15px; flex-shrink: 0; color: #6FCF97; margin-top: 3px; }
-
-.rd-ob-progress { display: flex; gap: 6px; align-items: center; justify-content: center; margin-top: 1.6rem; }
-.rd-ob-seg { width: 30px; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.12); overflow: hidden; position: relative; }
-.rd-ob-seg .fill { position: absolute; inset: 0; width: 0%; background: var(--gold-light); }
-.rd-ob-seg.done .fill { width: 100%; }
+.rd-ob-modules div { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.84rem; color: rgba(255,255,255,0.75); }
+.rd-ob-modules span.n { width: 22px; height: 22px; border-radius: 6px; background: rgba(184,154,86,0.14); color: var(--gold-light); font-size: 0.68rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rd-ob-route { display: flex; flex-direction: column; align-items: center; gap: 2px; max-width: 320px; }
+.rd-ob-route .step { font-size: 0.82rem; font-weight: 600; color: var(--white); }
+.rd-ob-route .step .n { color: var(--gold-light); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.06em; display: block; }
+.rd-ob-route .step.cert { color: var(--gold-light); }
+.rd-ob-route .down { color: rgba(255,255,255,0.25); font-size: 0.75rem; }
+.rd-ob-benefits { text-align: left; max-width: 380px; margin: 1rem auto 0; list-style: none; }
+.rd-ob-benefits li { display: flex; align-items: start; gap: 9px; font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-bottom: 8px; line-height: 1.5; }
+.rd-ob-benefits li .n { font-family: var(--serif); color: var(--gold-light); font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+.rd-ob-cert-badge { display: flex; align-items: center; gap: 12px; background: rgba(184,154,86,0.1); border: 1px solid rgba(184,154,86,0.3); border-radius: 12px; padding: 0.9rem 1.3rem; margin-top: 1rem; }
+.rd-ob-cert-badge svg { width: 30px; height: 30px; color: var(--gold-light); flex-shrink: 0; }
+.rd-ob-cert-badge div { text-align: left; font-size: 0.72rem; font-weight: 700; color: var(--gold-light); letter-spacing: 0.04em; line-height: 1.5; }
 
 .rd-ob-cta { margin-top: 1.6rem; }
 @endsection
@@ -269,82 +275,81 @@
 <div id="rdOnboard">
   <div class="rd-ob-logo"><img src="{{ asset('images/logos.png') }}" alt="Romani Compliance"></div>
 
-  <div class="rd-ob-phase rd-ob-greet" id="rdObGreet">
-    <h1>Bienvenido, {{ explode(' ', auth()->user()->name)[0] }}</h1>
-    <p>Estamos preparando tu experiencia de aprendizaje</p>
-  </div>
+  <button type="button" class="rd-ob-skip" onclick="rdOnboardFinish()">Omitir →</button>
 
-  <div class="rd-ob-phase rd-ob-prepare" id="rdObPrepare">
-    <h2>Estamos preparando el contenido para ti, {{ explode(' ', auth()->user()->name)[0] }}</h2>
-    <div class="rd-ob-loadbar"><div class="fill" id="rdObLoadFill"></div></div>
+  <div class="rd-ob-name" id="rdObName">
+    <h1>BIENVENIDO, {{ \Illuminate\Support\Str::upper(explode(' ', auth()->user()->name)[0]) }}.</h1>
   </div>
+  <div class="rd-ob-preparing" id="rdObPreparing">Estamos preparando tu experiencia de aprendizaje.</div>
+
+  <div class="rd-ob-master-track"><div class="rd-ob-master-fill" id="rdObMasterFill"></div></div>
 
   <div class="rd-ob-carousel" id="rdObCarousel">
     <div class="rd-ob-track" id="rdObTrack">
 
       <div class="rd-ob-card" data-card="0">
-        <div class="rd-ob-eyebrow">01 &middot; Bienvenido</div>
-        <h2>Bienvenido a tu capacitación</h2>
-        <p>Estás a punto de comenzar una experiencia diseñada para ayudarte a comprender los fundamentos esenciales de {{ $course->title }}.</p>
+        <div class="rd-ob-eyebrow">El propósito</div>
+        <h2>Comprender es prevenir.</h2>
+        <p>El sistema de prevención LA/FT no se limita a cumplir una obligación normativa. Permite identificar riesgos, reconocer señales de alerta y actuar antes de que una operación pueda convertirse en un problema.</p>
+        <div class="rd-ob-tags"><span>PREVENCIÓN</span><span>DETECCIÓN</span><span>RESPUESTA</span></div>
       </div>
 
       <div class="rd-ob-card" data-card="1">
-        <div class="rd-ob-eyebrow">02 &middot; Importancia</div>
-        <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5 4 9 9 9s9-4 9-9V7l-9-5z"/></svg></div>
-        <h2>¿Por qué es importante?</h2>
-        <p>Cumple con las obligaciones normativas vigentes y aprende a identificar riesgos que impactan directamente tu labor profesional.</p>
+        <div class="rd-ob-eyebrow">Por qué importa</div>
+        <h2>El riesgo no siempre se ve a simple vista.</h2>
+        <p>Una operación aparentemente normal puede esconder señales que requieren análisis. Esta capacitación te ayudará a reconocer los principales riesgos de LA/FT y los elementos que deben activar una revisión.</p>
+        <div class="rd-ob-tags"><span>IDENTIFICAR</span><span>→</span><span>ANALIZAR</span><span>→</span><span>REPORTAR</span></div>
       </div>
 
       @if($course->instructor)
-        <div class="rd-ob-card" data-card="2">
-          <div class="rd-ob-eyebrow">03 &middot; Tu capacitador</div>
+        <div class="rd-ob-card" data-card="2" data-duration="long">
+          <div class="rd-ob-eyebrow">Aprende de un especialista</div>
           <img src="{{ $course->instructor->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $course->instructor->name }}" class="rd-ob-instructor-photo">
           <h2>{{ $course->instructor->name }}</h2>
           <p style="color:var(--gold-light);font-weight:600;font-size:0.85rem;margin-bottom:0.6rem;">{{ $course->instructor->title ?? 'Instructor' }}</p>
-          <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 160) }}</p>
+          <p>{{ \Illuminate\Support\Str::limit($course->instructor->bio, 170) }}</p>
         </div>
       @endif
 
       <div class="rd-ob-card" data-card="3">
-        <div class="rd-ob-eyebrow">04 &middot; Contenido</div>
-        <div class="rd-ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div>
-        <h2>¿Qué vas a aprender?</h2>
-        <div class="rd-ob-modules">
-          @foreach($course->modules as $module)
-            <div><span class="n">{{ sprintf('%02d', $loop->iteration) }}</span> {{ $module->title }}</div>
-          @endforeach
+        <div class="rd-ob-eyebrow">Certificación</div>
+        <h2>Tu aprendizaje también deja una constancia.</h2>
+        <p>Al completar satisfactoriamente la capacitación podrás obtener una certificación digital verificable mediante código QR.</p>
+        <div class="rd-ob-cert-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="6" y="6" width="4" height="4"/><rect x="14" y="6" width="4" height="4"/><rect x="6" y="14" width="4" height="4"/><path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg>
+          <div>CERTIFICACIÓN DIGITAL<br>VERIFICABLE POR QR</div>
         </div>
       </div>
 
       <div class="rd-ob-card" data-card="4">
-        <div class="rd-ob-eyebrow">05 &middot; Ruta de aprendizaje</div>
-        <h2>Tu ruta de aprendizaje</h2>
-        <div class="rd-ob-route">
-          @foreach($course->modules as $module)
-            <span class="step">{{ sprintf('%02d', $loop->iteration) }}. {{ \Illuminate\Support\Str::limit($module->title, 22) }}</span>
-            <span class="arrow">→</span>
-          @endforeach
-          <span class="step">Evaluación</span>
-        </div>
+        <div class="rd-ob-eyebrow">Beneficios</div>
+        <h2>Más que completar un curso.</h2>
+        <ul class="rd-ob-benefits">
+          <li><span class="n">01</span> Comprender el marco normativo aplicable.</li>
+          <li><span class="n">02</span> Identificar señales de alerta.</li>
+          <li><span class="n">03</span> Comprender obligaciones y responsabilidades.</li>
+          <li><span class="n">04</span> Aplicar los conocimientos a casos prácticos.</li>
+          <li><span class="n">05</span> Contar con una constancia verificable.</li>
+        </ul>
       </div>
 
       <div class="rd-ob-card" data-card="5">
-        <div class="rd-ob-eyebrow">06 &middot; Todo listo</div>
-        <h2>Comienza tu aprendizaje</h2>
-        <div class="rd-ob-meta-row">
-          @if($course->duration_minutes)
-            <div><strong>{{ $course->lectiveHours() }}h</strong>duración</div>
-          @endif
-          <div><strong>{{ $course->modules->count() }}</strong>módulos</div>
-          <div><strong>{{ $course->modules->sum(fn($m) => $m->lessons->count()) }}</strong>contenidos</div>
+        <div class="rd-ob-eyebrow">Tu ruta</div>
+        <h2>Una ruta diseñada para avanzar paso a paso.</h2>
+        <div class="rd-ob-route">
+          @foreach($course->modules as $module)
+            <div class="step"><span class="n">MÓDULO {{ sprintf('%02d', $loop->iteration) }}</span>{{ $module->title }}</div>
+            <div class="down">↓</div>
+          @endforeach
+          <div class="step cert"><span class="n">FINAL</span>Certificación</div>
         </div>
+        <p style="margin-top:1rem;">Todo listo. Comienza tu capacitación.</p>
         <div class="rd-ob-cta">
           <button type="button" class="rd-btn-primary" onclick="rdOnboardFinish()">Comenzar capacitación →</button>
         </div>
       </div>
 
     </div>
-    <div class="rd-ob-progress" id="rdObProgress"></div>
   </div>
 </div>
 @endauth
@@ -409,11 +414,16 @@ function rdGoStep2() {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') rdCloseWelcome(); });
 
 let rdObCards = [];
-let rdObSegs = [];
 let rdObIndex = 0;
 let rdObAutoTimer = null;
-const RD_OB_CARD_MS = 6500; // 5-8s por tarjeta
-const CARD_SECONDS = RD_OB_CARD_MS / 1000;
+let rdObDurations = [];
+let rdObTotalMs = 0;
+let rdObElapsedMs = 0;
+let rdObMasterRaf = null;
+const RD_OB_NORMAL_MS = 5200; // 4-6s
+const RD_OB_INSTRUCTOR_MS = 7200; // 6-8s
+const RD_OB_NAME_DOCK_DELAY = 1900;
+const RD_OB_PREPARING_MS = 1700;
 
 (function rdOnboarding() {
   const overlay = document.getElementById('rdOnboard');
@@ -426,102 +436,73 @@ const CARD_SECONDS = RD_OB_CARD_MS / 1000;
   // inscripción (a propósito, por pedido explícito), no solo una vez.
   if (!justJoined) return;
 
-  // Precargar/preparar todo el DOM del carrusel ANTES de mostrar nada,
-  // para que la primera tarjeta nunca aparezca vacía.
+  // Precargar todo el DOM del carrusel ANTES de mostrar nada, para que
+  // la primera tarjeta nunca aparezca vacía.
   rdObCards = Array.from(document.querySelectorAll('#rdObTrack .rd-ob-card'));
-  const segWrap = document.getElementById('rdObProgress');
-  rdObCards.forEach((_, i) => {
-    const seg = document.createElement('span');
-    seg.className = 'rd-ob-seg';
-    seg.innerHTML = '<span class="fill"></span>';
-    segWrap.appendChild(seg);
-  });
-  rdObSegs = Array.from(segWrap.children);
+  rdObDurations = rdObCards.map(c => c.dataset.duration === 'long' ? RD_OB_INSTRUCTOR_MS : RD_OB_NORMAL_MS);
+  rdObTotalMs = RD_OB_NAME_DOCK_DELAY + RD_OB_PREPARING_MS + rdObDurations.reduce((a, b) => a + b, 0);
   rdObCards[0].classList.add('active');
 
   overlay.classList.add('active');
+  rdObStartMasterProgress();
 
-  // Fase 1: bienvenida a pantalla completa (3.5s)
-  const greet = document.getElementById('rdObGreet');
-  requestAnimationFrame(() => greet.classList.add('show'));
-
+  // El nombre aparece centrado y grande, luego sube y queda fijo arriba.
+  const nameEl = document.getElementById('rdObName');
   setTimeout(() => {
-    greet.classList.add('fade-out');
+    nameEl.classList.add('docked');
+
+    const preparing = document.getElementById('rdObPreparing');
+    preparing.classList.add('show');
+
     setTimeout(() => {
-      greet.classList.remove('show');
-
-      // Fase 2: preparando contenido (~2.6s con barra de carga lenta)
-      const prepare = document.getElementById('rdObPrepare');
-      prepare.classList.add('show');
-      requestAnimationFrame(() => {
-        const fill = document.getElementById('rdObLoadFill');
-        if (fill) fill.style.width = '100%';
-      });
-
-      setTimeout(() => {
-        prepare.classList.add('fade-out');
-        setTimeout(() => {
-          prepare.classList.remove('show');
-
-          // Fase 3: carrusel automático de 6 tarjetas
-          document.getElementById('rdObCarousel').classList.add('show');
-          rdObRenderSegs();
-          rdObStartAuto();
-        }, 1100);
-      }, 2600);
-    }, 1100);
-  }, 3800);
+      preparing.classList.remove('show');
+      document.getElementById('rdObCarousel').classList.add('show');
+      rdObStartAuto();
+    }, RD_OB_PREPARING_MS);
+  }, RD_OB_NAME_DOCK_DELAY);
 })();
 
-function rdObRenderSegs() {
-  rdObSegs.forEach((s, i) => {
-    s.classList.toggle('done', i < rdObIndex);
-    const fill = s.querySelector('.fill');
-    fill.style.transition = 'none';
-    fill.style.width = i < rdObIndex ? '100%' : '0%';
-  });
-}
-
-function rdObAnimateCurrentSeg() {
-  const seg = rdObSegs[rdObIndex];
-  if (!seg) return;
-  const fill = seg.querySelector('.fill');
-  fill.style.transition = 'none';
-  fill.style.width = '0%';
-  requestAnimationFrame(() => {
-    fill.style.transition = 'width ' + CARD_SECONDS + 's linear';
-    fill.style.width = '100%';
-  });
+function rdObStartMasterProgress() {
+  const fill = document.getElementById('rdObMasterFill');
+  const start = performance.now();
+  function tick(now) {
+    const pct = Math.min(100, ((now - start) / rdObTotalMs) * 100);
+    fill.style.width = pct + '%';
+    if (pct < 100) rdObMasterRaf = requestAnimationFrame(tick);
+  }
+  rdObMasterRaf = requestAnimationFrame(tick);
 }
 
 function rdObStartAuto() {
-  rdObAnimateCurrentSeg();
-  rdObAutoTimer = setInterval(() => {
+  const advance = () => {
     if (rdObIndex < rdObCards.length - 1) {
       rdObCards[rdObIndex].classList.remove('active');
       rdObCards[rdObIndex].classList.add('leaving');
       rdObIndex++;
       rdObCards[rdObIndex].classList.add('active');
       setTimeout(() => rdObCards[rdObIndex - 1]?.classList.remove('leaving'), 950);
-      rdObRenderSegs();
-      rdObAnimateCurrentSeg();
-    } else {
-      clearInterval(rdObAutoTimer);
+      rdObAutoTimer = setTimeout(advance, rdObDurations[rdObIndex]);
     }
-  }, RD_OB_CARD_MS);
+  };
+  rdObAutoTimer = setTimeout(advance, rdObDurations[rdObIndex]);
 }
 
 function rdOnboardFinish() {
-  clearInterval(rdObAutoTimer);
-  @php $firstLesson = $course->modules->flatMap->lessons->first(); @endphp
-  @if($firstLesson)
-    window.location.href = '{{ route('lessons.show', $firstLesson) }}';
-  @else
-    document.getElementById('rdOnboard')?.classList.remove('active');
-    const url = new URL(window.location.href);
-    url.searchParams.delete('bienvenida');
-    window.history.replaceState({}, '', url);
-  @endif
+  clearTimeout(rdObAutoTimer);
+  cancelAnimationFrame(rdObMasterRaf);
+  const overlay = document.getElementById('rdOnboard');
+  overlay.classList.add('leaving');
+  setTimeout(() => {
+    @php $firstLesson = $course->modules->flatMap->lessons->first(); @endphp
+    @if($firstLesson)
+      window.location.href = '{{ route('lessons.show', $firstLesson) }}';
+    @else
+      overlay.classList.remove('active');
+      const url = new URL(window.location.href);
+      url.searchParams.delete('bienvenida');
+      window.history.replaceState({}, '', url);
+    @endif
+  }, 450);
 }
 </script>
 @endsection

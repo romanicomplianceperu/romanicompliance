@@ -123,11 +123,17 @@
 .rdp-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
 .rdp-pdf { width: 100%; height: 68vh; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 1.6rem; }
 .rdp-text { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.8rem; font-size: 0.92rem; line-height: 1.85; white-space: pre-line; margin-bottom: 1.6rem; box-shadow: var(--shadow-s); }
-.rdp-nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--line); }
-.rdp-nav-btn { padding: 12px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: 1px solid var(--line); background: var(--white); color: var(--ink); transition: transform 0.2s, border-color 0.2s; }
+.rdp-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--line); }
+.rdp-nav-btn { padding: 12px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: 1px solid var(--line); background: var(--white); color: var(--ink); transition: transform 0.2s, border-color 0.2s; white-space: nowrap; }
 .rdp-nav-btn:hover { transform: translateY(-1px); border-color: var(--gold); }
-.rdp-nav-btn.primary { background: var(--gold); color: var(--white); border: none; }
+.rdp-nav-btn.primary { background: var(--gold); color: var(--white); border: none; padding: 13px 28px; }
 .rdp-nav-btn.primary:hover { background: var(--gold-light); }
+.rdp-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.rdp-nav-side { display: flex; }
+.rdp-nav-side.right { justify-content: flex-end; }
+.rdp-nav-center { display: flex; justify-content: center; }
+.rdp-viewer-enter { animation: rdpViewerIn 0.55s cubic-bezier(0.22,0.61,0.36,1) both; }
+@keyframes rdpViewerIn { from { opacity: 0; transform: translateY(10px); box-shadow: none; } to { opacity: 1; transform: translateY(0); } }
 .rdp-main-fade { animation: rd-fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; }
 @keyframes rd-fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -183,28 +189,45 @@
       @endif
 
       @if($lesson->type === 'video' && $lesson->embedUrl())
-        <div class="rdp-video"><iframe src="{{ $lesson->embedUrl() }}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+        <div class="rdp-video rdp-viewer-enter"><iframe src="{{ $lesson->embedUrl() }}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
       @elseif($lesson->type === 'pdf' && $lesson->file_path)
-        <iframe src="{{ asset('storage/'.$lesson->file_path) }}" class="rdp-pdf"></iframe>
+        <iframe src="{{ asset('storage/'.$lesson->file_path) }}" class="rdp-pdf rdp-viewer-enter"></iframe>
       @elseif($lesson->type === 'file' && $lesson->file_path)
-        <div class="rdp-text" style="text-align:center;">
+        <div class="rdp-text rdp-viewer-enter" style="text-align:center;">
           <p style="margin-bottom:1rem;">Vista previa no disponible para este tipo de archivo.</p>
           <a href="{{ asset('storage/'.$lesson->file_path) }}" target="_blank" class="rdp-nav-btn primary" style="display:inline-flex;">Descargar archivo</a>
         </div>
       @elseif($lesson->type === 'text')
-        <div class="rdp-text" contenteditable="true" onfocus="this.dataset.editing=1" style="cursor:text;">{{ $lesson->content }}</div>
+        <div class="rdp-text rdp-viewer-enter" contenteditable="true" onfocus="this.dataset.editing=1" style="cursor:text;">{{ $lesson->content }}</div>
       @endif
 
       <div class="rdp-nav">
-        <div>
+        <div class="rdp-nav-side">
           @if($previousLesson)
             <a href="{{ route('lessons.show', $previousLesson) }}" class="rdp-nav-btn">← Anterior</a>
+          @else
+            <button type="button" class="rdp-nav-btn" disabled>← Anterior</button>
           @endif
         </div>
-        <form action="{{ route('lessons.complete', $lesson) }}" method="POST">
-          @csrf
-          <button type="submit" class="rdp-nav-btn primary">{{ $isCompleted ? ($nextLesson ? 'Siguiente →' : 'Volver al curso') : '✓ Marcar como completada' }}</button>
-        </form>
+
+        <div class="rdp-nav-center">
+          @if($isCompleted)
+            <span class="rdp-nav-btn primary" style="cursor:default;">✓ Completada</span>
+          @else
+            <form action="{{ route('lessons.complete', $lesson) }}" method="POST">
+              @csrf
+              <button type="submit" class="rdp-nav-btn primary">Marcar como completada</button>
+            </form>
+          @endif
+        </div>
+
+        <div class="rdp-nav-side right">
+          @if($nextLesson)
+            <a href="{{ route('lessons.show', $nextLesson) }}" class="rdp-nav-btn">Siguiente →</a>
+          @else
+            <a href="{{ route('courses.show', $course) }}" class="rdp-nav-btn primary">Volver al curso</a>
+          @endif
+        </div>
       </div>
     </div>
   </div>
