@@ -31,11 +31,26 @@ class Lesson extends Model
 
     public function typeLabel(): string
     {
+        if (in_array($this->type, ['file', 'pdf'], true) && $this->file_path) {
+            $ext = strtolower(pathinfo($this->file_path, PATHINFO_EXTENSION));
+
+            return match ($ext) {
+                'docx', 'doc' => 'Documento Word',
+                'xlsx', 'xls' => 'Hoja de cálculo Excel',
+                'pptx', 'ppt' => 'Presentación PowerPoint',
+                'pdf' => 'Documento PDF',
+                default => $this->type === 'pdf' ? 'Documento PDF' : 'Archivo descargable',
+            };
+        }
+
         return match ($this->type) {
             'video' => 'Video',
             'pdf' => 'Documento PDF',
-            'file' => 'Diapositiva',
+            'file' => 'Archivo descargable',
             'text' => 'Contenido teórico',
+            'interactive' => 'Actividad interactiva',
+            'glossary' => 'Glosario interactivo',
+            'memory' => 'Juego de memoria',
             default => ucfirst($this->type),
         };
     }

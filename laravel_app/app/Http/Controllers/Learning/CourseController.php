@@ -48,7 +48,7 @@ class CourseController extends Controller
             ['status' => 'active', 'progress_percent' => 0]
         );
 
-        return redirect()->route('courses.show', $course)->with('success', 'Te inscribiste correctamente en el curso.');
+        return redirect()->route('courses.show', ['course' => $course, 'bienvenida' => 1]);
     }
 
     public function claimPayment(Request $request, Course $course)

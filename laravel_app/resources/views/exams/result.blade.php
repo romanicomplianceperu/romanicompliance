@@ -154,5 +154,9 @@ function toggleReview() {
   const isOpen = toggle.classList.toggle('open');
   list.style.maxHeight = isOpen ? list.scrollHeight + 'px' : null;
 }
+
+@if($attempt->status === 'passed')
+if (typeof window.fireConfetti === 'function') { window.fireConfetti({ count: 180 }); }
+@endif
 </script>
 @endsection

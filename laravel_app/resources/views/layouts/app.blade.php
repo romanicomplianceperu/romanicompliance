@@ -239,6 +239,63 @@ const obs = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
 }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => obs.observe(el));
+
+window.fireConfetti = function (opts) {
+  opts = opts || {};
+  const count = opts.count || 140;
+  const colors = ['#8B7340', '#B89A56', '#1F7A4D', '#0B1829', '#F2D98A'];
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const pieces = [];
+  for (let i = 0; i < count; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * canvas.height * 0.3,
+      w: 6 + Math.random() * 6,
+      h: 8 + Math.random() * 8,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360,
+      vRot: (Math.random() - 0.5) * 10,
+      vy: 2 + Math.random() * 3,
+      vx: (Math.random() - 0.5) * 2.5,
+      opacity: 1,
+    });
+  }
+
+  let frame = 0;
+  const maxFrames = 220;
+  (function tick() {
+    frame++;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let stillVisible = false;
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vRot;
+      if (frame > maxFrames * 0.6) p.opacity -= 0.02;
+      if (p.opacity > 0) stillVisible = true;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.opacity);
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rot * Math.PI) / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    if (frame < maxFrames && stillVisible) {
+      requestAnimationFrame(tick);
+    } else {
+      window.removeEventListener('resize', resize);
+      canvas.remove();
+    }
+  })();
+};
 </script>
 @yield('scripts')
 </body>
