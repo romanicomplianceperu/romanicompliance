@@ -40,27 +40,87 @@ class MatrizRiesgosLaftFintechSeeder extends Seeder
         $course->exam()->delete();
 
         // ---------------------------------------------------------------
-        // Módulo 1 — Fundamentos
+        // Módulo 1 — Fundamentos (diapositiva interactiva con revelado
+        // palabra por palabra + citas y fuentes normativas)
         // ---------------------------------------------------------------
-        $introCards = [
-            'intro' => 'La Matriz de Gestión de Riesgos (MGR) es el documento técnico mediante el cual un sujeto obligado identifica, valora y controla su exposición al Lavado de Activos y Financiamiento del Terrorismo (LA/FT). En este curso trabajamos sobre un modelo referencial de una empresa fintech real: canje de activos virtuales + otorgamiento de préstamos.',
-            'cards' => [
-                ['icon' => '📋', 'tag' => 'QUÉ ES', 'color' => 'gold', 'title' => 'Herramienta del EBR', 'body' => 'Es la herramienta central del Enfoque Basado en Riesgos (EBR) que exige la SBS y la UIF-Perú: no es un formato administrativo, es evidencia técnica real.'],
-                ['icon' => '🏦', 'tag' => 'EL CASO DEL CURSO', 'color' => 'ink', 'title' => 'Fintech + préstamos', 'body' => 'Una empresa que combina canje de activos virtuales (PSAV) con otorgamiento de préstamos a clientes perfilados por su frecuencia de canje.'],
-                ['icon' => '⚠️', 'tag' => 'POR QUÉ IMPORTA', 'color' => 'red', 'title' => 'Riesgo facilitador', 'body' => 'Al riesgo propio del canje cripto/fiat se suma el riesgo crediticio: el nuevo producto amplía la superficie de exposición LA/FT.'],
-                ['icon' => '🛡️', 'tag' => '3 PILARES', 'color' => 'green', 'title' => 'KYC · KYT · KYB', 'body' => 'Conocimiento del cliente, de las transacciones/personal, y de proveedores y contrapartes — se aplican rigurosamente en cada matriz.'],
+        $introSlide = [
+            'intro' => 'Antes de calcular una sola cifra, hay que entender qué es realmente la MGR y por qué la ley la exige. Avanza diapositiva por diapositiva.',
+            'slides' => [
+                [
+                    'heading' => 'El documento técnico',
+                    'text' => 'La Matriz de Gestión de Riesgos (MGR) es el instrumento mediante el cual un sujeto obligado identifica, valora y controla su exposición al Lavado de Activos y Financiamiento del Terrorismo.',
+                    'highlight' => ['Matriz', 'Gestión', 'Riesgos', 'identifica', 'valora', 'controla'],
+                ],
+                [
+                    'heading' => 'No es un formato, es evidencia',
+                    'text' => 'Bajo el Enfoque Basado en Riesgos que exige la SBS y la UIF-Perú, la matriz debe reflejar el funcionamiento real del negocio: llenar una plantilla sin sustento documentado no cumple el estándar exigido.',
+                    'highlight' => ['Enfoque', 'Basado', 'Riesgos', 'evidencia'],
+                    'citation' => ['label' => 'Res. SBS N.º 02648-2024', 'note' => 'Fija las directrices del SPLAFT para Proveedores de Servicios de Activos Virtuales (PSAV) y exige evaluar Clientes, Productos, Canales y Geografía.'],
+                ],
+                [
+                    'heading' => 'El caso guía de este curso',
+                    'text' => 'Trabajaremos sobre un modelo referencial de una empresa fintech que combina el canje de activos virtuales con el otorgamiento de préstamos, un caso donde el riesgo crediticio se suma al riesgo cripto ya existente.',
+                    'highlight' => ['fintech', 'préstamos', 'riesgo', 'crediticio'],
+                ],
+                [
+                    'heading' => 'Tres pilares de control',
+                    'text' => 'Toda matriz seria se apoya en tres pilares complementarios: KYC, el conocimiento del cliente; KYT, el conocimiento de las transacciones y del personal; y KYB, el conocimiento de proveedores y contrapartes.',
+                    'highlight' => ['KYC', 'KYT', 'KYB'],
+                ],
+            ],
+            'sources' => [
+                ['label' => 'Ley N.º 27693', 'desc' => 'Crea y regula la Unidad de Inteligencia Financiera del Perú (UIF-Perú).'],
+                ['label' => 'Res. SBS N.º 02648-2024', 'desc' => 'Directrices del SPLAFT para Proveedores de Servicios de Activos Virtuales (PSAV).'],
             ],
         ];
 
-        $legalCards = [
-            'intro' => 'La evaluación de riesgos LA/FT responde a un marco normativo concurrente que toda matriz debe poder sustentar norma por norma.',
-            'cards' => [
-                ['icon' => '⚖️', 'tag' => 'LEY', 'color' => 'ink', 'title' => 'Ley N.º 27693', 'body' => 'Crea y regula la Unidad de Inteligencia Financiera del Perú (UIF-Perú).'],
-                ['icon' => '⚖️', 'tag' => 'DECRETO LEGISLATIVO', 'color' => 'ink', 'title' => 'D.L. N.º 1106', 'body' => 'Lucha eficaz contra el lavado de activos y otros delitos relacionados.'],
-                ['icon' => '📜', 'tag' => 'RESOLUCIÓN SBS', 'color' => 'gold', 'title' => 'Res. N.º 02648-2024', 'body' => 'Directrices del SPLAFT para Proveedores de Servicios de Activos Virtuales (PSAV): exige evaluar Clientes, Productos, Canales y Geografía.'],
-                ['icon' => '📜', 'tag' => 'RESOLUCIÓN SBS', 'color' => 'gold', 'title' => 'Res. N.º 4463-2016', 'body' => 'Gestión de riesgos y prevención del LA/FT para sujetos obligados dedicados al otorgamiento de préstamos y empeño.'],
-                ['icon' => '📜', 'tag' => 'RESOLUCIÓN SBS', 'color' => 'gold', 'title' => 'Res. N.º 789-2018', 'body' => 'Prevención del LA/FT aplicable a los sujetos obligados bajo supervisión de la UIF-Perú.'],
-                ['icon' => '🧩', 'tag' => 'REGLA CLAVE', 'color' => 'green', 'title' => 'Un solo SPLAFT', 'body' => 'Si una empresa realiza más de una actividad del artículo 3 de la Ley N.º 29038, implementa un único SPLAFT que cumpla las exigencias de cada actividad.'],
+        $legalSlide = [
+            'intro' => 'La evaluación de riesgos LA/FT responde a un marco normativo concurrente. Cada norma delimita una parte del alcance que la matriz debe poder sustentar.',
+            'slides' => [
+                [
+                    'heading' => 'Ley N.º 27693',
+                    'text' => 'Crea y regula la Unidad de Inteligencia Financiera del Perú, la autoridad central que recibe los Reportes de Operaciones Sospechosas de todos los sujetos obligados del país.',
+                    'highlight' => ['Unidad', 'Inteligencia', 'Financiera'],
+                    'citation' => ['label' => 'Ley N.º 27693', 'note' => 'Norma de creación de la UIF-Perú.'],
+                ],
+                [
+                    'heading' => 'D.L. N.º 1106',
+                    'text' => 'Decreto Legislativo de lucha eficaz contra el lavado de activos y otros delitos relacionados a la minería ilegal y crimen organizado.',
+                    'highlight' => ['lavado', 'activos'],
+                    'citation' => ['label' => 'D.L. N.º 1106', 'note' => 'Lucha eficaz contra el lavado de activos y otros delitos relacionados.'],
+                ],
+                [
+                    'heading' => 'Res. SBS N.º 02648-2024',
+                    'text' => 'Establece las directrices del SPLAFT específicas para Proveedores de Servicios de Activos Virtuales, exigiendo evaluar de forma diferenciada a los Clientes, los Productos, los Canales y la Geografía.',
+                    'highlight' => ['PSAV', 'Clientes', 'Productos', 'Canales', 'Geografía'],
+                    'citation' => ['label' => 'Res. SBS N.º 02648-2024', 'note' => 'Directrices del SPLAFT para Proveedores de Servicios de Activos Virtuales (PSAV).'],
+                ],
+                [
+                    'heading' => 'Res. SBS N.º 4463-2016',
+                    'text' => 'Regula la gestión de riesgos y prevención del LA/FT para los sujetos obligados dedicados al otorgamiento de préstamos y al empeño, el producto crediticio del caso guía de este curso.',
+                    'highlight' => ['préstamos', 'empeño'],
+                    'citation' => ['label' => 'Res. SBS N.º 4463-2016', 'note' => 'Gestión de riesgos y prevención del LA/FT para sujetos obligados dedicados al otorgamiento de préstamos y empeño.'],
+                ],
+                [
+                    'heading' => 'Res. SBS N.º 789-2018',
+                    'text' => 'Norma de prevención del LA/FT aplicable, en general, a los sujetos obligados que se encuentran bajo la supervisión directa de la UIF-Perú.',
+                    'highlight' => ['UIF-Perú', 'supervisión'],
+                    'citation' => ['label' => 'Res. SBS N.º 789-2018', 'note' => 'Prevención del LA/FT aplicable a los sujetos obligados bajo supervisión de la UIF-Perú.'],
+                ],
+                [
+                    'heading' => 'Regla clave: un solo SPLAFT',
+                    'text' => 'Si una empresa realiza más de una actividad de las comprendidas en el artículo 3 de la Ley N.º 29038, no implementa varios sistemas paralelos: implementa un único SPLAFT que cumpla, a la vez, las exigencias de cada actividad.',
+                    'highlight' => ['único', 'SPLAFT'],
+                    'citation' => ['label' => 'Ley N.º 29038, artículo 3', 'note' => 'Lista las actividades sujetas a reportar operaciones a la UIF-Perú, incluyendo el canje de activos virtuales y el otorgamiento de préstamos.'],
+                ],
+            ],
+            'sources' => [
+                ['label' => 'Ley N.º 27693', 'desc' => 'Crea y regula la Unidad de Inteligencia Financiera del Perú (UIF-Perú).'],
+                ['label' => 'D.L. N.º 1106', 'desc' => 'Lucha eficaz contra el lavado de activos y otros delitos relacionados.'],
+                ['label' => 'Res. SBS N.º 02648-2024', 'desc' => 'Directrices del SPLAFT para Proveedores de Servicios de Activos Virtuales (PSAV).'],
+                ['label' => 'Res. SBS N.º 4463-2016', 'desc' => 'Gestión de riesgos y prevención del LA/FT para sujetos obligados dedicados al otorgamiento de préstamos y empeño.'],
+                ['label' => 'Res. SBS N.º 789-2018', 'desc' => 'Prevención del LA/FT aplicable a los sujetos obligados bajo supervisión de la UIF-Perú.'],
+                ['label' => 'Ley N.º 29038, artículo 3', 'desc' => 'Actividades sujetas a reporte ante la UIF-Perú; base de la regla de un único SPLAFT.'],
             ],
         ];
 
@@ -98,31 +158,31 @@ class MatrizRiesgosLaftFintechSeeder extends Seeder
         $glossary = [
             'intro' => 'Haz clic en cada término para ver su definición completa y qué otro concepto no debes confundir con él.',
             'terms' => [
-                ['term' => 'RI', 'short' => 'Riesgo Inherente', 'definition' => 'Nivel de riesgo antes de considerar controles. Se calcula como RI = P × I. Representa la exposición en estado puro.', 'confuse' => 'RR (Riesgo Residual): el RI es "antes" de los controles, el RR es "después".'],
-                ['term' => 'RR', 'short' => 'Riesgo Residual', 'definition' => 'Riesgo que permanece tras aplicar los controles. Se calcula como RR = RI − EC. Es la clasificación final de cada fila de la matriz.', 'confuse' => 'RI (Riesgo Inherente): no confundir el resultado final (RR) con la exposición bruta (RI).'],
-                ['term' => 'P', 'short' => 'Probabilidad', 'definition' => 'Frecuencia o posibilidad de que el riesgo se materialice, en escala de 1 a 3.', 'confuse' => 'I (Impacto): la probabilidad mide "qué tan seguido", el impacto mide "qué tan grave".'],
-                ['term' => 'I', 'short' => 'Impacto', 'definition' => 'Gravedad del daño si el riesgo se materializa, en escala de 1 a 3.', 'confuse' => 'P (Probabilidad): un riesgo puede tener impacto alto pero probabilidad baja, o viceversa.'],
-                ['term' => 'EC', 'short' => 'Eficacia de Controles', 'definition' => 'Fortaleza y robustez de las medidas de mitigación, en escala de 0 a 6.', 'confuse' => 'RR: el EC es un insumo del cálculo, no el resultado. Se resta al RI para obtener el RR.'],
-                ['term' => 'EBR', 'short' => 'Enfoque Basado en Riesgos', 'definition' => 'Principio que obliga a destinar mayores recursos de prevención a las áreas de mayor riesgo.', 'confuse' => 'SPLAFT: el SPLAFT es el sistema completo; el EBR es el principio metodológico que lo guía.'],
-                ['term' => 'PEP', 'short' => 'Persona Expuesta Políticamente', 'definition' => 'Individuo con riesgo inherente mayor por su función pública; requiere Debida Diligencia Reforzada.', 'confuse' => 'KYC: el KYC es el proceso general de conocer al cliente; el PEP es una categoría de cliente de mayor riesgo dentro de ese proceso.'],
-                ['term' => 'DeFi', 'short' => 'Finanzas Descentralizadas', 'definition' => 'Protocolos de activos virtuales sin punto de control centralizado. Se consideran de Riesgo ALTO en el modelo del curso.', 'confuse' => 'PSAV: un PSAV es la empresa que presta el servicio; DeFi es un tipo de protocolo con el que esa empresa puede (o no) operar.'],
-                ['term' => 'KYC', 'short' => 'Know Your Customer', 'definition' => 'Obtención y verificación de identidad y perfil del cliente antes de la relación comercial.', 'confuse' => 'KYT y KYB: KYC es sobre el cliente; KYT es sobre transacciones/personal; KYB es sobre proveedores y contrapartes.'],
-                ['term' => 'KYT', 'short' => 'Know Your Transaction', 'definition' => 'Verificación, capacitación y monitoreo del personal y de las transacciones.', 'confuse' => 'KYC: no confundir el monitoreo de operaciones y personal (KYT) con la identificación del cliente (KYC).'],
-                ['term' => 'KYB', 'short' => 'Know Your Business', 'definition' => 'Debida diligencia aplicada a proveedores críticos y contrapartes jurídicas.', 'confuse' => 'KYC: el KYB se aplica a empresas/contrapartes, el KYC se aplica a clientes.'],
-                ['term' => 'LTV', 'short' => 'Loan-to-Value', 'definition' => 'Relación entre el monto del préstamo y el valor del colateral en activos virtuales.', 'confuse' => 'RR: el LTV es una medida financiera del crédito, no una clasificación de riesgo LA/FT.'],
-                ['term' => 'Estructuración', 'short' => 'Pitufeo', 'definition' => 'División de grandes sumas en múltiples operaciones pequeñas para eludir umbrales de detección.', 'confuse' => 'Fraccionamiento contable: la estructuración tiene fin ilícito de evasión de controles, no es una técnica contable legítima.'],
+                ['term' => 'RI', 'icon' => '📈', 'short' => 'Riesgo Inherente', 'definition' => 'Nivel de riesgo antes de considerar controles. Se calcula como RI = P × I. Representa la exposición en estado puro.', 'confuse' => 'RR (Riesgo Residual): el RI es "antes" de los controles, el RR es "después".'],
+                ['term' => 'RR', 'icon' => '📉', 'short' => 'Riesgo Residual', 'definition' => 'Riesgo que permanece tras aplicar los controles. Se calcula como RR = RI − EC. Es la clasificación final de cada fila de la matriz.', 'confuse' => 'RI (Riesgo Inherente): no confundir el resultado final (RR) con la exposición bruta (RI).'],
+                ['term' => 'P', 'icon' => '🎲', 'short' => 'Probabilidad', 'definition' => 'Frecuencia o posibilidad de que el riesgo se materialice, en escala de 1 a 3.', 'confuse' => 'I (Impacto): la probabilidad mide "qué tan seguido", el impacto mide "qué tan grave".'],
+                ['term' => 'I', 'icon' => '💥', 'short' => 'Impacto', 'definition' => 'Gravedad del daño si el riesgo se materializa, en escala de 1 a 3.', 'confuse' => 'P (Probabilidad): un riesgo puede tener impacto alto pero probabilidad baja, o viceversa.'],
+                ['term' => 'EC', 'icon' => '🛡️', 'short' => 'Eficacia de Controles', 'definition' => 'Fortaleza y robustez de las medidas de mitigación, en escala de 0 a 6.', 'confuse' => 'RR: el EC es un insumo del cálculo, no el resultado. Se resta al RI para obtener el RR.'],
+                ['term' => 'EBR', 'icon' => '🎯', 'short' => 'Enfoque Basado en Riesgos', 'definition' => 'Principio que obliga a destinar mayores recursos de prevención a las áreas de mayor riesgo.', 'confuse' => 'SPLAFT: el SPLAFT es el sistema completo; el EBR es el principio metodológico que lo guía.'],
+                ['term' => 'PEP', 'icon' => '🏛️', 'short' => 'Persona Expuesta Políticamente', 'definition' => 'Individuo con riesgo inherente mayor por su función pública; requiere Debida Diligencia Reforzada.', 'confuse' => 'KYC: el KYC es el proceso general de conocer al cliente; el PEP es una categoría de cliente de mayor riesgo dentro de ese proceso.'],
+                ['term' => 'DeFi', 'icon' => '🌐', 'short' => 'Finanzas Descentralizadas', 'definition' => 'Protocolos de activos virtuales sin punto de control centralizado. Se consideran de Riesgo ALTO en el modelo del curso.', 'confuse' => 'PSAV: un PSAV es la empresa que presta el servicio; DeFi es un tipo de protocolo con el que esa empresa puede (o no) operar.'],
+                ['term' => 'KYC', 'icon' => '🪪', 'short' => 'Know Your Customer', 'definition' => 'Obtención y verificación de identidad y perfil del cliente antes de la relación comercial.', 'confuse' => 'KYT y KYB: KYC es sobre el cliente; KYT es sobre transacciones/personal; KYB es sobre proveedores y contrapartes.'],
+                ['term' => 'KYT', 'icon' => '🔍', 'short' => 'Know Your Transaction', 'definition' => 'Verificación, capacitación y monitoreo del personal y de las transacciones.', 'confuse' => 'KYC: no confundir el monitoreo de operaciones y personal (KYT) con la identificación del cliente (KYC).'],
+                ['term' => 'KYB', 'icon' => '🤝', 'short' => 'Know Your Business', 'definition' => 'Debida diligencia aplicada a proveedores críticos y contrapartes jurídicas.', 'confuse' => 'KYC: el KYB se aplica a empresas/contrapartes, el KYC se aplica a clientes.'],
+                ['term' => 'LTV', 'icon' => '💰', 'short' => 'Loan-to-Value', 'definition' => 'Relación entre el monto del préstamo y el valor del colateral en activos virtuales.', 'confuse' => 'RR: el LTV es una medida financiera del crédito, no una clasificación de riesgo LA/FT.'],
+                ['term' => 'Estructuración', 'icon' => '🧩', 'short' => 'Pitufeo', 'definition' => 'División de grandes sumas en múltiples operaciones pequeñas para eludir umbrales de detección.', 'confuse' => 'Fraccionamiento contable: la estructuración tiene fin ilícito de evasión de controles, no es una técnica contable legítima.'],
             ],
         ];
 
         $memory = [
             'instructions' => 'Encuentra las parejas: cada fórmula o rango con su resultado o nivel correspondiente.',
             'pairs' => [
-                ['a' => 'RI', 'b' => 'P × I'],
-                ['a' => 'RR', 'b' => 'RI − EC'],
-                ['a' => 'BAJO', 'b' => '1 a 3'],
-                ['a' => 'MEDIO', 'b' => '4 a 6'],
-                ['a' => 'ALTO', 'b' => '7 a 9'],
-                ['a' => 'EBR', 'b' => 'Más recursos a mayor riesgo'],
+                ['a' => 'RI', 'b' => 'P × I', 'icon' => '📈'],
+                ['a' => 'RR', 'b' => 'RI − EC', 'icon' => '📉'],
+                ['a' => 'BAJO', 'b' => '1 a 3', 'icon' => '🟢'],
+                ['a' => 'MEDIO', 'b' => '4 a 6', 'icon' => '🟡'],
+                ['a' => 'ALTO', 'b' => '7 a 9', 'icon' => '🔴'],
+                ['a' => 'EBR', 'b' => 'Más recursos a mayor riesgo', 'icon' => '🎯'],
             ],
         ];
 
@@ -163,8 +223,8 @@ class MatrizRiesgosLaftFintechSeeder extends Seeder
             [
                 'title' => 'Módulo 1: Fundamentos de la Matriz de Gestión de Riesgos',
                 'lessons' => [
-                    ['title' => '¿Qué es la MGR y por qué es obligatoria?', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'cards'] + $introCards)],
-                    ['title' => 'Marco legal aplicable', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'cards'] + $legalCards)],
+                    ['title' => '¿Qué es la MGR y por qué es obligatoria?', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'slide'] + $introSlide)],
+                    ['title' => 'Marco legal aplicable', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'slide'] + $legalSlide)],
                     ['title' => 'Descarga: Modelo editable de Matriz de Gestión de Riesgos LA/FT (Word)', 'type' => 'file', 'duration_minutes' => 5, 'file_path' => 'lessons/files/modelo-matriz-gestion-riesgos-laft-fintech-prestamos.docx'],
                 ],
             ],

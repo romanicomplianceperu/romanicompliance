@@ -121,6 +121,7 @@
 .ix-card:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(11,24,41,0.08); border-color: var(--gold); }
 .ix-card .icon { display: block; margin-bottom: 10px; }
 .ix-card .icon svg { width: 22px; height: 22px; color: var(--gold); }
+.ix-card .icon.icon-emoji { font-size: 1.7rem; line-height: 1; }
 .ix-card .tag { display: inline-block; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 9px; border-radius: 20px; margin-bottom: 8px; }
 .ix-card .tag.gold { background: var(--gold-pale); color: var(--gold); }
 .ix-card .tag.green { background: rgba(31,122,77,0.1); color: #1F7A4D; }
@@ -169,11 +170,53 @@
 .gl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 .gl-term-card { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 14px 12px; text-align: center; cursor: pointer; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; }
 .gl-term-card:hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 8px 20px rgba(11,24,41,0.08); }
+.gl-term-card .icon { display: block; font-size: 1.3rem; margin-bottom: 4px; }
 .gl-term-card .t { font-family: var(--serif); font-size: 1.05rem; font-weight: 700; color: var(--ink); }
 .gl-term-card .s { font-size: 0.68rem; color: var(--slate-light); margin-top: 2px; }
-.gl-modal-body p { font-size: 0.88rem; color: var(--slate); line-height: 1.7; margin-bottom: 1rem; }
 .gl-confuse { background: var(--gold-pale); border-radius: 8px; padding: 12px 14px; font-size: 0.82rem; color: var(--ink); }
 .gl-confuse strong { color: var(--gold); }
+
+/* Floating glossary window */
+.gl-float { position: fixed; right: 24px; bottom: 24px; width: 350px; max-width: calc(100vw - 32px); background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 60px rgba(11,24,41,0.22); z-index: 200; opacity: 0; transform: translateY(24px) scale(0.97); pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
+.gl-float.active { opacity: 1; transform: none; pointer-events: auto; }
+.gl-float-header { display: flex; align-items: flex-start; gap: 10px; padding: 14px 14px 12px; border-bottom: 1px solid var(--line); cursor: grab; background: var(--ivory); border-radius: 14px 14px 0 0; user-select: none; }
+.gl-float-header:active { cursor: grabbing; }
+.gl-float-icon { font-size: 1.4rem; flex-shrink: 0; }
+.gl-float-titles { flex: 1; min-width: 0; }
+.gl-float-titles h3 { font-family: var(--serif); font-size: 1.05rem; color: var(--ink); margin: 0; }
+.gl-float-titles p { font-size: 0.72rem; color: var(--slate-light); margin: 2px 0 0; }
+.gl-float-close { flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--ivory-dim); color: var(--slate); font-size: 1rem; line-height: 1; cursor: pointer; }
+.gl-float-close:hover { background: var(--gold); color: var(--white); }
+.gl-float-body { padding: 14px 16px 16px; max-height: 50vh; overflow-y: auto; }
+.gl-float-body p { font-size: 0.85rem; color: var(--slate); line-height: 1.65; margin: 0 0 0.9rem; }
+@media (max-width: 560px) { .gl-float { left: 16px; right: 16px; bottom: 16px; width: auto; } }
+
+/* Interactive slide (word-reveal + citations) */
+.sl-deck { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.7rem; margin-bottom: 1.5rem; }
+.sl-progress { height: 4px; background: var(--ivory-dim); border-radius: 20px; overflow: hidden; margin-bottom: 1.5rem; }
+.sl-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width 0.4s ease; }
+.sl-viewport { position: relative; min-height: 190px; }
+.sl-slide { display: none; }
+.sl-slide.active { display: block; }
+.sl-num { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 8px; }
+.sl-heading { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 14px; }
+.sl-text { font-size: 1.02rem; line-height: 2; color: var(--ink); }
+.sl-word { display: inline-block; opacity: 0; transform: translateY(6px); animation: slWordIn 0.4s ease forwards; }
+.sl-word.hi { color: var(--gold); font-weight: 700; }
+@keyframes slWordIn { to { opacity: 1; transform: none; } }
+.sl-citation { display: flex; gap: 10px; align-items: flex-start; margin-top: 1.3rem; padding: 12px 14px; background: var(--gold-pale); border-radius: 8px; font-size: 0.82rem; color: var(--ink); line-height: 1.55; }
+.sl-citation-icon { font-size: 1.05rem; flex-shrink: 0; }
+.sl-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; gap: 10px; }
+.sl-btn { padding: 9px 16px; border-radius: 20px; border: 1px solid var(--line); background: var(--white); font-size: 0.8rem; font-weight: 600; color: var(--ink); cursor: pointer; }
+.sl-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.sl-btn.primary { background: var(--ink); color: var(--white); border-color: var(--ink); }
+.sl-dots { display: flex; gap: 6px; }
+.sl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); cursor: pointer; border: none; padding: 0; }
+.sl-dot.active { background: var(--gold); width: 20px; border-radius: 5px; }
+.sl-sources { margin-top: 0.3rem; }
+.sl-source-row { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
+.sl-source-row:last-child { border-bottom: none; }
+.sl-source-icon { flex-shrink: 0; }
 
 /* Memory game */
 .mg-status { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 0.8rem; color: var(--slate); }
@@ -185,7 +228,8 @@
 .mg-card.flipped .mg-card-inner, .mg-card.matched .mg-card-inner { transform: rotateY(180deg); }
 .mg-face { position: absolute; inset: 0; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 6px; backface-visibility: hidden; font-size: 0.72rem; font-weight: 600; line-height: 1.3; }
 .mg-front { background: var(--ink); color: var(--gold-light); font-size: 1.3rem; }
-.mg-back { background: var(--white); border: 1.5px solid var(--gold); color: var(--ink); transform: rotateY(180deg); }
+.mg-back { background: var(--white); border: 1.5px solid var(--gold); color: var(--ink); transform: rotateY(180deg); flex-direction: column; gap: 4px; }
+.mg-icon { font-size: 1.3rem; line-height: 1; }
 .mg-card.matched .mg-back { background: rgba(31,122,77,0.1); border-color: #1F7A4D; color: #1F7A4D; }
 .mg-win { text-align: center; padding: 1.4rem; background: rgba(31,122,77,0.08); border: 1px solid rgba(31,122,77,0.3); border-radius: 10px; margin-top: 1rem; display: none; }
 .mg-win.show { display: block; }
@@ -259,7 +303,7 @@
         <div class="ix-card-grid">
           @foreach($ix['cards'] ?? [] as $c)
             <div class="ix-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
+              <span class="icon icon-emoji">{{ $c['icon'] ?? '📌' }}</span>
               @if(!empty($c['tag']))<span class="tag {{ $c['color'] ?? 'gold' }}">{{ $c['tag'] }}</span>@endif
               <h4>{{ $c['title'] ?? '' }}</h4>
               <p>{{ $c['body'] ?? '' }}</p>
@@ -311,6 +355,42 @@
           </div>
         @endif
 
+      @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'slide')
+        @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
+        <div class="sl-deck" id="slDeck">
+          <div class="sl-progress"><div class="sl-progress-fill" id="slProgressFill"></div></div>
+          <div class="sl-viewport" id="slViewport">
+            @foreach($ix['slides'] ?? [] as $i => $s)
+              <div class="sl-slide {{ $i === 0 ? 'active' : '' }}" data-index="{{ $i }}">
+                <div class="sl-num">{{ $i + 1 }} / {{ count($ix['slides']) }}</div>
+                @if(!empty($s['heading']))<h3 class="sl-heading">{{ $s['heading'] }}</h3>@endif
+                <p class="sl-text" data-words="{{ $s['text'] ?? '' }}" data-highlight='{{ json_encode($s['highlight'] ?? []) }}'></p>
+                @if(!empty($s['citation']))
+                  <div class="sl-citation">
+                    <span class="sl-citation-icon">📜</span>
+                    <div><strong>{{ $s['citation']['label'] ?? '' }}</strong><br>{{ $s['citation']['note'] ?? '' }}</div>
+                  </div>
+                @endif
+              </div>
+            @endforeach
+          </div>
+          <div class="sl-nav">
+            <button type="button" id="slPrev" class="sl-btn" disabled>← Anterior</button>
+            <div class="sl-dots" id="slDots">
+              @foreach($ix['slides'] ?? [] as $i => $s)<button type="button" class="sl-dot {{ $i === 0 ? 'active' : '' }}" data-index="{{ $i }}"></button>@endforeach
+            </div>
+            <button type="button" id="slNext" class="sl-btn primary">Siguiente →</button>
+          </div>
+        </div>
+        @if(!empty($ix['sources']))
+          <div class="sl-sources">
+            <div class="rdp-block-title" style="margin:0 0 0.6rem;">Fuentes normativas de referencia</div>
+            @foreach($ix['sources'] as $src)
+              <div class="sl-source-row"><span class="sl-source-icon">⚖️</span><div><strong>{{ $src['label'] ?? '' }}</strong> — {{ $src['desc'] ?? '' }}</div></div>
+            @endforeach
+          </div>
+        @endif
+
       @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'balance')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
         <div class="ix-bars" id="ixBars">
@@ -346,6 +426,7 @@
         <div class="gl-grid" id="glGrid">
           @foreach($ix['terms'] ?? [] as $i => $t)
             <div class="gl-term-card" data-idx="{{ $i }}" data-search="{{ \Illuminate\Support\Str::lower(($t['term'] ?? '').' '.($t['short'] ?? '')) }}" onclick="glOpen({{ $i }})">
+              <span class="icon">{{ $t['icon'] ?? '🔎' }}</span>
               <div class="t">{{ $t['term'] ?? '' }}</div>
               <div class="s">{{ $t['short'] ?? '' }}</div>
             </div>
@@ -537,14 +618,18 @@
 </div>
 @endif
 
-<div class="modal-overlay" id="modalGlosario">
-  <div class="modal-backdrop" onclick="cerrarModalesLeccion()"></div>
-  <div class="modal-box gl-modal-body" style="max-width:460px;">
-    <button class="modal-close" onclick="cerrarModalesLeccion()">&times;</button>
-    <h3 id="glModalTerm"></h3>
-    <p class="modal-sub" id="glModalShort"></p>
+<div class="gl-float" id="glFloat">
+  <div class="gl-float-header" id="glFloatHeader">
+    <span class="gl-float-icon" id="glFloatIcon">📖</span>
+    <div class="gl-float-titles">
+      <h3 id="glModalTerm"></h3>
+      <p id="glModalShort"></p>
+    </div>
+    <button type="button" class="gl-float-close" onclick="glClose()">&times;</button>
+  </div>
+  <div class="gl-float-body">
     <p id="glModalDef"></p>
-    <div class="gl-confuse" id="glModalConfuse" style="display:none;"><strong>No confundir con:</strong> <span id="glModalConfuseText"></span></div>
+    <div class="gl-confuse" id="glModalConfuse" style="display:none;"><strong>⚠️ No confundir con:</strong> <span id="glModalConfuseText"></span></div>
   </div>
 </div>
 @endsection
@@ -554,7 +639,7 @@
 function abrirModalCompra() { document.getElementById('modalCompra')?.classList.add('active'); }
 function abrirModalBloqueo() { document.getElementById('modalBloqueo')?.classList.add('active'); }
 function cerrarModalesLeccion() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active')); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModalesLeccion(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { cerrarModalesLeccion(); window.glClose?.(); } });
 
 function lessonToggleDrawer() {
   document.getElementById('lessonSidebar')?.classList.toggle('open');
@@ -603,15 +688,17 @@ function rdpTab(name) {
   setTimeout(() => bars.forEach(b => { b.style.width = b.dataset.pct + '%'; }), 150);
 })();
 
-/* ---- Interactive glossary ---- */
+/* ---- Interactive glossary (floating window) ---- */
 (function () {
   const dataEl = document.getElementById('glData');
   if (!dataEl) return;
   const terms = JSON.parse(dataEl.textContent || '[]');
+  const float = document.getElementById('glFloat');
 
   window.glOpen = function (idx) {
     const t = terms[idx];
     if (!t) return;
+    document.getElementById('glFloatIcon').textContent = t.icon || '🔎';
     document.getElementById('glModalTerm').textContent = t.term || '';
     document.getElementById('glModalShort').textContent = t.short || '';
     document.getElementById('glModalDef').textContent = t.definition || '';
@@ -622,8 +709,12 @@ function rdpTab(name) {
     } else {
       confuseBox.style.display = 'none';
     }
-    document.getElementById('modalGlosario').classList.add('active');
+    float.style.left = '';
+    float.style.top = '';
+    float.classList.add('active');
   };
+
+  window.glClose = function () { float.classList.remove('active'); };
 
   const search = document.getElementById('glSearch');
   if (search) {
@@ -634,6 +725,71 @@ function rdpTab(name) {
       });
     });
   }
+
+  /* Drag the floating window by its header */
+  const header = document.getElementById('glFloatHeader');
+  if (header) {
+    let dragging = false, offX = 0, offY = 0;
+    header.addEventListener('mousedown', e => {
+      if (e.target.closest('.gl-float-close')) return;
+      dragging = true;
+      const rect = float.getBoundingClientRect();
+      offX = e.clientX - rect.left;
+      offY = e.clientY - rect.top;
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      float.style.right = 'auto';
+      float.style.bottom = 'auto';
+      float.style.left = Math.min(Math.max(0, e.clientX - offX), window.innerWidth - float.offsetWidth) + 'px';
+      float.style.top = Math.min(Math.max(0, e.clientY - offY), window.innerHeight - float.offsetHeight) + 'px';
+    });
+    document.addEventListener('mouseup', () => { dragging = false; });
+  }
+})();
+
+/* ---- Interactive slide deck (word-by-word reveal) ---- */
+(function () {
+  const deck = document.getElementById('slDeck');
+  if (!deck) return;
+  const slides = Array.from(deck.querySelectorAll('.sl-slide'));
+  const dots = Array.from(deck.querySelectorAll('.sl-dot'));
+  const prevBtn = document.getElementById('slPrev');
+  const nextBtn = document.getElementById('slNext');
+  const fill = document.getElementById('slProgressFill');
+  let current = 0;
+
+  function renderWords(slide) {
+    const p = slide.querySelector('.sl-text');
+    if (!p || p.dataset.rendered) return;
+    const text = p.dataset.words || '';
+    let highlights = [];
+    try { highlights = JSON.parse(p.dataset.highlight || '[]'); } catch (e) {}
+    const words = text.split(/\s+/);
+    p.innerHTML = words.map((w, i) => {
+      const clean = w.replace(/[.,;:()"“”]/g, '');
+      const isHi = highlights.some(h => clean.toLowerCase() === h.toLowerCase());
+      return '<span class="sl-word' + (isHi ? ' hi' : '') + '" style="animation-delay:' + (i * 0.045) + 's">' + w + '</span>';
+    }).join(' ');
+    p.dataset.rendered = '1';
+  }
+
+  function show(i) {
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+    prevBtn.disabled = i === 0;
+    nextBtn.textContent = i === slides.length - 1 ? 'Fin ✓' : 'Siguiente →';
+    fill.style.width = ((i + 1) / slides.length * 100) + '%';
+    renderWords(slides[i]);
+    current = i;
+  }
+
+  prevBtn.addEventListener('click', () => { if (current > 0) show(current - 1); });
+  nextBtn.addEventListener('click', () => { if (current < slides.length - 1) show(current + 1); });
+  dots.forEach(d => d.addEventListener('click', () => show(parseInt(d.dataset.index, 10))));
+
+  show(0);
 })();
 
 /* ---- Memory match game ---- */
@@ -665,8 +821,8 @@ function rdpTab(name) {
 
     cards = [];
     pairs.forEach((p, i) => {
-      cards.push({ pairId: i, text: p.a, key: 'a' });
-      cards.push({ pairId: i, text: p.b, key: 'b' });
+      cards.push({ pairId: i, text: p.a, icon: p.icon || '🔹', key: 'a' });
+      cards.push({ pairId: i, text: p.b, icon: p.icon || '🔹', key: 'b' });
     });
     shuffle(cards);
 
@@ -674,7 +830,7 @@ function rdpTab(name) {
       const el = document.createElement('div');
       el.className = 'mg-card';
       el.dataset.index = i;
-      el.innerHTML = '<div class="mg-card-inner"><div class="mg-face mg-front">?</div><div class="mg-face mg-back">' + c.text + '</div></div>';
+      el.innerHTML = '<div class="mg-card-inner"><div class="mg-face mg-front">❔</div><div class="mg-face mg-back"><span class="mg-icon">' + c.icon + '</span>' + c.text + '</div></div>';
       el.addEventListener('click', () => flip(i, el));
       grid.appendChild(el);
     });

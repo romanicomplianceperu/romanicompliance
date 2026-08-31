@@ -57,6 +57,8 @@
 .rd-cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 .rd-btn-primary { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--ink); font-weight: 700; font-size: 0.92rem; padding: 15px 32px; border-radius: 8px; border: none; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease; box-shadow: 0 8px 24px rgba(184,154,86,0.25); }
 .rd-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(184,154,86,0.35); }
+.rd-btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--white); font-weight: 700; font-size: 0.88rem; padding: 14px 26px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.3); transition: border-color 0.2s ease, background 0.2s ease; }
+.rd-btn-secondary:hover { border-color: var(--gold-light); background: rgba(184,154,86,0.12); }
 .rd-progress-chip { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
 .rd-login-note { display: block; margin-top: 8px; font-size: 0.74rem; color: rgba(255,255,255,0.4); }
 .rd-login-note a { color: var(--gold-light); font-weight: 600; }
@@ -254,6 +256,11 @@
             {{ $enrollment->progress_percent > 0 ? 'Continuar curso' : 'Comenzar curso' }}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
+          @if($course->exam)
+            <a href="{{ route('exams.show', $course) }}" class="rd-btn-secondary" title="Puedes dar el cuestionario en cualquier momento, sin necesidad de terminar el curso">
+              Dar el cuestionario
+            </a>
+          @endif
           <span class="rd-progress-chip">{{ $enrollment->progress_percent }}% completado</span>
         @else
           <button type="button" class="rd-btn-primary" onclick="rdOpenWelcome()">
