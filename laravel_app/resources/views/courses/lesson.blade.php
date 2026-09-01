@@ -21,6 +21,8 @@
 .lesson-text-content { background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 1.8rem; font-size: 0.9rem; line-height: 1.8; color: var(--ink); margin-bottom: 1.5rem; white-space: pre-line; }
 .lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; }
 .lesson-nav a, .lesson-nav button { font-size: 0.82rem; }
+.lesson-auto-complete { margin-top: 10px; text-align: right; font-size: 0.76rem; color: #1F7A4D; font-weight: 600; opacity: 0; transition: opacity 0.4s ease; }
+.lesson-auto-complete.show { opacity: 1; }
 
 .lesson-sidebar { background: var(--white); border: 1px solid var(--line); border-radius: 10px; padding: 0; position: sticky; top: 90px; overflow: hidden; }
 .rdp-panel-head { padding: 1.2rem 1.2rem 1rem; border-bottom: 1px solid var(--line); }
@@ -205,20 +207,17 @@
 .gl-confuse { background: var(--gold-pale); border-radius: 8px; padding: 12px 14px; font-size: 0.82rem; color: var(--ink); }
 .gl-confuse strong { color: var(--gold); }
 
-/* Floating glossary window */
-.gl-float { position: fixed; right: 24px; bottom: 24px; width: 350px; max-width: calc(100vw - 32px); background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 60px rgba(11,24,41,0.22); z-index: 200; opacity: 0; transform: translateY(24px) scale(0.97); pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
-.gl-float.active { opacity: 1; transform: none; pointer-events: auto; }
-.gl-float-header { display: flex; align-items: flex-start; gap: 10px; padding: 14px 14px 12px; border-bottom: 1px solid var(--line); cursor: grab; background: var(--ivory); border-radius: 14px 14px 0 0; user-select: none; }
-.gl-float-header:active { cursor: grabbing; }
-.gl-float-icon { font-size: 1.4rem; flex-shrink: 0; }
-.gl-float-titles { flex: 1; min-width: 0; }
-.gl-float-titles h3 { font-family: var(--serif); font-size: 1.05rem; color: var(--ink); margin: 0; }
-.gl-float-titles p { font-size: 0.72rem; color: var(--slate-light); margin: 2px 0 0; }
-.gl-float-close { flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--ivory-dim); color: var(--slate); font-size: 1rem; line-height: 1; cursor: pointer; }
-.gl-float-close:hover { background: var(--gold); color: var(--white); }
-.gl-float-body { padding: 14px 16px 16px; max-height: 50vh; overflow-y: auto; }
-.gl-float-body p { font-size: 0.85rem; color: var(--slate); line-height: 1.65; margin: 0 0 0.9rem; }
-@media (max-width: 560px) { .gl-float { left: 16px; right: 16px; bottom: 16px; width: auto; } }
+/* Glossary — centered modal, list format */
+.gl-list-modal { max-width: 640px; }
+.gl-list { max-height: 60vh; overflow-y: auto; margin-top: 0.5rem; }
+.gl-list-item { padding: 16px 4px; border-bottom: 1px solid var(--line); border-radius: 8px; transition: background 0.4s ease; scroll-margin-top: 10px; }
+.gl-list-item:last-child { border-bottom: none; }
+.gl-list-item.flash { background: var(--gold-pale); }
+.gl-list-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.gl-list-icon { font-size: 1.3rem; flex-shrink: 0; }
+.gl-list-term { font-family: var(--serif); font-size: 1.05rem; font-weight: 700; color: var(--ink); }
+.gl-list-short { font-size: 0.72rem; color: var(--slate-light); }
+.gl-list-def { font-size: 0.85rem; color: var(--slate); line-height: 1.65; margin-bottom: 8px; }
 
 /* GAFI jurisdictions map (by region) */
 .gm-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.3rem; font-size: 0.78rem; color: var(--slate); }
@@ -226,17 +225,22 @@
 .gm-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .gm-legend .dot.red { background: #B3413B; }
 .gm-legend .dot.amber { background: #B8942E; }
-.gm-regions { display: flex; flex-direction: column; gap: 14px; margin-bottom: 1.2rem; }
-.gm-region { background: var(--white); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; }
-.gm-region h5 { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-light); margin-bottom: 10px; }
-.gm-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.gm-chip { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); border-radius: 20px; padding: 7px 14px; font-size: 0.8rem; font-weight: 600; color: var(--ink); background: var(--white); cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s; }
-.gm-chip:hover { transform: translateY(-2px); }
-.gm-chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.gm-chip.red { border-color: rgba(179,65,59,0.4); }
-.gm-chip.red:hover, .gm-chip.red.active { background: rgba(179,65,59,0.08); border-color: #B3413B; }
-.gm-chip.amber { border-color: rgba(184,148,46,0.4); }
-.gm-chip.amber:hover, .gm-chip.amber.active { background: rgba(184,148,46,0.1); border-color: #B8942E; }
+.gm-map-wrap { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1rem; margin-bottom: 1.2rem; }
+.gm-map { width: 100%; height: auto; display: block; }
+.gm-ocean { fill: var(--ivory-dim); }
+.gm-grid line { stroke: rgba(11,24,41,0.05); stroke-width: 1; }
+.gm-continents ellipse { fill: rgba(11,24,41,0.08); stroke: rgba(11,24,41,0.12); stroke-width: 1; }
+.gm-marker { cursor: pointer; }
+.gm-dot { transition: r 0.15s ease; }
+.gm-marker.red .gm-dot { fill: #B3413B; }
+.gm-marker.amber .gm-dot { fill: #B8942E; }
+.gm-pulse { transform-box: fill-box; transform-origin: center; }
+.gm-marker.red .gm-pulse { fill: rgba(179,65,59,0.25); animation: gmPulse 2.2s ease-out infinite; }
+.gm-marker.amber .gm-pulse { fill: rgba(184,148,46,0.25); animation: gmPulse 2.2s ease-out infinite; }
+.gm-marker:hover .gm-dot, .gm-marker.active .gm-dot { r: 8; }
+.gm-label { font-size: 13px; font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--white); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+@keyframes gmPulse { 0% { transform: scale(0.5); opacity: 0.9; } 100% { transform: scale(1.6); opacity: 0; } }
+@media (max-width: 640px) { .gm-label { font-size: 16px; } }
 .gm-detail { background: var(--gold-pale); border-radius: 10px; padding: 1rem 1.2rem; font-size: 0.85rem; color: var(--ink); line-height: 1.6; margin-bottom: 1rem; display: none; }
 .gm-detail.show { display: block; }
 .gm-detail strong { display: block; margin-bottom: 4px; font-size: 0.92rem; }
@@ -351,23 +355,7 @@
     @elseif(in_array($lesson->type, ['interactive', 'glossary', 'memory']) && $lesson->content)
       @php $ix = json_decode($lesson->content, true) ?: []; @endphp
 
-      @if($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'subject_select')
-        @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
-        <div class="ss-wrap">
-          <label for="ssSelect">Tipo de sujeto obligado</label>
-          <select id="ssSelect" class="ss-select">
-            <option value="">Selecciona tu sector…</option>
-            @foreach($ix['sectors'] ?? [] as $s)
-              <option value="{{ $s['value'] }}">{{ $s['label'] }}</option>
-            @endforeach
-          </select>
-          <button type="button" id="ssSave" class="btn btn-gold">Guardar selección</button>
-          <div class="ss-confirm" id="ssConfirm" style="display:none;">✓ Sector guardado: <strong id="ssConfirmLabel"></strong>. Los casos prácticos de este curso se destacarán para tu sector.</div>
-          <div class="ss-note">Puedes cambiarlo cuando quieras volviendo a esta lección.</div>
-        </div>
-        <script id="ssMeta" type="application/json">{!! json_encode(['courseId' => $course->id, 'sectors' => $ix['sectors'] ?? []]) !!}</script>
-
-      @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'cards')
+      @if($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'cards')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
         <div class="ix-card-grid" id="ixCardGrid" data-course="{{ $course->id }}">
           @foreach($ix['cards'] ?? [] as $c)
@@ -499,19 +487,31 @@
           <span><span class="dot red"></span> High-Risk Jurisdictions subject to a Call for Action</span>
           <span><span class="dot amber"></span> Jurisdictions under Increased Monitoring</span>
         </div>
-        <div class="gm-regions" id="gmRegions">
-          @foreach($ix['regions'] ?? [] as $region)
-            <div class="gm-region">
-              <h5>{{ $region['label'] ?? '' }}</h5>
-              <div class="gm-chip-row">
-                @foreach($region['countries'] ?? [] as $c)
-                  <button type="button" class="gm-chip {{ $c['status'] ?? 'amber' }}" data-detail="{{ e(json_encode($c)) }}">
-                    <span class="dot {{ $c['status'] ?? 'amber' }}"></span>{{ $c['name'] ?? '' }}
-                  </button>
-                @endforeach
-              </div>
-            </div>
-          @endforeach
+        <div class="gm-map-wrap">
+          <svg class="gm-map" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="900" height="400" rx="14" class="gm-ocean"/>
+            <g class="gm-grid">
+              @for($i = 0; $i <= 900; $i += 45)<line x1="{{ $i }}" y1="0" x2="{{ $i }}" y2="400"/>@endfor
+              @for($i = 0; $i <= 400; $i += 40)<line x1="0" y1="{{ $i }}" x2="900" y2="{{ $i }}"/>@endfor
+            </g>
+            <g class="gm-continents">
+              <ellipse cx="140" cy="140" rx="100" ry="90"/>
+              <ellipse cx="185" cy="205" rx="45" ry="35"/>
+              <ellipse cx="195" cy="320" rx="65" ry="85"/>
+              <ellipse cx="500" cy="90" rx="70" ry="45"/>
+              <ellipse cx="545" cy="160" rx="45" ry="35"/>
+              <ellipse cx="470" cy="260" rx="95" ry="105"/>
+              <ellipse cx="680" cy="140" rx="140" ry="90"/>
+              <ellipse cx="800" cy="320" rx="60" ry="50"/>
+            </g>
+            @foreach($ix['countries'] ?? [] as $i => $c)
+              <g class="gm-marker {{ $c['status'] ?? 'amber' }}" data-idx="{{ $i }}" transform="translate({{ $c['x'] ?? 0 }},{{ $c['y'] ?? 0 }})">
+                <circle class="gm-pulse" r="14"/>
+                <circle class="gm-dot" r="6"/>
+                <text class="gm-label" x="10" y="4">{{ $c['name'] ?? '' }}</text>
+              </g>
+            @endforeach
+          </svg>
         </div>
         <div class="gm-detail" id="gmDetail"></div>
         <div class="gm-disclaimer">⚠️ {{ $ix['disclaimer'] ?? 'El GAFI actualiza estas listas varias veces al año. Este mapa es ilustrativo; consulta siempre el listado oficial vigente.' }}
@@ -519,6 +519,7 @@
             <a href="{{ $ix['officialUrl'] }}" target="_blank" rel="noopener">Ver listado oficial del GAFI ↗</a>
           @endif
         </div>
+        <script id="gmData" type="application/json">{!! json_encode($ix['countries'] ?? []) !!}</script>
 
       @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'balance')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
@@ -578,11 +579,13 @@
           <a href="{{ route('lessons.show', $previousLesson) }}" class="btn btn-outline-dark" style="border:1px solid var(--line);padding:10px 18px;border-radius:4px;">← Anterior</a>
         @endif
       </div>
-      <form action="{{ route('lessons.complete', $lesson) }}" method="POST">
-        @csrf
-        <button type="submit" class="btn btn-gold">{{ $isCompleted ? ($nextLesson ? 'Siguiente lección →' : 'Volver al curso') : 'Marcar como completada' }}</button>
-      </form>
+      @if($nextLesson)
+        <a href="{{ route('lessons.show', $nextLesson) }}" class="btn btn-gold">Siguiente lección →</a>
+      @else
+        <a href="{{ route('courses.show', $course) }}" class="btn btn-gold">Volver al curso</a>
+      @endif
     </div>
+    <div class="lesson-auto-complete" id="lessonAutoComplete" style="display:none;">✓ Lección completada automáticamente</div>
   </div>
 
   <div class="lesson-sidebar" id="lessonSidebar">
@@ -752,20 +755,33 @@
 </div>
 @endif
 
-<div class="gl-float" id="glFloat">
-  <div class="gl-float-header" id="glFloatHeader">
-    <span class="gl-float-icon" id="glFloatIcon">📖</span>
-    <div class="gl-float-titles">
-      <h3 id="glModalTerm"></h3>
-      <p id="glModalShort"></p>
+@if($lesson->type === 'glossary')
+<div class="modal-overlay" id="modalGlosario">
+  <div class="modal-backdrop" onclick="cerrarModalesLeccion()"></div>
+  <div class="modal-box gl-list-modal">
+    <button class="modal-close" onclick="cerrarModalesLeccion()">&times;</button>
+    <h3>Glosario del curso</h3>
+    <p class="modal-sub">Todos los términos clave, en un solo lugar.</p>
+    <div class="gl-list" id="glList">
+      @foreach($ix['terms'] ?? [] as $i => $t)
+        <div class="gl-list-item" id="glItem-{{ $i }}">
+          <div class="gl-list-head">
+            <span class="gl-list-icon">{{ $t['icon'] ?? '🔎' }}</span>
+            <div>
+              <div class="gl-list-term">{{ $t['term'] ?? '' }}</div>
+              <div class="gl-list-short">{{ $t['short'] ?? '' }}</div>
+            </div>
+          </div>
+          <p class="gl-list-def">{{ $t['definition'] ?? '' }}</p>
+          @if(!empty($t['confuse']))
+            <div class="gl-confuse"><strong>⚠️ No confundir con:</strong> {{ $t['confuse'] }}</div>
+          @endif
+        </div>
+      @endforeach
     </div>
-    <button type="button" class="gl-float-close" onclick="glClose()">&times;</button>
-  </div>
-  <div class="gl-float-body">
-    <p id="glModalDef"></p>
-    <div class="gl-confuse" id="glModalConfuse" style="display:none;"><strong>⚠️ No confundir con:</strong> <span id="glModalConfuseText"></span></div>
   </div>
 </div>
+@endif
 @endsection
 
 @section('scripts')
@@ -817,6 +833,20 @@ function rdpTab(name) {
       }
     }, 900);
   });
+})();
+
+/* ---- Automatic lesson completion ---- */
+(function () {
+  @if(!$isCompleted)
+    fetch('{{ route("lessons.complete", $lesson) }}', {
+      method: 'POST',
+      headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+      keepalive: true,
+    }).then(() => {
+      const toast = document.getElementById('lessonAutoComplete');
+      if (toast) toast.classList.add('show');
+    }).catch(() => {});
+  @endif
 })();
 
 /* ---- Top progress line ---- */
@@ -877,17 +907,19 @@ function rdpTab(name) {
   grid.parentElement.insertBefore(banner, grid);
 })();
 
-/* ---- GAFI jurisdictions map ---- */
+/* ---- GAFI jurisdictions map (interactive SVG) ---- */
 (function () {
-  const wrap = document.getElementById('gmRegions');
+  const dataEl = document.getElementById('gmData');
   const detail = document.getElementById('gmDetail');
-  if (!wrap || !detail) return;
+  if (!dataEl || !detail) return;
+  const countries = JSON.parse(dataEl.textContent || '[]');
 
-  wrap.querySelectorAll('.gm-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const data = JSON.parse(chip.dataset.detail || '{}');
-      wrap.querySelectorAll('.gm-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
+  document.querySelectorAll('.gm-marker').forEach(marker => {
+    marker.addEventListener('click', () => {
+      const data = countries[marker.dataset.idx];
+      if (!data) return;
+      document.querySelectorAll('.gm-marker').forEach(m => m.classList.remove('active'));
+      marker.classList.add('active');
       const statusLabel = data.status === 'red' ? 'High-Risk Jurisdiction subject to a Call for Action' : 'Jurisdiction under Increased Monitoring';
       detail.innerHTML = '<strong>' + (data.name || '') + ' — ' + statusLabel + '</strong>' + (data.note || 'Recuerda: esto es un factor de riesgo del país, no una designación de sanciones sobre una persona.');
       detail.classList.add('show');
@@ -902,33 +934,22 @@ function rdpTab(name) {
   setTimeout(() => bars.forEach(b => { b.style.width = b.dataset.pct + '%'; }), 150);
 })();
 
-/* ---- Interactive glossary (floating window) ---- */
+/* ---- Interactive glossary (centered modal, list format) ---- */
 (function () {
-  const dataEl = document.getElementById('glData');
-  if (!dataEl) return;
-  const terms = JSON.parse(dataEl.textContent || '[]');
-  const float = document.getElementById('glFloat');
+  const grid = document.getElementById('glGrid');
+  if (!grid) return;
 
   window.glOpen = function (idx) {
-    const t = terms[idx];
-    if (!t) return;
-    document.getElementById('glFloatIcon').textContent = t.icon || '🔎';
-    document.getElementById('glModalTerm').textContent = t.term || '';
-    document.getElementById('glModalShort').textContent = t.short || '';
-    document.getElementById('glModalDef').textContent = t.definition || '';
-    const confuseBox = document.getElementById('glModalConfuse');
-    if (t.confuse) {
-      confuseBox.style.display = 'block';
-      document.getElementById('glModalConfuseText').textContent = t.confuse;
-    } else {
-      confuseBox.style.display = 'none';
+    document.getElementById('modalGlosario')?.classList.add('active');
+    document.querySelectorAll('#glList .gl-list-item').forEach(el => el.classList.remove('flash'));
+    const item = document.getElementById('glItem-' + idx);
+    if (item) {
+      setTimeout(() => {
+        item.scrollIntoView({ block: 'start' });
+        item.classList.add('flash');
+      }, 60);
     }
-    float.style.left = '';
-    float.style.top = '';
-    float.classList.add('active');
   };
-
-  window.glClose = function () { float.classList.remove('active'); };
 
   const search = document.getElementById('glSearch');
   if (search) {
@@ -938,28 +959,6 @@ function rdpTab(name) {
         card.style.display = card.dataset.search.includes(q) ? '' : 'none';
       });
     });
-  }
-
-  /* Drag the floating window by its header */
-  const header = document.getElementById('glFloatHeader');
-  if (header) {
-    let dragging = false, offX = 0, offY = 0;
-    header.addEventListener('mousedown', e => {
-      if (e.target.closest('.gl-float-close')) return;
-      dragging = true;
-      const rect = float.getBoundingClientRect();
-      offX = e.clientX - rect.left;
-      offY = e.clientY - rect.top;
-      e.preventDefault();
-    });
-    document.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      float.style.right = 'auto';
-      float.style.bottom = 'auto';
-      float.style.left = Math.min(Math.max(0, e.clientX - offX), window.innerWidth - float.offsetWidth) + 'px';
-      float.style.top = Math.min(Math.max(0, e.clientY - offY), window.innerHeight - float.offsetHeight) + 'px';
-    });
-    document.addEventListener('mouseup', () => { dragging = false; });
   }
 })();
 

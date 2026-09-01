@@ -105,6 +105,33 @@
 .rd-modules { display: grid; gap: 1rem; margin-top: 0.5rem; }
 .rd-module-card { display: grid; grid-template-columns: auto 1fr; gap: 1.2rem; background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem 1.7rem; transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease; }
 .rd-module-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(11,24,41,0.08); }
+
+/* ---- Subject-type picker (two-pane) ---- */
+.ss-picker { display: grid; grid-template-columns: 1fr 1.3fr; gap: 1.4rem; background: var(--white); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(11,24,41,0.05); }
+.ss-picker-list { border-right: 1px solid var(--line); max-height: 480px; overflow-y: auto; padding: 8px; }
+.ss-picker-item { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 12px; border-radius: 9px; border: none; background: none; text-align: left; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--ink); transition: background 0.15s; }
+.ss-picker-item:hover { background: var(--ivory); }
+.ss-picker-item.active { background: var(--gold-pale); color: var(--gold); }
+.ss-picker-icon { font-size: 1.1rem; flex-shrink: 0; }
+.ss-picker-label { flex: 1; line-height: 1.3; }
+.ss-picker-chevron { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.4; }
+.ss-picker-item.active .ss-picker-chevron { opacity: 1; }
+.ss-picker-detail { padding: 2rem 1.8rem; display: flex; align-items: center; }
+.ss-picker-empty { text-align: center; color: var(--slate-light); font-size: 0.85rem; margin: 0 auto; max-width: 280px; }
+.ss-picker-empty span { font-size: 1.8rem; display: block; margin-bottom: 10px; }
+.ss-picker-content { width: 100%; }
+.ss-picker-eyebrow { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 6px; }
+.ss-picker-content h3 { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); margin-bottom: 10px; }
+.ss-picker-content p { font-size: 0.88rem; color: var(--slate); line-height: 1.7; }
+.ss-adapt { display: none; align-items: flex-start; gap: 12px; background: rgba(31,122,77,0.08); border: 1px solid rgba(31,122,77,0.25); border-radius: 10px; padding: 14px 18px; margin-top: 1rem; }
+.ss-adapt-icon { width: 24px; height: 24px; border-radius: 50%; background: #1F7A4D; color: var(--white); font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ss-adapt strong { display: block; font-size: 0.85rem; color: #1F7A4D; margin-bottom: 3px; }
+.ss-adapt p { font-size: 0.85rem; color: var(--ink); line-height: 1.6; }
+@media (max-width: 800px) {
+  .ss-picker { grid-template-columns: 1fr; }
+  .ss-picker-list { border-right: none; border-bottom: 1px solid var(--line); max-height: 260px; }
+  .ss-picker-detail { padding: 1.5rem; }
+}
 .rd-module-num { width: 42px; height: 42px; border-radius: 10px; background: var(--gold-pale); color: var(--gold); font-weight: 800; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .rd-module-card h3 { font-size: 1.03rem; margin-bottom: 0.5rem; }
 .rd-lesson-chip { display: inline-block; font-size: 0.78rem; color: var(--slate); padding: 3px 0; }
@@ -354,7 +381,9 @@
 </section>
 @endif
 
-@if($course->modules->count() > 0)
+@if($course->slug === 'listas-internacionales-ft-fpadm')
+  @include('courses._subject-selector')
+@elseif($course->modules->count() > 0)
 <section class="rd-section">
   <div class="wrap">
     <div class="rd-eyebrow">Temario</div>

@@ -46,25 +46,6 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
         // ---------------------------------------------------------------
         // Módulo 1 — Personalización + ¿Por qué revisamos listas?
         // ---------------------------------------------------------------
-        $subjectSelect = [
-            'intro' => 'Selecciona el tipo de sujeto obligado al que pertenece tu organización. Los casos prácticos de este curso se destacarán según tu sector. Puedes cambiarlo cuando quieras.',
-            'sectors' => [
-                ['value' => 'notaria', 'label' => 'Notaría'],
-                ['value' => 'casino', 'label' => 'Casinos y máquinas tragamonedas'],
-                ['value' => 'prestamos', 'label' => 'Empresas de préstamos y empeños'],
-                ['value' => 'casas_cambio', 'label' => 'Casas de cambio'],
-                ['value' => 'inmobiliaria', 'label' => 'Empresas inmobiliarias / agentes inmobiliarios'],
-                ['value' => 'vehiculos', 'label' => 'Compra y venta de vehículos'],
-                ['value' => 'joyas', 'label' => 'Comercio de joyas y metales preciosos'],
-                ['value' => 'transferencia_fondos', 'label' => 'Empresas de transferencia de fondos'],
-                ['value' => 'cooperativas', 'label' => 'Cooperativas'],
-                ['value' => 'cripto', 'label' => 'Proveedores de servicios de activos virtuales / criptomonedas'],
-                ['value' => 'construccion', 'label' => 'Construcción y comercio exterior'],
-                ['value' => 'abogados_contadores', 'label' => 'Abogados y contadores (cuando corresponda como sujeto obligado)'],
-                ['value' => 'general', 'label' => 'Otro sujeto obligado / capacitación general'],
-            ],
-        ];
-
         $porQueSlide = [
             'intro' => 'Antes de aprender a manejar una coincidencia, hay que entender por qué el sistema de prevención exige revisar listas en cada relación comercial.',
             'slides' => [
@@ -228,25 +209,17 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
         ];
 
         $gafiMap = [
-            'intro' => 'Explora las jurisdicciones que el GAFI identifica por región. Haz clic en cada una para ver su estatus.',
-            'regions' => [
-                ['label' => 'Asia', 'countries' => [
-                    ['name' => 'Corea del Norte', 'status' => 'red', 'note' => 'En la lista de jurisdicciones de alto riesgo desde hace más de una década, por deficiencias estratégicas graves y persistentes.'],
-                    ['name' => 'Myanmar', 'status' => 'red', 'note' => 'Incorporada a la lista de alto riesgo por deficiencias estratégicas en su sistema de prevención de LA/FT.'],
-                ]],
-                ['label' => 'Oriente Medio', 'countries' => [
-                    ['name' => 'Irán', 'status' => 'red', 'note' => 'En la lista de alto riesgo desde 2020, además del régimen de sanciones específico del CSNU explicado en el Módulo 4.'],
-                    ['name' => 'Siria', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
-                    ['name' => 'Yemen', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
-                ]],
-                ['label' => 'África', 'countries' => [
-                    ['name' => 'Sudán del Sur', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
-                    ['name' => 'República Democrática del Congo', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
-                    ['name' => 'Nigeria', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
-                ]],
-                ['label' => 'Caribe', 'countries' => [
-                    ['name' => 'Haití', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
-                ]],
+            'intro' => 'Haz clic en cada marcador del mapa para ver el estatus de esa jurisdicción ante el GAFI.',
+            'countries' => [
+                ['name' => 'Corea del Norte', 'status' => 'red', 'x' => 760, 'y' => 108, 'note' => 'En la lista de jurisdicciones de alto riesgo desde hace más de una década, por deficiencias estratégicas graves y persistentes.'],
+                ['name' => 'Myanmar', 'status' => 'red', 'x' => 700, 'y' => 205, 'note' => 'Incorporada a la lista de alto riesgo por deficiencias estratégicas en su sistema de prevención de LA/FT.'],
+                ['name' => 'Irán', 'status' => 'red', 'x' => 560, 'y' => 158, 'note' => 'En la lista de alto riesgo desde 2020, además del régimen de sanciones específico del CSNU explicado en el Módulo 4.'],
+                ['name' => 'Siria', 'status' => 'amber', 'x' => 528, 'y' => 142, 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                ['name' => 'Yemen', 'status' => 'amber', 'x' => 555, 'y' => 188, 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                ['name' => 'Sudán del Sur', 'status' => 'amber', 'x' => 500, 'y' => 218, 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                ['name' => 'Rep. Dem. del Congo', 'status' => 'amber', 'x' => 478, 'y' => 258, 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                ['name' => 'Nigeria', 'status' => 'amber', 'x' => 420, 'y' => 218, 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                ['name' => 'Haití', 'status' => 'amber', 'x' => 190, 'y' => 195, 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
             ],
             'disclaimer' => 'Este mapa es ilustrativo del tipo de jurisdicciones que el GAFI clasifica en cada categoría. La lista vigente cambia varias veces al año — antes de tomar cualquier decisión, verifica siempre el listado oficial actualizado.',
             'officialUrl' => 'https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html',
@@ -356,8 +329,7 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
         ];
 
         $modulesData = [
-            ['title' => 'Módulo 1: Personalización y ¿por qué revisamos listas?', 'lessons' => [
-                ['title' => 'Personaliza tu capacitación', 'type' => 'interactive', 'duration_minutes' => 2, 'content' => json_encode(['kind' => 'subject_select'] + $subjectSelect)],
+            ['title' => 'Módulo 1: ¿Por qué revisamos listas?', 'lessons' => [
                 ['title' => '¿Por qué revisamos listas?', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'slide'] + $porQueSlide)],
             ]],
             ['title' => 'Módulo 2: Mapa de listas internacionales', 'lessons' => [
