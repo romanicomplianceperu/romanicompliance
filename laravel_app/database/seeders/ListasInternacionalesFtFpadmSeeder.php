@@ -222,9 +222,34 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                 ],
             ],
             'sources' => [
-                ['label' => 'Listados públicos del GAFI/FATF', 'desc' => 'High-Risk Jurisdictions subject to a Call for Action y Jurisdictions under Increased Monitoring, actualizados periódicamente por el GAFI.'],
-                ['label' => 'Res. SBS N.º 789-2018 y modificatorias', 'desc' => 'Prevención del LA/FT aplicable a los sujetos obligados bajo supervisión de la UIF-Perú, incluyendo el tratamiento de jurisdicciones de riesgo.'],
+                ['label' => 'Listados públicos del GAFI/FATF', 'url' => 'https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html', 'desc' => 'High-Risk Jurisdictions subject to a Call for Action y Jurisdictions under Increased Monitoring, actualizados periódicamente por el GAFI.'],
+                ['label' => 'Res. SBS N.º 789-2018 y modificatorias', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos', 'desc' => 'Prevención del LA/FT aplicable a los sujetos obligados bajo supervisión de la UIF-Perú, incluyendo el tratamiento de jurisdicciones de riesgo.'],
             ],
+        ];
+
+        $gafiMap = [
+            'intro' => 'Explora las jurisdicciones que el GAFI identifica por región. Haz clic en cada una para ver su estatus.',
+            'regions' => [
+                ['label' => 'Asia', 'countries' => [
+                    ['name' => 'Corea del Norte', 'status' => 'red', 'note' => 'En la lista de jurisdicciones de alto riesgo desde hace más de una década, por deficiencias estratégicas graves y persistentes.'],
+                    ['name' => 'Myanmar', 'status' => 'red', 'note' => 'Incorporada a la lista de alto riesgo por deficiencias estratégicas en su sistema de prevención de LA/FT.'],
+                ]],
+                ['label' => 'Oriente Medio', 'countries' => [
+                    ['name' => 'Irán', 'status' => 'red', 'note' => 'En la lista de alto riesgo desde 2020, además del régimen de sanciones específico del CSNU explicado en el Módulo 4.'],
+                    ['name' => 'Siria', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                    ['name' => 'Yemen', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                ]],
+                ['label' => 'África', 'countries' => [
+                    ['name' => 'Sudán del Sur', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                    ['name' => 'República Democrática del Congo', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                    ['name' => 'Nigeria', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                ]],
+                ['label' => 'Caribe', 'countries' => [
+                    ['name' => 'Haití', 'status' => 'amber', 'note' => 'Bajo monitoreo reforzado del GAFI mientras implementa su plan de acción acordado.'],
+                ]],
+            ],
+            'disclaimer' => 'Este mapa es ilustrativo del tipo de jurisdicciones que el GAFI clasifica en cada categoría. La lista vigente cambia varias veces al año — antes de tomar cualquier decisión, verifica siempre el listado oficial actualizado.',
+            'officialUrl' => 'https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html',
         ];
 
         // ---------------------------------------------------------------
@@ -349,6 +374,7 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
             ]],
             ['title' => 'Módulo 6: GAFI y jurisdicciones de riesgo', 'lessons' => [
                 ['title' => 'GAFI: país no es lo mismo que persona sancionada', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'slide'] + $gafiSlide)],
+                ['title' => 'Mapa de jurisdicciones GAFI por región', 'type' => 'interactive', 'duration_minutes' => 6, 'content' => json_encode(['kind' => 'gafi_map'] + $gafiMap)],
             ]],
             ['title' => 'Módulo 7: Coincidencia real o falso positivo', 'lessons' => [
                 ['title' => 'Glosario: coincidencia, falso positivo y tipping off', 'type' => 'glossary', 'duration_minutes' => 10, 'content' => json_encode($glosarioListas)],

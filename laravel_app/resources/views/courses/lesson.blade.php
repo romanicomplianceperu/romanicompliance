@@ -220,6 +220,30 @@
 .gl-float-body p { font-size: 0.85rem; color: var(--slate); line-height: 1.65; margin: 0 0 0.9rem; }
 @media (max-width: 560px) { .gl-float { left: 16px; right: 16px; bottom: 16px; width: auto; } }
 
+/* GAFI jurisdictions map (by region) */
+.gm-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.3rem; font-size: 0.78rem; color: var(--slate); }
+.gm-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.gm-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.gm-legend .dot.red { background: #B3413B; }
+.gm-legend .dot.amber { background: #B8942E; }
+.gm-regions { display: flex; flex-direction: column; gap: 14px; margin-bottom: 1.2rem; }
+.gm-region { background: var(--white); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; }
+.gm-region h5 { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-light); margin-bottom: 10px; }
+.gm-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.gm-chip { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); border-radius: 20px; padding: 7px 14px; font-size: 0.8rem; font-weight: 600; color: var(--ink); background: var(--white); cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s; }
+.gm-chip:hover { transform: translateY(-2px); }
+.gm-chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.gm-chip.red { border-color: rgba(179,65,59,0.4); }
+.gm-chip.red:hover, .gm-chip.red.active { background: rgba(179,65,59,0.08); border-color: #B3413B; }
+.gm-chip.amber { border-color: rgba(184,148,46,0.4); }
+.gm-chip.amber:hover, .gm-chip.amber.active { background: rgba(184,148,46,0.1); border-color: #B8942E; }
+.gm-detail { background: var(--gold-pale); border-radius: 10px; padding: 1rem 1.2rem; font-size: 0.85rem; color: var(--ink); line-height: 1.6; margin-bottom: 1rem; display: none; }
+.gm-detail.show { display: block; }
+.gm-detail strong { display: block; margin-bottom: 4px; font-size: 0.92rem; }
+.gm-disclaimer { font-size: 0.76rem; color: var(--slate-light); background: var(--ivory); border-radius: 8px; padding: 10px 14px; line-height: 1.6; }
+.gm-disclaimer a { color: var(--gold); font-weight: 700; text-decoration: none; }
+.gm-disclaimer a:hover { text-decoration: underline; }
+
 /* Interactive slide (word-reveal + citations) */
 .sl-deck { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.7rem; margin-bottom: 1.5rem; }
 .sl-progress { height: 4px; background: var(--ivory-dim); border-radius: 20px; overflow: hidden; margin-bottom: 1.5rem; }
@@ -468,6 +492,33 @@
             @endforeach
           </div>
         @endif
+
+      @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'gafi_map')
+        @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
+        <div class="gm-legend">
+          <span><span class="dot red"></span> High-Risk Jurisdictions subject to a Call for Action</span>
+          <span><span class="dot amber"></span> Jurisdictions under Increased Monitoring</span>
+        </div>
+        <div class="gm-regions" id="gmRegions">
+          @foreach($ix['regions'] ?? [] as $region)
+            <div class="gm-region">
+              <h5>{{ $region['label'] ?? '' }}</h5>
+              <div class="gm-chip-row">
+                @foreach($region['countries'] ?? [] as $c)
+                  <button type="button" class="gm-chip {{ $c['status'] ?? 'amber' }}" data-detail="{{ e(json_encode($c)) }}">
+                    <span class="dot {{ $c['status'] ?? 'amber' }}"></span>{{ $c['name'] ?? '' }}
+                  </button>
+                @endforeach
+              </div>
+            </div>
+          @endforeach
+        </div>
+        <div class="gm-detail" id="gmDetail"></div>
+        <div class="gm-disclaimer">⚠️ {{ $ix['disclaimer'] ?? 'El GAFI actualiza estas listas varias veces al año. Este mapa es ilustrativo; consulta siempre el listado oficial vigente.' }}
+          @if(!empty($ix['officialUrl']))
+            <a href="{{ $ix['officialUrl'] }}" target="_blank" rel="noopener">Ver listado oficial del GAFI ↗</a>
+          @endif
+        </div>
 
       @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'balance')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
@@ -824,6 +875,24 @@ function rdpTab(name) {
   banner.className = 'ix-sector-banner';
   banner.innerHTML = '⭐ Se destacó el caso adaptado a <strong>tu sector</strong> según tu selección.';
   grid.parentElement.insertBefore(banner, grid);
+})();
+
+/* ---- GAFI jurisdictions map ---- */
+(function () {
+  const wrap = document.getElementById('gmRegions');
+  const detail = document.getElementById('gmDetail');
+  if (!wrap || !detail) return;
+
+  wrap.querySelectorAll('.gm-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const data = JSON.parse(chip.dataset.detail || '{}');
+      wrap.querySelectorAll('.gm-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const statusLabel = data.status === 'red' ? 'High-Risk Jurisdiction subject to a Call for Action' : 'Jurisdiction under Increased Monitoring';
+      detail.innerHTML = '<strong>' + (data.name || '') + ' — ' + statusLabel + '</strong>' + (data.note || 'Recuerda: esto es un factor de riesgo del país, no una designación de sanciones sobre una persona.');
+      detail.classList.add('show');
+    });
+  });
 })();
 
 /* ---- Balance bars animation ---- */
