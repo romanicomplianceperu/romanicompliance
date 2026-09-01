@@ -26,10 +26,12 @@
   $isOptionalCert = ($course->certificate_type ?? 'gratuita') === 'opcional';
 
   $formulasPreview = null;
+  $gafiMapPreview = null;
   foreach ($allLessons as $l) {
       if ($l->type === 'interactive' && $l->content) {
           $decoded = json_decode($l->content, true);
-          if (($decoded['kind'] ?? null) === 'formulas') { $formulasPreview = $decoded; break; }
+          if (($decoded['kind'] ?? null) === 'formulas' && !$formulasPreview) { $formulasPreview = $decoded; }
+          if (($decoded['kind'] ?? null) === 'gafi_map' && !$gafiMapPreview) { $gafiMapPreview = $decoded; }
       }
   }
 @endphp
@@ -132,6 +134,26 @@
   .ss-picker-list { border-right: none; border-bottom: 1px solid var(--line); max-height: 260px; }
   .ss-picker-detail { padding: 1.5rem; }
 }
+
+/* ---- GAFI map preview (public, on course page) ---- */
+.gm-map-wrap { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1rem; margin-bottom: 1.2rem; }
+.gm-map { width: 100%; height: auto; display: block; }
+.gm-ocean { fill: var(--ivory-dim); }
+.gm-grid line { stroke: rgba(11,24,41,0.05); stroke-width: 1; }
+.gm-continents ellipse { fill: rgba(11,24,41,0.08); stroke: rgba(11,24,41,0.12); stroke-width: 1; }
+.gm-marker { cursor: pointer; }
+.gm-dot { transition: r 0.15s ease; }
+.gm-marker.red .gm-dot { fill: #B3413B; }
+.gm-marker.amber .gm-dot { fill: #B8942E; }
+.gm-pulse { transform-box: fill-box; transform-origin: center; }
+.gm-marker.red .gm-pulse { fill: rgba(179,65,59,0.25); animation: gmPulse 2.2s ease-out infinite; }
+.gm-marker.amber .gm-pulse { fill: rgba(184,148,46,0.25); animation: gmPulse 2.2s ease-out infinite; }
+.gm-marker:hover .gm-dot, .gm-marker.active .gm-dot { r: 8; }
+.gm-label { font-size: 13px; font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--white); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+@keyframes gmPulse { 0% { transform: scale(0.5); opacity: 0.9; } 100% { transform: scale(1.6); opacity: 0; } }
+.gm-detail { background: var(--gold-pale); border-radius: 10px; padding: 1rem 1.2rem; font-size: 0.85rem; color: var(--ink); line-height: 1.6; display: none; }
+.gm-detail.show { display: block; }
+.gm-detail strong { display: block; margin-bottom: 4px; font-size: 0.92rem; }
 .rd-module-num { width: 42px; height: 42px; border-radius: 10px; background: var(--gold-pale); color: var(--gold); font-weight: 800; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .rd-module-card h3 { font-size: 1.03rem; margin-bottom: 0.5rem; }
 .rd-lesson-chip { display: inline-block; font-size: 0.78rem; color: var(--slate); padding: 3px 0; }
@@ -296,8 +318,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
           @if($course->exam)
-            <a href="{{ route('exams.show', $course) }}" class="rd-btn-secondary" title="Puedes dar el cuestionario en cualquier momento, sin necesidad de terminar el curso">
-              Dar el cuestionario
+            <a href="{{ route('exams.show', $course) }}" class="rd-btn-secondary" title="Al hacer clic, darás el cuestionario para obtener tu certificado">
+              Obtener certificado
             </a>
           @endif
           <span class="rd-progress-chip">{{ $enrollment->progress_percent }}% completado</span>
@@ -364,6 +386,48 @@
   </div>
 </section>
 
+@if($gafiMapPreview)
+<section class="rd-section rd-section-alt">
+  <div class="wrap">
+    <div class="rd-eyebrow">Vista previa</div>
+    <h2>Un mapa interactivo, dentro del curso</h2>
+    <p class="rd-section-lead">Así se ve uno de los mapas interactivos del curso — haz clic en cualquier marcador para ver su estatus. Esto es solo una muestra; dentro del curso encontrarás más.</p>
+    <div class="gm-map-wrap">
+      <svg class="gm-map" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="900" height="400" rx="14" class="gm-ocean"/>
+        <g class="gm-grid">
+          @for($i = 0; $i <= 900; $i += 45)<line x1="{{ $i }}" y1="0" x2="{{ $i }}" y2="400"/>@endfor
+          @for($i = 0; $i <= 400; $i += 40)<line x1="0" y1="{{ $i }}" x2="900" y2="{{ $i }}"/>@endfor
+        </g>
+        <g class="gm-continents">
+          <ellipse cx="140" cy="140" rx="100" ry="90"/>
+          <ellipse cx="185" cy="205" rx="45" ry="35"/>
+          <ellipse cx="195" cy="320" rx="65" ry="85"/>
+          <ellipse cx="500" cy="90" rx="70" ry="45"/>
+          <ellipse cx="545" cy="160" rx="45" ry="35"/>
+          <ellipse cx="470" cy="260" rx="95" ry="105"/>
+          <ellipse cx="680" cy="140" rx="140" ry="90"/>
+          <ellipse cx="800" cy="320" rx="60" ry="50"/>
+        </g>
+        @foreach($gafiMapPreview['countries'] ?? [] as $i => $c)
+          <g class="gm-marker {{ $c['status'] ?? 'amber' }}" data-idx="{{ $i }}" transform="translate({{ $c['x'] ?? 0 }},{{ $c['y'] ?? 0 }})">
+            <circle class="gm-pulse" r="14"/>
+            <circle class="gm-dot" r="6"/>
+            <text class="gm-label" x="10" y="4">{{ $c['name'] ?? '' }}</text>
+          </g>
+        @endforeach
+      </svg>
+    </div>
+    <div class="gm-detail" id="gmPreviewDetail"></div>
+    <script id="gmPreviewData" type="application/json">{!! json_encode($gafiMapPreview['countries'] ?? []) !!}</script>
+  </div>
+</section>
+@endif
+
+@if($course->slug === 'listas-internacionales-ft-fpadm')
+  @include('courses._subject-selector')
+@endif
+
 @if($totalLessons > 0)
 <section class="rd-section" style="padding-bottom:0.5rem;">
   <div class="wrap">
@@ -381,9 +445,7 @@
 </section>
 @endif
 
-@if($course->slug === 'listas-internacionales-ft-fpadm')
-  @include('courses._subject-selector')
-@elseif($course->modules->count() > 0)
+@if($course->modules->count() > 0)
 <section class="rd-section">
   <div class="wrap">
     <div class="rd-eyebrow">Temario</div>
@@ -674,7 +736,7 @@
 @if($enrollment && $course->exam && !$certificate && !$pendingCertificate)
   <a href="{{ route('exams.show', $course) }}" class="floating-quiz-cta" id="floatingQuizCta" data-course="{{ $course->id }}">
     <span class="fqc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4M11 11l-7 7"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h11"/></svg></span>
-    <span class="fqc-text">Dar el cuestionario<small>Sin necesidad de terminar el curso</small></span>
+    <span class="fqc-text">Obtener certificado<small>Responde el cuestionario para certificarte</small></span>
     <button type="button" class="floating-quiz-close" id="floatingQuizClose" onclick="event.preventDefault(); event.stopPropagation(); fqcDismiss();">&times;</button>
   </a>
 @endif
@@ -697,6 +759,24 @@ function rdGoStep2() {
     sessionStorage.setItem(key, '1');
     cta.style.display = 'none';
   };
+})();
+
+(function () {
+  const dataEl = document.getElementById('gmPreviewData');
+  const detail = document.getElementById('gmPreviewDetail');
+  if (!dataEl || !detail) return;
+  const countries = JSON.parse(dataEl.textContent || '[]');
+  document.querySelectorAll('.gm-marker').forEach(marker => {
+    marker.addEventListener('click', () => {
+      const data = countries[marker.dataset.idx];
+      if (!data) return;
+      document.querySelectorAll('.gm-marker').forEach(m => m.classList.remove('active'));
+      marker.classList.add('active');
+      const statusLabel = data.status === 'red' ? 'High-Risk Jurisdiction subject to a Call for Action' : 'Jurisdiction under Increased Monitoring';
+      detail.innerHTML = '<strong>' + (data.name || '') + ' — ' + statusLabel + '</strong>' + (data.note || '');
+      detail.classList.add('show');
+    });
+  });
 })();
 
 function abrirModalCompra() { document.getElementById('modalCompra')?.classList.add('active'); }

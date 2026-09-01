@@ -96,11 +96,13 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
         ];
 
         $herramientaListas = [
-            'intro' => 'Estos son los buscadores oficiales reales. Aquí no simulamos nada: úsalos para practicar navegando el contenido real de cada lista.',
+            'intro' => 'Estos son los buscadores oficiales reales — los mismos que usa un Oficial de Cumplimiento en el Perú. Aquí no simulamos nada: úsalos para practicar navegando el contenido real de cada lista.',
             'tools' => [
-                ['icon' => '🇺🇳', 'title' => 'Lista Consolidada del CSNU', 'desc' => 'Busca directamente en la lista consolidada de sanciones del Consejo de Seguridad de las Naciones Unidas (ISIL/Da\'esh, Al-Qaida, Corea del Norte, Irán y demás regímenes vigentes).', 'url' => 'https://www.un.org/securitycouncil/content/un-sc-consolidated-list', 'color' => 'red'],
-                ['icon' => '🇺🇸', 'title' => 'OFAC Sanctions List Search', 'desc' => 'Buscador oficial del Departamento del Tesoro de EE. UU. para consultar la lista SDN y otras listas de sanciones administradas por OFAC.', 'url' => 'https://sanctionssearch.ofac.treas.gov/', 'color' => 'gold'],
-                ['icon' => '🌐', 'title' => 'Listas del GAFI/FATF', 'desc' => 'Listado oficial y actualizado de jurisdicciones de alto riesgo (Call for Action) y bajo monitoreo reforzado (Increased Monitoring).', 'url' => 'https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html', 'color' => 'ink'],
+                ['icon' => '🇵🇪', 'title' => 'SBS — Revisión de Listas de Interés', 'desc' => 'Portal oficial donde la SBS/UIF-Perú centraliza y actualiza las listas de interés: CSNU (terrorismo y FPADM), OFAC, Unión Europea, GAFI y funciones PEP.', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos/listas-de-interes', 'color' => 'ink'],
+                ['icon' => '🇺🇳', 'title' => 'Lista Consolidada del CSNU', 'desc' => 'Busca directamente en la lista consolidada de sanciones del Consejo de Seguridad de las Naciones Unidas (ISIL/Da\'esh, Al-Qaida, Talibanes, Corea del Norte, Irán y demás regímenes vigentes).', 'url' => 'https://www.un.org/securitycouncil/content/un-sc-consolidated-list', 'color' => 'red'],
+                ['icon' => '🇺🇸', 'title' => 'OFAC Sanctions List Search', 'desc' => 'Buscador oficial del Departamento del Tesoro de EE. UU. para consultar la lista SDN ("lista Clinton") y otras listas de sanciones administradas por OFAC.', 'url' => 'https://sanctionssearch.ofac.treas.gov/', 'color' => 'gold'],
+                ['icon' => '🇪🇺', 'title' => 'Lista de Terroristas de la Unión Europea', 'desc' => 'Lista de personas y entidades vinculadas a actos terroristas, adoptada por la UE en aplicación de la Resolución 1373 del CSNU. Se revisa cada seis meses.', 'url' => 'https://eur-lex.europa.eu/legal-content/es/TXT/HTML/?uri=CELEX:32019D1341&from=en', 'color' => 'gold'],
+                ['icon' => '🌐', 'title' => 'Listas del GAFI/FATF', 'desc' => 'Listado oficial y actualizado de jurisdicciones de alto riesgo (Call for Action) y bajo monitoreo reforzado (Increased Monitoring) — la SBS las llama "países y territorios no cooperantes".', 'url' => 'https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html', 'color' => 'ink'],
             ],
         ];
 
@@ -281,7 +283,13 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                     'heading' => 'No es una decisión de una sola persona',
                     'text' => 'El marco peruano distingue con claridad entre lo que corresponde al colaborador que detecta la alerta, lo que corresponde al Oficial de Cumplimiento que la evalúa, y lo que corresponde a la autoridad competente conforme al marco legal vigente.',
                     'highlight' => ['colaborador', 'Oficial de Cumplimiento', 'autoridad competente'],
-                    'citation' => ['label' => 'Ley N.º 27693 y D.S. N.º 020-2017-JUS', 'note' => 'Distribuyen las competencias del sujeto obligado, el Oficial de Cumplimiento y la UIF-Perú frente a las coincidencias con listas y el régimen de congelamiento.'],
+                    'citation' => ['label' => 'Ley N.º 27693 y D.S. N.º 020-2017-JUS', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos/listas-de-interes', 'note' => 'Distribuyen las competencias del sujeto obligado, el Oficial de Cumplimiento y la UIF-Perú frente a las coincidencias con listas y el régimen de congelamiento.'],
+                ],
+                [
+                    'heading' => 'La facultad expresa de la UIF-Perú',
+                    'text' => 'La Ley N.º 30437 amplió las facultades de la UIF-Perú en la lucha contra el terrorismo: le corresponde disponer el congelamiento inmediato de los fondos u otros activos de las personas comprendidas en las listas del CSNU sobre terrorismo y sobre FPADM.',
+                    'highlight' => ['Ley N.º 30437', 'congelamiento inmediato'],
+                    'citation' => ['label' => 'Ley N.º 30437', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos/listas-de-interes', 'note' => 'Otorga a la UIF-Perú la facultad de disponer el congelamiento inmediato de fondos u otros activos vinculados a las listas del CSNU de terrorismo y de FPADM.'],
                 ],
                 [
                     'heading' => 'El colaborador detecta, no decide',
@@ -296,7 +304,9 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
             ],
             'sources' => [
                 ['label' => 'Ley N.º 27693 y modificatorias', 'desc' => 'Marco general del sistema de prevención y de la UIF-Perú.'],
+                ['label' => 'Ley N.º 30437', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos/listas-de-interes', 'desc' => 'Otorga a la UIF-Perú la facultad de disponer el congelamiento inmediato de fondos vinculados a las listas del CSNU de terrorismo y FPADM.'],
                 ['label' => 'D.S. N.º 020-2017-JUS y modificatorias', 'desc' => 'Reglamento que desarrolla las competencias y el procedimiento frente a coincidencias y comunicación a la UIF-Perú.'],
+                ['label' => 'Res. SBS N.º 3862-2016', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos/listas-de-interes', 'desc' => 'Regula los mecanismos y procedimientos para que la UIF-Perú congele administrativamente fondos vinculados al terrorismo y al FPADM.'],
             ],
         ];
 

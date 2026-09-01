@@ -460,7 +460,7 @@
 
       @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'slide')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
-        <div class="sl-deck" id="slDeck">
+        <div class="sl-deck" id="slDeck" data-next-url="{{ $nextLesson ? route('lessons.show', $nextLesson) : route('courses.show', $course) }}">
           <div class="sl-progress"><div class="sl-progress-fill" id="slProgressFill"></div></div>
           <div class="sl-viewport" id="slViewport">
             @foreach($ix['slides'] ?? [] as $i => $s)
@@ -738,9 +738,9 @@
             Certificado en proceso
           </div>
         @else
-          <a href="{{ route('exams.show', $course) }}" class="rdp-cert-status rdp-cert-ready">Dar el cuestionario y certificarme</a>
+          <a href="{{ route('exams.show', $course) }}" class="rdp-cert-status rdp-cert-ready">Obtener certificado</a>
           @if($progressPercent < 100)
-            <div class="rdp-cert-hint">Puedes darlo ahora mismo, sin terminar el curso.</div>
+            <div class="rdp-cert-hint">Responde el cuestionario para certificarte — puedes darlo ahora, sin terminar el curso.</div>
           @endif
         @endif
       </div>
@@ -751,7 +751,7 @@
 @if($course->exam && !$certificate && !$pendingCertificate)
   <a href="{{ route('exams.show', $course) }}" class="floating-quiz-cta" id="floatingQuizCta" data-course="{{ $course->id }}">
     <span class="fqc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4M11 11l-7 7"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h11"/></svg></span>
-    <span class="fqc-text">Dar el cuestionario<small>Sin necesidad de terminar el curso</small></span>
+    <span class="fqc-text">Obtener certificado<small>Responde el cuestionario para certificarte</small></span>
     <button type="button" class="floating-quiz-close" id="floatingQuizClose" onclick="event.preventDefault(); event.stopPropagation(); fqcDismiss();">&times;</button>
   </a>
 @endif
@@ -1020,14 +1020,21 @@ function rdpTab(name) {
     slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
     dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
     prevBtn.disabled = i === 0;
-    nextBtn.textContent = i === slides.length - 1 ? 'Fin ✓' : 'Siguiente →';
+    nextBtn.textContent = i === slides.length - 1 ? 'Continuar →' : 'Siguiente →';
     fill.style.width = ((i + 1) / slides.length * 100) + '%';
     renderWords(slides[i]);
     current = i;
   }
 
   prevBtn.addEventListener('click', () => { if (current > 0) show(current - 1); });
-  nextBtn.addEventListener('click', () => { if (current < slides.length - 1) show(current + 1); });
+  nextBtn.addEventListener('click', () => {
+    if (current < slides.length - 1) {
+      show(current + 1);
+    } else {
+      const url = deck.dataset.nextUrl;
+      if (url) window.location.href = url;
+    }
+  });
   dots.forEach(d => d.addEventListener('click', () => show(parseInt(d.dataset.index, 10))));
 
   show(0);
