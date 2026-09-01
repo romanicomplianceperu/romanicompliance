@@ -95,7 +95,7 @@
 .ac-case-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.2rem; }
 .ac-case-tag { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--slate); background: var(--ivory-dim); padding: 5px 12px; border-radius: 20px; }
 .ac-case-card h2 { font-family: var(--serif); font-size: 1.4rem; color: var(--ink); margin-bottom: 1.2rem; }
-.ac-case-card .body p { font-size: 0.92rem; color: var(--ink); line-height: 1.85; margin-bottom: 1rem; }
+.ac-case-card .body p { font-size: 0.92rem; color: var(--ink); line-height: 1.85; margin-bottom: 1rem; white-space: pre-line; }
 .ac-case-doc-link { display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 700; color: var(--gold); margin-top: 0.6rem; }
 
 /* Question form */

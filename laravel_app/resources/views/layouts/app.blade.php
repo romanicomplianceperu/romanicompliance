@@ -51,6 +51,8 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.28;
 .nav-links a:hover { color: var(--ink); }
 .nav-links a.active { color: var(--ink); font-weight: 700; }
 .nav-cta { font-size: 0.75rem !important; font-weight: 600 !important; color: var(--white) !important; background: var(--ink); padding: 8px 20px; border-radius: var(--radius); transition: background 0.2s; }
+.nav-cta-academico { font-size: 0.75rem !important; font-weight: 700 !important; color: var(--gold) !important; background: var(--gold-pale); padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(139,115,64,0.3); transition: background 0.2s, color 0.2s; }
+.nav-cta-academico:hover { background: var(--gold); color: var(--white) !important; }
 .nav-cta:hover { background: var(--ink-light) !important; }
 .nav-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
 .nav-avatar-initials { display: flex; align-items: center; justify-content: center; background: var(--gold); color: var(--white); font-size: 0.72rem; font-weight: 700; border: none; }
@@ -173,11 +175,11 @@ footer { background: var(--ink-90); padding: 2.5rem 0; border-top: 1px solid rgb
     <div class="nav-links">
       <a href="{{ route('home') }}#servicios">Servicios</a>
       <a href="{{ route('capacitaciones') }}" class="{{ request()->routeIs('capacitaciones') ? 'active' : '' }}">Capacitaciones</a>
-      <a href="{{ route('home') }}#nosotros">Sobre nosotros</a>
       <a href="{{ route('equipo') }}" class="{{ request()->routeIs('equipo') ? 'active' : '' }}">Equipo</a>
       <a href="{{ route('blog.index') }}" class="{{ request()->routeIs('blog.*') ? 'active' : '' }}">Noticias</a>
       <a href="{{ route('home') }}#contacto">Contacto</a>
       <a href="{{ route('courses.catalog') }}" class="{{ request()->routeIs('courses.*', 'lessons.*') ? 'active' : '' }}">Cursos</a>
+      <a href="{{ route('academico.index') }}" class="nav-cta-academico {{ request()->routeIs('academico.*') ? 'active' : '' }}">🎓 Académico</a>
       @auth
         <a href="{{ route('dashboard') }}" title="Mi panel">
           @if(auth()->user()->displayPhoto())

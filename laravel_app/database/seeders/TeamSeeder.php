@@ -4,12 +4,19 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class TeamSeeder extends Seeder
 {
     public function run(): void
     {
+        $federicoPhotoPath = 'team/federico-chunga-fiestas.jpg';
+        $b64File = __DIR__.'/data/federico-chunga-fiestas.jpg.b64';
+        if (file_exists($b64File)) {
+            Storage::disk('public')->put($federicoPhotoPath, base64_decode(file_get_contents($b64File)));
+        }
+
         $members = [
             [
                 'email' => 'denis@romanicompliance.com',
@@ -51,7 +58,7 @@ class TeamSeeder extends Seeder
                 'role' => 'student',
                 'title' => 'Consultor Internacional en Conducta Empresarial Responsable',
                 'bio' => 'Consultor internacional especializado en conducta empresarial responsable, políticas públicas con enfoque de derechos humanos e integridad, lucha contra la corrupción, y Estado constitucional de derecho.',
-                'photo' => null,
+                'photo' => $federicoPhotoPath,
                 'team_rank' => 'associate',
                 'team_order' => 4,
             ],
