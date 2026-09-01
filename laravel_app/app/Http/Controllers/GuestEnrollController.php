@@ -25,6 +25,19 @@ class GuestEnrollController extends Controller
 
         $user = $request->user();
 
+        if ($user && $user->is_guest) {
+            // Ya existe una sesión de invitado activa (cookie "recordarme" de
+            // una visita anterior). Si el nombre o correo recién escritos no
+            // coinciden con esa identidad, no la reutilizamos en silencio:
+            // probablemente es otra persona en el mismo navegador/dispositivo.
+            $sameEmail = ! empty($data['email']) && $user->email === $data['email'];
+            $sameName = Str::lower(trim($data['full_name'])) === Str::lower($user->name);
+
+            if (! $sameEmail && ! $sameName) {
+                $user = null;
+            }
+        }
+
         if (! $user) {
             $user = $data['email'] ?? null
                 ? User::where('email', $data['email'])->first()

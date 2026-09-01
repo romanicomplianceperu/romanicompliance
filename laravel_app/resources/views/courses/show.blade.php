@@ -63,6 +63,17 @@
 .rd-login-note { display: block; margin-top: 8px; font-size: 0.74rem; color: rgba(255,255,255,0.4); }
 .rd-login-note a { color: var(--gold-light); font-weight: 600; }
 
+/* Floating "take the quiz / get certified" CTA */
+.floating-quiz-cta { position: fixed; left: 22px; bottom: 22px; z-index: 190; display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--ink); padding: 13px 18px 13px 16px; border-radius: 50px; box-shadow: 0 16px 36px rgba(184,154,86,0.4); text-decoration: none; font-weight: 700; font-size: 0.82rem; animation: fqcPulse 2.8s ease-in-out infinite; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.floating-quiz-cta:hover { transform: translateY(-3px); box-shadow: 0 20px 44px rgba(184,154,86,0.5); animation-play-state: paused; }
+.floating-quiz-cta .fqc-icon { width: 30px; height: 30px; border-radius: 50%; background: rgba(11,24,41,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.floating-quiz-cta .fqc-icon svg { width: 16px; height: 16px; }
+.floating-quiz-cta .fqc-text { display: flex; flex-direction: column; line-height: 1.25; }
+.floating-quiz-cta .fqc-text small { font-weight: 500; opacity: 0.75; font-size: 0.68rem; }
+.floating-quiz-close { position: absolute; top: -7px; right: -7px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--white); border: 2px solid var(--white); font-size: 0.66rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+@keyframes fqcPulse { 0%, 100% { box-shadow: 0 16px 36px rgba(184,154,86,0.4); } 50% { box-shadow: 0 16px 44px rgba(184,154,86,0.65); } }
+@media (max-width: 640px) { .floating-quiz-cta { left: 14px; bottom: 14px; padding: 11px 16px 11px 14px; } .floating-quiz-cta .fqc-text small { display: none; } }
+
 .rd-illustration { position: relative; }
 .rd-illustration svg { width: 100%; height: auto; filter: drop-shadow(0 20px 50px rgba(0,0,0,0.35)); }
 @media (max-width: 900px) {
@@ -166,9 +177,10 @@
 .rd-ob-skip { position: absolute; top: 1.7rem; right: 1.8rem; z-index: 3; font-size: 0.72rem; color: rgba(255,255,255,0.32); background: none; border: none; cursor: pointer; letter-spacing: 0.02em; }
 .rd-ob-skip:hover { color: rgba(255,255,255,0.6); }
 
-.rd-ob-name { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); text-align: center; transition: top 1.1s cubic-bezier(0.16,0.84,0.3,1), transform 1.1s cubic-bezier(0.16,0.84,0.3,1); z-index: 2; }
+.rd-ob-name { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); text-align: center; transition: top 1.1s cubic-bezier(0.16,0.84,0.3,1), transform 1.1s cubic-bezier(0.16,0.84,0.3,1); z-index: 20; }
 .rd-ob-name.docked { top: 2.6rem; transform: translate(-50%, 0) scale(0.4); }
-.rd-ob-name h1 { font-family: var(--serif); font-weight: 700; font-size: clamp(2.6rem, 9vw, 5.2rem); color: var(--white); letter-spacing: 0.01em; white-space: nowrap; min-height: 1.2em; max-width: 92vw; overflow: hidden; text-overflow: clip; }
+.rd-ob-name h1 { font-family: var(--serif); font-weight: 700; font-size: clamp(2.6rem, 9vw, 5.2rem); color: var(--white); letter-spacing: 0.01em; white-space: nowrap; min-height: 1.2em; max-width: 92vw; overflow: hidden; text-overflow: clip; transition: background 0.4s ease, padding 0.4s ease, border-radius 0.4s ease, box-shadow 0.4s ease; }
+.rd-ob-name.docked h1 { background: var(--ink); padding: 10px 34px; border-radius: 40px; box-shadow: 0 10px 30px rgba(11,24,41,0.35); }
 @media (max-width: 480px) {
   .rd-ob-name h1 { font-size: clamp(1.7rem, 8.5vw, 2.4rem); white-space: normal; line-height: 1.15; }
   .rd-ob-name { width: 90vw; }
@@ -536,11 +548,11 @@
         @csrf
         <div class="rd-form-group">
           <label>Nombre completo</label>
-          <input type="text" name="full_name" required autofocus>
+          <input type="text" name="full_name" required autofocus autocomplete="off" spellcheck="false">
         </div>
         <div class="rd-form-group">
           <label>Correo electrónico</label>
-          <input type="email" name="email" required>
+          <input type="email" name="email" required autocomplete="off">
           <div class="rd-form-hint">Lo usamos para tu certificado y para que no pierdas tu avance.</div>
         </div>
         <button type="submit" class="btn btn-gold btn-block" style="width:100%;justify-content:center;">Entrar al curso</button>
@@ -635,6 +647,14 @@
   </div>
 </div>
 @endauth
+
+@if($enrollment && $course->exam && !$certificate && !$pendingCertificate)
+  <a href="{{ route('exams.show', $course) }}" class="floating-quiz-cta" id="floatingQuizCta" data-course="{{ $course->id }}">
+    <span class="fqc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4M11 11l-7 7"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h11"/></svg></span>
+    <span class="fqc-text">Dar el cuestionario<small>Sin necesidad de terminar el curso</small></span>
+    <button type="button" class="floating-quiz-close" id="floatingQuizClose" onclick="event.preventDefault(); event.stopPropagation(); fqcDismiss();">&times;</button>
+  </a>
+@endif
 @endsection
 
 @section('scripts')
@@ -645,6 +665,17 @@ function rdGoStep2() {
   document.getElementById('rdStep1').classList.remove('active');
   document.getElementById('rdStep2').classList.add('active');
 }
+(function () {
+  const cta = document.getElementById('floatingQuizCta');
+  if (!cta) return;
+  const key = 'rc_quiz_cta_dismissed_' + cta.dataset.course;
+  if (sessionStorage.getItem(key) === '1') { cta.style.display = 'none'; }
+  window.fqcDismiss = function () {
+    sessionStorage.setItem(key, '1');
+    cta.style.display = 'none';
+  };
+})();
+
 function abrirModalCompra() { document.getElementById('modalCompra')?.classList.add('active'); }
 function abrirModalBloqueo() { document.getElementById('modalBloqueo')?.classList.add('active'); }
 function cerrarModalesCurso() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active')); }

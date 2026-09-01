@@ -44,8 +44,27 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
         $course->exam()->delete();
 
         // ---------------------------------------------------------------
-        // Módulo 1 — ¿Por qué revisamos listas?
+        // Módulo 1 — Personalización + ¿Por qué revisamos listas?
         // ---------------------------------------------------------------
+        $subjectSelect = [
+            'intro' => 'Selecciona el tipo de sujeto obligado al que pertenece tu organización. Los casos prácticos de este curso se destacarán según tu sector. Puedes cambiarlo cuando quieras.',
+            'sectors' => [
+                ['value' => 'notaria', 'label' => 'Notaría'],
+                ['value' => 'casino', 'label' => 'Casinos y máquinas tragamonedas'],
+                ['value' => 'prestamos', 'label' => 'Empresas de préstamos y empeños'],
+                ['value' => 'casas_cambio', 'label' => 'Casas de cambio'],
+                ['value' => 'inmobiliaria', 'label' => 'Empresas inmobiliarias / agentes inmobiliarios'],
+                ['value' => 'vehiculos', 'label' => 'Compra y venta de vehículos'],
+                ['value' => 'joyas', 'label' => 'Comercio de joyas y metales preciosos'],
+                ['value' => 'transferencia_fondos', 'label' => 'Empresas de transferencia de fondos'],
+                ['value' => 'cooperativas', 'label' => 'Cooperativas'],
+                ['value' => 'cripto', 'label' => 'Proveedores de servicios de activos virtuales / criptomonedas'],
+                ['value' => 'construccion', 'label' => 'Construcción y comercio exterior'],
+                ['value' => 'abogados_contadores', 'label' => 'Abogados y contadores (cuando corresponda como sujeto obligado)'],
+                ['value' => 'general', 'label' => 'Otro sujeto obligado / capacitación general'],
+            ],
+        ];
+
         $porQueSlide = [
             'intro' => 'Antes de aprender a manejar una coincidencia, hay que entender por qué el sistema de prevención exige revisar listas en cada relación comercial.',
             'slides' => [
@@ -58,7 +77,7 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                     'heading' => 'Un riesgo con un reloj distinto',
                     'text' => 'El screening de listas responde a un riesgo particular: el financiamiento del terrorismo y el financiamiento de la proliferación de armas de destrucción masiva, donde la oportunidad de actuar a tiempo puede ser más corta que en otros delitos.',
                     'highlight' => ['financiamiento', 'terrorismo', 'proliferación'],
-                    'citation' => ['label' => 'Res. SBS N.º 3862-2016', 'note' => 'Reglamento de gestión de riesgos de LA/FT que exige la revisión de listas como parte de la debida diligencia del cliente.'],
+                    'citation' => ['label' => 'Res. SBS N.º 3862-2016', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos', 'note' => 'Reglamento de gestión de riesgos de LA/FT que exige la revisión de listas como parte de la debida diligencia del cliente.'],
                 ],
                 [
                     'heading' => 'Lo que deberías poder responder al terminar',
@@ -67,9 +86,9 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                 ],
             ],
             'sources' => [
-                ['label' => 'Ley N.º 27693 y modificatorias', 'desc' => 'Crea y regula la Unidad de Inteligencia Financiera del Perú (UIF-Perú).'],
-                ['label' => 'D.S. N.º 020-2017-JUS y modificatorias', 'desc' => 'Reglamento de la Ley que crea la UIF-Perú, en lo relativo al régimen de listas y comunicación de coincidencias.'],
-                ['label' => 'Res. SBS N.º 3862-2016 y modificatorias', 'desc' => 'Reglamento de gestión de riesgos de LA/FT aplicable a los sujetos obligados bajo su ámbito.'],
+                ['label' => 'Ley N.º 27693 y modificatorias', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos', 'desc' => 'Crea y regula la Unidad de Inteligencia Financiera del Perú (UIF-Perú).'],
+                ['label' => 'D.S. N.º 020-2017-JUS y modificatorias', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos', 'desc' => 'Reglamento de la Ley que crea la UIF-Perú, en lo relativo al régimen de listas y comunicación de coincidencias.'],
+                ['label' => 'Res. SBS N.º 3862-2016 y modificatorias', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos', 'desc' => 'Reglamento de gestión de riesgos de LA/FT aplicable a los sujetos obligados bajo su ámbito.'],
             ],
         ];
 
@@ -85,6 +104,13 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                 ['icon' => '🌐', 'tag' => 'JURISDICCIONES', 'color' => 'gold', 'title' => 'GAFI', 'body' => 'Identifica países, no personas: jurisdicciones de alto riesgo o bajo monitoreo reforzado. Es un factor de riesgo, no una designación individual.'],
                 ['icon' => '🏛️', 'tag' => 'FACTOR DE RIESGO', 'color' => 'ink', 'title' => 'PEP', 'body' => 'Persona Expuesta Políticamente: no es una lista de sanciones, es una categoría de cliente que exige debida diligencia reforzada.'],
                 ['icon' => '📋', 'tag' => 'INTERNA', 'color' => 'green', 'title' => 'Alertas del sistema', 'body' => 'Coincidencias que genera el propio sistema de prevención del sujeto obligado al comparar clientes contra las listas anteriores.'],
+            ],
+            'sources' => [
+                ['label' => 'Comité 1267/1989/2253 (ISIL/Da\'esh y Al-Qaida)', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/1267', 'desc' => 'Página oficial del comité de sanciones del Consejo de Seguridad de la ONU.'],
+                ['label' => 'Comité 1718 (Corea del Norte)', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/1718', 'desc' => 'Página oficial del comité de sanciones sobre el programa nuclear y de misiles de Corea del Norte.'],
+                ['label' => 'OFAC — Sanctions List Search', 'url' => 'https://sanctionssearch.ofac.treas.gov/', 'desc' => 'Buscador oficial de la lista SDN del Departamento del Tesoro de EE. UU.'],
+                ['label' => 'GAFI — Listas de jurisdicciones', 'url' => 'https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html', 'desc' => 'Listado oficial y actualizado de jurisdicciones de alto riesgo y bajo monitoreo reforzado.'],
+                ['label' => 'SBS / UIF-Perú', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos', 'desc' => 'Portal oficial de prevención del lavado de activos y financiamiento del terrorismo de la SBS.'],
             ],
         ];
 
@@ -129,7 +155,7 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                     'heading' => 'Corea del Norte: Resolución 1718 y sucesivas',
                     'text' => 'Desde 2006, el Consejo de Seguridad ha adoptado la Resolución 1718 y numerosas resoluciones sucesivas que sancionan a Corea del Norte por sus programas nuclear y de misiles balísticos, incluyendo designaciones de personas, entidades y buques.',
                     'highlight' => ['Resolución 1718', 'Corea del Norte'],
-                    'citation' => ['label' => 'Resolución 1718 (2006) y sucesivas', 'note' => 'Régimen de sanciones del CSNU sobre el programa nuclear y de misiles balísticos de Corea del Norte.'],
+                    'citation' => ['label' => 'Resolución 1718 (2006) y sucesivas', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/1718', 'note' => 'Régimen de sanciones del CSNU sobre el programa nuclear y de misiles balísticos de Corea del Norte.'],
                 ],
                 [
                     'heading' => 'Irán: una evolución que hay que conocer',
@@ -140,7 +166,7 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                     'heading' => 'El "snapback" de 2025',
                     'text' => 'En agosto de 2025, ante el incumplimiento del acuerdo nuclear, un grupo de Estados activó el mecanismo de reversión ("snapback") previsto en la Resolución 2231. Como consecuencia, a fines de septiembre de 2025 Naciones Unidas restableció las resoluciones de sanciones anteriores sobre Irán, y el comité de sanciones asociado al régimen de la Resolución 1737 volvió a estar operativo.',
                     'highlight' => ['snapback', 'restableció', '1737'],
-                    'citation' => ['label' => 'Resolución 2231 (2015) y mecanismo de "snapback" (2025)', 'note' => 'Tras la activación del mecanismo de reversión en agosto de 2025, el Consejo de Seguridad restableció las resoluciones de sanciones previas sobre Irán a partir de septiembre de 2025.'],
+                    'citation' => ['label' => 'Resolución 2231 (2015) y mecanismo de "snapback" (2025)', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/information', 'note' => 'Tras la activación del mecanismo de reversión en agosto de 2025, el Consejo de Seguridad restableció las resoluciones de sanciones previas sobre Irán a partir de septiembre de 2025.'],
                 ],
                 [
                     'heading' => 'Qué significa esto para tu trabajo',
@@ -149,10 +175,10 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                 ],
             ],
             'sources' => [
-                ['label' => 'Resolución 1718 (2006) y sucesivas', 'desc' => 'Régimen de sanciones del CSNU sobre Corea del Norte.'],
-                ['label' => 'Resolución 1737 (2006)', 'desc' => 'Creó el comité de sanciones original sobre el programa nuclear de Irán.'],
-                ['label' => 'Resolución 2231 (2015)', 'desc' => 'Endosó el acuerdo nuclear (JCPOA) y estableció el esquema de levantamiento progresivo de sanciones, con cláusula de reversión ("snapback").'],
-                ['label' => 'Restablecimiento de sanciones sobre Irán (2025)', 'desc' => 'Tras el procedimiento de "snapback" activado en agosto de 2025, el Consejo de Seguridad restableció resoluciones de sanciones previas a partir de septiembre de 2025.'],
+                ['label' => 'Resolución 1718 (2006) y sucesivas', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/1718', 'desc' => 'Régimen de sanciones del CSNU sobre Corea del Norte.'],
+                ['label' => 'Comité 1737 sobre Irán', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/information', 'desc' => 'Creó el comité de sanciones original sobre el programa nuclear de Irán.'],
+                ['label' => 'Resolución 2231 (2015)', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/information', 'desc' => 'Endosó el acuerdo nuclear (JCPOA) y estableció el esquema de levantamiento progresivo de sanciones, con cláusula de reversión ("snapback").'],
+                ['label' => 'Restablecimiento de sanciones sobre Irán (2025)', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/information', 'desc' => 'Tras el procedimiento de "snapback" activado en agosto de 2025, el Consejo de Seguridad restableció resoluciones de sanciones previas a partir de septiembre de 2025.'],
             ],
         ];
 
@@ -166,6 +192,9 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                 ['icon' => '📜', 'tag' => 'SU LISTA PRINCIPAL', 'color' => 'gold', 'title' => 'SDN List', 'body' => 'La lista de Nacionales Especialmente Designados incluye personas y entidades vinculadas a terrorismo, narcotráfico, proliferación, crimen organizado y regímenes sancionados por EE. UU.'],
                 ['icon' => '⚠️', 'tag' => 'NO CONFUNDIR', 'color' => 'red', 'title' => 'OFAC ≠ CSNU', 'body' => 'Una coincidencia OFAC no activa, por sí sola, el mismo mecanismo jurídico previsto para una designación vinculante del CSNU en el sujeto obligado peruano. Es una fuente de interés que exige verificar y analizar.'],
                 ['icon' => '✅', 'tag' => 'QUÉ HACER', 'color' => 'green', 'title' => 'Detectar → Verificar → Escalar', 'body' => 'Detectar la coincidencia, verificar los datos identificatorios, escalar al Oficial de Cumplimiento, evaluar el riesgo conforme a la política interna y documentar la decisión.'],
+            ],
+            'sources' => [
+                ['label' => 'OFAC — Sanctions List Search', 'url' => 'https://sanctionssearch.ofac.treas.gov/', 'desc' => 'Buscador oficial de la lista SDN del Departamento del Tesoro de EE. UU.'],
             ],
         ];
 
@@ -292,16 +321,18 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
         $casosSectoriales = [
             'intro' => 'Un mismo principio, aplicado a distintos giros de negocio. Lee cada caso y piensa qué harías antes de seguir al siguiente módulo.',
             'cards' => [
-                ['icon' => '📜', 'tag' => 'NOTARÍA', 'color' => 'ink', 'title' => 'Caso Notaría Rivera', 'body' => 'Un cliente participa en la compraventa de un inmueble de S/ 780,000. Durante el screening, uno de los intervinientes presenta una coincidencia parcial de nombre con una persona incluida en una lista del CSNU. Se verifica y se escala sin firmar la escritura hasta resolver la alerta.'],
-                ['icon' => '🎰', 'tag' => 'CASINO', 'color' => 'ink', 'title' => 'Caso Casino Golden Palace', 'body' => 'Un cliente frecuente compra S/ 48,000 en fichas y las canjea poco después sin haber jugado. El sistema genera además una alerta de screening por similitud de nombre. Se documenta la operación inusual y se verifica la alerta de forma independiente.'],
-                ['icon' => '💳', 'tag' => 'PRÉSTAMOS', 'color' => 'ink', 'title' => 'Caso Financiera Crédito Express', 'body' => 'Un cliente solicita un crédito de S/ 120,000 y, poco después, un tercero no relacionado pretende cancelarlo de forma anticipada. Al revisar al beneficiario final de la empresa solicitante, aparece una coincidencia con una lista de interés que debe verificarse antes de aceptar el pago.'],
-                ['icon' => '🪙', 'tag' => 'CRIPTOACTIVOS', 'color' => 'ink', 'title' => 'Caso AndeanCrypto Exchange', 'body' => 'Un cliente recibe activos virtuales desde múltiples wallets. El screening de una de las contrapartes genera una alerta de coincidencia. Se congela temporalmente el retiro mientras el Oficial de Cumplimiento evalúa la operación, sin informar al cliente el motivo exacto de la demora.'],
-                ['icon' => '💱', 'tag' => 'CASA DE CAMBIO', 'color' => 'ink', 'title' => 'Caso Cambios del Sur', 'body' => 'Un mismo domicilio realiza operaciones sucesivas de cambio de moneda a nombre de distintos titulares, uno de los cuales activa una coincidencia de nombre con una lista GAFI de interés. Se analiza el patrón en conjunto, no cada operación de forma aislada.'],
+                ['icon' => '📜', 'tag' => 'NOTARÍA', 'color' => 'ink', 'title' => 'Caso Notaría Rivera', 'sectorKey' => 'notaria', 'body' => 'Un cliente participa en la compraventa de un inmueble de S/ 780,000. Durante el screening, uno de los intervinientes presenta una coincidencia parcial de nombre con una persona incluida en una lista del CSNU. Se verifica y se escala sin firmar la escritura hasta resolver la alerta.'],
+                ['icon' => '🎰', 'tag' => 'CASINO', 'color' => 'ink', 'title' => 'Caso Casino Golden Palace', 'sectorKey' => 'casino', 'body' => 'Un cliente frecuente compra S/ 48,000 en fichas y las canjea poco después sin haber jugado. El sistema genera además una alerta de screening por similitud de nombre. Se documenta la operación inusual y se verifica la alerta de forma independiente.'],
+                ['icon' => '💳', 'tag' => 'PRÉSTAMOS', 'color' => 'ink', 'title' => 'Caso Financiera Crédito Express', 'sectorKey' => 'prestamos', 'body' => 'Un cliente solicita un crédito de S/ 120,000 y, poco después, un tercero no relacionado pretende cancelarlo de forma anticipada. Al revisar al beneficiario final de la empresa solicitante, aparece una coincidencia con una lista de interés que debe verificarse antes de aceptar el pago.'],
+                ['icon' => '🪙', 'tag' => 'CRIPTOACTIVOS', 'color' => 'ink', 'title' => 'Caso AndeanCrypto Exchange', 'sectorKey' => 'cripto', 'body' => 'Un cliente recibe activos virtuales desde múltiples wallets. El screening de una de las contrapartes genera una alerta de coincidencia. Se congela temporalmente el retiro mientras el Oficial de Cumplimiento evalúa la operación, sin informar al cliente el motivo exacto de la demora.'],
+                ['icon' => '💱', 'tag' => 'CASA DE CAMBIO', 'color' => 'ink', 'title' => 'Caso Cambios del Sur', 'sectorKey' => 'casas_cambio', 'body' => 'Un mismo domicilio realiza operaciones sucesivas de cambio de moneda a nombre de distintos titulares, uno de los cuales activa una coincidencia de nombre con una lista GAFI de interés. Se analiza el patrón en conjunto, no cada operación de forma aislada.'],
+                ['icon' => '🏗️', 'tag' => 'INMOBILIARIA', 'color' => 'ink', 'title' => 'Caso Inversiones Costa Verde', 'sectorKey' => 'inmobiliaria', 'body' => 'Un proyecto inmobiliario recibe un pago inicial de un tercero distinto al comprador registrado en el contrato. Al verificar al beneficiario final de la empresa compradora, se detecta una coincidencia con una lista de interés que exige análisis antes de continuar.'],
             ],
         ];
 
         $modulesData = [
-            ['title' => 'Módulo 1: ¿Por qué revisamos listas?', 'lessons' => [
+            ['title' => 'Módulo 1: Personalización y ¿por qué revisamos listas?', 'lessons' => [
+                ['title' => 'Personaliza tu capacitación', 'type' => 'interactive', 'duration_minutes' => 2, 'content' => json_encode(['kind' => 'subject_select'] + $subjectSelect)],
                 ['title' => '¿Por qué revisamos listas?', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'slide'] + $porQueSlide)],
             ]],
             ['title' => 'Módulo 2: Mapa de listas internacionales', 'lessons' => [

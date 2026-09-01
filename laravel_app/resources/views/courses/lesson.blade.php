@@ -93,10 +93,22 @@
 .rdp-cert-locked { background: var(--ivory-dim); color: var(--slate-light); cursor: default; }
 .rdp-cert-ready { background: rgba(37,150,90,0.12); color: #1F7A4D; cursor: pointer; font-weight: 800; border: 1px solid rgba(37,150,90,0.3); }
 .rdp-cert-ready:hover { background: #1F7A4D; color: var(--white); }
+.rdp-cert-hint { font-size: 0.7rem; color: var(--slate-light); text-align: center; margin-top: 8px; }
 .rdp-cert-done { background: rgba(37,150,90,0.1); color: #1F7A4D; }
 
 .lesson-drawer-toggle { display: none; }
 .lesson-drawer-backdrop { display: none; }
+
+/* Floating "take the quiz / get certified" CTA */
+.floating-quiz-cta { position: fixed; left: 22px; bottom: 22px; z-index: 190; display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--ink); padding: 13px 18px 13px 16px; border-radius: 50px; box-shadow: 0 16px 36px rgba(184,154,86,0.4); text-decoration: none; font-weight: 700; font-size: 0.82rem; animation: fqcPulse 2.8s ease-in-out infinite; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.floating-quiz-cta:hover { transform: translateY(-3px); box-shadow: 0 20px 44px rgba(184,154,86,0.5); animation-play-state: paused; }
+.floating-quiz-cta .fqc-icon { width: 30px; height: 30px; border-radius: 50%; background: rgba(11,24,41,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.floating-quiz-cta .fqc-icon svg { width: 16px; height: 16px; }
+.floating-quiz-cta .fqc-text { display: flex; flex-direction: column; line-height: 1.25; }
+.floating-quiz-cta .fqc-text small { font-weight: 500; opacity: 0.75; font-size: 0.68rem; }
+.floating-quiz-close { position: absolute; top: -7px; right: -7px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--white); border: 2px solid var(--white); font-size: 0.66rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+@keyframes fqcPulse { 0%, 100% { box-shadow: 0 16px 36px rgba(184,154,86,0.4); } 50% { box-shadow: 0 16px 44px rgba(184,154,86,0.65); } }
+@media (max-width: 640px) { .floating-quiz-cta { left: 14px; bottom: 14px; padding: 11px 16px 11px 14px; } .floating-quiz-cta .fqc-text small { display: none; } }
 
 @media (max-width: 960px) {
   .lesson-layout { grid-template-columns: 1fr; padding: 1.5rem 0; gap: 1.2rem; }
@@ -128,6 +140,23 @@
 .ix-card .tag.red { background: rgba(179,65,59,0.1); color: #B3413B; }
 .ix-card .tag.ink { background: rgba(11,24,41,0.06); color: var(--ink); }
 .ix-card h4 { font-size: 0.95rem; margin-bottom: 6px; color: var(--ink); }
+.ix-card[data-sector].ix-card-mine { border-color: var(--gold); box-shadow: 0 10px 26px rgba(184,154,86,0.2); position: relative; }
+.ix-card-mine-ribbon { position: absolute; top: -9px; right: 12px; background: var(--gold); color: var(--ink); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.05em; padding: 3px 9px; border-radius: 20px; }
+.ix-sector-banner { display: flex; align-items: center; gap: 10px; background: var(--gold-pale); border: 1px solid rgba(184,154,86,0.35); border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: var(--ink); margin-bottom: 1.2rem; }
+.ix-sector-banner strong { color: var(--gold); }
+
+/* Subject-type selector (dropdown) */
+.ss-wrap { background: var(--white); border: 1px solid var(--line); border-radius: 10px; padding: 1.5rem; margin-bottom: 1.2rem; }
+.ss-wrap label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-light); margin-bottom: 8px; }
+.ss-select { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 0.9rem; color: var(--ink); background: var(--white); margin-bottom: 12px; }
+.ss-select:focus { border-color: var(--gold); outline: none; }
+.ss-confirm { display: flex; align-items: center; gap: 8px; background: rgba(31,122,77,0.1); color: #1F7A4D; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; font-weight: 600; margin-top: 10px; }
+.ss-note { font-size: 0.76rem; color: var(--slate-light); margin-top: 8px; }
+
+/* Source / citation links */
+.sl-source-row a, .sl-citation a { color: var(--gold); font-weight: 700; text-decoration: none; }
+.sl-source-row a:hover, .sl-citation a:hover { text-decoration: underline; }
+.sl-source-link-icon { display: inline-block; margin-left: 4px; font-size: 0.72rem; }
 .ix-card p { font-size: 0.82rem; color: var(--slate); line-height: 1.6; }
 
 .ix-formula-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 1.6rem; }
@@ -298,11 +327,28 @@
     @elseif(in_array($lesson->type, ['interactive', 'glossary', 'memory']) && $lesson->content)
       @php $ix = json_decode($lesson->content, true) ?: []; @endphp
 
-      @if($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'cards')
+      @if($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'subject_select')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
-        <div class="ix-card-grid">
+        <div class="ss-wrap">
+          <label for="ssSelect">Tipo de sujeto obligado</label>
+          <select id="ssSelect" class="ss-select">
+            <option value="">Selecciona tu sector…</option>
+            @foreach($ix['sectors'] ?? [] as $s)
+              <option value="{{ $s['value'] }}">{{ $s['label'] }}</option>
+            @endforeach
+          </select>
+          <button type="button" id="ssSave" class="btn btn-gold">Guardar selección</button>
+          <div class="ss-confirm" id="ssConfirm" style="display:none;">✓ Sector guardado: <strong id="ssConfirmLabel"></strong>. Los casos prácticos de este curso se destacarán para tu sector.</div>
+          <div class="ss-note">Puedes cambiarlo cuando quieras volviendo a esta lección.</div>
+        </div>
+        <script id="ssMeta" type="application/json">{!! json_encode(['courseId' => $course->id, 'sectors' => $ix['sectors'] ?? []]) !!}</script>
+
+      @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'cards')
+        @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
+        <div class="ix-card-grid" id="ixCardGrid" data-course="{{ $course->id }}">
           @foreach($ix['cards'] ?? [] as $c)
-            <div class="ix-card">
+            <div class="ix-card" data-sector="{{ $c['sectorKey'] ?? '' }}">
+              @if(!empty($c['sectorKey']))<span class="ix-card-mine-ribbon" style="display:none;">★ TU SECTOR</span>@endif
               <span class="icon icon-emoji">{{ $c['icon'] ?? '📌' }}</span>
               @if(!empty($c['tag']))<span class="tag {{ $c['color'] ?? 'gold' }}">{{ $c['tag'] }}</span>@endif
               <h4>{{ $c['title'] ?? '' }}</h4>
@@ -310,6 +356,23 @@
             </div>
           @endforeach
         </div>
+        @if(!empty($ix['sources']))
+          <div class="sl-sources">
+            <div class="rdp-block-title" style="margin:0 0 0.6rem;">Fuentes normativas de referencia</div>
+            @foreach($ix['sources'] as $src)
+              <div class="sl-source-row">
+                <span class="sl-source-icon">⚖️</span>
+                <div>
+                  <strong>{{ $src['label'] ?? '' }}</strong>
+                  @if(!empty($src['url']))
+                    <a href="{{ $src['url'] }}" target="_blank" rel="noopener">↗</a>
+                  @endif
+                  — {{ $src['desc'] ?? '' }}
+                </div>
+              </div>
+            @endforeach
+          </div>
+        @endif
 
       @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'formulas')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
@@ -368,7 +431,13 @@
                 @if(!empty($s['citation']))
                   <div class="sl-citation">
                     <span class="sl-citation-icon">📜</span>
-                    <div><strong>{{ $s['citation']['label'] ?? '' }}</strong><br>{{ $s['citation']['note'] ?? '' }}</div>
+                    <div>
+                      <strong>{{ $s['citation']['label'] ?? '' }}</strong>
+                      @if(!empty($s['citation']['url']))
+                        <a href="{{ $s['citation']['url'] }}" target="_blank" rel="noopener">Ver fuente oficial <span class="sl-source-link-icon">↗</span></a>
+                      @endif
+                      <br>{{ $s['citation']['note'] ?? '' }}
+                    </div>
                   </div>
                 @endif
               </div>
@@ -386,7 +455,16 @@
           <div class="sl-sources">
             <div class="rdp-block-title" style="margin:0 0 0.6rem;">Fuentes normativas de referencia</div>
             @foreach($ix['sources'] as $src)
-              <div class="sl-source-row"><span class="sl-source-icon">⚖️</span><div><strong>{{ $src['label'] ?? '' }}</strong> — {{ $src['desc'] ?? '' }}</div></div>
+              <div class="sl-source-row">
+                <span class="sl-source-icon">⚖️</span>
+                <div>
+                  <strong>{{ $src['label'] ?? '' }}</strong>
+                  @if(!empty($src['url']))
+                    <a href="{{ $src['url'] }}" target="_blank" rel="noopener">↗</a>
+                  @endif
+                  — {{ $src['desc'] ?? '' }}
+                </div>
+              </div>
             @endforeach
           </div>
         @endif
@@ -577,19 +655,24 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
             Certificado en proceso
           </div>
-        @elseif($progressPercent >= 100)
-          @if(($course->certificate_type ?? 'gratuita') === 'opcional')
-            <button type="button" class="rdp-cert-status rdp-cert-ready" style="width:100%;border:none;" onclick="abrirModalCompra()">Conseguir certificación</button>
-          @else
-            <a href="{{ route('exams.show', $course) }}" class="rdp-cert-status rdp-cert-ready">Conseguir certificación</a>
-          @endif
         @else
-          <button type="button" class="rdp-cert-status rdp-cert-locked" style="width:100%;border:none;cursor:default;" onclick="abrirModalBloqueo()">Certificado bloqueado</button>
+          <a href="{{ route('exams.show', $course) }}" class="rdp-cert-status rdp-cert-ready">Dar el cuestionario y certificarme</a>
+          @if($progressPercent < 100)
+            <div class="rdp-cert-hint">Puedes darlo ahora mismo, sin terminar el curso.</div>
+          @endif
         @endif
       </div>
     @endif
   </div>
 </div>
+
+@if($course->exam && !$certificate && !$pendingCertificate)
+  <a href="{{ route('exams.show', $course) }}" class="floating-quiz-cta" id="floatingQuizCta" data-course="{{ $course->id }}">
+    <span class="fqc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4M11 11l-7 7"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h11"/></svg></span>
+    <span class="fqc-text">Dar el cuestionario<small>Sin necesidad de terminar el curso</small></span>
+    <button type="button" class="floating-quiz-close" id="floatingQuizClose" onclick="event.preventDefault(); event.stopPropagation(); fqcDismiss();">&times;</button>
+  </a>
+@endif
 
 <div class="modal-overlay" id="modalBloqueo">
   <div class="modal-backdrop" onclick="cerrarModalesLeccion()"></div>
@@ -641,6 +724,17 @@ function abrirModalBloqueo() { document.getElementById('modalBloqueo')?.classLis
 function cerrarModalesLeccion() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active')); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { cerrarModalesLeccion(); window.glClose?.(); } });
 
+(function () {
+  const cta = document.getElementById('floatingQuizCta');
+  if (!cta) return;
+  const key = 'rc_quiz_cta_dismissed_' + cta.dataset.course;
+  if (sessionStorage.getItem(key) === '1') { cta.style.display = 'none'; }
+  window.fqcDismiss = function () {
+    sessionStorage.setItem(key, '1');
+    cta.style.display = 'none';
+  };
+})();
+
 function lessonToggleDrawer() {
   document.getElementById('lessonSidebar')?.classList.toggle('open');
   document.getElementById('lessonDrawerBackdrop')?.classList.toggle('open');
@@ -679,6 +773,57 @@ function rdpTab(name) {
   const fill = document.getElementById('lessonProgressFill');
   if (!fill) return;
   setTimeout(() => { fill.style.width = fill.dataset.pct + '%'; }, 150);
+})();
+
+/* ---- Subject-type selector (dropdown) ---- */
+(function () {
+  const metaEl = document.getElementById('ssMeta');
+  const select = document.getElementById('ssSelect');
+  const saveBtn = document.getElementById('ssSave');
+  if (!metaEl || !select || !saveBtn) return;
+
+  const meta = JSON.parse(metaEl.textContent || '{}');
+  const storageKey = 'rc_subject_' + meta.courseId;
+  const sectors = meta.sectors || [];
+
+  const current = localStorage.getItem(storageKey);
+  if (current) select.value = current;
+
+  saveBtn.addEventListener('click', () => {
+    const value = select.value;
+    if (!value) return;
+    localStorage.setItem(storageKey, value);
+    const found = sectors.find(s => s.value === value);
+    document.getElementById('ssConfirmLabel').textContent = found ? found.label : value;
+    document.getElementById('ssConfirm').style.display = 'flex';
+  });
+})();
+
+/* ---- Highlight cards matching the saved subject type ---- */
+(function () {
+  const grid = document.getElementById('ixCardGrid');
+  if (!grid) return;
+  const courseId = grid.dataset.course;
+  const selected = localStorage.getItem('rc_subject_' + courseId);
+  if (!selected) return;
+
+  const cards = Array.from(grid.querySelectorAll('.ix-card[data-sector]')).filter(c => c.dataset.sector);
+  if (!cards.length) return;
+
+  const mine = cards.filter(c => c.dataset.sector === selected);
+  if (!mine.length) return;
+
+  mine.forEach(c => {
+    c.classList.add('ix-card-mine');
+    const ribbon = c.querySelector('.ix-card-mine-ribbon');
+    if (ribbon) ribbon.style.display = 'inline-block';
+    grid.insertBefore(c, grid.firstChild);
+  });
+
+  const banner = document.createElement('div');
+  banner.className = 'ix-sector-banner';
+  banner.innerHTML = '⭐ Se destacó el caso adaptado a <strong>tu sector</strong> según tu selección.';
+  grid.parentElement.insertBefore(banner, grid);
 })();
 
 /* ---- Balance bars animation ---- */
