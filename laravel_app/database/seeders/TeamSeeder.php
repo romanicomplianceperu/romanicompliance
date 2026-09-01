@@ -45,6 +45,16 @@ class TeamSeeder extends Seeder
                 'team_rank' => 'associate',
                 'team_order' => 3,
             ],
+            [
+                'email' => 'federico.chunga@romanicompliance.com',
+                'name' => 'Federico Chunga Fiestas',
+                'role' => 'student',
+                'title' => 'Consultor Internacional en Conducta Empresarial Responsable',
+                'bio' => 'Consultor internacional especializado en conducta empresarial responsable, políticas públicas con enfoque de derechos humanos e integridad, lucha contra la corrupción, y Estado constitucional de derecho.',
+                'photo' => null,
+                'team_rank' => 'associate',
+                'team_order' => 4,
+            ],
         ];
 
         foreach ($members as $data) {

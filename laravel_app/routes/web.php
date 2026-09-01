@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ProjectParticipantController as AdminProjectParti
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\AcademicoController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
@@ -61,6 +62,19 @@ Route::get('/cursos/{course:slug}', [LearningCourseController::class, 'show'])->
 Route::post('/cursos/{course:slug}/inicio-rapido', [GuestEnrollController::class, 'start'])->name('courses.guest-start');
 
 Route::get('/proyectos/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
+
+Route::prefix('academico')->name('academico.')->group(function () {
+    Route::get('/', [AcademicoController::class, 'index'])->name('index');
+    Route::get('/visitante', [AcademicoController::class, 'visitante'])->name('visitante');
+    Route::get('/alumno', [AcademicoController::class, 'alumno'])->name('alumno');
+    Route::get('/ingreso', [AcademicoController::class, 'identify'])->name('identify');
+    Route::post('/ingreso', [AcademicoController::class, 'identifyStore'])->name('identify.store');
+    Route::get('/{university}', [AcademicoController::class, 'university'])->name('university');
+    Route::get('/{university}/{course}', [AcademicoController::class, 'course'])->name('course');
+    Route::get('/{university}/{course}/participacion', [AcademicoController::class, 'participacion'])->name('participacion.index');
+    Route::get('/{university}/{course}/participacion/{activity}', [AcademicoController::class, 'activity'])->name('activity.show');
+    Route::post('/{university}/{course}/participacion/{activity}/responder', [AcademicoController::class, 'respond'])->name('activity.respond');
+});
 
 Route::get('/blog', [BlogArticleController::class, 'index'])->name('blog.index');
 Route::get('/blog/autor/{user}', [BlogArticleController::class, 'author'])->name('blog.author');
