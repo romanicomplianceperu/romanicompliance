@@ -313,7 +313,8 @@
       <div class="rd-cta-row">
         @if($enrollment)
           @php $next = $course->nextLessonFor(auth()->user()); @endphp
-          <a href="{{ $next ? route('lessons.show', $next) : route('courses.show', $course) }}" class="rd-btn-primary">
+          @php $startUrl = $course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next ? route('lessons.show', $next) : route('courses.show', $course)); @endphp
+          <a href="{{ $startUrl }}" class="rd-btn-primary">
             {{ $enrollment->progress_percent > 0 ? 'Continuar curso' : 'Comenzar curso' }}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
@@ -422,10 +423,6 @@
     <script id="gmPreviewData" type="application/json">{!! json_encode($gafiMapPreview['countries'] ?? []) !!}</script>
   </div>
 </section>
-@endif
-
-@if($course->slug === 'listas-internacionales-ft-fpadm')
-  @include('courses._subject-selector')
 @endif
 
 @if($totalLessons > 0)
@@ -571,7 +568,8 @@
       <p>Avanza a tu propio ritmo, autoevalúate al finalizar y obtén tu certificado verificable por QR.</p>
       @if($enrollment)
         @php $next2 = $course->nextLessonFor(auth()->user()); @endphp
-        <a href="{{ $next2 ? route('lessons.show', $next2) : route('courses.show', $course) }}" class="rd-btn-primary">Continuar curso</a>
+        @php $startUrl2 = $course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next2 ? route('lessons.show', $next2) : route('courses.show', $course)); @endphp
+        <a href="{{ $startUrl2 }}" class="rd-btn-primary">Continuar curso</a>
       @else
         <button type="button" class="rd-btn-primary" onclick="rdOpenWelcome()">Inscribirme gratis</button>
       @endif
@@ -889,7 +887,9 @@ function rdOnboardFinish() {
   setTimeout(() => overlay.classList.add('leaving'), 500);
   setTimeout(() => {
     @php $firstLesson = $course->nextLessonFor(auth()->user() ?? new \App\Models\User()); @endphp
-    @if(auth()->check() && $firstLesson)
+    @if(auth()->check() && $course->slug === 'listas-internacionales-ft-fpadm')
+      window.location.href = '{{ route('courses.subject-select', $course) }}';
+    @elseif(auth()->check() && $firstLesson)
       window.location.href = '{{ route('lessons.show', $firstLesson) }}';
     @else
       overlay.classList.remove('active');

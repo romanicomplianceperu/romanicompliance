@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/completar-perfil', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::post('/cursos/{course:slug}/inscribirse', [LearningCourseController::class, 'enroll'])->name('courses.enroll');
+    Route::get('/cursos/{course:slug}/sector', [LearningCourseController::class, 'subjectSelect'])->name('courses.subject-select');
     Route::post('/cursos/{course:slug}/certificacion/pago-reclamado', [LearningCourseController::class, 'claimPayment'])->name('courses.claim-payment');
 
     Route::get('/lecciones/{lesson}', [LearningLessonController::class, 'show'])->name('lessons.show');

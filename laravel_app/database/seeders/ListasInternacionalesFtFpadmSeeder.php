@@ -263,6 +263,19 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
             ],
         ];
 
+        $screeningSearch = [
+            'intro' => 'Escribe un nombre y compáralo contra una base de práctica. Así se siente un sistema de screening real — y por qué una coincidencia de nombre nunca es, por sí sola, la respuesta final.',
+            'disclaimer' => 'Esta es una base de datos de práctica con nombres ilustrativos (ficticios), no la lista oficial en tiempo real. Para una consulta real, usa los buscadores oficiales de la lección "Herramienta" del Módulo 2.',
+            'examples' => ['Khalid Mansouri', 'Nadia Volkov', 'Juan Carlos Ramírez'],
+            'dataset' => [
+                ['name' => 'Khalid Ibrahim Al-Mansouri', 'aliases' => ['Khalid I. Mansouri', 'Abu Ibrahim'], 'list' => 'CSNU · Terrorismo (práctica)', 'note' => 'Registro ilustrativo para practicar el flujo de verificación.'],
+                ['name' => 'Farrukh Tashkentov', 'aliases' => ['F. Tashkentov'], 'list' => 'CSNU · FPADM (práctica)', 'note' => 'Registro ilustrativo asociado a una empresa intermediaria ficticia.'],
+                ['name' => 'Nadia Petrova Volkova', 'aliases' => ['Nadia Volkov', 'N. Petrova'], 'list' => 'OFAC · SDN (práctica)', 'note' => 'Registro ilustrativo para practicar el flujo de verificación.'],
+                ['name' => 'Inversiones Al-Rashid E.I.R.L.', 'aliases' => ['Grupo Al-Rashid'], 'list' => 'CSNU · Terrorismo (práctica)', 'note' => 'Entidad ficticia — practica también el screening de personas jurídicas, no solo naturales.'],
+                ['name' => 'TransGlobal Trading Company', 'aliases' => ['TransGlobal Trading Co.'], 'list' => 'CSNU · FPADM (práctica)', 'note' => 'Entidad ficticia usada como ejemplo de empresa pantalla en comercio internacional.'],
+            ],
+        ];
+
         // ---------------------------------------------------------------
         // Módulo 8 — Congelamiento administrativo y semáforo de consecuencias
         // ---------------------------------------------------------------
@@ -371,6 +384,7 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
             ['title' => 'Módulo 7: Coincidencia real o falso positivo', 'lessons' => [
                 ['title' => 'Glosario: coincidencia, falso positivo y tipping off', 'type' => 'glossary', 'duration_minutes' => 10, 'content' => json_encode($glosarioListas)],
                 ['title' => 'Juego: empareja los conceptos clave', 'type' => 'memory', 'duration_minutes' => 8, 'content' => json_encode($memoryListas)],
+                ['title' => 'Buscador de práctica: ¿está en la lista?', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'screening_search'] + $screeningSearch)],
             ]],
             ['title' => 'Módulo 8: Congelamiento administrativo', 'lessons' => [
                 ['title' => 'Semáforo de consecuencias', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'cards'] + $semaforoCards)],

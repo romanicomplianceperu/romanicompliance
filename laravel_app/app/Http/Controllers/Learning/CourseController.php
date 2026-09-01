@@ -51,6 +51,19 @@ class CourseController extends Controller
         return redirect()->route('courses.show', ['course' => $course, 'bienvenida' => 1]);
     }
 
+    public function subjectSelect(Request $request, Course $course)
+    {
+        $user = $request->user();
+        $enrollment = $course->enrollmentFor($user);
+
+        abort_unless($enrollment, 403);
+
+        $nextLesson = $course->nextLessonFor($user);
+        $nextUrl = $nextLesson ? route('lessons.show', $nextLesson) : route('courses.show', $course);
+
+        return view('courses.subject-select', compact('course', 'nextUrl'));
+    }
+
     public function claimPayment(Request $request, Course $course)
     {
         $user = $request->user();

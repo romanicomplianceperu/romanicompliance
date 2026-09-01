@@ -232,6 +232,26 @@
 .gl-list-short { font-size: 0.72rem; color: var(--slate-light); }
 .gl-list-def { font-size: 0.85rem; color: var(--slate); line-height: 1.65; margin-bottom: 8px; }
 
+/* Screening search (practice tool) */
+.sc-search-box { display: flex; gap: 10px; margin-bottom: 1rem; }
+.sc-search-box input { flex: 1; padding: 13px 16px; border: 1.5px solid var(--line); border-radius: 8px; font-size: 0.92rem; }
+.sc-search-box input:focus { border-color: var(--gold); outline: none; }
+.sc-search-box button { padding: 13px 22px; border-radius: 8px; border: none; background: var(--ink); color: var(--white); font-weight: 700; font-size: 0.85rem; cursor: pointer; flex-shrink: 0; }
+.sc-search-box button:hover { background: var(--gold); }
+.sc-disclaimer { font-size: 0.76rem; color: var(--slate-light); background: var(--ivory); border-radius: 8px; padding: 10px 14px; line-height: 1.6; margin-bottom: 1.2rem; }
+.sc-result { display: none; border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
+.sc-result.show { display: block; }
+.sc-result.hit { background: rgba(179,65,59,0.06); border: 1.5px solid rgba(179,65,59,0.3); }
+.sc-result.miss { background: rgba(31,122,77,0.06); border: 1.5px solid rgba(31,122,77,0.25); }
+.sc-result-title { font-size: 0.95rem; font-weight: 800; margin-bottom: 8px; }
+.sc-result.hit .sc-result-title { color: #B3413B; }
+.sc-result.miss .sc-result-title { color: #1F7A4D; }
+.sc-result-body { font-size: 0.85rem; color: var(--ink); line-height: 1.65; }
+.sc-result-list-tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; background: rgba(179,65,59,0.12); color: #B3413B; padding: 4px 10px; border-radius: 20px; margin-bottom: 8px; }
+.sc-result-reminder { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(11,24,41,0.15); font-size: 0.8rem; color: var(--slate); font-style: italic; }
+.sc-examples { font-size: 0.76rem; color: var(--slate-light); margin-top: 6px; }
+.sc-examples button { background: none; border: none; color: var(--gold); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 0.76rem; padding: 0 2px; }
+
 /* GAFI jurisdictions map (by region) */
 .gm-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.3rem; font-size: 0.78rem; color: var(--slate); }
 .gm-legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -368,7 +388,24 @@
     @elseif(in_array($lesson->type, ['interactive', 'glossary', 'memory']) && $lesson->content)
       @php $ix = json_decode($lesson->content, true) ?: []; @endphp
 
-      @if($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'tool_links')
+      @if($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'screening_search')
+        @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
+        <div class="sc-disclaimer">⚠️ {{ $ix['disclaimer'] ?? 'Este buscador consulta una base de práctica con nombres ilustrativos, no la lista oficial en tiempo real. Para una consulta real, usa los buscadores oficiales de la lección "Herramienta".' }}</div>
+        <div class="sc-search-box">
+          <input type="text" id="scInput" placeholder="Escribe un nombre completo…" autocomplete="off">
+          <button type="button" id="scBtn">Buscar</button>
+        </div>
+        @if(!empty($ix['examples']))
+          <div class="sc-examples">Prueba con:
+            @foreach($ix['examples'] as $ex)
+              <button type="button" class="sc-example-btn" data-name="{{ $ex }}">{{ $ex }}</button>@if(!$loop->last),@endif
+            @endforeach
+          </div>
+        @endif
+        <div class="sc-result" id="scResult"></div>
+        <script id="scData" type="application/json">{!! json_encode($ix['dataset'] ?? []) !!}</script>
+
+      @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'tool_links')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
         <div class="tl-grid">
           @foreach($ix['tools'] ?? [] as $tool)
@@ -933,6 +970,73 @@ function rdpTab(name) {
   banner.className = 'ix-sector-banner';
   banner.innerHTML = '⭐ Se destacó el caso adaptado a <strong>tu sector</strong> según tu selección.';
   grid.parentElement.insertBefore(banner, grid);
+})();
+
+/* ---- Screening search (practice tool) ---- */
+(function () {
+  const dataEl = document.getElementById('scData');
+  const input = document.getElementById('scInput');
+  const btn = document.getElementById('scBtn');
+  const resultBox = document.getElementById('scResult');
+  if (!dataEl || !input || !btn || !resultBox) return;
+
+  const dataset = JSON.parse(dataEl.textContent || '[]');
+
+  function normalize(s) {
+    return (s || '').toString().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9\s]/g, '').trim();
+  }
+
+  function wordOverlap(a, b) {
+    const wa = normalize(a).split(/\s+/).filter(Boolean);
+    const wb = normalize(b).split(/\s+/).filter(Boolean);
+    if (!wa.length || !wb.length) return 0;
+    let matches = 0;
+    wa.forEach(w => { if (w.length > 1 && wb.includes(w)) matches++; });
+    return matches;
+  }
+
+  function search() {
+    const query = input.value.trim();
+    if (!query) return;
+
+    let best = null;
+    let bestScore = 0;
+
+    dataset.forEach(entry => {
+      const candidates = [entry.name, ...(entry.aliases || [])];
+      candidates.forEach(c => {
+        const score = wordOverlap(query, c);
+        if (score > bestScore) { bestScore = score; best = entry; }
+      });
+    });
+
+    resultBox.classList.remove('hit', 'miss');
+    resultBox.classList.add('show');
+
+    if (best && bestScore >= 2) {
+      resultBox.classList.add('hit');
+      resultBox.innerHTML =
+        '<div class="sc-result-list-tag">' + (best.list || 'Lista de interés') + '</div>' +
+        '<div class="sc-result-title">⚠️ Coincidencia potencial encontrada</div>' +
+        '<div class="sc-result-body">"' + query + '" coincide parcialmente con <strong>' + best.name + '</strong>, registrado en: ' + (best.list || '') + '.' +
+        (best.note ? ' ' + best.note : '') +
+        '<div class="sc-result-reminder">Recuerda: una coincidencia de nombre NO confirma identidad. Verifica fecha de nacimiento, documento y nacionalidad, y escala al Oficial de Cumplimiento sin informar al cliente.</div></div>';
+    } else {
+      resultBox.classList.add('miss');
+      resultBox.innerHTML =
+        '<div class="sc-result-title">✅ Sin coincidencias en la base de práctica</div>' +
+        '<div class="sc-result-body">"' + query + '" no coincide con ningún registro de esta base ilustrativa.' +
+        '<div class="sc-result-reminder">Esto no reemplaza una verificación real: para un caso real, usa siempre los buscadores oficiales.</div></div>';
+    }
+  }
+
+  btn.addEventListener('click', search);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
+  document.querySelectorAll('.sc-example-btn').forEach(b => {
+    b.addEventListener('click', () => { input.value = b.dataset.name; search(); });
+  });
 })();
 
 /* ---- GAFI jurisdictions map (interactive SVG) ---- */

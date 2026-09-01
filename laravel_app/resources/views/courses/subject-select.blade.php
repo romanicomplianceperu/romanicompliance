@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('title', 'Personaliza tu capacitación — '.$course->title)
+
 @php
   $ssSectors = [
     ['value' => 'notaria', 'label' => 'Notaría', 'icon' => '📜',
@@ -42,11 +46,49 @@
   ];
 @endphp
 
-<section class="rd-section" id="rdSubjectSelector">
-  <div class="wrap">
-    <div class="rd-eyebrow">Personalización</div>
-    <h2>¿A qué tipo de sujeto obligado perteneces?</h2>
-    <p class="rd-section-lead">Selecciona tu sector: los casos prácticos de este curso se destacarán para ti. A la derecha verás qué dice la normativa sobre tu categoría.</p>
+@section('styles')
+.ss-full-shell { min-height: calc(100vh - 71px); background: var(--ivory); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.6rem 1.5rem; }
+.ss-full-inner { max-width: 900px; width: 100%; text-align: center; }
+.ss-full-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.7rem; }
+.ss-full-title { font-family: var(--serif); font-weight: 600; font-size: clamp(1.6rem, 3.6vw, 2.2rem); color: var(--ink); margin-bottom: 0.6rem; }
+.ss-full-lead { font-size: 0.92rem; color: var(--slate); max-width: 560px; margin: 0 auto 2rem; line-height: 1.6; }
+
+.ss-picker { display: grid; grid-template-columns: 1fr 1.3fr; gap: 1.4rem; background: var(--white); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(11,24,41,0.05); text-align: left; }
+.ss-picker-list { border-right: 1px solid var(--line); max-height: 420px; overflow-y: auto; padding: 8px; }
+.ss-picker-item { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 12px; border-radius: 9px; border: none; background: none; text-align: left; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--ink); transition: background 0.15s; }
+.ss-picker-item:hover { background: var(--ivory); }
+.ss-picker-item.active { background: var(--gold-pale); color: var(--gold); }
+.ss-picker-icon { font-size: 1.1rem; flex-shrink: 0; }
+.ss-picker-label { flex: 1; line-height: 1.3; }
+.ss-picker-chevron { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.4; }
+.ss-picker-item.active .ss-picker-chevron { opacity: 1; }
+.ss-picker-detail { padding: 2rem 1.8rem; display: flex; align-items: center; }
+.ss-picker-empty { text-align: center; color: var(--slate-light); font-size: 0.85rem; margin: 0 auto; max-width: 280px; }
+.ss-picker-empty span { font-size: 1.8rem; display: block; margin-bottom: 10px; }
+.ss-picker-content { width: 100%; }
+.ss-picker-eyebrow { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 6px; }
+.ss-picker-content h3 { font-family: var(--serif); font-size: 1.15rem; color: var(--ink); margin-bottom: 10px; }
+.ss-picker-content p { font-size: 0.86rem; color: var(--slate); line-height: 1.65; }
+@media (max-width: 800px) {
+  .ss-picker { grid-template-columns: 1fr; }
+  .ss-picker-list { border-right: none; border-bottom: 1px solid var(--line); max-height: 240px; }
+  .ss-picker-detail { padding: 1.4rem; }
+}
+
+.ss-full-cta-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 1.6rem; flex-wrap: wrap; }
+.ss-full-continue { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--ink); font-weight: 700; font-size: 0.9rem; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; opacity: 0.4; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; }
+.ss-full-continue.enabled { opacity: 1; pointer-events: auto; }
+.ss-full-continue:hover.enabled { transform: translateY(-2px); }
+.ss-full-skip { font-size: 0.82rem; color: var(--slate-light); font-weight: 600; }
+.ss-full-skip:hover { color: var(--slate); }
+@endsection
+
+@section('content')
+<div class="ss-full-shell">
+  <div class="ss-full-inner">
+    <div class="ss-full-eyebrow">Personalicemos tu capacitación</div>
+    <h1 class="ss-full-title">¿A qué tipo de sujeto obligado perteneces?</h1>
+    <p class="ss-full-lead">Selecciona tu sector: los casos prácticos de este curso se destacarán para ti. A la derecha verás qué dice la normativa sobre tu categoría.</p>
 
     <div class="ss-picker">
       <div class="ss-picker-list" id="ssPickerList">
@@ -67,30 +109,39 @@
           <div class="ss-picker-eyebrow">Según la SBS / UIF-Perú</div>
           <h3 id="ssPickerTitle"></h3>
           <p id="ssPickerSbs"></p>
+          <p id="ssPickerAdapt" style="margin-top:10px;color:var(--gold);font-weight:600;"></p>
         </div>
       </div>
     </div>
 
-    <div class="ss-adapt" id="ssAdapt" style="display:none;">
-      <span class="ss-adapt-icon">✓</span>
-      <div>
-        <strong>Así se ajustará tu curso</strong>
-        <p id="ssAdaptText"></p>
-      </div>
+    <div class="ss-full-cta-row">
+      <button type="button" class="ss-full-continue" id="ssContinueBtn">Continuar al curso →</button>
+      <a href="{{ $nextUrl }}" class="ss-full-skip">Omitir por ahora</a>
     </div>
   </div>
-</section>
+</div>
 
 <script id="ssData" type="application/json">{!! json_encode($ssSectors) !!}</script>
+@endsection
+
+@section('scripts')
 <script>
 (function () {
-  const dataEl = document.getElementById('ssData');
-  if (!dataEl) return;
-  const sectors = JSON.parse(dataEl.textContent || '[]');
+  const sectors = JSON.parse(document.getElementById('ssData').textContent || '[]');
   const storageKey = 'rc_subject_{{ $course->id }}';
-  const items = document.querySelectorAll('#ssPickerList .ss-picker-item');
+  const nextUrl = '{{ $nextUrl }}';
 
-  function select(index, save) {
+  // Already chosen before? Skip straight to the course.
+  if (localStorage.getItem(storageKey)) {
+    window.location.replace(nextUrl);
+    return;
+  }
+
+  const items = document.querySelectorAll('#ssPickerList .ss-picker-item');
+  const continueBtn = document.getElementById('ssContinueBtn');
+  let selectedValue = null;
+
+  function select(index) {
     const s = sectors[index];
     if (!s) return;
     items.forEach((it, i) => it.classList.toggle('active', i === index));
@@ -98,17 +149,18 @@
     document.getElementById('ssPickerContent').style.display = 'block';
     document.getElementById('ssPickerTitle').textContent = s.label;
     document.getElementById('ssPickerSbs').textContent = s.sbs;
-    document.getElementById('ssAdaptText').textContent = s.adapt;
-    document.getElementById('ssAdapt').style.display = 'flex';
-    if (save) localStorage.setItem(storageKey, s.value);
+    document.getElementById('ssPickerAdapt').textContent = '✓ ' + s.adapt;
+    selectedValue = s.value;
+    continueBtn.classList.add('enabled');
   }
 
-  items.forEach((item, i) => item.addEventListener('click', () => select(i, true)));
+  items.forEach((item, i) => item.addEventListener('click', () => select(i)));
 
-  const saved = localStorage.getItem(storageKey);
-  if (saved) {
-    const idx = sectors.findIndex(s => s.value === saved);
-    if (idx >= 0) select(idx, false);
-  }
+  continueBtn.addEventListener('click', () => {
+    if (!selectedValue) return;
+    localStorage.setItem(storageKey, selectedValue);
+    window.location.href = nextUrl;
+  });
 })();
 </script>
+@endsection
