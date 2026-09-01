@@ -207,6 +207,19 @@
 .gl-confuse { background: var(--gold-pale); border-radius: 8px; padding: 12px 14px; font-size: 0.82rem; color: var(--ink); }
 .gl-confuse strong { color: var(--gold); }
 
+/* Tool links (real official search tools) */
+.tl-grid { display: grid; gap: 12px; }
+.tl-card { display: flex; align-items: flex-start; gap: 14px; background: var(--white); border: 1.5px solid var(--line); border-radius: 12px; padding: 1.2rem 1.4rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+.tl-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(11,24,41,0.1); }
+.tl-card.red { border-left: 4px solid #B3413B; }
+.tl-card.gold { border-left: 4px solid var(--gold); }
+.tl-card.ink { border-left: 4px solid var(--ink); }
+.tl-icon { font-size: 1.6rem; flex-shrink: 0; }
+.tl-body { flex: 1; min-width: 0; }
+.tl-body h4 { font-size: 0.98rem; color: var(--ink); margin-bottom: 4px; }
+.tl-body p { font-size: 0.82rem; color: var(--slate); line-height: 1.55; }
+.tl-cta { flex-shrink: 0; font-size: 0.76rem; font-weight: 700; color: var(--gold); white-space: nowrap; align-self: center; }
+
 /* Glossary — centered modal, list format */
 .gl-list-modal { max-width: 640px; }
 .gl-list { max-height: 60vh; overflow-y: auto; margin-top: 0.5rem; }
@@ -355,7 +368,22 @@
     @elseif(in_array($lesson->type, ['interactive', 'glossary', 'memory']) && $lesson->content)
       @php $ix = json_decode($lesson->content, true) ?: []; @endphp
 
-      @if($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'cards')
+      @if($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'tool_links')
+        @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
+        <div class="tl-grid">
+          @foreach($ix['tools'] ?? [] as $tool)
+            <a href="{{ $tool['url'] ?? '#' }}" target="_blank" rel="noopener" class="tl-card {{ $tool['color'] ?? 'gold' }}">
+              <span class="tl-icon">{{ $tool['icon'] ?? '🔎' }}</span>
+              <div class="tl-body">
+                <h4>{{ $tool['title'] ?? '' }}</h4>
+                <p>{{ $tool['desc'] ?? '' }}</p>
+              </div>
+              <span class="tl-cta">Abrir ↗</span>
+            </a>
+          @endforeach
+        </div>
+
+      @elseif($lesson->type === 'interactive' && ($ix['kind'] ?? null) === 'cards')
         @if(!empty($ix['intro']))<p class="ix-intro">{{ $ix['intro'] }}</p>@endif
         <div class="ix-card-grid" id="ixCardGrid" data-course="{{ $course->id }}">
           @foreach($ix['cards'] ?? [] as $c)

@@ -29,7 +29,7 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                 'created_by' => $instructor?->id,
                 'instructor_id' => $instructor?->id,
                 'instructor_name' => 'Denis Gabriel Romani Seminario',
-                'title' => 'Listas Internacionales, Financiamiento del Terrorismo y FPADM',
+                'title' => 'Listas Internacionales y FPADM: Identificación, Coincidencias y Congelamiento de Activos',
                 'description' => 'Curso práctico e interactivo sobre identificación, coincidencias y congelamiento de activos frente a listas internacionales: régimen CSNU 1267/1989/2253, Resolución 1373, financiamiento de la proliferación de armas de destrucción masiva (FPADM), Corea del Norte e Irán, OFAC/SDN, jurisdicciones GAFI, y el procedimiento de escalamiento frente a una coincidencia.',
                 'cover_image' => $coverPath,
                 'duration_minutes' => 80,
@@ -77,14 +77,14 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
         // Módulo 2 — Mapa de listas internacionales
         // ---------------------------------------------------------------
         $mapaListas = [
-            'intro' => 'No todas las listas producen la misma consecuencia. Antes de actuar, identifica de qué tipo de lista se trata.',
+            'intro' => 'Existen 4 fuentes indispensables que todo sujeto obligado debe dominar. A ellas se suman factores de riesgo complementarios, que no son designaciones de sanciones por sí solos.',
             'cards' => [
-                ['icon' => '🛑', 'tag' => 'CSNU · TERRORISMO', 'color' => 'red', 'title' => 'Régimen 1267 / 1989 / 2253', 'body' => 'Lista de sanciones del Consejo de Seguridad de la ONU sobre personas y entidades asociadas a ISIL (Da\'esh) y Al-Qaida. Genera obligación de congelamiento cuando existe una designación vigente aplicable.'],
-                ['icon' => '☢️', 'tag' => 'CSNU · FPADM', 'color' => 'red', 'title' => 'Corea del Norte e Irán', 'body' => 'Sanciones del Consejo de Seguridad vinculadas al financiamiento de la proliferación de armas de destrucción masiva (Resolución 1718 y sucesivas; régimen aplicable a Irán).'],
-                ['icon' => '🇺🇸', 'tag' => 'LISTA DE INTERÉS', 'color' => 'gold', 'title' => 'OFAC / SDN', 'body' => 'Lista de Nacionales Especialmente Designados del Departamento del Tesoro de EE. UU. Es una fuente complementaria, no un mandato directo del CSNU sobre el sujeto obligado peruano.'],
-                ['icon' => '🌐', 'tag' => 'JURISDICCIONES', 'color' => 'gold', 'title' => 'GAFI', 'body' => 'Identifica países, no personas: jurisdicciones de alto riesgo o bajo monitoreo reforzado. Es un factor de riesgo, no una designación individual.'],
+                ['icon' => '1️⃣', 'tag' => '1 DE 4 · INDISPENSABLE', 'color' => 'red', 'title' => 'CSNU — Terrorismo (Régimen 1267/1989/2253)', 'body' => 'Lista de sanciones del Consejo de Seguridad de la ONU sobre personas y entidades asociadas a ISIL (Da\'esh) y Al-Qaida. Genera obligación de congelamiento cuando existe una designación vigente aplicable.'],
+                ['icon' => '2️⃣', 'tag' => '2 DE 4 · INDISPENSABLE', 'color' => 'red', 'title' => 'CSNU — FPADM (Corea del Norte e Irán)', 'body' => 'Sanciones del Consejo de Seguridad vinculadas al financiamiento de la proliferación de armas de destrucción masiva (Resolución 1718 y sucesivas; régimen aplicable a Irán).'],
+                ['icon' => '3️⃣', 'tag' => '3 DE 4 · INDISPENSABLE', 'color' => 'gold', 'title' => 'OFAC / SDN (Departamento del Tesoro de EE. UU.)', 'body' => 'Lista de Nacionales Especialmente Designados. Es una fuente de interés que todo sujeto obligado debe verificar, aunque jurídicamente no equivale a una designación vinculante del CSNU sobre Perú.'],
+                ['icon' => '4️⃣', 'tag' => '4 DE 4 · INDISPENSABLE', 'color' => 'gold', 'title' => 'Listas de interés de la SBS / UIF-Perú', 'body' => 'Listas y comunicaciones adicionales que la SBS/UIF-Perú identifica como relevantes para el sistema de prevención, complementarias a las tres anteriores.'],
+                ['icon' => '🌐', 'tag' => 'FACTOR DE RIESGO', 'color' => 'ink', 'title' => 'GAFI', 'body' => 'Identifica países, no personas: jurisdicciones de alto riesgo o bajo monitoreo reforzado. Es un factor de riesgo que exige mayor análisis, no una designación individual.'],
                 ['icon' => '🏛️', 'tag' => 'FACTOR DE RIESGO', 'color' => 'ink', 'title' => 'PEP', 'body' => 'Persona Expuesta Políticamente: no es una lista de sanciones, es una categoría de cliente que exige debida diligencia reforzada.'],
-                ['icon' => '📋', 'tag' => 'INTERNA', 'color' => 'green', 'title' => 'Alertas del sistema', 'body' => 'Coincidencias que genera el propio sistema de prevención del sujeto obligado al comparar clientes contra las listas anteriores.'],
             ],
             'sources' => [
                 ['label' => 'Comité 1267/1989/2253 (ISIL/Da\'esh y Al-Qaida)', 'url' => 'https://www.un.org/securitycouncil/es/sanctions/1267', 'desc' => 'Página oficial del comité de sanciones del Consejo de Seguridad de la ONU.'],
@@ -92,6 +92,15 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
                 ['label' => 'OFAC — Sanctions List Search', 'url' => 'https://sanctionssearch.ofac.treas.gov/', 'desc' => 'Buscador oficial de la lista SDN del Departamento del Tesoro de EE. UU.'],
                 ['label' => 'GAFI — Listas de jurisdicciones', 'url' => 'https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html', 'desc' => 'Listado oficial y actualizado de jurisdicciones de alto riesgo y bajo monitoreo reforzado.'],
                 ['label' => 'SBS / UIF-Perú', 'url' => 'https://www.sbs.gob.pe/prevencion-de-lavado-activos', 'desc' => 'Portal oficial de prevención del lavado de activos y financiamiento del terrorismo de la SBS.'],
+            ],
+        ];
+
+        $herramientaListas = [
+            'intro' => 'Estos son los buscadores oficiales reales. Aquí no simulamos nada: úsalos para practicar navegando el contenido real de cada lista.',
+            'tools' => [
+                ['icon' => '🇺🇳', 'title' => 'Lista Consolidada del CSNU', 'desc' => 'Busca directamente en la lista consolidada de sanciones del Consejo de Seguridad de las Naciones Unidas (ISIL/Da\'esh, Al-Qaida, Corea del Norte, Irán y demás regímenes vigentes).', 'url' => 'https://www.un.org/securitycouncil/content/un-sc-consolidated-list', 'color' => 'red'],
+                ['icon' => '🇺🇸', 'title' => 'OFAC Sanctions List Search', 'desc' => 'Buscador oficial del Departamento del Tesoro de EE. UU. para consultar la lista SDN y otras listas de sanciones administradas por OFAC.', 'url' => 'https://sanctionssearch.ofac.treas.gov/', 'color' => 'gold'],
+                ['icon' => '🌐', 'title' => 'Listas del GAFI/FATF', 'desc' => 'Listado oficial y actualizado de jurisdicciones de alto riesgo (Call for Action) y bajo monitoreo reforzado (Increased Monitoring).', 'url' => 'https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html', 'color' => 'ink'],
             ],
         ];
 
@@ -334,6 +343,7 @@ class ListasInternacionalesFtFpadmSeeder extends Seeder
             ]],
             ['title' => 'Módulo 2: Mapa de listas internacionales', 'lessons' => [
                 ['title' => 'Mapa de listas internacionales', 'type' => 'interactive', 'duration_minutes' => 8, 'content' => json_encode(['kind' => 'cards'] + $mapaListas)],
+                ['title' => 'Herramienta: busca en las listas oficiales reales', 'type' => 'interactive', 'duration_minutes' => 5, 'content' => json_encode(['kind' => 'tool_links'] + $herramientaListas)],
             ]],
             ['title' => 'Módulo 3: Régimen 1267 y Resolución 1373', 'lessons' => [
                 ['title' => 'Arrastra: ¿Régimen 1267 o Resolución 1373?', 'type' => 'interactive', 'duration_minutes' => 10, 'content' => json_encode(['kind' => 'matrix_builder'] + $regimen1267vs1373)],

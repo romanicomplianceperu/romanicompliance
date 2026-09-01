@@ -8,7 +8,7 @@
 <link rel="icon" href="{{ asset('images/logos.png') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --ink: #0B1829;
@@ -29,7 +29,7 @@
   --shadow-s: 0 2px 12px rgba(11,24,41,0.06);
   --shadow-m: 0 8px 32px rgba(11,24,41,0.08);
   --max: 1120px;
-  --serif: 'Cormorant Garamond', Georgia, serif;
+  --serif: 'Lora', Georgia, serif;
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
@@ -38,7 +38,7 @@ html { scroll-behavior: smooth; }
 body { background: var(--ivory); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
-h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; line-height: 1.2; }
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.28; }
 .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
 
 /* NAV */

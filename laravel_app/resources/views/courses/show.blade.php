@@ -653,15 +653,9 @@
       </div>
 
       <div class="rd-ob-card" data-card="5">
-        <div class="rd-ob-eyebrow">Tu ruta</div>
+        <div class="rd-ob-eyebrow">Todo listo</div>
         <h2>Tu recorrido comienza aquí</h2>
-        <div class="rd-ob-route">
-          @foreach($course->modules as $module)
-            <div class="step"><span class="n">MÓDULO {{ sprintf('%02d', $loop->iteration) }}</span>{{ $module->title }}</div>
-            <div class="down">↓</div>
-          @endforeach
-          <div class="step cert"><span class="n">FINAL</span>Certificación</div>
-        </div>
+        <p>Avanza a tu propio ritmo, con casos adaptados a tu sector y una certificación verificable al finalizar.</p>
         <div class="rd-ob-cta">
           <button type="button" class="rd-btn-primary rd-ob-final-btn" onclick="rdOnboardFinish()">Comenzar curso →</button>
         </div>
