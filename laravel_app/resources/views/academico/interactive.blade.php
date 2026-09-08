@@ -4,6 +4,18 @@
 
 @section('styles')
 @include('academico._styles')
+<style>
+/* The site-wide WhatsApp bubble and "Certifícate gratis" CTA are position:fixed at the
+   bottom of the screen. On a desktop-width layout they sit in the corners, clear of the
+   centered content column — but on a mobile viewport the content fills the full width,
+   so these two floating widgets end up directly on top of whatever scrolls underneath
+   them (exercise cards, drag-and-drop chips, and the Guardar/Enviar buttons at the end
+   of the form), making them untappable. Hide both on mobile widths on this page, since a
+   student mid-activity shouldn't have a promo CTA competing for touch targets anyway. */
+@media (max-width: 768px) {
+  .wa-float, .ac-float-cta { display: none !important; }
+}
+</style>
 @endsection
 
 @section('content')

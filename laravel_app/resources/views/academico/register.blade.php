@@ -4,6 +4,13 @@
 
 @section('styles')
 @include('academico._styles')
+<style>
+/* Keep the floating WhatsApp bubble clear of the registration form on mobile — see the
+   same note in academico/interactive.blade.php for the full explanation. */
+@media (max-width: 768px) {
+  .wa-float, .ac-float-cta { display: none !important; }
+}
+</style>
 @endsection
 
 @section('content')
