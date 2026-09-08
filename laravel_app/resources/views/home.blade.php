@@ -114,19 +114,22 @@
 .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
 .form-msg { display: none; padding: 2rem; text-align: center; color: var(--gold-light); font-size: 0.9rem; font-weight: 500; }
 
-/* ── MODAL (overlay/box shared in layouts/app.blade.php) ── */
-.modal-form { display: flex; flex-direction: column; gap: 12px; }
-.modal-form .mf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.modal-form label { font-size: 0.7rem; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; display: block; }
-.modal-form input, .modal-form textarea, .modal-form select { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); font-family: var(--sans); font-size: 0.85rem; color: var(--ink); transition: border-color 0.3s; }
-.modal-form input:focus, .modal-form textarea:focus, .modal-form select:focus { outline: none; border-color: var(--gold); }
-.modal-form input::placeholder, .modal-form textarea::placeholder { color: var(--slate-light); }
-.modal-form textarea { resize: vertical; min-height: 70px; }
-.modal-submit { padding: 12px; background: var(--ink); color: var(--white); border: none; border-radius: var(--radius); font-family: var(--sans); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.3s; margin-top: 4px; }
-.modal-submit:hover { background: var(--ink-light); }
-.modal-msg { display: none; text-align: center; padding: 2rem 1rem; }
-.modal-msg h4 { font-size: 1.2rem; color: var(--ink); margin-bottom: 0.5rem; }
-.modal-msg p { font-size: 0.85rem; color: var(--slate); }
+/* ── CLIENTES (trust carousel) ── */
+.clients-strip { background: var(--ink); padding: 4rem 0; overflow: hidden; position: relative; }
+.clients-strip .section-header h2 { color: var(--white); }
+.clients-strip .section-header p { color: rgba(255,255,255,0.5); }
+.clients-strip .section-header .gold-line { background: var(--gold-light); }
+.clients-track-wrap { position: relative; margin-top: 2.5rem; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.clients-track { display: flex; align-items: center; gap: 4.5rem; width: max-content; animation: clients-scroll 28s linear infinite; }
+.clients-track:hover { animation-play-state: paused; }
+.client-item { display: flex; align-items: center; justify-content: center; height: 64px; flex-shrink: 0; }
+.client-item img { height: 46px; width: auto; max-width: 180px; object-fit: contain; opacity: 0.92; transition: opacity 0.3s, transform 0.3s; }
+.client-item:hover img { opacity: 1; transform: translateY(-2px); }
+.client-item.client-text-logo { font-family: var(--serif); font-size: 1.7rem; letter-spacing: 0.02em; color: var(--gold-light); font-weight: 500; white-space: nowrap; transition: transform 0.3s; }
+.client-item.client-text-logo span { font-weight: 300; font-style: italic; color: rgba(255,255,255,0.55); }
+.client-item.client-text-logo:hover { transform: translateY(-2px); }
+@keyframes clients-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .clients-track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; } }
 
 @media (max-width: 900px) {
   .services-grid, .plans-grid, .blog .article-grid, .courses-online-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
@@ -136,8 +139,9 @@
   .director-contact { justify-content: center; }
   .director-creds { justify-content: center; }
   .contact-layout { grid-template-columns: 1fr; }
-  .form-row, .mf-row { grid-template-columns: 1fr !important; }
+  .form-row { grid-template-columns: 1fr !important; }
   .hero { padding: 4rem 0 3.5rem; }
+  .clients-strip { padding: 3rem 0; }
 }
 @endsection
 
@@ -149,7 +153,7 @@
       <h1>{!! \App\Models\SiteSetting::get('home_hero_title', 'Protegemos su organización con <em>estrategia legal</em> y cumplimiento normativo') !!}</h1>
       <p class="hero-sub">{{ \App\Models\SiteSetting::get('home_hero_subtitle', 'Asesoría especializada en compliance corporativo, prevención de lavado de activos, derecho penal y due diligence para empresas que operan bajo estándares rigurosos.') }}</p>
       <div class="hero-actions">
-        <button class="btn btn-gold" onclick="abrirModal()">Solicitar asesoría</button>
+        <button class="btn btn-gold" onclick="irAContacto()">Solicitar asesoría</button>
         <a href="#servicios" class="btn btn-ghost">Conocer servicios</a>
       </div>
     </div>
@@ -172,6 +176,32 @@
   </div>
 </section>
 
+<section class="clients-strip" id="clientes">
+  <div class="wrap">
+    <div class="section-header reveal">
+      <div class="gold-line"></div>
+      <h2>Clientes que confiaron en nosotros</h2>
+      <p>Organizaciones que respaldan nuestro trabajo en compliance y cumplimiento normativo</p>
+    </div>
+    <div class="clients-track-wrap reveal">
+      <div class="clients-track">
+        @for ($i = 0; $i < 2; $i++)
+          <div class="client-item">
+            <img src="{{ asset('images/clientes/red-digital.svg') }}" alt="Red Digital" loading="lazy">
+          </div>
+          <div class="client-item">
+            <img src="{{ asset('images/clientes/qr-pay.png') }}" alt="QR Pay" loading="lazy">
+          </div>
+          <div class="client-item client-text-logo">Gold<span>Lion</span></div>
+          <div class="client-item">
+            <img src="{{ asset('images/clientes/san-jorge.png') }}" alt="Créditos San Jorge" loading="lazy">
+          </div>
+        @endfor
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="services" id="servicios">
   <div class="wrap">
     <div class="section-header reveal">
@@ -184,25 +214,25 @@
         <div class="service-num">01</div>
         <h4>Compliance corporativo</h4>
         <p>Diseño e implementación de modelos de prevención conforme a la Ley N.° 30424. Programas de cumplimiento que protegen a su organización frente a la responsabilidad penal de la persona jurídica.</p>
-        <a href="javascript:void(0)" onclick="abrirModal()" class="service-link">Consultar</a>
+        <a href="javascript:void(0)" onclick="irAContacto('Compliance corporativo')" class="service-link">Consultar</a>
       </div>
       <div class="service-card reveal stagger-2">
         <div class="service-num">02</div>
         <h4>Prevención LA/FT</h4>
         <p>Asesoría integral en el Sistema de Prevención de Lavado de Activos y Financiamiento del Terrorismo. Manuales, matrices de riesgo, políticas DDC/KYC y capacitación al Oficial de Cumplimiento.</p>
-        <a href="javascript:void(0)" onclick="abrirModal()" class="service-link">Consultar</a>
+        <a href="javascript:void(0)" onclick="irAContacto('Prevención LA/FT (SPLAFT)')" class="service-link">Consultar</a>
       </div>
       <div class="service-card reveal stagger-3">
         <div class="service-num">03</div>
         <h4>Asesoría penal</h4>
         <p>Asesoría personalizada en derecho penal para personas naturales y jurídicas. Defensa técnica, estrategia procesal y acompañamiento integral en todas las etapas del proceso penal.</p>
-        <a href="javascript:void(0)" onclick="abrirModal()" class="service-link">Consultar</a>
+        <a href="javascript:void(0)" onclick="irAContacto('Asesoría penal')" class="service-link">Consultar</a>
       </div>
       <div class="service-card reveal stagger-4">
         <div class="service-num">04</div>
         <h4>Due Diligence</h4>
         <p>Investigaciones de debida diligencia sobre personas naturales y jurídicas. Verificación de antecedentes, análisis patrimonial y evaluación de riesgos reputacionales para operaciones corporativas.</p>
-        <a href="javascript:void(0)" onclick="abrirModal()" class="service-link">Consultar</a>
+        <a href="javascript:void(0)" onclick="irAContacto('Due Diligence')" class="service-link">Consultar</a>
       </div>
       <div class="service-card reveal stagger-5">
         <div class="service-num">05</div>
@@ -214,7 +244,7 @@
         <div class="service-num">06</div>
         <h4>Investigación financiera</h4>
         <p>Análisis de operaciones sospechosas, rastreo de flujos financieros y elaboración de informes técnicos para procedimientos regulatorios, administrativos y judiciales.</p>
-        <a href="javascript:void(0)" onclick="abrirModal()" class="service-link">Consultar</a>
+        <a href="javascript:void(0)" onclick="irAContacto('Investigación financiera')" class="service-link">Consultar</a>
       </div>
     </div>
   </div>
@@ -440,67 +470,21 @@
     </div>
   </div>
 </section>
-
-<div class="modal-overlay" id="modalAsesoria">
-  <div class="modal-backdrop" onclick="cerrarModal()"></div>
-  <div class="modal-box">
-    <button class="modal-close" onclick="cerrarModal()">&times;</button>
-    <div id="modalFormContent">
-      <h3>Solicitar asesoría</h3>
-      <p class="modal-sub">Complete el formulario y nos pondremos en contacto con usted a la brevedad.</p>
-      <form class="modal-form" onsubmit="return enviarFormulario(event, this, 'modalMsgOk')">
-        <div class="mf-row">
-          <div>
-            <label>Nombre completo</label>
-            <input type="text" name="nombre" placeholder="Su nombre" required>
-          </div>
-          <div>
-            <label>Teléfono</label>
-            <input type="tel" name="telefono" placeholder="+51 ...">
-          </div>
-        </div>
-        <div>
-          <label>Correo electrónico</label>
-          <input type="email" name="email" placeholder="correo@empresa.com" required>
-        </div>
-        <div>
-          <label>Servicio de interés</label>
-          <select name="servicio">
-            <option value="Compliance corporativo">Compliance corporativo</option>
-            <option value="Prevención LA/FT (SPLAFT)">Prevención LA/FT (SPLAFT)</option>
-            <option value="Asesoría penal">Asesoría penal</option>
-            <option value="Due Diligence">Due Diligence</option>
-            <option value="Capacitación">Capacitación</option>
-            <option value="Investigación financiera">Investigación financiera</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div>
-          <label>Mensaje</label>
-          <textarea name="mensaje" placeholder="Describa brevemente su consulta o necesidad" rows="3"></textarea>
-        </div>
-        <button type="submit" class="modal-submit">Enviar solicitud</button>
-      </form>
-    </div>
-    <div class="modal-msg" id="modalMsgOk">
-      <h4>Solicitud enviada</h4>
-      <p>Nos pondremos en contacto con usted a la brevedad. Gracias por confiar en Romani Compliance.</p>
-    </div>
-  </div>
-</div>
 @endsection
 
 @section('scripts')
 <script>
-function abrirModal() {
-  document.getElementById('modalAsesoria').classList.add('active');
-  document.body.style.overflow = 'hidden';
+function irAContacto(servicio) {
+  const seccion = document.getElementById('contacto');
+  if (!seccion) return;
+  seccion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const select = document.querySelector('#contactFormInline select[name="servicio"]');
+  if (servicio && select) select.value = servicio;
+  window.setTimeout(() => {
+    const nombre = document.querySelector('#contactFormInline input[name="nombre"]');
+    if (nombre) nombre.focus({ preventScroll: true });
+  }, 500);
 }
-function cerrarModal() {
-  document.getElementById('modalAsesoria').classList.remove('active');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
 
 async function enviarFormulario(e, form, msgId) {
   e.preventDefault();
@@ -520,10 +504,6 @@ async function enviarFormulario(e, form, msgId) {
       })
     });
     form.style.display = 'none';
-    if (document.getElementById('modalFormContent') && msgId === 'modalMsgOk') {
-      document.querySelector('.modal-sub').style.display = 'none';
-      document.querySelector('.modal-box h3').style.display = 'none';
-    }
     document.getElementById(msgId).style.display = 'block';
   } catch (err) {
     alert('Error al enviar. Intente por WhatsApp al +51 969 754 983.');

@@ -27,6 +27,7 @@ use App\Http\Controllers\Blog\ArticleController as BlogArticleController;
 use App\Http\Controllers\CertificateVerificationController;
 use App\Http\Controllers\ClaimAccountController;
 use App\Http\Controllers\CourseQuestionController;
+use App\Http\Controllers\FedericoEditorController;
 use App\Http\Controllers\GuestEnrollController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PanelController;
@@ -81,6 +82,15 @@ Route::prefix('academico')->name('academico.')->group(function () {
     Route::post('/{university}/{course}/participacion/{activity}/registro', [AcademicoController::class, 'registerSubmission'])->name('activity.register');
     Route::post('/{university}/{course}/participacion/{activity}/guardar', [AcademicoController::class, 'saveSubmission'])->name('activity.save');
     Route::post('/salir', [AcademicoController::class, 'logout'])->name('logout');
+});
+
+Route::prefix('redaccion/federico')->name('federico.')->group(function () {
+    Route::get('/', [FedericoEditorController::class, 'gate'])->name('gate');
+    Route::post('/', [FedericoEditorController::class, 'authenticate'])->name('authenticate');
+    Route::post('/salir', [FedericoEditorController::class, 'logout'])->name('logout');
+    Route::get('/nuevo', [FedericoEditorController::class, 'editor'])->name('editor');
+    Route::post('/nuevo', [FedericoEditorController::class, 'store'])->name('store');
+    Route::post('/imagen', [FedericoEditorController::class, 'uploadImage'])->name('upload-image');
 });
 
 Route::get('/blog', [BlogArticleController::class, 'index'])->name('blog.index');

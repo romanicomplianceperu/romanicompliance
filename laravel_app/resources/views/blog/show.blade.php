@@ -17,6 +17,17 @@
 .article-layout { display: grid; grid-template-columns: 2.3fr 1fr; gap: 2.5rem; align-items: start; padding: 3rem 0; }
 .article-body { font-size: 0.95rem; color: var(--ink); line-height: 1.9; white-space: pre-line; }
 .article-body p { margin-bottom: 1.2rem; }
+.article-body h2, .article-body h3, .article-body h4 { color: var(--ink); font-weight: 600; line-height: 1.35; margin: 2rem 0 1rem; }
+.article-body h2 { font-size: 1.4rem; }
+.article-body h3 { font-size: 1.2rem; }
+.article-body h4 { font-size: 1.05rem; }
+.article-body ul, .article-body ol { margin: 0 0 1.2rem 1.4rem; }
+.article-body li { margin-bottom: 0.5rem; }
+.article-body a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+.article-body a:hover { color: var(--gold-light); }
+.article-body strong, .article-body b { font-weight: 700; color: var(--ink); }
+.article-body blockquote { margin: 1.5rem 0; padding: 0.2rem 1.5rem; border-left: 3px solid var(--gold); color: var(--slate); font-style: italic; }
+.article-body img { max-width: 100%; height: auto; border-radius: 6px; margin: 1.5rem 0; display: block; }
 
 .author-card { display: flex; gap: 1rem; align-items: center; background: var(--ivory); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem; margin-bottom: 2rem; }
 .author-card img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
@@ -77,7 +88,7 @@
       </div>
     </div>
 
-    <div class="article-body">{{ $article->content }}</div>
+    <div class="article-body">{!! $article->content !!}</div>
 
     @if($article->tags->isNotEmpty())
       <div class="tags-row">

@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\Tag;
 use App\Models\User;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -97,7 +98,7 @@ class ArticleController extends Controller
 
     private function validated(Request $request): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'author_id' => ['required', 'exists:users,id'],
             'article_category_id' => ['nullable', 'exists:article_categories,id'],
@@ -107,6 +108,10 @@ class ArticleController extends Controller
             'cover_image' => ['nullable', 'image', 'max:2048'],
             'tags' => ['nullable', 'string'],
         ]);
+
+        $data['content'] = HtmlSanitizer::clean($data['content']);
+
+        return $data;
     }
 
     private function applyStatus(array &$data, Request $request, ?Article $article = null): void
