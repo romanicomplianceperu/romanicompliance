@@ -161,10 +161,19 @@ footer { background: var(--ink-90); padding: 2.5rem 0; border-top: 1px solid rgb
 .article-card-author img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
 .article-card-author span { font-size: 0.76rem; color: var(--slate); font-weight: 600; }
 
+/* ── GLOBAL LOADER ── */
+.global-loader { position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; background: rgba(250,250,246,0.72); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+.global-loader.active { display: flex; }
+.global-loader-spinner { width: 46px; height: 46px; border: 4px solid var(--line); border-top-color: var(--gold); border-radius: 50%; animation: globalSpin 0.75s linear infinite; }
+@keyframes globalSpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .global-loader-spinner { animation-duration: 1.6s; } }
+
 @yield('styles')
 </style>
 </head>
 <body>
+
+<div class="global-loader" id="globalLoader" aria-hidden="true"><div class="global-loader-spinner"></div></div>
 
 <nav class="nav-bar" id="navBar">
   <div class="nav-inner">
@@ -234,6 +243,32 @@ footer { background: var(--ink-90); padding: 2.5rem 0; border-top: 1px solid rgb
 </a>
 
 <script>
+(function () {
+  const loader = document.getElementById('globalLoader');
+  if (!loader) return;
+  function show() { loader.classList.add('active'); }
+  document.addEventListener('submit', function (e) {
+    const form = e.target;
+    if (form.tagName === 'FORM' && !form.hasAttribute('data-no-loader') && !form.hasAttribute('target')) {
+      show();
+    }
+  }, true);
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest('a[href]');
+    if (!a || a.hasAttribute('data-no-loader') || a.target === '_blank') return;
+    const href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+    let url;
+    try { url = new URL(href, window.location.href); } catch (err) { return; }
+    if (url.origin !== window.location.origin) return;
+    show();
+  }, true);
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) loader.classList.remove('active');
+  });
+})();
+
 window.addEventListener('scroll', () => {
   document.getElementById('navBar').classList.toggle('scrolled', window.scrollY > 20);
 });

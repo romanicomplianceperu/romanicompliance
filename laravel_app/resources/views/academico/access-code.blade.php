@@ -19,7 +19,7 @@
     @if($errors->any())
       <div class="ac-form-error">{{ $errors->first('code') }}</div>
     @endif
-    <form method="POST" action="{{ route('academico.activity.unlock', [$university->slug, $course->slug, $activity->slug]) }}">
+    <form method="POST" action="{{ $formAction }}">
       @csrf
       <label>Código de acceso</label>
       <input type="text" name="code" required autofocus autocomplete="off" placeholder="Escribe el código que te dio tu docente">

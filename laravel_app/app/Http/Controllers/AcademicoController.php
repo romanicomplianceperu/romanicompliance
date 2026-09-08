@@ -48,6 +48,10 @@ class AcademicoController extends Controller
     {
         [$university, $course] = $this->resolve($universitySlug, $courseSlug);
 
+        if ($gate = $this->courseGate($university, $course)) {
+            return $gate;
+        }
+
         return view('academico.course', compact('university', 'course'));
     }
 
@@ -55,9 +59,60 @@ class AcademicoController extends Controller
     {
         [$university, $course] = $this->resolve($universitySlug, $courseSlug);
 
+        if ($gate = $this->courseGate($university, $course)) {
+            return $gate;
+        }
+
         $activities = $course->activities()->where('type', 'participacion')->get();
 
         return view('academico.participacion-index', compact('university', 'course', 'activities'));
+    }
+
+    /**
+     * Find the activity (if any) that gates entry to this course, and return the
+     * access-code screen for it when it hasn't been unlocked yet in this session.
+     */
+    private function findGatingActivity(AcademicCourse $course): ?AcademicActivity
+    {
+        return $course->activities()
+            ->whereNotNull('access_code')
+            ->where('status', 'disponible')
+            ->orderByDesc('week_number')
+            ->first();
+    }
+
+    private function courseGate(AcademicUniversity $university, AcademicCourse $course)
+    {
+        $gatingActivity = $this->findGatingActivity($course);
+
+        if ($gatingActivity && ! session($this->unlockSessionKey($gatingActivity))) {
+            return view('academico.access-code', [
+                'university' => $university,
+                'course' => $course,
+                'activity' => $gatingActivity,
+                'formAction' => route('academico.course.unlock', [$university->slug, $course->slug]),
+            ]);
+        }
+
+        return null;
+    }
+
+    public function unlockCourse(Request $request, string $universitySlug, string $courseSlug)
+    {
+        [$university, $course] = $this->resolve($universitySlug, $courseSlug);
+
+        $gatingActivity = $this->findGatingActivity($course);
+        abort_unless($gatingActivity, 404);
+
+        $data = $request->validate(['code' => ['required', 'string', 'max:100']]);
+
+        if (! $gatingActivity->checkAccessCode($data['code'])) {
+            return back()->withErrors(['code' => 'El código de acceso no es correcto.'])->withInput();
+        }
+
+        session([$this->unlockSessionKey($gatingActivity) => true]);
+
+        return redirect()->route('academico.course', [$universitySlug, $courseSlug]);
     }
 
     public function activity(Request $request, string $universitySlug, string $courseSlug, string $activitySlug)
@@ -75,6 +130,12 @@ class AcademicoController extends Controller
 
         if ($activity->requiresAccessCode()) {
             return $this->activityGated($request, $university, $course, $activity);
+        }
+
+        if (! $activity->isAvailable()) {
+            return redirect()
+                ->route('academico.participacion.index', [$universitySlug, $courseSlug])
+                ->with('academico_error', 'Esta actividad no está disponible por ahora.');
         }
 
         $activity->load('questions.responses');
@@ -95,7 +156,12 @@ class AcademicoController extends Controller
         $unlockKey = $this->unlockSessionKey($activity);
 
         if (! session($unlockKey)) {
-            return view('academico.access-code', compact('university', 'course', 'activity'));
+            return view('academico.access-code', [
+                'university' => $university,
+                'course' => $course,
+                'activity' => $activity,
+                'formAction' => route('academico.activity.unlock', [$university->slug, $course->slug, $activity->slug]),
+            ]);
         }
 
         $submission = $this->currentSubmission($request, $activity);

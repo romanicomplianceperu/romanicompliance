@@ -93,10 +93,17 @@ img { max-width: 100%; display: block; }
 @media (max-width: 480px) {
   .topbar-user span { display: none; }
 }
+/* ── GLOBAL LOADER ── */
+.global-loader { position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; background: rgba(250,250,246,0.72); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+.global-loader.active { display: flex; }
+.global-loader-spinner { width: 46px; height: 46px; border: 4px solid var(--line); border-top-color: var(--gold); border-radius: 50%; animation: globalSpin 0.75s linear infinite; }
+@keyframes globalSpin { to { transform: rotate(360deg); } }
+
 @yield('styles')
 </style>
 </head>
 <body>
+<div class="global-loader" id="globalLoader" aria-hidden="true"><div class="global-loader-spinner"></div></div>
 <div class="admin-layout">
   <aside class="sidebar">
     <a href="{{ route('admin.dashboard') }}" class="sidebar-brand"><img src="{{ asset('images/logos.png') }}" alt="Romani Compliance"></a>
@@ -151,6 +158,33 @@ img { max-width: 100%; display: block; }
     </div>
   </div>
 </div>
+<script>
+(function () {
+  const loader = document.getElementById('globalLoader');
+  if (!loader) return;
+  function show() { loader.classList.add('active'); }
+  document.addEventListener('submit', function (e) {
+    const form = e.target;
+    if (form.tagName === 'FORM' && !form.hasAttribute('data-no-loader') && !form.hasAttribute('target')) {
+      show();
+    }
+  }, true);
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest('a[href]');
+    if (!a || a.hasAttribute('data-no-loader') || a.target === '_blank') return;
+    const href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+    let url;
+    try { url = new URL(href, window.location.href); } catch (err) { return; }
+    if (url.origin !== window.location.origin) return;
+    show();
+  }, true);
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) loader.classList.remove('active');
+  });
+})();
+</script>
 @yield('scripts')
 </body>
 </html>

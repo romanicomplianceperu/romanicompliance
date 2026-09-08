@@ -89,7 +89,7 @@ TXT;
                 'group_size' => '5 a 6 estudiantes',
                 'case_body' => $caseBody,
                 'case_document_path' => $casePdf,
-                'status' => 'disponible',
+                'status' => 'cerrada',
             ]
         );
 
