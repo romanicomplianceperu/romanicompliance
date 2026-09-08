@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AcademicSubmissionMember extends Model
 {
-    protected $fillable = ['academic_submission_id', 'full_name', 'email'];
+    protected $fillable = ['academic_submission_id', 'full_name', 'email', 'phone'];
 
     public function submission(): BelongsTo
     {

@@ -123,6 +123,7 @@ class AcademicActivity extends Model
         $correctCount = 0;
         $totalPoints = 0;
         $earnedPoints = 0;
+        $byType = [];
 
         foreach ($exercises as $exercise) {
             $studentAnswer = $answers[$exercise->id] ?? null;
@@ -133,6 +134,12 @@ class AcademicActivity extends Model
                 $earnedPoints += $exercise->points;
             }
             $items[$exercise->id] = $exercise->toGradedArray($studentAnswer);
+
+            $byType[$exercise->type] ??= ['total' => 0, 'correct' => 0];
+            $byType[$exercise->type]['total']++;
+            if ($isCorrect) {
+                $byType[$exercise->type]['correct']++;
+            }
         }
 
         return [
@@ -142,6 +149,21 @@ class AcademicActivity extends Model
             'earned_points' => $earnedPoints,
             'percent' => $totalPoints > 0 ? (int) round($earnedPoints / $totalPoints * 100) : 0,
             'items' => $items,
+            'by_type' => $byType,
         ];
+    }
+
+    /**
+     * Human-readable Spanish label for an exercise type, used in the results/statistics view.
+     */
+    public static function exerciseTypeLabel(string $type): string
+    {
+        return match ($type) {
+            'vf' => 'Verdadero / Falso',
+            'mcq' => 'Opción múltiple',
+            'matching' => 'Emparejar',
+            'ordering' => 'Ordenar',
+            default => ucfirst($type),
+        };
     }
 }

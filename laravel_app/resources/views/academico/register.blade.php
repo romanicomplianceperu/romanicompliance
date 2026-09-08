@@ -42,6 +42,8 @@
         <input type="text" name="full_name" autocomplete="off">
         <label>Correo institucional</label>
         <input type="email" name="email" autocomplete="off" placeholder="nombre@unp.edu.pe">
+        <label>Número de celular</label>
+        <input type="tel" name="phone" autocomplete="off" placeholder="9XXXXXXXX" inputmode="tel">
       </div>
 
       <div id="groupFields" class="ac-id-card" style="max-width:none;padding:1.6rem;display:none;">
@@ -88,6 +90,7 @@
     row.innerHTML = `
       <input type="text" name="members[${i}][full_name]" placeholder="Nombre completo" required>
       <input type="email" name="members[${i}][email]" placeholder="Correo institucional" required>
+      <input type="tel" name="members[${i}][phone]" placeholder="Número de celular" inputmode="tel" required>
       <button type="button" class="ac-member-remove" title="Quitar">✕</button>
     `;
     row.querySelector('.ac-member-remove').addEventListener('click', () => row.remove());

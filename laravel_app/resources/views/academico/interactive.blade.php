@@ -85,6 +85,20 @@
       <div class="ac-score-banner">
         <div class="score-value">{{ $grading['earned_points'] }} / {{ $grading['total_points'] }} <small>puntos</small></div>
         <div class="score-percent">{{ $grading['percent'] }}% de aciertos en los ejercicios autocalificables ({{ $grading['correct'] }} de {{ $grading['total'] }})</div>
+        @if(count($grading['by_type']) > 1)
+          <div class="ac-score-stats">
+            @foreach($grading['by_type'] as $type => $stat)
+              @php $statPct = $stat['total'] > 0 ? (int) round($stat['correct'] / $stat['total'] * 100) : 0; @endphp
+              <div class="ac-score-stat">
+                <div class="stat-row">
+                  <span class="stat-label">{{ \App\Models\AcademicActivity::exerciseTypeLabel($type) }}</span>
+                  <span class="stat-value">{{ $stat['correct'] }}/{{ $stat['total'] }}</span>
+                </div>
+                <div class="stat-bar"><div class="stat-fill" style="width:{{ $statPct }}%;"></div></div>
+              </div>
+            @endforeach
+          </div>
+        @endif
       </div>
     @endif
 
@@ -150,6 +164,7 @@
   const CAN_EDIT = @json($canEdit);
   const SAVE_URL = @json($saveUrl);
   const CSRF_TOKEN = @json(csrf_token());
+  const JUST_SUBMITTED = @json(session('academico_success') === 'Actividad enviada correctamente.');
 
   const state = { exercises: {} };
 
@@ -161,6 +176,60 @@
     document.querySelectorAll('.ac-float-cta, .wa-float').forEach(function (btn) {
       btn.style.pointerEvents = suspend ? 'none' : '';
     });
+  }
+
+  // Small self-contained confetti burst (no external library) shown right after the
+  // student submits the activity, on the page they land on after the redirect.
+  function fireConfetti() {
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const colors = ['#8B7340', '#B89A56', '#0B1829', '#2F6F4F', '#B4483A'];
+    const pieces = Array.from({ length: 140 }).map(function () {
+      return {
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * canvas.height * 0.6,
+        w: 5 + Math.random() * 6,
+        h: 8 + Math.random() * 8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speed: 2 + Math.random() * 3,
+        drift: (Math.random() - 0.5) * 2.4,
+        rot: Math.random() * Math.PI,
+        rotSpeed: (Math.random() - 0.5) * 0.25,
+      };
+    });
+
+    let frame = 0;
+    function tick() {
+      frame++;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let stillFalling = false;
+      pieces.forEach(function (p) {
+        p.y += p.speed;
+        p.x += p.drift;
+        p.rot += p.rotSpeed;
+        if (p.y < canvas.height + 20) stillFalling = true;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      if (stillFalling && frame < 260) {
+        requestAnimationFrame(tick);
+      } else {
+        window.removeEventListener('resize', resize);
+        canvas.remove();
+      }
+    }
+    tick();
   }
 
   function el(tag, className, text) {
@@ -512,6 +581,10 @@
     setInterval(function () { if (dirty) doAutosave(); }, 20000);
     document.addEventListener('visibilitychange', function () { if (document.hidden && dirty) doAutosave(); });
     window.addEventListener('pagehide', function () { if (dirty) doAutosave(); });
+  }
+
+  if (JUST_SUBMITTED) {
+    fireConfetti();
   }
 })();
 </script>

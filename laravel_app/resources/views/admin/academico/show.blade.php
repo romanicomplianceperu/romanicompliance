@@ -53,7 +53,7 @@
             </td>
             <td>
               @foreach($submission->members as $member)
-                {{ $member->full_name }} <span class="form-hint">({{ $member->email }})</span><br>
+                {{ $member->full_name }} <span class="form-hint">({{ $member->email }}{{ $member->phone ? ' · '.$member->phone : '' }})</span><br>
               @endforeach
             </td>
             <td>{{ $submission->ip_address }}</td>

@@ -162,8 +162,8 @@
 .ac-mode-btn small { display: block; font-weight: 500; font-size: 0.72rem; color: var(--slate-light); margin-top: 3px; }
 
 /* Group member rows */
-.ac-member-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
-@media (max-width: 560px) { .ac-member-row { grid-template-columns: 1fr; } }
+.ac-member-row { display: grid; grid-template-columns: 1.2fr 1.2fr 1fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
+@media (max-width: 720px) { .ac-member-row { grid-template-columns: 1fr; } }
 .ac-member-row input { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.85rem; }
 .ac-member-row input:focus { border-color: var(--gold); outline: none; }
 .ac-member-remove { background: none; border: none; color: var(--slate-light); cursor: pointer; font-size: 1.1rem; padding: 4px 8px; }
@@ -203,6 +203,12 @@
 .ac-score-banner .score-value small { font-family: var(--sans); font-size: 0.9rem; font-weight: 500; color: rgba(255,255,255,0.7); }
 .ac-score-banner .score-percent { font-size: 0.86rem; color: rgba(255,255,255,0.85); margin-top: 8px; }
 .ac-score-banner .score-note { font-size: 0.74rem; color: rgba(255,255,255,0.55); margin-top: 8px; }
+.ac-score-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 1.2rem; padding-top: 1.1rem; border-top: 1px solid rgba(255,255,255,0.15); text-align: left; }
+.ac-score-stat .stat-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.76rem; margin-bottom: 5px; }
+.ac-score-stat .stat-label { color: rgba(255,255,255,0.8); font-weight: 600; }
+.ac-score-stat .stat-value { color: var(--gold-light); font-weight: 700; }
+.ac-score-stat .stat-bar { height: 6px; border-radius: 4px; background: rgba(255,255,255,0.15); overflow: hidden; }
+.ac-score-stat .stat-fill { height: 100%; background: var(--gold-light); border-radius: 4px; }
 
 /* Exercises section */
 .ac-ex-section { margin-bottom: 1.8rem; }

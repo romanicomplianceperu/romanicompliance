@@ -236,9 +236,14 @@ class AcademicoController extends Controller
             'mode' => ['required', 'in:individual,grupal'],
             'full_name' => ['required_if:mode,individual', 'nullable', 'string', 'max:255'],
             'email' => ['required_if:mode,individual', 'nullable', 'email', 'max:255'],
+            'phone' => ['required_if:mode,individual', 'nullable', 'string', 'max:30'],
             'members' => ['required_if:mode,grupal', 'nullable', 'array', 'min:2'],
             'members.*.full_name' => ['required_with:members', 'string', 'max:255'],
             'members.*.email' => ['required_with:members', 'email', 'max:255'],
+            'members.*.phone' => ['required_with:members', 'string', 'max:30'],
+        ], [
+            'phone.required_if' => 'El número de celular es obligatorio.',
+            'members.*.phone.required_with' => 'El número de celular de cada integrante es obligatorio.',
         ]);
 
         $submission = new AcademicSubmission([
@@ -259,6 +264,7 @@ class AcademicoController extends Controller
                 'academic_submission_id' => $submission->id,
                 'full_name' => Str::title(Str::lower(trim($data['full_name']))),
                 'email' => $data['email'],
+                'phone' => trim($data['phone']),
             ]);
         } else {
             foreach ($data['members'] as $member) {
@@ -266,6 +272,7 @@ class AcademicoController extends Controller
                     'academic_submission_id' => $submission->id,
                     'full_name' => Str::title(Str::lower(trim($member['full_name']))),
                     'email' => $member['email'],
+                    'phone' => trim($member['phone']),
                 ]);
             }
         }
