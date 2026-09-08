@@ -82,6 +82,9 @@ footer { background: var(--ink-90); padding: 2.5rem 0; border-top: 1px solid rgb
 .footer-links a { font-size: 0.72rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.04em; transition: color 0.2s; }
 .footer-links a:hover { color: var(--gold-light); }
 .footer-copy { width: 100%; text-align: center; font-size: 0.68rem; color: rgba(255,255,255,0.2); margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.04); }
+.footer-credit { width: 100%; text-align: center; font-size: 0.66rem; color: rgba(255,255,255,0.18); margin-top: 0.5rem; }
+.footer-credit a { color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
+.footer-credit a:hover { color: var(--gold-light); }
 
 /* WHATSAPP */
 .wa-float { position: fixed; bottom: 28px; right: 28px; z-index: 90; width: 56px; height: 56px; background: var(--green-wa); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(37,211,102,0.35); transition: transform 0.3s, box-shadow 0.3s; }
@@ -234,6 +237,9 @@ footer { background: var(--ink-90); padding: 2.5rem 0; border-top: 1px solid rgb
     </div>
     <div class="footer-copy">
       2026 Romani Compliance. Compliance · ALA/CFT · Due Diligence · Investigación Financiera. Todos los derechos reservados.
+    </div>
+    <div class="footer-credit">
+      Programado y desarrollado por <a href="https://www.linkedin.com/in/angel-omar-oliden-pacherrez-086b12187/" target="_blank" rel="noopener noreferrer">Angel Oliden</a>. Todos los derechos reservados.
     </div>
   </div>
 </footer>
