@@ -47,6 +47,9 @@ class AcademicActivityExercise extends Model
             'ordering' => $base + [
                 'items' => $this->shuffledItems(),
             ],
+            'memory' => $base + [
+                'cards' => $this->shuffledMemoryCards(),
+            ],
             default => $base,
         };
     }
@@ -77,6 +80,7 @@ class AcademicActivityExercise extends Model
             'mcq' => (int) $studentAnswer === (int) ($this->payload['correct'] ?? -1),
             'matching' => $this->matchingIsCorrect($studentAnswer),
             'ordering' => $this->orderingIsCorrect($studentAnswer),
+            'memory' => $this->memoryIsCorrect($studentAnswer),
             default => false,
         };
     }
@@ -127,6 +131,23 @@ class AcademicActivityExercise extends Model
         return array_values($studentAnswer) === array_values($correctOrder);
     }
 
+    /**
+     * A memory game is correct when every pair has been found (order doesn't matter — a
+     * "wrong" flip is never recorded, since the game only saves a pair once both cards
+     * flipped actually match).
+     */
+    private function memoryIsCorrect(mixed $studentAnswer): bool
+    {
+        if (! is_array($studentAnswer)) {
+            return false;
+        }
+
+        $expected = collect($this->payload['pairs'] ?? [])->pluck('id')->sort()->values()->all();
+        $got = collect($studentAnswer)->unique()->sort()->values()->all();
+
+        return $expected === $got;
+    }
+
     private function correctAnswerForDisplay(): mixed
     {
         return match ($this->type) {
@@ -134,6 +155,7 @@ class AcademicActivityExercise extends Model
             'mcq' => $this->payload['correct'] ?? null,
             'matching' => $this->payload['pairs'] ?? [],
             'ordering' => $this->payload['correctOrder'] ?? [],
+            'memory' => collect($this->payload['pairs'] ?? [])->pluck('id')->values()->all(),
             default => null,
         };
     }
@@ -157,5 +179,25 @@ class AcademicActivityExercise extends Model
         mt_srand();
 
         return $items;
+    }
+
+    /**
+     * Two face-down cards per pair (one showing the left text, one the right text),
+     * shuffled together into a single deck for the memory game's grid. Stable per
+     * exercise id so the layout doesn't reshuffle on every request.
+     */
+    private function shuffledMemoryCards(): array
+    {
+        $pairs = $this->payload['pairs'] ?? [];
+        $cards = [];
+        foreach ($pairs as $pair) {
+            $cards[] = ['cardId' => $pair['id'].'-a', 'pairId' => $pair['id'], 'text' => $pair['left']];
+            $cards[] = ['cardId' => $pair['id'].'-b', 'pairId' => $pair['id'], 'text' => $pair['right']];
+        }
+        mt_srand(($this->id ?: 1) + 2000);
+        $cards = collect($cards)->shuffle()->values()->all();
+        mt_srand();
+
+        return $cards;
     }
 }

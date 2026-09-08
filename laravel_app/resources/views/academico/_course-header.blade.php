@@ -7,7 +7,10 @@
     <div class="ac-campus-nav">
       <a href="{{ route('academico.university', $university->slug) }}">Inicio</a>
       <a href="{{ route('courses.catalog') }}">Cursos</a>
-      <a href="{{ route('academico.index') }}">Salir del espacio académico</a>
+      <form method="POST" action="{{ route('academico.logout') }}" class="ac-logout-form" data-no-loader>
+        @csrf
+        <button type="submit" class="ac-logout-btn">Cerrar sesión</button>
+      </form>
     </div>
   </div>
 </div>

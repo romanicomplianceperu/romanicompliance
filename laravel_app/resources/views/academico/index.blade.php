@@ -8,6 +8,10 @@
 
 @section('content')
 <div class="ac-shell ac-full">
+  @if(session('academico_success'))
+    <div class="ac-response-sent" style="margin-bottom:1.4rem;">{{ session('academico_success') }}</div>
+  @endif
+
   <div class="ac-eyebrow">Espacio Académico</div>
   <h1 class="ac-title">Espacio Académico</h1>
   <p class="ac-subtitle">Selecciona cómo deseas ingresar.</p>

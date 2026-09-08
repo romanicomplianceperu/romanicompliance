@@ -335,6 +335,24 @@ class AcademicoController extends Controller
             ->with('academico_success', $data['action'] === 'enviar' ? 'Actividad enviada correctamente.' : 'Avance guardado.');
     }
 
+    /**
+     * Let a student close out their Espacio Académico session: forgets which access
+     * codes they unlocked and which submission belongs to them, and logs out the guest
+     * account created by the identify flow (used by the older, non-gated activities).
+     * Lets someone else pick up the same shared/classroom computer with a clean slate.
+     */
+    public function logout(Request $request)
+    {
+        if ($request->user()) {
+            Auth::logout();
+        }
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('academico.index')->with('academico_success', 'Cerraste tu sesión del espacio académico.');
+    }
+
     private function unlockSessionKey(AcademicActivity $activity): string
     {
         return "academico_unlocked_activity_{$activity->id}";

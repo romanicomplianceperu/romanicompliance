@@ -80,6 +80,7 @@ Route::prefix('academico')->name('academico.')->group(function () {
     Route::post('/{university}/{course}/participacion/{activity}/acceso', [AcademicoController::class, 'unlockActivity'])->name('activity.unlock');
     Route::post('/{university}/{course}/participacion/{activity}/registro', [AcademicoController::class, 'registerSubmission'])->name('activity.register');
     Route::post('/{university}/{course}/participacion/{activity}/guardar', [AcademicoController::class, 'saveSubmission'])->name('activity.save');
+    Route::post('/salir', [AcademicoController::class, 'logout'])->name('logout');
 });
 
 Route::get('/blog', [BlogArticleController::class, 'index'])->name('blog.index');

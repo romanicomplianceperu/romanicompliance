@@ -180,16 +180,6 @@
 
   const state = { exercises: {} };
 
-  // The floating "Certifícate gratis" and WhatsApp buttons are position:fixed and can sit on
-  // top of a drop zone near the bottom/edges of the screen (a real issue on desktop, where the
-  // pointer can pass right over them). Suspend their hit-testing for the duration of any drag so
-  // elementFromPoint() always finds the drop zone underneath instead of the floating button.
-  function suspendFloatingButtons(suspend) {
-    document.querySelectorAll('.ac-float-cta, .wa-float').forEach(function (btn) {
-      btn.style.pointerEvents = suspend ? 'none' : '';
-    });
-  }
-
   // Small self-contained confetti burst (no external library) shown right after the
   // student submits the activity, on the page they land on after the redirect.
   function fireConfetti() {
@@ -338,15 +328,16 @@
     const pairs = Object.assign({}, GRADED ? (ex.student_answer || {}) : (SAVED[ex.id] || {}));
     state.exercises[ex.id] = pairs;
 
-    ex.right.forEach(r => {
-      const zone = el('div', 'ac-match-zone');
-      zone.dataset.rightId = r.id;
-      zone.appendChild(el('div', 'zone-title', r.text));
-      const box = el('div', 'zone-chips');
-      zone.appendChild(box);
-      zoneBoxes[r.id] = box;
-      zonesWrap.appendChild(zone);
-    });
+    // Tap-to-pick / tap-to-place instead of free dragging: tap a card to pick it up (it gets
+    // highlighted), then tap the box it belongs in. This needs no continuous pointer-tracking,
+    // so — unlike a real drag — it can't get interrupted mid-gesture and leave a card stuck
+    // floating on screen, which is exactly what was happening on some mobile browsers.
+    let picked = null;
+
+    function clearPicked() {
+      if (picked) picked.classList.remove('picked');
+      picked = null;
+    }
 
     function place(chip, rightId) {
       if (rightId && zoneBoxes[rightId]) {
@@ -358,64 +349,60 @@
       }
     }
 
-    function bindDrag(chip) {
-      chip.addEventListener('pointerdown', function (e) {
-        if (chip.hasAttribute('disabled')) return;
-        e.preventDefault();
-        const rect = chip.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left, offsetY = e.clientY - rect.top;
-        chip.setPointerCapture(e.pointerId);
-        chip.classList.add('dragging');
-        suspendFloatingButtons(true);
-        document.body.appendChild(chip);
-        Object.assign(chip.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', zIndex: 999, pointerEvents: 'none' });
-
-        function move(ev) {
-          chip.style.left = (ev.clientX - offsetX) + 'px';
-          chip.style.top = (ev.clientY - offsetY) + 'px';
-          zonesWrap.querySelectorAll('.ac-match-zone').forEach(z => z.classList.remove('over'));
-          const under = document.elementFromPoint(ev.clientX, ev.clientY);
-          const zone = under ? under.closest('.ac-match-zone') : null;
-          if (zone) zone.classList.add('over');
-        }
-        function up(ev) {
-          chip.removeEventListener('pointermove', move);
-          chip.removeEventListener('pointerup', up);
-          chip.classList.remove('dragging');
-          suspendFloatingButtons(false);
-          chip.style.position = ''; chip.style.left = ''; chip.style.top = ''; chip.style.width = ''; chip.style.zIndex = ''; chip.style.pointerEvents = '';
-          zonesWrap.querySelectorAll('.ac-match-zone').forEach(z => z.classList.remove('over'));
-
-          const under = document.elementFromPoint(ev.clientX, ev.clientY);
-          const zone = under ? under.closest('.ac-match-zone') : null;
-          const rightId = zone ? zone.dataset.rightId : null;
-
-          if (rightId) pairs[chip.dataset.leftId] = rightId;
-          else delete pairs[chip.dataset.leftId];
-
-          place(chip, rightId);
+    ex.right.forEach(r => {
+      const zone = el('div', 'ac-match-zone');
+      zone.dataset.rightId = r.id;
+      zone.appendChild(el('div', 'zone-title', r.text));
+      const box = el('div', 'zone-chips');
+      zone.appendChild(box);
+      zoneBoxes[r.id] = box;
+      if (! GRADED) {
+        zone.addEventListener('click', function () {
+          if (! picked) return;
+          pairs[picked.dataset.leftId] = r.id;
+          place(picked, r.id);
           state.exercises[ex.id] = pairs;
           markDirty();
-        }
-        chip.addEventListener('pointermove', move);
-        chip.addEventListener('pointerup', up);
-      });
-    }
+          clearPicked();
+        });
+      }
+      zonesWrap.appendChild(zone);
+    });
 
     ex.left.forEach(l => {
       const chip = el('div', 'ac-match-drag-chip', l.text);
       chip.dataset.leftId = l.id;
-      chip.style.touchAction = 'none';
-      if (! GRADED) bindDrag(chip);
-      else chip.setAttribute('disabled', 'disabled');
+      if (! GRADED) {
+        chip.addEventListener('click', function () {
+          if (picked === chip) { clearPicked(); return; }
+          clearPicked();
+          picked = chip;
+          chip.classList.add('picked');
+        });
+      } else {
+        chip.setAttribute('disabled', 'disabled');
+      }
       chipEls[l.id] = chip;
       place(chip, pairs[l.id]);
     });
 
+    if (! GRADED) {
+      // Tapping empty tray space while a card is picked up sends it back to the tray.
+      tray.addEventListener('click', function (e) {
+        if (e.target === tray && picked) {
+          delete pairs[picked.dataset.leftId];
+          place(picked, null);
+          state.exercises[ex.id] = pairs;
+          markDirty();
+          clearPicked();
+        }
+      });
+    }
+
     card.appendChild(tray);
     card.appendChild(zonesWrap);
     if (! GRADED) {
-      card.appendChild(el('p', 'ac-ex-hint', 'Arrastra cada tarjeta hacia la casilla que le corresponde. Puedes moverla de nuevo si te equivocas.'));
+      card.appendChild(el('p', 'ac-ex-hint', 'Toca una tarjeta para elegirla y luego toca la casilla donde va. Toca una tarjeta ya colocada para volver a moverla.'));
     }
 
     if (GRADED) {
@@ -452,48 +439,12 @@
       refresh();
     }
 
-    function bindRowDrag(handle, row) {
-      handle.addEventListener('pointerdown', function (e) {
-        e.preventDefault();
-        handle.setPointerCapture(e.pointerId);
-        row.classList.add('dragging');
-        suspendFloatingButtons(true);
-        row.style.pointerEvents = 'none';
-
-        function move(ev) {
-          const under = document.elementFromPoint(ev.clientX, ev.clientY);
-          const target = under ? under.closest('.ac-order-row') : null;
-          if (! target || target === row) return;
-          const rect = target.getBoundingClientRect();
-          const before = ev.clientY < rect.top + rect.height / 2;
-          list.insertBefore(row, before ? target : target.nextSibling);
-        }
-        function up() {
-          handle.removeEventListener('pointermove', move);
-          handle.removeEventListener('pointerup', up);
-          row.classList.remove('dragging');
-          row.style.pointerEvents = '';
-          suspendFloatingButtons(false);
-          commitOrder(Array.from(list.children).map(r => r.dataset.id));
-        }
-        handle.addEventListener('pointermove', move);
-        handle.addEventListener('pointerup', up);
-      });
-    }
-
     function refresh() {
       list.innerHTML = '';
       order.forEach((id, idx) => {
         const row = el('div', 'ac-order-row');
         row.dataset.id = id;
-        if (! GRADED) {
-          const handle = el('div', 'ac-order-handle', '⠿');
-          handle.style.touchAction = 'none';
-          bindRowDrag(handle, row);
-          row.appendChild(handle);
-        } else {
-          row.appendChild(el('span', 'ac-order-num', String(idx + 1)));
-        }
+        row.appendChild(el('span', 'ac-order-num', String(idx + 1)));
         row.appendChild(el('span', 'ac-order-text', itemText(id)));
         if (! GRADED) {
           const controls = el('div', 'ac-order-controls');
@@ -516,10 +467,86 @@
     refresh();
     card.appendChild(list);
     if (! GRADED) {
-      card.appendChild(el('p', 'ac-ex-hint', 'Arrastra la tarjeta desde ⠿ para ordenarla, o usa las flechas.'));
+      card.appendChild(el('p', 'ac-ex-hint', 'Usa las flechas ↑ ↓ para ordenar las tarjetas.'));
     } else if (! ex.correct) {
       card.appendChild(el('div', 'ac-order-correct-note', 'Orden correcto: ' + (ex.correct_answer || []).map(itemText).join(' → ')));
     }
+    return card;
+  }
+
+  function renderMemory(ex) {
+    const card = el('div', 'ac-ex-card');
+    card.appendChild(exHeader(ex));
+
+    if (GRADED) {
+      const grouped = {};
+      ex.cards.forEach(c => { (grouped[c.pairId] = grouped[c.pairId] || []).push(c); });
+      const found = new Set(ex.student_answer || []);
+      const list = el('div', 'ac-memory-review');
+      Object.keys(grouped).forEach(pairId => {
+        const pair = grouped[pairId];
+        const row = el('div', 'ac-memory-review-row ' + (found.has(pairId) ? 'answer-correct' : 'answer-wrong'));
+        row.appendChild(el('span', 'ac-memory-review-text', pair[0] ? pair[0].text : ''));
+        row.appendChild(el('span', 'ac-memory-review-link', '↔'));
+        row.appendChild(el('span', 'ac-memory-review-text', pair[1] ? pair[1].text : ''));
+        list.appendChild(row);
+      });
+      card.appendChild(list);
+      if (! ex.correct) {
+        card.appendChild(el('p', 'ac-ex-hint', 'Las parejas en rojo no se encontraron antes de enviar la actividad.'));
+      }
+      return card;
+    }
+
+    const grid = el('div', 'ac-memory-grid');
+    const matched = new Set(SAVED[ex.id] || []);
+    state.exercises[ex.id] = Array.from(matched);
+
+    let flipped = [];
+    let busy = false;
+
+    ex.cards.forEach(c => {
+      const cardEl = el('div', 'ac-memory-card' + (matched.has(c.pairId) ? ' matched flipped' : ''));
+      cardEl.dataset.cardId = c.cardId;
+      cardEl.dataset.pairId = c.pairId;
+      const inner = el('div', 'ac-memory-card-inner');
+      const front = el('div', 'ac-memory-card-front', '🎓');
+      const back = el('div', 'ac-memory-card-back', c.text);
+      inner.append(front, back);
+      cardEl.appendChild(inner);
+
+      if (! matched.has(c.pairId)) {
+        cardEl.addEventListener('click', function () {
+          if (busy || cardEl.classList.contains('flipped') || cardEl.classList.contains('matched')) return;
+          cardEl.classList.add('flipped');
+          flipped.push({ pairId: c.pairId, el: cardEl });
+          if (flipped.length === 2) {
+            busy = true;
+            const [a, b] = flipped;
+            if (a.pairId === b.pairId) {
+              a.el.classList.add('matched');
+              b.el.classList.add('matched');
+              matched.add(a.pairId);
+              state.exercises[ex.id] = Array.from(matched);
+              markDirty();
+              flipped = [];
+              busy = false;
+            } else {
+              setTimeout(function () {
+                a.el.classList.remove('flipped');
+                b.el.classList.remove('flipped');
+                flipped = [];
+                busy = false;
+              }, 800);
+            }
+          }
+        });
+      }
+      grid.appendChild(cardEl);
+    });
+
+    card.appendChild(grid);
+    card.appendChild(el('p', 'ac-ex-hint', 'Toca dos tarjetas para encontrar su pareja. Si no coinciden, se voltean de nuevo.'));
     return card;
   }
 
@@ -531,6 +558,7 @@
       else if (ex.type === 'mcq') card = renderMCQ(ex);
       else if (ex.type === 'matching') card = renderMatching(ex);
       else if (ex.type === 'ordering') card = renderOrdering(ex);
+      else if (ex.type === 'memory') card = renderMemory(ex);
       if (card) root.appendChild(card);
     });
   }

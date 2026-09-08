@@ -239,6 +239,19 @@ TXT;
                 ],
                 'points' => 2,
             ],
+            [
+                'type' => 'memory',
+                'prompt' => 'Juego de memoria: voltea las tarjetas y encuentra cada dato del caso con su pareja.',
+                'payload' => [
+                    'pairs' => [
+                        ['id' => 'mm1', 'left' => 'Distribuidora Norte S.A.C.', 'right' => 'Dedicada a la venta de abarrotes'],
+                        ['id' => 'mm2', 'left' => 'Deuda con el proveedor', 'right' => 'S/ 180 000 por mercadería entregada'],
+                        ['id' => 'mm3', 'left' => 'Titular de Comercial Norte E.I.R.L.', 'right' => 'La esposa de uno de los socios'],
+                        ['id' => 'mm4', 'left' => 'Cas. Lab. 3733-2009', 'right' => 'Fija criterios para reconocer un grupo de empresas'],
+                    ],
+                ],
+                'points' => 2,
+            ],
         ];
 
         // updateOrCreate (keyed by position) instead of delete()+create(), so re-running this

@@ -163,6 +163,7 @@ class AcademicActivity extends Model
             'mcq' => 'Opción múltiple',
             'matching' => 'Emparejar',
             'ordering' => 'Ordenar',
+            'memory' => 'Juego de memoria',
             default => ucfirst($type),
         };
     }
