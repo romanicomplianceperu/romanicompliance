@@ -85,7 +85,6 @@
       <div class="ac-score-banner">
         <div class="score-value">{{ $grading['earned_points'] }} / {{ $grading['total_points'] }} <small>puntos</small></div>
         <div class="score-percent">{{ $grading['percent'] }}% de aciertos en los ejercicios autocalificables ({{ $grading['correct'] }} de {{ $grading['total'] }})</div>
-        <div class="score-note">La respuesta crítica no forma parte de este puntaje automático; la revisa tu docente directamente.</div>
       </div>
     @endif
 
@@ -108,7 +107,6 @@
         <div class="ac-critica-section">
           <div class="ac-critica-head">
             <h3>Respuesta crítica</h3>
-            <span class="ac-critica-badge">No cuenta para la nota automática</span>
           </div>
           <p class="ac-ex-intro">Estas son las preguntas del caso que revisa directamente su docente; respondan con argumentos propios.</p>
           @php $savedQuestions = $submission->answers['questions'] ?? []; @endphp
@@ -154,6 +152,16 @@
   const CSRF_TOKEN = @json(csrf_token());
 
   const state = { exercises: {} };
+
+  // The floating "Certifícate gratis" and WhatsApp buttons are position:fixed and can sit on
+  // top of a drop zone near the bottom/edges of the screen (a real issue on desktop, where the
+  // pointer can pass right over them). Suspend their hit-testing for the duration of any drag so
+  // elementFromPoint() always finds the drop zone underneath instead of the floating button.
+  function suspendFloatingButtons(suspend) {
+    document.querySelectorAll('.ac-float-cta, .wa-float').forEach(function (btn) {
+      btn.style.pointerEvents = suspend ? 'none' : '';
+    });
+  }
 
   function el(tag, className, text) {
     const e = document.createElement(tag);
@@ -277,8 +285,9 @@
         const offsetX = e.clientX - rect.left, offsetY = e.clientY - rect.top;
         chip.setPointerCapture(e.pointerId);
         chip.classList.add('dragging');
+        suspendFloatingButtons(true);
         document.body.appendChild(chip);
-        Object.assign(chip.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', zIndex: 999 });
+        Object.assign(chip.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', zIndex: 999, pointerEvents: 'none' });
 
         function move(ev) {
           chip.style.left = (ev.clientX - offsetX) + 'px';
@@ -292,7 +301,8 @@
           chip.removeEventListener('pointermove', move);
           chip.removeEventListener('pointerup', up);
           chip.classList.remove('dragging');
-          chip.style.position = ''; chip.style.left = ''; chip.style.top = ''; chip.style.width = ''; chip.style.zIndex = '';
+          suspendFloatingButtons(false);
+          chip.style.position = ''; chip.style.left = ''; chip.style.top = ''; chip.style.width = ''; chip.style.zIndex = ''; chip.style.pointerEvents = '';
           zonesWrap.querySelectorAll('.ac-match-zone').forEach(z => z.classList.remove('over'));
 
           const under = document.elementFromPoint(ev.clientX, ev.clientY);
@@ -366,6 +376,8 @@
         e.preventDefault();
         handle.setPointerCapture(e.pointerId);
         row.classList.add('dragging');
+        suspendFloatingButtons(true);
+        row.style.pointerEvents = 'none';
 
         function move(ev) {
           const under = document.elementFromPoint(ev.clientX, ev.clientY);
@@ -379,6 +391,8 @@
           handle.removeEventListener('pointermove', move);
           handle.removeEventListener('pointerup', up);
           row.classList.remove('dragging');
+          row.style.pointerEvents = '';
+          suspendFloatingButtons(false);
           commitOrder(Array.from(list.children).map(r => r.dataset.id));
         }
         handle.addEventListener('pointermove', move);

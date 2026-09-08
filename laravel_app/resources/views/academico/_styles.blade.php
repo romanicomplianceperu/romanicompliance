@@ -285,3 +285,13 @@
   .ac-question-actions { flex-direction: column; align-items: stretch; }
   .ac-question-actions button { width: 100%; }
 }
+
+/* Access-code gate, shown as a blurred-backdrop modal window over the course page */
+.ac-gate-box { max-width: 420px; text-align: left; }
+.ac-gate-box h3 { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); margin-bottom: 0.4rem; }
+.ac-gate-form label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-light); margin: 0 0 6px; }
+.ac-gate-form input[type="text"] { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.95rem; margin-bottom: 14px; }
+.ac-gate-form input[type="text"]:focus { border-color: var(--gold); outline: none; }
+@media (max-width: 480px) {
+  .ac-gate-box { padding: 1.6rem; }
+}

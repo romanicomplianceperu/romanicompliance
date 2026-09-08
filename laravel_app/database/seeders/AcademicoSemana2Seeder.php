@@ -61,8 +61,6 @@ TXT;
             ]
         );
 
-        $activity->questions()->delete();
-
         $questions = [
             'Explique por qué, en principio, el proveedor no podría cobrar del patrimonio personal de los esposos M. ¿Qué institución jurídica se los impide?',
             '¿Cuál o cuáles de los cuatro supuestos clásicos del levantamiento del velo concurren en el caso? Fundamenten con los hechos.',
@@ -70,15 +68,14 @@ TXT;
             'Si ustedes fueran los abogados del proveedor, ¿qué pedirían al juez y con qué fundamento? Y si defendieran a los esposos M., ¿qué argumentos usarían?',
         ];
 
+        // updateOrCreate (keyed by position), same reasoning as the exercises below: keeps ids
+        // stable across reseeds so a student's already-saved answers don't get orphaned.
         foreach ($questions as $order => $prompt) {
-            AcademicActivityQuestion::create([
-                'academic_activity_id' => $activity->id,
-                'order' => $order + 1,
-                'prompt' => $prompt,
-            ]);
+            AcademicActivityQuestion::updateOrCreate(
+                ['academic_activity_id' => $activity->id, 'order' => $order + 1],
+                ['prompt' => $prompt]
+            );
         }
-
-        $activity->exercises()->delete();
 
         $exercises = [
             [
@@ -211,17 +208,52 @@ TXT;
                 ],
                 'points' => 2,
             ],
+            [
+                'type' => 'matching',
+                'prompt' => 'Empareja cada empresa o parte del caso con su rol.',
+                'payload' => [
+                    'left' => [
+                        ['id' => 'a1', 'text' => 'Distribuidora Norte S.A.C.'],
+                        ['id' => 'a2', 'text' => 'Comercial Norte E.I.R.L.'],
+                        ['id' => 'a3', 'text' => 'El proveedor'],
+                    ],
+                    'right' => [
+                        ['id' => 'ra', 'text' => 'Sociedad que se quedó sin bienes ni saldo en sus cuentas'],
+                        ['id' => 'rb', 'text' => 'Empresa que recibió la mercadería, los vehículos y la cartera de clientes'],
+                        ['id' => 'rc', 'text' => 'Acreedor que reclama el pago de S/ 180 000'],
+                    ],
+                    'pairs' => ['a1' => 'ra', 'a2' => 'rb', 'a3' => 'rc'],
+                ],
+                'points' => 2,
+            ],
+            [
+                'type' => 'ordering',
+                'prompt' => 'El enunciado pide un informe grupal con tres partes. Ordénalas tal como las pide el «producto a entregar».',
+                'payload' => [
+                    'items' => [
+                        ['id' => 'p1', 'text' => 'Explicar la autonomía patrimonial y su límite.'],
+                        ['id' => 'p2', 'text' => 'Identificar el o los supuestos de levantamiento del velo que concurren.'],
+                        ['id' => 'p3', 'text' => 'Formular la pretensión que plantearían al juez.'],
+                    ],
+                    'correctOrder' => ['p1', 'p2', 'p3'],
+                ],
+                'points' => 2,
+            ],
         ];
 
+        // updateOrCreate (keyed by position) instead of delete()+create(), so re-running this
+        // seeder never reshuffles the auto-increment ids of exercises that already exist — that
+        // would silently orphan any answers a student has already saved against those ids.
         foreach ($exercises as $order => $exercise) {
-            AcademicActivityExercise::create([
-                'academic_activity_id' => $activity->id,
-                'order' => $order + 1,
-                'type' => $exercise['type'],
-                'prompt' => $exercise['prompt'],
-                'payload' => $exercise['payload'],
-                'points' => $exercise['points'],
-            ]);
+            AcademicActivityExercise::updateOrCreate(
+                ['academic_activity_id' => $activity->id, 'order' => $order + 1],
+                [
+                    'type' => $exercise['type'],
+                    'prompt' => $exercise['prompt'],
+                    'payload' => $exercise['payload'],
+                    'points' => $exercise['points'],
+                ]
+            );
         }
 
         $this->command?->info('Académico: Caso Semana 2 (Mercantil II - UNP) sembrado con código de acceso, fecha límite y '.count($exercises).' ejercicios autocalificables.');
