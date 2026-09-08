@@ -38,10 +38,11 @@
   @else
     <div class="table-wrap"><table class="table">
       <thead>
-        <tr><th>Modo</th><th>Integrantes</th><th>IP</th><th>Enviado</th><th>Estado</th><th></th></tr>
+        <tr><th>Modo</th><th>Integrantes</th><th>IP</th><th>Enviado</th><th>Puntaje</th><th>Estado</th><th></th></tr>
       </thead>
       <tbody>
         @foreach($submissions as $submission)
+          @php $submissionGrading = $submission->isSubmitted() ? $activity->grade($submission) : null; @endphp
           <tr>
             <td>
               @if($submission->mode === 'grupal')
@@ -64,6 +65,13 @@
               @endif
             </td>
             <td>
+              @if($submissionGrading)
+                {{ $submissionGrading['earned_points'] }}/{{ $submissionGrading['total_points'] }} <span class="form-hint">({{ $submissionGrading['percent'] }}%)</span>
+              @else
+                <span class="form-hint">—</span>
+              @endif
+            </td>
+            <td>
               <form action="{{ route('admin.academico.submissions.status', $submission) }}" method="POST" style="display:flex;gap:6px;align-items:center;">
                 @csrf @method('PATCH')
                 <select name="status" onchange="this.form.submit()" style="padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:0.78rem;">
@@ -78,7 +86,7 @@
             </td>
           </tr>
           <tr id="answers-{{ $submission->id }}" style="display:none;">
-            <td colspan="6">
+            <td colspan="7">
               <div style="background:var(--ivory-dim);border-radius:8px;padding:12px 16px;font-size:0.82rem;">
                 @php $qs = $submission->answers['questions'] ?? []; @endphp
                 @forelse($qs as $qid => $answer)

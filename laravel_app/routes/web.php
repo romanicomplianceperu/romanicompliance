@@ -75,6 +75,7 @@ Route::prefix('academico')->name('academico.')->group(function () {
     Route::post('/{university}/{course}/acceso', [AcademicoController::class, 'unlockCourse'])->name('course.unlock');
     Route::get('/{university}/{course}/participacion', [AcademicoController::class, 'participacion'])->name('participacion.index');
     Route::get('/{university}/{course}/participacion/{activity}', [AcademicoController::class, 'activity'])->name('activity.show');
+    Route::get('/{university}/{course}/participacion/{activity}/pdf', [AcademicoController::class, 'downloadCasePdf'])->name('activity.pdf');
     Route::post('/{university}/{course}/participacion/{activity}/responder', [AcademicoController::class, 'respond'])->name('activity.respond');
     Route::post('/{university}/{course}/participacion/{activity}/acceso', [AcademicoController::class, 'unlockActivity'])->name('activity.unlock');
     Route::post('/{university}/{course}/participacion/{activity}/registro', [AcademicoController::class, 'registerSubmission'])->name('activity.register');

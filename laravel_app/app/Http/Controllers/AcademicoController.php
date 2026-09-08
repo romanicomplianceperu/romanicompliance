@@ -10,6 +10,7 @@ use App\Models\AcademicSubmission;
 use App\Models\AcademicSubmissionMember;
 use App\Models\AcademicUniversity;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -171,16 +172,41 @@ class AcademicoController extends Controller
         }
 
         $submission->load('members');
-        $activity->load('questions');
+        $activity->load('questions', 'exercises');
+
+        $grading = $submission->isSubmitted() ? $activity->grade($submission) : null;
+
+        $exercisesData = $activity->exercises->map(function ($exercise) use ($grading) {
+            return $grading
+                ? $grading['items'][$exercise->id]
+                : $exercise->toPublicArray();
+        })->values();
 
         return view('academico.interactive', [
             'university' => $university,
             'course' => $course,
             'activity' => $activity,
             'submission' => $submission,
+            'exercisesData' => $exercisesData,
+            'grading' => $grading,
             'isClosed' => $activity->isPastDue() && $submission->isSubmitted(),
             'canEdit' => ! $activity->isPastDue() || ! $submission->isSubmitted(),
         ]);
+    }
+
+    public function downloadCasePdf(string $universitySlug, string $courseSlug, string $activitySlug)
+    {
+        [$university, $course] = $this->resolve($universitySlug, $courseSlug);
+        $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
+
+        abort_unless(
+            ! $activity->requiresAccessCode() || session($this->unlockSessionKey($activity)),
+            403
+        );
+
+        $pdf = Pdf::loadView('academico.case-pdf', compact('university', 'course', 'activity'));
+
+        return $pdf->download(Str::slug($activity->title.'-'.($activity->case_title ?: 'caso')).'.pdf');
     }
 
     public function unlockActivity(Request $request, string $universitySlug, string $courseSlug, string $activitySlug)
@@ -255,7 +281,12 @@ class AcademicoController extends Controller
         $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
 
         $submission = $this->currentSubmission($request, $activity);
-        abort_unless($submission, 403);
+        if (! $submission) {
+            if ($request->wantsJson()) {
+                return response()->json(['ok' => false, 'message' => 'Sesión expirada.'], 403);
+            }
+            abort(403);
+        }
 
         $data = $request->validate([
             'answers' => ['nullable', 'string'],
@@ -263,7 +294,12 @@ class AcademicoController extends Controller
         ]);
 
         if ($data['action'] === 'enviar' && $activity->isPastDue()) {
-            return back()->with('academico_error', 'El plazo de entrega venció. Tu avance quedó guardado como borrador, pero ya no se puede enviar.');
+            $message = 'El plazo de entrega venció. Tu avance quedó guardado como borrador, pero ya no se puede enviar.';
+            if ($request->wantsJson()) {
+                return response()->json(['ok' => false, 'message' => $message], 422);
+            }
+
+            return back()->with('academico_error', $message);
         }
 
         $decoded = null;
@@ -278,6 +314,14 @@ class AcademicoController extends Controller
         }
 
         $submission->save();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'ok' => true,
+                'action' => $data['action'],
+                'saved_at' => now()->timezone('America/Lima')->format('H:i'),
+            ]);
+        }
 
         return redirect()
             ->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug])
