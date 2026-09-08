@@ -125,6 +125,10 @@
 .client-item { display: flex; align-items: center; justify-content: center; height: 64px; flex-shrink: 0; }
 .client-item img { height: 46px; width: auto; max-width: 180px; object-fit: contain; opacity: 0.92; transition: opacity 0.3s, transform 0.3s; }
 .client-item:hover img { opacity: 1; transform: translateY(-2px); }
+.client-item-framed { height: 96px; width: 96px; border-radius: 50%; background: rgba(255,255,255,0.96); border: 2px solid var(--gold-light); box-shadow: 0 6px 18px rgba(0,0,0,0.25); padding: 10px; box-sizing: border-box; }
+.client-item-framed img { height: 100%; width: 100%; max-width: none; opacity: 1; }
+.client-item-framed:hover img { transform: none; }
+.client-item-framed:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,0.3); }
 .client-item.client-text-logo { font-family: var(--serif); font-size: 1.7rem; letter-spacing: 0.02em; color: var(--gold-light); font-weight: 500; white-space: nowrap; transition: transform 0.3s; }
 .client-item.client-text-logo span { font-weight: 300; font-style: italic; color: rgba(255,255,255,0.55); }
 .client-item.client-text-logo:hover { transform: translateY(-2px); }
@@ -193,7 +197,7 @@
             <img src="{{ asset('images/clientes/qr-pay.png') }}" alt="QR Pay" loading="lazy">
           </div>
           <div class="client-item client-text-logo">Gold<span>Lion</span></div>
-          <div class="client-item">
+          <div class="client-item client-item-framed">
             <img src="{{ asset('images/clientes/san-jorge.png') }}" alt="Créditos San Jorge" loading="lazy">
           </div>
         @endfor

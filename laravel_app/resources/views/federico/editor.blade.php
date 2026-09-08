@@ -29,10 +29,20 @@
 .fc-field input[type="file"] { font-size: 0.84rem; }
 .fc-cover-preview { display: block; margin-top: 10px; max-width: 100%; max-height: 220px; border-radius: 8px; object-fit: cover; }
 
-#fc-editor { background: var(--white); min-height: 360px; font-size: 0.95rem; }
-.ql-toolbar.ql-snow { border-color: var(--line); border-radius: 8px 8px 0 0; background: var(--ivory-dim); }
-.ql-container.ql-snow { border-color: var(--line); border-radius: 0 0 8px 8px; }
-.ql-editor.ql-blank::before { color: var(--slate-light); font-style: normal; }
+.fc-page-wrap { background: var(--ivory-dim); border: 1px solid var(--line); border-radius: 10px; padding: 1.4rem; }
+.ql-toolbar.ql-snow { border: 1px solid var(--line); border-radius: 8px; background: var(--white); margin-bottom: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.ql-container.ql-snow { border: none; }
+#fc-editor { background: var(--white); min-height: 520px; font-size: 1rem; border-radius: 6px; box-shadow: 0 2px 10px rgba(11,24,41,0.08), 0 12px 32px rgba(11,24,41,0.06); max-width: 760px; margin: 0 auto; }
+#fc-editor .ql-editor { padding: 3rem 3.5rem; line-height: 1.8; min-height: 520px; }
+.ql-editor.ql-blank::before { color: var(--slate-light); font-style: normal; left: 3.5rem; right: 3.5rem; }
+.ql-editor h2 { font-size: 1.5rem; }
+.ql-editor h3 { font-size: 1.25rem; }
+.ql-editor h4 { font-size: 1.1rem; }
+.ql-editor blockquote { border-left: 3px solid var(--gold); color: var(--slate); }
+@media (max-width: 700px) {
+  #fc-editor .ql-editor { padding: 1.5rem 1.4rem; }
+  .ql-editor.ql-blank::before { left: 1.4rem; right: 1.4rem; }
+}
 
 .fc-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.6rem; flex-wrap: wrap; }
 .fc-btn { padding: 12px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s, transform 0.2s; }
@@ -129,7 +139,9 @@
 
           <div class="fc-field">
             <label>Contenido</label>
-            <div id="fc-editor"></div>
+            <div class="fc-page-wrap">
+              <div id="fc-editor"></div>
+            </div>
             <textarea name="content" id="fc-content" hidden>{{ old('content') }}</textarea>
           </div>
 
