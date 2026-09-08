@@ -29,20 +29,33 @@
 .fc-field input[type="file"] { font-size: 0.84rem; }
 .fc-cover-preview { display: block; margin-top: 10px; max-width: 100%; max-height: 220px; border-radius: 8px; object-fit: cover; }
 
-.fc-page-wrap { background: var(--ivory-dim); border: 1px solid var(--line); border-radius: 10px; padding: 1.4rem; }
-.ql-toolbar.ql-snow { border: 1px solid var(--line); border-radius: 8px; background: var(--white); margin-bottom: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.fc-page-wrap { position: relative; background: var(--ivory-dim); border: 1px solid var(--line); border-radius: 10px; padding: 1.4rem; }
+.ql-toolbar.ql-snow { border: 1px solid var(--line); border-radius: 8px; background: var(--white); margin-bottom: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); padding: 10px 12px; }
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options { z-index: 30; }
 .ql-container.ql-snow { border: none; }
-#fc-editor { background: var(--white); min-height: 520px; font-size: 1rem; border-radius: 6px; box-shadow: 0 2px 10px rgba(11,24,41,0.08), 0 12px 32px rgba(11,24,41,0.06); max-width: 760px; margin: 0 auto; }
+#fc-editor { background: var(--white); min-height: 520px; font-size: 1rem; border-radius: 6px; box-shadow: 0 2px 10px rgba(11,24,41,0.08), 0 12px 32px rgba(11,24,41,0.06); max-width: 800px; margin: 0 auto; }
 #fc-editor .ql-editor { padding: 3rem 3.5rem; line-height: 1.8; min-height: 520px; }
-.ql-editor.ql-blank::before { color: var(--slate-light); font-style: normal; left: 3.5rem; right: 3.5rem; }
+.ql-editor.ql-blank::before { top: 3rem; left: 3.5rem; right: 3.5rem; color: var(--slate-light); font-style: normal; }
 .ql-editor h2 { font-size: 1.5rem; }
 .ql-editor h3 { font-size: 1.25rem; }
 .ql-editor h4 { font-size: 1.1rem; }
 .ql-editor blockquote { border-left: 3px solid var(--gold); color: var(--slate); }
+.ql-editor pre { background: var(--ivory-dim); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
 @media (max-width: 700px) {
   #fc-editor .ql-editor { padding: 1.5rem 1.4rem; }
-  .ql-editor.ql-blank::before { left: 1.4rem; right: 1.4rem; }
+  .ql-editor.ql-blank::before { top: 1.5rem; left: 1.4rem; right: 1.4rem; }
 }
+
+.fc-fs-toggle { position: absolute; top: 26px; right: 26px; z-index: 25; width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--line); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--slate); transition: background 0.2s, color 0.2s; padding: 0; }
+.fc-fs-toggle:hover { background: var(--ivory-dim); color: var(--ink); }
+.fc-fs-toggle svg { width: 16px; height: 16px; }
+.fc-page-wrap.fc-fullscreen { position: fixed; inset: 0; z-index: 4000; margin: 0; border-radius: 0; padding: 2rem 1.5rem 2.5rem; overflow-y: auto; border: none; }
+.fc-page-wrap.fc-fullscreen #fc-editor,
+.fc-page-wrap.fc-fullscreen .ql-toolbar.ql-snow { max-width: 860px; margin-left: auto; margin-right: auto; }
+.fc-page-wrap.fc-fullscreen .ql-toolbar.ql-snow { position: sticky; top: 0; }
+.fc-page-wrap.fc-fullscreen .fc-fs-toggle { position: fixed; top: 22px; right: 32px; }
+body.fc-fullscreen-active { overflow: hidden; }
+#fc-preview-modal.active { z-index: 4500; }
 
 .fc-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.6rem; flex-wrap: wrap; }
 .fc-btn { padding: 12px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s, transform 0.2s; }
@@ -75,6 +88,23 @@
 .fc-preview-body blockquote { margin: 1.2rem 0; padding: 0.2rem 1.2rem; border-left: 3px solid var(--gold); color: var(--slate); font-style: italic; }
 .fc-preview-body img { max-width: 100%; border-radius: 6px; margin: 1.2rem 0; }
 .fc-preview-body a { color: var(--gold); }
+.fc-preview-body pre { background: var(--ivory-dim); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; overflow-x: auto; font-family: monospace; margin-bottom: 1.1rem; }
+.fc-preview-body code { font-family: monospace; }
+.fc-preview-body sub { vertical-align: sub; font-size: smaller; }
+.fc-preview-body sup { vertical-align: super; font-size: smaller; }
+.fc-preview-body .ql-size-small { font-size: 0.75em; }
+.fc-preview-body .ql-size-large { font-size: 1.5em; }
+.fc-preview-body .ql-size-huge { font-size: 2.5em; }
+.fc-preview-body .ql-font-serif { font-family: Georgia, 'Times New Roman', serif; }
+.fc-preview-body .ql-font-monospace { font-family: Monaco, 'Courier New', monospace; }
+.fc-preview-body .ql-indent-1 { padding-left: 3em; }
+.fc-preview-body .ql-indent-2 { padding-left: 6em; }
+.fc-preview-body .ql-indent-3 { padding-left: 9em; }
+.fc-preview-body .ql-indent-4 { padding-left: 12em; }
+.fc-preview-body .ql-indent-5 { padding-left: 15em; }
+.fc-preview-body .ql-indent-6 { padding-left: 18em; }
+.fc-preview-body .ql-indent-7 { padding-left: 21em; }
+.fc-preview-body .ql-indent-8 { padding-left: 24em; }
 
 @media (max-width: 900px) {
   .fc-layout { grid-template-columns: 1fr; }
@@ -139,7 +169,11 @@
 
           <div class="fc-field">
             <label>Contenido</label>
-            <div class="fc-page-wrap">
+            <div class="fc-page-wrap" id="fc-page-wrap">
+              <button type="button" class="fc-fs-toggle" id="fc-fullscreen-btn" title="Pantalla completa" aria-label="Pantalla completa">
+                <svg id="fc-fs-icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"></path></svg>
+                <svg id="fc-fs-icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M9 3v3a2 2 0 01-2 2H4M15 3v3a2 2 0 002 2h3M9 21v-3a2 2 0 00-2-2H4M15 21v-3a2 2 0 012-2h3"></path></svg>
+              </button>
               <div id="fc-editor"></div>
             </div>
             <textarea name="content" id="fc-content" hidden>{{ old('content') }}</textarea>
@@ -194,11 +228,14 @@ var quill = new Quill('#fc-editor', {
   placeholder: 'Escribe el contenido de tu artículo aquí…',
   modules: {
     toolbar: [
+      [{ header: 2 }, { header: 3 }, { header: 4 }, { font: [] }],
+      [{ size: ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ header: 2 }, { header: 3 }, { header: 4 }],
+      [{ color: [] }, { background: [] }],
+      [{ script: 'sub' }, { script: 'super' }],
       [{ align: '' }, { align: 'center' }, { align: 'justify' }, { align: 'right' }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      ['blockquote', 'code-block'],
       ['link', 'image'],
       ['clean']
     ]
@@ -309,6 +346,35 @@ function fcClosePreview() {
   document.body.style.overflow = '';
 }
 document.getElementById('fc-preview-btn').addEventListener('click', fcOpenPreview);
-document.addEventListener('keydown', function (e) { if (e.key === 'Escape') fcClosePreview(); });
+
+// Fullscreen editor mode.
+var fcPageWrap = document.getElementById('fc-page-wrap');
+var fcFsBtn = document.getElementById('fc-fullscreen-btn');
+var fcFsIconExpand = document.getElementById('fc-fs-icon-expand');
+var fcFsIconCollapse = document.getElementById('fc-fs-icon-collapse');
+
+function fcSetFullscreen(on) {
+  fcPageWrap.classList.toggle('fc-fullscreen', on);
+  document.body.classList.toggle('fc-fullscreen-active', on);
+  fcFsIconExpand.hidden = on;
+  fcFsIconCollapse.hidden = !on;
+  fcFsBtn.title = on ? 'Salir de pantalla completa' : 'Pantalla completa';
+  fcFsBtn.setAttribute('aria-label', fcFsBtn.title);
+}
+function fcIsFullscreen() {
+  return fcPageWrap.classList.contains('fc-fullscreen');
+}
+fcFsBtn.addEventListener('click', function () { fcSetFullscreen(!fcIsFullscreen()); });
+
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+
+  var previewOpen = document.getElementById('fc-preview-modal').classList.contains('active');
+  if (previewOpen) {
+    fcClosePreview();
+  } else if (fcIsFullscreen()) {
+    fcSetFullscreen(false);
+  }
+});
 </script>
 @endsection

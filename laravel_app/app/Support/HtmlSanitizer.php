@@ -12,16 +12,18 @@ use DOMXPath;
  *
  * Built without a Composer dependency: strips anything that is not an
  * explicitly allowed tag/attribute, removes event handlers and
- * javascript: URIs, and keeps only the `text-align` CSS property from
- * inline styles (which is how Quill.js expresses paragraph alignment).
+ * javascript: URIs, keeps only a small safe set of CSS properties from
+ * inline styles (alignment and color, which is how Quill.js expresses
+ * them), and keeps only known Quill-generated class names (size, font,
+ * indent) — never arbitrary classes.
  */
 class HtmlSanitizer
 {
     private const ALLOWED_TAGS = [
-        'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's',
+        'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'sub', 'sup',
         'a', 'img',
         'ul', 'ol', 'li',
-        'blockquote',
+        'blockquote', 'pre', 'code',
         'h2', 'h3', 'h4',
         'span', 'div',
     ];
@@ -29,7 +31,15 @@ class HtmlSanitizer
     private const ALLOWED_ATTRS = [
         'a' => ['href', 'target', 'rel'],
         'img' => ['src', 'alt', 'width', 'height'],
+        'span' => ['class'],
+        'p' => ['class'],
+        'li' => ['class'],
+        'ol' => ['class'],
+        'ul' => ['class'],
+        'pre' => ['class'],
     ];
+
+    private const ALLOWED_CLASS_PATTERN = '/^ql-(size-(small|large|huge)|font-(serif|monospace)|indent-[1-8])$/';
 
     /** Tags whose content is never safe/meaningful to keep — dropped entirely, not unwrapped. */
     private const STRIP_ENTIRELY = [
@@ -123,6 +133,13 @@ class HtmlSanitizer
                 continue;
             }
 
+            if ($name === 'class' && in_array('class', $allowed, true)) {
+                $clean = self::sanitizeClass($attr->value);
+                $clean === '' ? $el->removeAttribute('class') : $el->setAttribute('class', $clean);
+
+                continue;
+            }
+
             if (str_starts_with($name, 'on') || ! in_array($name, $allowed, true)) {
                 $el->removeAttribute($attr->name);
 
@@ -148,10 +165,49 @@ class HtmlSanitizer
 
     private static function sanitizeStyle(string $style): string
     {
-        if (preg_match('/text-align\s*:\s*(left|right|center|justify)/i', $style, $m)) {
-            return 'text-align: '.strtolower($m[1]).';';
+        $kept = [];
+
+        foreach (explode(';', $style) as $declaration) {
+            $declaration = trim($declaration);
+
+            if ($declaration === '' || ! str_contains($declaration, ':')) {
+                continue;
+            }
+
+            [$property, $value] = array_map('trim', explode(':', $declaration, 2));
+            $property = strtolower($property);
+
+            if ($property === 'text-align' && preg_match('/^(left|right|center|justify)$/i', $value)) {
+                $kept[] = 'text-align: '.strtolower($value);
+
+                continue;
+            }
+
+            if (in_array($property, ['color', 'background-color'], true) && self::isSafeColorValue($value)) {
+                $kept[] = $property.': '.$value;
+            }
         }
 
-        return '';
+        return $kept === [] ? '' : implode('; ', $kept).';';
+    }
+
+    private static function sanitizeClass(string $class): string
+    {
+        $kept = array_filter(
+            preg_split('/\s+/', trim($class)) ?: [],
+            fn (string $token) => $token !== '' && preg_match(self::ALLOWED_CLASS_PATTERN, $token) === 1
+        );
+
+        return implode(' ', $kept);
+    }
+
+    private static function isSafeColorValue(string $value): bool
+    {
+        $value = trim($value);
+
+        return (bool) preg_match(
+            '/^(#[0-9a-f]{3}|#[0-9a-f]{6}|rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)|rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(0|1|0?\.\d+)\s*\)|[a-z]+)$/i',
+            $value
+        );
     }
 }

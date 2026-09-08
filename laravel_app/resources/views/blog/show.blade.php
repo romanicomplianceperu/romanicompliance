@@ -28,6 +28,23 @@
 .article-body strong, .article-body b { font-weight: 700; color: var(--ink); }
 .article-body blockquote { margin: 1.5rem 0; padding: 0.2rem 1.5rem; border-left: 3px solid var(--gold); color: var(--slate); font-style: italic; }
 .article-body img { max-width: 100%; height: auto; border-radius: 6px; margin: 1.5rem 0; display: block; }
+.article-body pre { background: var(--ivory); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font-family: monospace; white-space: pre; margin-bottom: 1.2rem; }
+.article-body code { font-family: monospace; }
+.article-body sub { vertical-align: sub; font-size: smaller; }
+.article-body sup { vertical-align: super; font-size: smaller; }
+.article-body .ql-size-small { font-size: 0.75em; }
+.article-body .ql-size-large { font-size: 1.5em; }
+.article-body .ql-size-huge { font-size: 2.5em; }
+.article-body .ql-font-serif { font-family: Georgia, 'Times New Roman', serif; }
+.article-body .ql-font-monospace { font-family: Monaco, 'Courier New', monospace; }
+.article-body .ql-indent-1 { padding-left: 3em; }
+.article-body .ql-indent-2 { padding-left: 6em; }
+.article-body .ql-indent-3 { padding-left: 9em; }
+.article-body .ql-indent-4 { padding-left: 12em; }
+.article-body .ql-indent-5 { padding-left: 15em; }
+.article-body .ql-indent-6 { padding-left: 18em; }
+.article-body .ql-indent-7 { padding-left: 21em; }
+.article-body .ql-indent-8 { padding-left: 24em; }
 
 .author-card { display: flex; gap: 1rem; align-items: center; background: var(--ivory); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem; margin-bottom: 2rem; }
 .author-card img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
