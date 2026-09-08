@@ -57,6 +57,19 @@
 body.fc-fullscreen-active { overflow: hidden; }
 #fc-preview-modal.active { z-index: 4500; }
 
+.fc-page-wrap.fc-dragging { outline: 3px dashed var(--gold); outline-offset: -3px; }
+.fc-page-wrap.fc-dragging::after { content: 'Suelta la imagen aquí para insertarla'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.9); font-size: 1rem; font-weight: 700; color: var(--gold); z-index: 30; pointer-events: none; border-radius: 10px; }
+.fc-editor-hint { font-size: 0.74rem; color: var(--slate-light); margin-top: 0.6rem; display: flex; align-items: center; gap: 6px; }
+.fc-editor-hint svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+.fc-editor-area { display: grid; grid-template-columns: 1fr; gap: 1.4rem; align-items: start; }
+.fc-editor-area.fc-live-active { grid-template-columns: 1fr 1fr; }
+.fc-live-preview { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.6rem; max-height: 700px; overflow-y: auto; }
+@media (max-width: 1100px) {
+  .fc-editor-area.fc-live-active { grid-template-columns: 1fr; }
+}
+.fc-btn-active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
 .fc-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.6rem; flex-wrap: wrap; }
 .fc-btn { padding: 12px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s, transform 0.2s; }
 .fc-btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--slate); }
@@ -169,17 +182,30 @@ body.fc-fullscreen-active { overflow: hidden; }
 
           <div class="fc-field">
             <label>Contenido</label>
-            <div class="fc-page-wrap" id="fc-page-wrap">
-              <button type="button" class="fc-fs-toggle" id="fc-fullscreen-btn" title="Pantalla completa" aria-label="Pantalla completa">
-                <svg id="fc-fs-icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"></path></svg>
-                <svg id="fc-fs-icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M9 3v3a2 2 0 01-2 2H4M15 3v3a2 2 0 002 2h3M9 21v-3a2 2 0 00-2-2H4M15 21v-3a2 2 0 012-2h3"></path></svg>
-              </button>
-              <div id="fc-editor"></div>
+            <div class="fc-editor-area" id="fc-editor-area">
+              <div class="fc-page-wrap" id="fc-page-wrap">
+                <button type="button" class="fc-fs-toggle" id="fc-fullscreen-btn" title="Pantalla completa" aria-label="Pantalla completa">
+                  <svg id="fc-fs-icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"></path></svg>
+                  <svg id="fc-fs-icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M9 3v3a2 2 0 01-2 2H4M15 3v3a2 2 0 002 2h3M9 21v-3a2 2 0 00-2-2H4M15 21v-3a2 2 0 012-2h3"></path></svg>
+                </button>
+                <div id="fc-editor"></div>
+              </div>
+              <div class="fc-live-preview" id="fc-live-preview" hidden>
+                <div class="fc-preview-label">Vista previa en vivo</div>
+                <h2 id="fc-live-preview-title" class="fc-preview-title"></h2>
+                <div id="fc-live-preview-cover-wrap" class="fc-preview-cover-wrap" hidden><img id="fc-live-preview-cover" alt=""></div>
+                <div id="fc-live-preview-body" class="fc-preview-body"></div>
+              </div>
+            </div>
+            <div class="fc-editor-hint">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+              Puedes arrastrar y soltar una imagen directamente sobre el editor, o usar el ícono de imagen en la barra de herramientas.
             </div>
             <textarea name="content" id="fc-content" hidden>{{ old('content') }}</textarea>
           </div>
 
           <div class="fc-actions">
+            <button type="button" class="fc-btn fc-btn-ghost" id="fc-live-preview-btn">Vista en vivo</button>
             <button type="button" class="fc-btn fc-btn-ghost" id="fc-preview-btn">Vista previa</button>
             <button type="submit" name="action" value="draft" class="fc-btn fc-btn-secondary">Guardar borrador</button>
             <button type="submit" name="action" value="publish" class="fc-btn fc-btn-primary">Publicar</button>
@@ -250,8 +276,40 @@ var quill = new Quill('#fc-editor', {
   }
 })();
 
-// Custom image handler: upload to the server and embed the returned URL,
-// instead of inlining a base64 blob into the article content.
+// Shared image upload: sends the file to the server and embeds the returned
+// URL, instead of inlining a base64 blob into the article content. Used by
+// both the toolbar image button and drag-and-drop.
+function fcUploadAndInsertImage(file) {
+  if (!file || !file.type || file.type.indexOf('image/') !== 0) return;
+
+  var range = quill.getSelection(true) || { index: quill.getLength() };
+  var placeholder = '…subiendo imagen…';
+  quill.insertText(range.index, placeholder, { italic: true });
+  quill.setSelection(range.index + placeholder.length);
+
+  var formData = new FormData();
+  formData.append('image', file);
+
+  fetch('{{ route('federico.upload-image') }}', {
+    method: 'POST',
+    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+    body: formData
+  })
+    .then(function (res) {
+      if (!res.ok) throw new Error('upload-failed');
+      return res.json();
+    })
+    .then(function (data) {
+      quill.deleteText(range.index, placeholder.length);
+      quill.insertEmbed(range.index, 'image', data.location, 'user');
+      quill.setSelection(range.index + 1);
+    })
+    .catch(function () {
+      quill.deleteText(range.index, placeholder.length);
+      alert('No se pudo subir la imagen. Verifica tu conexión e inténtalo de nuevo.');
+    });
+}
+
 quill.getModule('toolbar').addHandler('image', function () {
   var input = document.createElement('input');
   input.setAttribute('type', 'file');
@@ -259,37 +317,41 @@ quill.getModule('toolbar').addHandler('image', function () {
   input.click();
 
   input.onchange = function () {
-    var file = input.files[0];
-    if (!file) return;
-
-    var range = quill.getSelection(true) || { index: quill.getLength() };
-    var placeholder = '…subiendo imagen…';
-    quill.insertText(range.index, placeholder, { italic: true });
-    quill.setSelection(range.index + placeholder.length);
-
-    var formData = new FormData();
-    formData.append('image', file);
-
-    fetch('{{ route('federico.upload-image') }}', {
-      method: 'POST',
-      headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-      body: formData
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('upload-failed');
-        return res.json();
-      })
-      .then(function (data) {
-        quill.deleteText(range.index, placeholder.length);
-        quill.insertEmbed(range.index, 'image', data.location, 'user');
-        quill.setSelection(range.index + 1);
-      })
-      .catch(function () {
-        quill.deleteText(range.index, placeholder.length);
-        alert('No se pudo subir la imagen. Verifica tu conexión e inténtalo de nuevo.');
-      });
+    fcUploadAndInsertImage(input.files[0]);
   };
 });
+
+// Drag-and-drop: drop an image file anywhere on the editor page to insert it.
+(function setupDragAndDrop() {
+  var dropTarget = document.getElementById('fc-page-wrap');
+  var dragCounter = 0;
+
+  dropTarget.addEventListener('dragenter', function (e) {
+    e.preventDefault();
+    dragCounter++;
+    dropTarget.classList.add('fc-dragging');
+  });
+  dropTarget.addEventListener('dragover', function (e) {
+    e.preventDefault();
+  });
+  dropTarget.addEventListener('dragleave', function (e) {
+    e.preventDefault();
+    dragCounter = Math.max(0, dragCounter - 1);
+    if (dragCounter === 0) dropTarget.classList.remove('fc-dragging');
+  });
+  dropTarget.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dragCounter = 0;
+    dropTarget.classList.remove('fc-dragging');
+
+    var files = e.dataTransfer && e.dataTransfer.files;
+    if (!files || !files.length) return;
+
+    for (var i = 0; i < files.length; i++) {
+      fcUploadAndInsertImage(files[i]);
+    }
+  });
+})();
 
 // Cover image preview.
 document.getElementById('fc-cover').addEventListener('change', function (e) {
@@ -346,6 +408,45 @@ function fcClosePreview() {
   document.body.style.overflow = '';
 }
 document.getElementById('fc-preview-btn').addEventListener('click', fcOpenPreview);
+
+// Live preview: a side-by-side panel that updates as you type, instead of
+// requiring a click to see how the article will look.
+var fcEditorArea = document.getElementById('fc-editor-area');
+var fcLivePreview = document.getElementById('fc-live-preview');
+var fcLiveBtn = document.getElementById('fc-live-preview-btn');
+var fcLiveActive = false;
+
+function fcUpdateLivePreview() {
+  if (!fcLiveActive) return;
+
+  var title = document.getElementById('fc-title').value.trim();
+  document.getElementById('fc-live-preview-title').textContent = title || 'Sin título todavía';
+  document.getElementById('fc-live-preview-body').innerHTML = quill.root.innerHTML;
+
+  var coverInput = document.getElementById('fc-cover');
+  var coverWrap = document.getElementById('fc-live-preview-cover-wrap');
+  var coverImg = document.getElementById('fc-live-preview-cover');
+  if (coverInput.files && coverInput.files[0]) {
+    coverImg.src = URL.createObjectURL(coverInput.files[0]);
+    coverWrap.hidden = false;
+  } else {
+    coverWrap.hidden = true;
+  }
+}
+
+function fcSetLivePreview(on) {
+  fcLiveActive = on;
+  fcEditorArea.classList.toggle('fc-live-active', on);
+  fcLivePreview.hidden = !on;
+  fcLiveBtn.classList.toggle('fc-btn-active', on);
+  fcLiveBtn.textContent = on ? 'Ocultar vista en vivo' : 'Vista en vivo';
+  if (on) fcUpdateLivePreview();
+}
+
+fcLiveBtn.addEventListener('click', function () { fcSetLivePreview(!fcLiveActive); });
+quill.on('text-change', fcUpdateLivePreview);
+document.getElementById('fc-title').addEventListener('input', fcUpdateLivePreview);
+document.getElementById('fc-cover').addEventListener('change', fcUpdateLivePreview);
 
 // Fullscreen editor mode.
 var fcPageWrap = document.getElementById('fc-page-wrap');
