@@ -241,74 +241,90 @@
   function renderMatching(ex) {
     const card = el('div', 'ac-ex-card');
     card.appendChild(exHeader(ex));
-    const wrap = el('div', 'ac-match-wrap');
-    const leftCol = el('div', 'ac-match-col');
-    const rightCol = el('div', 'ac-match-col');
-    const colors = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
-    const leftEls = {}, rightEls = {};
-    let armed = null;
+
+    const tray = el('div', 'ac-match-tray');
+    const zonesWrap = el('div', 'ac-match-zones');
+    const zoneBoxes = {}, chipEls = {};
 
     const pairs = Object.assign({}, GRADED ? (ex.student_answer || {}) : (SAVED[ex.id] || {}));
     state.exercises[ex.id] = pairs;
 
-    function colorFor(leftId) {
-      const idx = ex.left.findIndex(l => l.id === leftId);
-      return colors[idx % colors.length];
+    ex.right.forEach(r => {
+      const zone = el('div', 'ac-match-zone');
+      zone.dataset.rightId = r.id;
+      zone.appendChild(el('div', 'zone-title', r.text));
+      const box = el('div', 'zone-chips');
+      zone.appendChild(box);
+      zoneBoxes[r.id] = box;
+      zonesWrap.appendChild(zone);
+    });
+
+    function place(chip, rightId) {
+      if (rightId && zoneBoxes[rightId]) {
+        zoneBoxes[rightId].appendChild(chip);
+        chip.classList.add('placed');
+      } else {
+        tray.appendChild(chip);
+        chip.classList.remove('placed');
+      }
     }
 
-    function refresh() {
-      ex.left.forEach(l => {
-        const chip = leftEls[l.id];
-        chip.className = 'ac-match-chip';
-        if (pairs[l.id]) chip.classList.add('paired', colorFor(l.id));
-        if (armed === l.id) chip.classList.add('armed');
-      });
-      ex.right.forEach(r => {
-        const chip = rightEls[r.id];
-        chip.className = 'ac-match-chip';
-        const pairedLeft = Object.keys(pairs).find(lid => pairs[lid] === r.id);
-        if (pairedLeft) chip.classList.add('paired', colorFor(pairedLeft));
+    function bindDrag(chip) {
+      chip.addEventListener('pointerdown', function (e) {
+        if (chip.hasAttribute('disabled')) return;
+        e.preventDefault();
+        const rect = chip.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left, offsetY = e.clientY - rect.top;
+        chip.setPointerCapture(e.pointerId);
+        chip.classList.add('dragging');
+        document.body.appendChild(chip);
+        Object.assign(chip.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', zIndex: 999 });
+
+        function move(ev) {
+          chip.style.left = (ev.clientX - offsetX) + 'px';
+          chip.style.top = (ev.clientY - offsetY) + 'px';
+          zonesWrap.querySelectorAll('.ac-match-zone').forEach(z => z.classList.remove('over'));
+          const under = document.elementFromPoint(ev.clientX, ev.clientY);
+          const zone = under ? under.closest('.ac-match-zone') : null;
+          if (zone) zone.classList.add('over');
+        }
+        function up(ev) {
+          chip.removeEventListener('pointermove', move);
+          chip.removeEventListener('pointerup', up);
+          chip.classList.remove('dragging');
+          chip.style.position = ''; chip.style.left = ''; chip.style.top = ''; chip.style.width = ''; chip.style.zIndex = '';
+          zonesWrap.querySelectorAll('.ac-match-zone').forEach(z => z.classList.remove('over'));
+
+          const under = document.elementFromPoint(ev.clientX, ev.clientY);
+          const zone = under ? under.closest('.ac-match-zone') : null;
+          const rightId = zone ? zone.dataset.rightId : null;
+
+          if (rightId) pairs[chip.dataset.leftId] = rightId;
+          else delete pairs[chip.dataset.leftId];
+
+          place(chip, rightId);
+          state.exercises[ex.id] = pairs;
+          markDirty();
+        }
+        chip.addEventListener('pointermove', move);
+        chip.addEventListener('pointerup', up);
       });
     }
 
     ex.left.forEach(l => {
-      const chip = el('div', 'ac-match-chip', l.text);
-      if (! GRADED) {
-        chip.addEventListener('click', () => {
-          if (pairs[l.id]) { delete pairs[l.id]; armed = null; }
-          else { armed = (armed === l.id) ? null : l.id; }
-          state.exercises[ex.id] = pairs;
-          refresh(); markDirty();
-        });
-      }
-      leftEls[l.id] = chip;
-      leftCol.appendChild(chip);
-    });
-    ex.right.forEach(r => {
-      const chip = el('div', 'ac-match-chip', r.text);
-      if (! GRADED) {
-        chip.addEventListener('click', () => {
-          if (armed) {
-            Object.keys(pairs).forEach(lid => { if (pairs[lid] === r.id) delete pairs[lid]; });
-            pairs[armed] = r.id;
-            armed = null;
-          } else {
-            const lid = Object.keys(pairs).find(k => pairs[k] === r.id);
-            if (lid) delete pairs[lid];
-          }
-          state.exercises[ex.id] = pairs;
-          refresh(); markDirty();
-        });
-      }
-      rightEls[r.id] = chip;
-      rightCol.appendChild(chip);
+      const chip = el('div', 'ac-match-drag-chip', l.text);
+      chip.dataset.leftId = l.id;
+      chip.style.touchAction = 'none';
+      if (! GRADED) bindDrag(chip);
+      else chip.setAttribute('disabled', 'disabled');
+      chipEls[l.id] = chip;
+      place(chip, pairs[l.id]);
     });
 
-    refresh();
-    wrap.append(leftCol, rightCol);
-    card.appendChild(wrap);
+    card.appendChild(tray);
+    card.appendChild(zonesWrap);
     if (! GRADED) {
-      card.appendChild(el('p', 'ac-ex-hint', 'Toca un elemento de la izquierda y luego su pareja a la derecha. Vuelve a tocarlo para deshacer.'));
+      card.appendChild(el('p', 'ac-ex-hint', 'Arrastra cada tarjeta hacia la casilla que le corresponde. Puedes moverla de nuevo si te equivocas.'));
     }
 
     if (GRADED) {
@@ -316,10 +332,10 @@
       ex.left.forEach(l => {
         const chosen = (ex.student_answer || {})[l.id];
         const isRight = chosen === correctPairs[l.id];
-        leftEls[l.id].classList.add(isRight ? 'answer-correct' : 'answer-wrong');
+        chipEls[l.id].classList.add(isRight ? 'answer-correct' : 'answer-wrong');
         if (! isRight) {
           const correctText = (ex.right.find(r => r.id === correctPairs[l.id]) || {}).text || '—';
-          leftEls[l.id].appendChild(el('div', 'ac-match-correct-note', 'Correcto: ' + correctText));
+          chipEls[l.id].appendChild(el('div', 'ac-match-correct-note', 'Correcto: ' + correctText));
         }
       });
     }
@@ -338,11 +354,51 @@
 
     const list = el('div', 'ac-order-list');
 
+    function commitOrder(newOrder) {
+      order = newOrder;
+      state.exercises[ex.id] = order;
+      markDirty();
+      refresh();
+    }
+
+    function bindRowDrag(handle, row) {
+      handle.addEventListener('pointerdown', function (e) {
+        e.preventDefault();
+        handle.setPointerCapture(e.pointerId);
+        row.classList.add('dragging');
+
+        function move(ev) {
+          const under = document.elementFromPoint(ev.clientX, ev.clientY);
+          const target = under ? under.closest('.ac-order-row') : null;
+          if (! target || target === row) return;
+          const rect = target.getBoundingClientRect();
+          const before = ev.clientY < rect.top + rect.height / 2;
+          list.insertBefore(row, before ? target : target.nextSibling);
+        }
+        function up() {
+          handle.removeEventListener('pointermove', move);
+          handle.removeEventListener('pointerup', up);
+          row.classList.remove('dragging');
+          commitOrder(Array.from(list.children).map(r => r.dataset.id));
+        }
+        handle.addEventListener('pointermove', move);
+        handle.addEventListener('pointerup', up);
+      });
+    }
+
     function refresh() {
       list.innerHTML = '';
       order.forEach((id, idx) => {
         const row = el('div', 'ac-order-row');
-        row.appendChild(el('span', 'ac-order-num', String(idx + 1)));
+        row.dataset.id = id;
+        if (! GRADED) {
+          const handle = el('div', 'ac-order-handle', '⠿');
+          handle.style.touchAction = 'none';
+          bindRowDrag(handle, row);
+          row.appendChild(handle);
+        } else {
+          row.appendChild(el('span', 'ac-order-num', String(idx + 1)));
+        }
         row.appendChild(el('span', 'ac-order-text', itemText(id)));
         if (! GRADED) {
           const controls = el('div', 'ac-order-controls');
@@ -351,8 +407,8 @@
           up.type = 'button'; down.type = 'button';
           up.disabled = idx === 0;
           down.disabled = idx === order.length - 1;
-          up.addEventListener('click', () => { const t = order[idx - 1]; order[idx - 1] = order[idx]; order[idx] = t; state.exercises[ex.id] = order; refresh(); markDirty(); });
-          down.addEventListener('click', () => { const t = order[idx + 1]; order[idx + 1] = order[idx]; order[idx] = t; state.exercises[ex.id] = order; refresh(); markDirty(); });
+          up.addEventListener('click', () => { const o = order.slice(); const t = o[idx - 1]; o[idx - 1] = o[idx]; o[idx] = t; commitOrder(o); });
+          down.addEventListener('click', () => { const o = order.slice(); const t = o[idx + 1]; o[idx + 1] = o[idx]; o[idx] = t; commitOrder(o); });
           controls.append(up, down);
           row.appendChild(controls);
         } else {
@@ -361,12 +417,14 @@
         }
         list.appendChild(row);
       });
-      if (GRADED && ! ex.correct) {
-        list.appendChild(el('div', 'ac-order-correct-note', 'Orden correcto: ' + (ex.correct_answer || []).map(itemText).join(' → ')));
-      }
     }
     refresh();
     card.appendChild(list);
+    if (! GRADED) {
+      card.appendChild(el('p', 'ac-ex-hint', 'Arrastra la tarjeta desde ⠿ para ordenarla, o usa las flechas.'));
+    } else if (! ex.correct) {
+      card.appendChild(el('div', 'ac-order-correct-note', 'Orden correcto: ' + (ex.correct_answer || []).map(itemText).join(' → ')));
+    }
     return card;
   }
 

@@ -217,7 +217,7 @@
 
 /* V/F */
 .ac-vf-row { display: flex; gap: 10px; }
-.ac-vf-btn { flex: 1; border: 1.5px solid var(--line); background: var(--white); color: var(--slate); font-weight: 700; font-size: 0.9rem; padding: 0.85rem; border-radius: 10px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease; }
+.ac-vf-btn { flex: 1; min-height: 46px; border: 1.5px solid var(--line); background: var(--white); color: var(--slate); font-weight: 700; font-size: 0.9rem; padding: 0.85rem; border-radius: 10px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease; }
 .ac-vf-btn:hover:not(:disabled) { border-color: var(--gold); }
 .ac-vf-btn.selected { border-color: var(--gold); background: var(--gold-pale); color: var(--ink); }
 .ac-vf-btn.answer-correct { border-color: #1F7A4D; background: rgba(31,122,77,0.1); color: #1F7A4D; }
@@ -226,39 +226,41 @@
 
 /* MCQ */
 .ac-mcq-list { display: flex; flex-direction: column; gap: 8px; }
-.ac-mcq-opt { text-align: left; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); font-size: 0.88rem; padding: 0.8rem 1rem; border-radius: 10px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
+.ac-mcq-opt { text-align: left; min-height: 44px; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); font-size: 0.88rem; padding: 0.8rem 1rem; border-radius: 10px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
 .ac-mcq-opt:hover:not(:disabled) { border-color: var(--gold); }
 .ac-mcq-opt.selected { border-color: var(--gold); background: var(--gold-pale); font-weight: 700; }
 .ac-mcq-opt.answer-correct { border-color: #1F7A4D; background: rgba(31,122,77,0.1); color: #1F7A4D; font-weight: 700; }
 .ac-mcq-opt.answer-wrong { border-color: #B3413B; background: rgba(179,65,59,0.08); color: #B3413B; }
 .ac-mcq-opt:disabled { cursor: default; opacity: 0.92; }
 
-/* Matching (tap-to-pair) */
-.ac-match-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width: 560px) { .ac-match-wrap { grid-template-columns: 1fr; } }
-.ac-match-col { display: flex; flex-direction: column; gap: 8px; }
-.ac-match-chip { position: relative; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); font-size: 0.82rem; padding: 0.75rem 0.9rem; border-radius: 10px; cursor: pointer; line-height: 1.4; transition: border-color 0.15s ease, background 0.15s ease; }
-.ac-match-chip.armed { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-pale); }
-.ac-match-chip.c1.paired { border-color: #B3413B; background: rgba(179,65,59,0.06); }
-.ac-match-chip.c2.paired { border-color: #1F7A4D; background: rgba(31,122,77,0.06); }
-.ac-match-chip.c3.paired { border-color: #2A5D9F; background: rgba(42,93,159,0.06); }
-.ac-match-chip.c4.paired { border-color: #8A6D1E; background: rgba(138,109,30,0.08); }
-.ac-match-chip.c5.paired { border-color: #6B4E9E; background: rgba(107,78,158,0.07); }
-.ac-match-chip.c6.paired { border-color: #B8894A; background: rgba(184,137,74,0.08); }
-.ac-match-wrap.graded .ac-match-chip { cursor: default; }
-.ac-match-chip.answer-correct { border-color: #1F7A4D !important; background: rgba(31,122,77,0.1) !important; }
-.ac-match-chip.answer-wrong { border-color: #B3413B !important; background: rgba(179,65,59,0.08) !important; }
+/* Matching (drag and drop) */
+.ac-match-tray { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; min-height: 50px; padding: 12px; background: var(--ivory-dim); border-radius: 10px; }
+.ac-match-drag-chip { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: grab; background: var(--white); border: 1.5px solid var(--gold); color: var(--ink); font-size: 0.82rem; font-weight: 600; line-height: 1.4; padding: 0.7rem 0.95rem; min-height: 44px; box-sizing: border-box; display: flex; align-items: center; border-radius: 12px; box-shadow: 0 2px 6px rgba(11,24,41,0.06); }
+.ac-match-drag-chip.dragging { opacity: 0.45; cursor: grabbing; }
+.ac-match-drag-chip.placed { cursor: default; border-color: #1F7A4D; }
+.ac-match-drag-chip[disabled] { cursor: default; }
+.ac-match-drag-chip.answer-correct { border-color: #1F7A4D !important; background: rgba(31,122,77,0.1) !important; }
+.ac-match-drag-chip.answer-wrong { border-color: #B3413B !important; background: rgba(179,65,59,0.08) !important; }
+.ac-match-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.ac-match-zone { border: 1.5px dashed var(--line); border-radius: 12px; padding: 12px; min-height: 90px; background: var(--ivory); transition: border-color 0.15s ease, background 0.15s ease; }
+.ac-match-zone.over { border-color: var(--gold); background: var(--gold-pale); }
+.ac-match-zone .zone-title { font-size: 0.76rem; font-weight: 700; color: var(--slate); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+.ac-match-zone .zone-chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 6px; }
 .ac-match-correct-note { margin-top: 6px; font-size: 0.74rem; color: #B3413B; font-weight: 600; }
+@media (max-width: 480px) { .ac-match-drag-chip { width: 100%; } }
 
-/* Ordering */
-.ac-order-list { display: flex; flex-direction: column; gap: 6px; }
-.ac-order-row { display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--line); background: var(--white); border-radius: 10px; padding: 0.7rem 0.9rem; }
+/* Ordering (drag and drop, with up/down fallback) */
+.ac-order-list { display: flex; flex-direction: column; gap: 8px; }
+.ac-order-row { display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--line); background: var(--white); border-radius: 10px; padding: 0.75rem 0.9rem; min-height: 44px; box-sizing: border-box; }
+.ac-order-row.dragging { opacity: 0.5; border-style: dashed; }
 .ac-order-row.answer-correct { border-color: #1F7A4D; background: rgba(31,122,77,0.08); }
 .ac-order-row.answer-wrong { border-color: #B3413B; background: rgba(179,65,59,0.06); }
+.ac-order-handle { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; flex-shrink: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; color: var(--slate-light); cursor: grab; border-radius: 6px; }
+.ac-order-handle:active { cursor: grabbing; color: var(--gold); }
 .ac-order-num { flex-shrink: 0; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--white); font-size: 0.72rem; font-weight: 700; border-radius: 50%; }
 .ac-order-text { flex: 1; font-size: 0.86rem; color: var(--ink); line-height: 1.45; }
 .ac-order-controls { display: flex; gap: 4px; flex-shrink: 0; }
-.ac-order-btn { width: 28px; height: 28px; border: 1px solid var(--line); background: var(--white); border-radius: 6px; cursor: pointer; font-size: 0.85rem; color: var(--slate); }
+.ac-order-btn { width: 32px; height: 32px; border: 1px solid var(--line); background: var(--white); border-radius: 6px; cursor: pointer; font-size: 0.9rem; color: var(--slate); }
 .ac-order-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
 .ac-order-btn:disabled { opacity: 0.35; cursor: default; }
 .ac-order-correct-note { margin-top: 8px; font-size: 0.78rem; color: #B3413B; font-weight: 600; }
@@ -272,3 +274,14 @@
 /* Autosave status */
 .ac-autosave-status { display: block; width: 100%; font-size: 0.76rem; color: var(--slate-light); margin-bottom: 4px; }
 @media (min-width: 640px) { .ac-autosave-status { width: auto; margin-right: auto; margin-bottom: 0; align-self: center; } }
+
+/* Mobile tightening for the interactive case page */
+@media (max-width: 480px) {
+  .ac-case-card { padding: 1.5rem 1.3rem; }
+  .ac-ex-card { padding: 1.2rem 1.1rem; }
+  .ac-question-card { padding: 1.2rem 1.2rem; }
+  .ac-ex-header { flex-direction: column; gap: 6px; }
+  .ac-ex-points { align-self: flex-start; }
+  .ac-question-actions { flex-direction: column; align-items: stretch; }
+  .ac-question-actions button { width: 100%; }
+}
