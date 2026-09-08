@@ -22,7 +22,7 @@
     <form method="POST" action="{{ route('academico.activity.unlock', [$university->slug, $course->slug, $activity->slug]) }}">
       @csrf
       <label>Código de acceso</label>
-      <input type="text" name="code" required autofocus autocomplete="off" placeholder="Ej. mercantil0809">
+      <input type="text" name="code" required autofocus autocomplete="off" placeholder="Escribe el código que te dio tu docente">
       <button type="submit" class="ac-btn-primary" style="width:100%;justify-content:center;">Ingresar →</button>
     </form>
   </div>

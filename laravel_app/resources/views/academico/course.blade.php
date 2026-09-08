@@ -13,7 +13,8 @@
 @include('academico._course-tabs')
 
 @php
-  $firstActivity = $course->activities()->where('type', 'participacion')->orderBy('week_number')->first();
+  $currentActivity = $course->activities()->where('type', 'participacion')->where('status', 'disponible')->orderByDesc('week_number')->first()
+      ?? $course->activities()->where('type', 'participacion')->orderBy('week_number')->first();
   $totalWeeks = $course->total_weeks ?: 16;
 @endphp
 
@@ -24,14 +25,14 @@
     <div class="ac-widget-grid">
       <div class="ac-widget">
         <div class="k">Progreso</div>
-        <div class="v">Semana 1 <small>de {{ $totalWeeks }}</small></div>
-        <div class="ac-progress-track"><div class="ac-progress-fill" style="width:{{ round(1 / $totalWeeks * 100) }}%;"></div></div>
+        <div class="v">Semana {{ $currentActivity->week_number ?? 1 }} <small>de {{ $totalWeeks }}</small></div>
+        <div class="ac-progress-track"><div class="ac-progress-fill" style="width:{{ round(($currentActivity->week_number ?? 1) / $totalWeeks * 100) }}%;"></div></div>
       </div>
       <div class="ac-widget">
         <div class="k">Actividad actual</div>
-        <div class="v" style="font-size:1rem;">{{ $firstActivity->title ?? 'Sin actividades aún' }}</div>
-        @if($firstActivity)
-          <span class="ac-status-badge {{ $firstActivity->status }}" style="margin-top:8px;display:inline-block;">{{ ucfirst($firstActivity->status) }}</span>
+        <div class="v" style="font-size:1rem;">{{ $currentActivity->title ?? 'Sin actividades aún' }}</div>
+        @if($currentActivity)
+          <span class="ac-status-badge {{ $currentActivity->status }}" style="margin-top:8px;display:inline-block;">{{ ucfirst($currentActivity->status) }}</span>
         @endif
       </div>
       <div class="ac-widget">
@@ -44,8 +45,8 @@
       </div>
     </div>
 
-    <h3 style="font-size:0.98rem;color:var(--ink);margin-bottom:1rem;">Esta semana</h3>
-    @forelse($course->activities()->where('week_number', 1)->get() as $activity)
+    <h3 style="font-size:0.98rem;color:var(--ink);margin-bottom:1rem;">Actividades</h3>
+    @forelse($course->activities()->orderByDesc('week_number')->get() as $activity)
       <a href="{{ route('academico.activity.show', [$university->slug, $course->slug, $activity->slug]) }}" class="ac-activity-card">
         <span class="ac-activity-week">S{{ $activity->week_number }}</span>
         <span class="ac-activity-body">
@@ -55,7 +56,7 @@
         <span class="ac-status-badge {{ $activity->status }}">{{ ucfirst($activity->status) }}</span>
       </a>
     @empty
-      <p style="color:var(--slate-light);font-size:0.86rem;">Todavía no hay actividades programadas para esta semana.</p>
+      <p style="color:var(--slate-light);font-size:0.86rem;">Todavía no hay actividades programadas.</p>
     @endforelse
   </div>
 </div>
