@@ -106,6 +106,7 @@ img { max-width: 100%; display: block; }
       <a href="{{ route('admin.courses.index') }}" class="{{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">Cursos</a>
       <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Alumnos</a>
       <a href="{{ route('admin.certificates.index') }}" class="{{ request()->routeIs('admin.certificates.*') ? 'active' : '' }}">Certificados</a>
+      <a href="{{ route('admin.academico.index') }}" class="{{ request()->routeIs('admin.academico.*') ? 'active' : '' }}">Académico</a>
       <a href="{{ route('admin.proyectos.index') }}" class="{{ request()->routeIs('admin.proyectos.*') ? 'active' : '' }}">Proyectos</a>
       <a href="{{ route('admin.empresas.index') }}" class="{{ request()->routeIs('admin.empresas.*') ? 'active' : '' }}">Empresas</a>
       <a href="{{ route('admin.articulos.index') }}" class="{{ request()->routeIs('admin.articulos.*') ? 'active' : '' }}">Artículos</a>

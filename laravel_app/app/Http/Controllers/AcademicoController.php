@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AcademicActivity;
+use App\Models\AcademicActivityVisit;
 use App\Models\AcademicCourse;
 use App\Models\AcademicResponse;
+use App\Models\AcademicSubmission;
+use App\Models\AcademicSubmissionMember;
 use App\Models\AcademicUniversity;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -62,6 +65,18 @@ class AcademicoController extends Controller
         [$university, $course] = $this->resolve($universitySlug, $courseSlug);
 
         $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
+
+        AcademicActivityVisit::create([
+            'academic_activity_id' => $activity->id,
+            'ip_address' => $request->ip(),
+            'user_agent' => substr((string) $request->userAgent(), 0, 255),
+            'visited_at' => now(),
+        ]);
+
+        if ($activity->requiresAccessCode()) {
+            return $this->activityGated($request, $university, $course, $activity);
+        }
+
         $activity->load('questions.responses');
 
         $user = $request->user();
@@ -73,6 +88,151 @@ class AcademicoController extends Controller
         }
 
         return view('academico.activity', compact('university', 'course', 'activity', 'responses'));
+    }
+
+    private function activityGated(Request $request, AcademicUniversity $university, AcademicCourse $course, AcademicActivity $activity)
+    {
+        $unlockKey = $this->unlockSessionKey($activity);
+
+        if (! session($unlockKey)) {
+            return view('academico.access-code', compact('university', 'course', 'activity'));
+        }
+
+        $submission = $this->currentSubmission($request, $activity);
+
+        if (! $submission) {
+            return view('academico.register', compact('university', 'course', 'activity'));
+        }
+
+        $submission->load('members');
+        $activity->load('questions');
+
+        return view('academico.interactive', [
+            'university' => $university,
+            'course' => $course,
+            'activity' => $activity,
+            'submission' => $submission,
+            'isClosed' => $activity->isPastDue() && $submission->isSubmitted(),
+            'canEdit' => ! $activity->isPastDue() || ! $submission->isSubmitted(),
+        ]);
+    }
+
+    public function unlockActivity(Request $request, string $universitySlug, string $courseSlug, string $activitySlug)
+    {
+        [$university, $course] = $this->resolve($universitySlug, $courseSlug);
+        $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
+
+        $data = $request->validate(['code' => ['required', 'string', 'max:100']]);
+
+        if (! $activity->checkAccessCode($data['code'])) {
+            return back()->withErrors(['code' => 'El código de acceso no es correcto.'])->withInput();
+        }
+
+        session([$this->unlockSessionKey($activity) => true]);
+
+        return redirect()->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug]);
+    }
+
+    public function registerSubmission(Request $request, string $universitySlug, string $courseSlug, string $activitySlug)
+    {
+        [$university, $course] = $this->resolve($universitySlug, $courseSlug);
+        $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
+
+        abort_unless($activity->requiresAccessCode() && session($this->unlockSessionKey($activity)), 403);
+
+        $data = $request->validate([
+            'mode' => ['required', 'in:individual,grupal'],
+            'full_name' => ['required_if:mode,individual', 'nullable', 'string', 'max:255'],
+            'email' => ['required_if:mode,individual', 'nullable', 'email', 'max:255'],
+            'members' => ['required_if:mode,grupal', 'nullable', 'array', 'min:2'],
+            'members.*.full_name' => ['required_with:members', 'string', 'max:255'],
+            'members.*.email' => ['required_with:members', 'email', 'max:255'],
+        ]);
+
+        $submission = new AcademicSubmission([
+            'academic_activity_id' => $activity->id,
+            'mode' => $data['mode'],
+            'ip_address' => $request->ip(),
+            'user_agent' => substr((string) $request->userAgent(), 0, 255),
+        ]);
+
+        if ($data['mode'] === 'grupal') {
+            $submission->group_code = AcademicSubmission::generateGroupCode($university, $course);
+        }
+
+        $submission->save();
+
+        if ($data['mode'] === 'individual') {
+            AcademicSubmissionMember::create([
+                'academic_submission_id' => $submission->id,
+                'full_name' => Str::title(Str::lower(trim($data['full_name']))),
+                'email' => $data['email'],
+            ]);
+        } else {
+            foreach ($data['members'] as $member) {
+                AcademicSubmissionMember::create([
+                    'academic_submission_id' => $submission->id,
+                    'full_name' => Str::title(Str::lower(trim($member['full_name']))),
+                    'email' => $member['email'],
+                ]);
+            }
+        }
+
+        session([$this->submissionSessionKey($activity) => $submission->id]);
+
+        return redirect()->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug]);
+    }
+
+    public function saveSubmission(Request $request, string $universitySlug, string $courseSlug, string $activitySlug)
+    {
+        [, $course] = $this->resolve($universitySlug, $courseSlug);
+        $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
+
+        $submission = $this->currentSubmission($request, $activity);
+        abort_unless($submission, 403);
+
+        $data = $request->validate([
+            'answers' => ['nullable', 'string'],
+            'action' => ['required', 'in:borrador,enviar'],
+        ]);
+
+        if ($data['action'] === 'enviar' && $activity->isPastDue()) {
+            return back()->with('academico_error', 'El plazo de entrega venció. Tu avance quedó guardado como borrador, pero ya no se puede enviar.');
+        }
+
+        $decoded = null;
+        if (! empty($data['answers'])) {
+            $decoded = json_decode($data['answers'], true);
+        }
+
+        $submission->answers = is_array($decoded) ? $decoded : $submission->answers;
+
+        if ($data['action'] === 'enviar') {
+            $submission->submitted_at = now();
+        }
+
+        $submission->save();
+
+        return redirect()
+            ->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug])
+            ->with('academico_success', $data['action'] === 'enviar' ? 'Actividad enviada correctamente.' : 'Avance guardado.');
+    }
+
+    private function unlockSessionKey(AcademicActivity $activity): string
+    {
+        return "academico_unlocked_activity_{$activity->id}";
+    }
+
+    private function submissionSessionKey(AcademicActivity $activity): string
+    {
+        return "academico_submission_activity_{$activity->id}";
+    }
+
+    private function currentSubmission(Request $request, AcademicActivity $activity): ?AcademicSubmission
+    {
+        $id = session($this->submissionSessionKey($activity));
+
+        return $id ? AcademicSubmission::find($id) : null;
     }
 
     public function identify(Request $request)

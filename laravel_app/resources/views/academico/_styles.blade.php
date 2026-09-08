@@ -136,3 +136,52 @@
   .ac-mobile-nav a.active { color: var(--ink); border-bottom-color: var(--gold); }
   .ac-mobile-nav span { color: var(--slate-light); }
 }
+
+/* Form errors */
+.ac-form-error { background: rgba(179,65,59,0.08); border: 1px solid rgba(179,65,59,0.25); color: #B3413B; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; margin-bottom: 14px; }
+
+/* Deadline badge */
+.ac-deadline-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.76rem; font-weight: 700; color: #B3413B; background: rgba(179,65,59,0.08); padding: 6px 13px; border-radius: 20px; margin-bottom: 1rem; }
+.ac-deadline-badge.closed { color: var(--slate-light); background: var(--ivory-dim); }
+
+/* Registration mode toggle */
+.ac-mode-toggle { display: flex; gap: 10px; margin-bottom: 1.4rem; }
+.ac-mode-btn { flex: 1; border: 1.5px solid var(--line); background: var(--white); border-radius: 12px; padding: 1rem; text-align: center; cursor: pointer; font-weight: 700; font-size: 0.88rem; color: var(--slate); transition: border-color 0.15s ease, color 0.15s ease; }
+.ac-mode-btn.active { border-color: var(--gold); color: var(--ink); background: var(--gold-pale); }
+.ac-mode-btn small { display: block; font-weight: 500; font-size: 0.72rem; color: var(--slate-light); margin-top: 3px; }
+
+/* Group member rows */
+.ac-member-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
+@media (max-width: 560px) { .ac-member-row { grid-template-columns: 1fr; } }
+.ac-member-row input { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.85rem; }
+.ac-member-row input:focus { border-color: var(--gold); outline: none; }
+.ac-member-remove { background: none; border: none; color: var(--slate-light); cursor: pointer; font-size: 1.1rem; padding: 4px 8px; }
+.ac-member-remove:hover { color: #B3413B; }
+.ac-member-add { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px dashed var(--line); border-radius: 8px; padding: 9px 14px; font-size: 0.82rem; font-weight: 700; color: var(--gold); cursor: pointer; margin-top: 4px; }
+.ac-member-add:hover { border-color: var(--gold); }
+
+/* Group code banner */
+.ac-group-code-banner { background: var(--ink); color: var(--white); border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1.4rem; text-align: center; }
+.ac-group-code-banner .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+.ac-group-code-banner .code { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--gold-light); letter-spacing: 0.02em; }
+.ac-group-code-banner .hint { font-size: 0.76rem; color: rgba(255,255,255,0.7); margin-top: 6px; }
+
+/* Drag and drop game */
+.ac-game { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 1.8rem 1.8rem 1.6rem; margin-bottom: 1.6rem; }
+.ac-game h3 { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); margin-bottom: 4px; }
+.ac-game .ac-game-hint { font-size: 0.82rem; color: var(--slate); margin-bottom: 1.2rem; line-height: 1.55; }
+.ac-dnd-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.4rem; min-height: 46px; padding: 10px; background: var(--ivory-dim); border-radius: 10px; }
+.ac-dnd-chip { touch-action: none; user-select: none; cursor: grab; background: var(--white); border: 1.5px solid var(--gold); color: var(--ink); font-size: 0.8rem; font-weight: 600; padding: 9px 14px; border-radius: 20px; box-shadow: 0 2px 6px rgba(11,24,41,0.06); }
+.ac-dnd-chip.dragging { opacity: 0.4; }
+.ac-dnd-chip.placed { cursor: default; border-color: #1F7A4D; }
+.ac-dnd-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.ac-dnd-zone { border: 1.5px dashed var(--line); border-radius: 12px; padding: 12px; min-height: 100px; background: var(--ivory); transition: border-color 0.15s ease, background 0.15s ease; }
+.ac-dnd-zone.over { border-color: var(--gold); background: var(--gold-pale); }
+.ac-dnd-zone .zone-title { font-size: 0.76rem; font-weight: 700; color: var(--slate); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+.ac-dnd-zone .zone-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ac-game-feedback { margin-top: 1rem; font-size: 0.82rem; padding: 10px 14px; border-radius: 8px; display: none; }
+.ac-game-feedback.ok { display: block; background: rgba(31,122,77,0.08); color: #1F7A4D; }
+.ac-game-feedback.warn { display: block; background: rgba(184,148,46,0.1); color: #8A6D1E; }
+
+/* Registration/read-only member list on interactive page */
+.ac-team-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--ivory-dim); border-radius: 20px; padding: 5px 12px; font-size: 0.78rem; color: var(--ink); margin: 0 6px 6px 0; }

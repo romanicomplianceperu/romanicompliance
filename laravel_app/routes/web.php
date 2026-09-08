@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AcademicoController as AdminAcademicoController;
 use App\Http\Controllers\Admin\AdministratorController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -74,6 +75,9 @@ Route::prefix('academico')->name('academico.')->group(function () {
     Route::get('/{university}/{course}/participacion', [AcademicoController::class, 'participacion'])->name('participacion.index');
     Route::get('/{university}/{course}/participacion/{activity}', [AcademicoController::class, 'activity'])->name('activity.show');
     Route::post('/{university}/{course}/participacion/{activity}/responder', [AcademicoController::class, 'respond'])->name('activity.respond');
+    Route::post('/{university}/{course}/participacion/{activity}/acceso', [AcademicoController::class, 'unlockActivity'])->name('activity.unlock');
+    Route::post('/{university}/{course}/participacion/{activity}/registro', [AcademicoController::class, 'registerSubmission'])->name('activity.register');
+    Route::post('/{university}/{course}/participacion/{activity}/guardar', [AcademicoController::class, 'saveSubmission'])->name('activity.save');
 });
 
 Route::get('/blog', [BlogArticleController::class, 'index'])->name('blog.index');
@@ -159,4 +163,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     Route::get('/preguntas-alumnos', [AdminCourseQuestionController::class, 'index'])->name('questions-support.index');
     Route::post('/preguntas-alumnos/{question}/responder', [AdminCourseQuestionController::class, 'answer'])->name('questions-support.answer');
+
+    Route::get('/academico', [AdminAcademicoController::class, 'index'])->name('academico.index');
+    Route::get('/academico/{activity}', [AdminAcademicoController::class, 'show'])->name('academico.show');
+    Route::put('/academico/{activity}', [AdminAcademicoController::class, 'update'])->name('academico.update');
+    Route::patch('/academico/envios/{submission}', [AdminAcademicoController::class, 'updateStatus'])->name('academico.submissions.status');
 });

@@ -11,7 +11,11 @@ class AcademicActivity extends Model
     protected $fillable = [
         'academic_course_id', 'slug', 'week_number', 'type', 'title',
         'case_title', 'unit', 'modality', 'group_size', 'case_body',
-        'case_document_path', 'status',
+        'case_document_path', 'status', 'access_code', 'due_at',
+    ];
+
+    protected $casts = [
+        'due_at' => 'datetime',
     ];
 
     public function course(): BelongsTo
@@ -24,9 +28,37 @@ class AcademicActivity extends Model
         return $this->hasMany(AcademicActivityQuestion::class, 'academic_activity_id')->orderBy('order');
     }
 
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(AcademicSubmission::class, 'academic_activity_id')->latest();
+    }
+
+    public function visits(): HasMany
+    {
+        return $this->hasMany(AcademicActivityVisit::class, 'academic_activity_id')->latest('visited_at');
+    }
+
     public function isAvailable(): bool
     {
         return $this->status === 'disponible';
+    }
+
+    public function requiresAccessCode(): bool
+    {
+        return ! empty($this->access_code);
+    }
+
+    public function checkAccessCode(?string $code): bool
+    {
+        return $this->access_code && trim((string) $code) !== '' && hash_equals(
+            strtolower(trim($this->access_code)),
+            strtolower(trim((string) $code))
+        );
+    }
+
+    public function isPastDue(): bool
+    {
+        return $this->due_at && now()->greaterThan($this->due_at);
     }
 
     public function caseBodyParagraphs(): array
