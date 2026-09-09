@@ -10,8 +10,9 @@
 .fc-gate-box p.fc-sub { font-size: 0.88rem; color: var(--slate); margin-bottom: 1.8rem; }
 .fc-gate-form { text-align: left; }
 .fc-gate-form label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-light); margin-bottom: 6px; }
-.fc-gate-form input[type="password"] { width: 100%; box-sizing: border-box; padding: 13px 16px; border: 1px solid var(--line); border-radius: 8px; font-size: 1rem; letter-spacing: 0.05em; margin-bottom: 1.2rem; transition: border-color 0.2s; }
-.fc-gate-form input[type="password"]:focus { outline: none; border-color: var(--gold); }
+.fc-gate-form input[type="text"] { width: 100%; box-sizing: border-box; padding: 13px 16px; border: 1px solid var(--line); border-radius: 8px; font-size: 1rem; letter-spacing: 0.05em; transition: border-color 0.2s; }
+.fc-gate-form input[type="text"]:focus { outline: none; border-color: var(--gold); }
+.fc-gate-hint { font-size: 0.72rem; color: var(--slate-light); margin: 6px 0 1.2rem; }
 .fc-gate-error { background: rgba(179,65,59,0.08); border: 1px solid rgba(179,65,59,0.25); color: #B3413B; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; margin-bottom: 1.1rem; text-align: left; }
 .fc-gate-submit { width: 100%; padding: 14px; background: var(--ink); color: var(--white); border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background 0.25s; }
 .fc-gate-submit:hover { background: var(--ink-light); }
@@ -34,8 +35,9 @@
 
     <form method="POST" action="{{ route('federico.authenticate') }}" class="fc-gate-form">
       @csrf
-      <label for="fc-password">Contraseña</label>
-      <input type="password" id="fc-password" name="password" required autofocus autocomplete="off">
+      <label for="fc-password">Código de acceso</label>
+      <input type="text" id="fc-password" name="password" required autofocus autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="fc-gate-hint">No distingue mayúsculas de minúsculas.</div>
       <button type="submit" class="fc-gate-submit">Ingresar →</button>
     </form>
   </div>

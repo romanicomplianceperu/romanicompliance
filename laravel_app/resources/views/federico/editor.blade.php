@@ -18,7 +18,8 @@
 .fc-alert-error { background: rgba(179,65,59,0.08); border: 1px solid rgba(179,65,59,0.25); color: #B3413B; }
 .fc-alert-error div + div { margin-top: 4px; }
 
-.fc-layout { display: grid; grid-template-columns: 2.4fr 1fr; gap: 1.8rem; align-items: start; }
+.fc-layout { display: grid; grid-template-columns: 2.6fr 1fr; gap: 1.8rem; align-items: start; min-width: 0; }
+.fc-layout > * { min-width: 0; }
 .fc-card { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.8rem; }
 .fc-field { margin-bottom: 1.4rem; }
 .fc-field label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
@@ -31,12 +32,19 @@
 .fc-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
 @media (max-width: 560px) { .fc-field-row { grid-template-columns: 1fr; } }
 
-.fc-dropzone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 1.6rem 1rem; border: 2px dashed var(--line); border-radius: 10px; background: var(--ivory-dim); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+.fc-dropzone { display: flex; align-items: center; gap: 14px; width: 100%; box-sizing: border-box; text-align: left; padding: 1rem 1.2rem; border: 2px dashed var(--line); border-radius: 10px; background: var(--ivory-dim); cursor: pointer; transition: border-color 0.2s, background 0.2s; flex-wrap: wrap; }
 .fc-dropzone:hover, .fc-dropzone:focus-visible { border-color: var(--gold); background: var(--gold-pale); outline: none; }
 .fc-dropzone.fc-dragging { border-color: var(--gold); background: var(--gold-pale); }
-.fc-dropzone svg { width: 26px; height: 26px; color: var(--gold); }
-.fc-dropzone-text { font-size: 0.82rem; color: var(--slate); }
-.fc-dropzone-text strong { color: var(--ink); }
+.fc-dropzone-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--white); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fc-dropzone-icon svg { width: 20px; height: 20px; color: var(--gold); }
+.fc-dropzone-text { font-size: 0.82rem; color: var(--slate); display: flex; flex-direction: column; flex: 1; min-width: 160px; }
+.fc-dropzone-text strong { color: var(--ink); font-size: 0.86rem; }
+.fc-dropzone-btn { margin-left: auto; padding: 9px 16px; background: var(--ink); color: var(--white); border-radius: 7px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+@media (max-width: 480px) {
+  .fc-dropzone { justify-content: center; text-align: center; }
+  .fc-dropzone-text { text-align: center; }
+  .fc-dropzone-btn { margin-left: 0; }
+}
 .fc-materials-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
 .fc-material-chip { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--white); border: 1px solid var(--line); border-radius: 8px; font-size: 0.82rem; }
 .fc-material-chip svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
@@ -78,13 +86,21 @@ body.fc-fullscreen-active { overflow: hidden; }
 .fc-editor-hint { font-size: 0.74rem; color: var(--slate-light); margin-top: 0.6rem; display: flex; align-items: center; gap: 6px; }
 .fc-editor-hint svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-.fc-editor-area { display: grid; grid-template-columns: 1fr; gap: 1.4rem; align-items: start; }
-.fc-editor-area.fc-live-active { grid-template-columns: 1fr 1fr; }
-.fc-live-preview { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.6rem; max-height: 700px; overflow-y: auto; }
-@media (max-width: 1100px) {
-  .fc-editor-area.fc-live-active { grid-template-columns: 1fr; }
+.fc-editor-area { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: start; min-width: 0; }
+.fc-editor-area > * { min-width: 0; }
+.fc-live-preview { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.6rem; max-height: 780px; overflow-y: auto; position: sticky; top: 16px; }
+@media (max-width: 1300px) {
+  .fc-editor-area { grid-template-columns: 1fr; }
+  .fc-live-preview { position: static; max-height: none; }
 }
 .fc-btn-active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+.fc-live-preview-author { display: flex; align-items: center; gap: 10px; margin-bottom: 1.2rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
+.fc-live-preview-author img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.fc-live-preview-author-title { font-size: 0.7rem; color: var(--gold); font-weight: 600; }
+.fc-live-preview-author-name { font-size: 0.84rem; color: var(--ink); font-weight: 700; }
+.fc-live-preview-cover-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-bottom: 1.4rem; background: var(--ivory-dim); border: 1px dashed var(--line); display: flex; align-items: center; justify-content: center; color: var(--slate-light); font-size: 0.76rem; }
+.fc-preview-demo { color: var(--slate-light); font-style: italic; }
 
 .fc-uploading-blot { display: inline-flex; align-items: center; gap: 6px; background: var(--gold-pale); color: var(--gold); border-radius: 6px; padding: 2px 10px 2px 6px; font-size: 0.85em; font-style: italic; user-select: none; cursor: default; }
 .fc-uploading-spinner { width: 11px; height: 11px; border: 2px solid rgba(184,145,64,0.3); border-top-color: var(--gold); border-radius: 50%; display: inline-block; animation: fcSpin 0.7s linear infinite; }
@@ -220,8 +236,11 @@ body.fc-fullscreen-active { overflow: hidden; }
           <div class="fc-field">
             <label>Material adicional <span>(opcional — PDFs descargables para los lectores, máx. 10MB cada uno)</span></label>
             <div class="fc-dropzone" id="fc-materials-dropzone" tabindex="0" role="button" aria-label="Agregar archivos PDF">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
-              <div class="fc-dropzone-text"><strong>Arrastra tus PDFs aquí</strong> o haz clic para elegirlos</div>
+              <div class="fc-dropzone-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+              </div>
+              <div class="fc-dropzone-text"><strong>Arrastra tus PDFs aquí</strong><span>o haz clic para elegirlos desde tu computadora</span></div>
+              <span class="fc-dropzone-btn">Elegir archivos</span>
             </div>
             <input type="file" name="materials[]" id="fc-materials-input" accept="application/pdf" multiple hidden>
             <div id="fc-materials-list" class="fc-materials-list"></div>
@@ -237,11 +256,21 @@ body.fc-fullscreen-active { overflow: hidden; }
                 </button>
                 <div id="fc-editor"></div>
               </div>
-              <div class="fc-live-preview" id="fc-live-preview" hidden>
-                <div class="fc-preview-label">Vista previa en vivo</div>
+              <div class="fc-live-preview" id="fc-live-preview">
+                <div class="fc-preview-label">Así se verá publicado</div>
+                @if($author)
+                  <div class="fc-live-preview-author">
+                    <img src="{{ $author->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $author->name }}">
+                    <div>
+                      <div class="fc-live-preview-author-title">{{ $author->title }}</div>
+                      <div class="fc-live-preview-author-name">{{ $author->name }}</div>
+                    </div>
+                  </div>
+                @endif
                 <h2 id="fc-live-preview-title" class="fc-preview-title"></h2>
-                <p id="fc-live-preview-excerpt" class="fc-preview-excerpt" hidden></p>
+                <p id="fc-live-preview-excerpt" class="fc-preview-excerpt"></p>
                 <div id="fc-live-preview-cover-wrap" class="fc-preview-cover-wrap" hidden><img id="fc-live-preview-cover" alt=""></div>
+                <div id="fc-live-preview-cover-placeholder" class="fc-live-preview-cover-placeholder">Sin imagen de portada todavía</div>
                 <div id="fc-live-preview-body" class="fc-preview-body"></div>
               </div>
             </div>
@@ -253,8 +282,7 @@ body.fc-fullscreen-active { overflow: hidden; }
           </div>
 
           <div class="fc-actions">
-            <button type="button" class="fc-btn fc-btn-ghost" id="fc-live-preview-btn">Vista en vivo</button>
-            <button type="button" class="fc-btn fc-btn-ghost" id="fc-preview-btn">Vista previa</button>
+            <button type="button" class="fc-btn fc-btn-ghost" id="fc-preview-btn">Vista previa a pantalla completa</button>
             <button type="submit" name="action" value="draft" class="fc-btn fc-btn-secondary">Guardar borrador</button>
             <button type="submit" name="action" value="publish" class="fc-btn fc-btn-primary">Publicar</button>
           </div>
@@ -569,51 +597,48 @@ function fcClosePreview() {
 }
 document.getElementById('fc-preview-btn').addEventListener('click', fcOpenPreview);
 
-// Live preview: a side-by-side panel that updates as you type, instead of
-// requiring a click to see how the article will look.
-var fcEditorArea = document.getElementById('fc-editor-area');
-var fcLivePreview = document.getElementById('fc-live-preview');
-var fcLiveBtn = document.getElementById('fc-live-preview-btn');
-var fcLiveActive = false;
+// Live preview: an always-visible side panel that updates as you type,
+// so you can always see how the article will look — with sample text
+// standing in for anything you haven't written yet.
+var FC_DEMO_TITLE = 'Así se verá el título de tu artículo';
+var FC_DEMO_EXCERPT = 'Aquí aparecerá el extracto que escribas arriba, o uno generado automáticamente a partir del contenido si lo dejas vacío.';
+var FC_DEMO_BODY = '<p>El contenido de tu artículo se mostrará aquí, formateado tal como lo verán los lectores en la web: con las mismas fuentes, tamaños y colores.</p>';
 
 function fcUpdateLivePreview() {
-  if (!fcLiveActive) return;
-
   var title = document.getElementById('fc-title').value.trim();
-  document.getElementById('fc-live-preview-title').textContent = title || 'Sin título todavía';
+  var titleEl = document.getElementById('fc-live-preview-title');
+  titleEl.textContent = title || FC_DEMO_TITLE;
+  titleEl.classList.toggle('fc-preview-demo', !title);
 
   var excerpt = document.getElementById('fc-excerpt').value.trim();
   var liveExcerptEl = document.getElementById('fc-live-preview-excerpt');
-  liveExcerptEl.textContent = excerpt;
-  liveExcerptEl.hidden = !excerpt;
+  liveExcerptEl.textContent = excerpt || FC_DEMO_EXCERPT;
+  liveExcerptEl.classList.toggle('fc-preview-demo', !excerpt);
 
-  document.getElementById('fc-live-preview-body').innerHTML = quill.root.innerHTML;
+  var contentHtml = quill.getText().trim() ? quill.root.innerHTML : FC_DEMO_BODY;
+  var bodyEl = document.getElementById('fc-live-preview-body');
+  bodyEl.innerHTML = contentHtml;
+  bodyEl.classList.toggle('fc-preview-demo', !quill.getText().trim());
 
   var coverInput = document.getElementById('fc-cover');
   var coverWrap = document.getElementById('fc-live-preview-cover-wrap');
+  var coverPlaceholder = document.getElementById('fc-live-preview-cover-placeholder');
   var coverImg = document.getElementById('fc-live-preview-cover');
   if (coverInput.files && coverInput.files[0]) {
     coverImg.src = URL.createObjectURL(coverInput.files[0]);
     coverWrap.hidden = false;
+    coverPlaceholder.hidden = true;
   } else {
     coverWrap.hidden = true;
+    coverPlaceholder.hidden = false;
   }
 }
 
-function fcSetLivePreview(on) {
-  fcLiveActive = on;
-  fcEditorArea.classList.toggle('fc-live-active', on);
-  fcLivePreview.hidden = !on;
-  fcLiveBtn.classList.toggle('fc-btn-active', on);
-  fcLiveBtn.textContent = on ? 'Ocultar vista en vivo' : 'Vista en vivo';
-  if (on) fcUpdateLivePreview();
-}
-
-fcLiveBtn.addEventListener('click', function () { fcSetLivePreview(!fcLiveActive); });
 quill.on('text-change', fcUpdateLivePreview);
 document.getElementById('fc-title').addEventListener('input', fcUpdateLivePreview);
 document.getElementById('fc-excerpt').addEventListener('input', fcUpdateLivePreview);
 document.getElementById('fc-cover').addEventListener('change', fcUpdateLivePreview);
+fcUpdateLivePreview();
 
 // Fullscreen editor mode.
 var fcPageWrap = document.getElementById('fc-page-wrap');

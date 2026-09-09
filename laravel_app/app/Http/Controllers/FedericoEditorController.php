@@ -42,8 +42,10 @@ class FedericoEditorController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! hash_equals(self::PASSWORD, (string) $request->input('password'))) {
-            return back()->withErrors(['password' => 'Contraseña incorrecta. Inténtalo de nuevo.']);
+        $submitted = mb_strtolower(trim((string) $request->input('password')));
+
+        if (! hash_equals(self::PASSWORD, $submitted)) {
+            return back()->withErrors(['password' => 'Código de acceso incorrecto. Inténtalo de nuevo.']);
         }
 
         $request->session()->put(self::SESSION_KEY, true);
