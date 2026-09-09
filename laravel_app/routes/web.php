@@ -91,6 +91,9 @@ Route::prefix('redaccion/federico')->name('federico.')->group(function () {
     Route::get('/nuevo', [FedericoEditorController::class, 'editor'])->name('editor');
     Route::post('/nuevo', [FedericoEditorController::class, 'store'])->name('store');
     Route::post('/imagen', [FedericoEditorController::class, 'uploadImage'])->name('upload-image');
+    Route::get('/{article}/editar', [FedericoEditorController::class, 'edit'])->name('edit');
+    Route::put('/{article}/editar', [FedericoEditorController::class, 'update'])->name('update');
+    Route::delete('/{article}', [FedericoEditorController::class, 'destroy'])->name('destroy');
 });
 
 Route::get('/blog', [BlogArticleController::class, 'index'])->name('blog.index');

@@ -30,6 +30,7 @@
 .fc-field textarea { resize: vertical; }
 .fc-field input[type="file"] { font-size: 0.84rem; }
 .fc-cover-preview { display: block; margin-top: 10px; max-width: 100%; max-height: 220px; border-radius: 8px; object-fit: cover; }
+.fc-cover-preview[hidden] { display: none; }
 .fc-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
 @media (max-width: 560px) { .fc-field-row { grid-template-columns: 1fr; } }
 
@@ -46,6 +47,10 @@
   .fc-dropzone-text { text-align: center; }
   .fc-dropzone-btn { margin-left: 0; }
 }
+.fc-dropzone-cover:hover, .fc-dropzone-cover:focus-visible { border-color: var(--green-wa); background: rgba(37,211,102,0.08); outline: none; }
+.fc-dropzone-cover.fc-dragging { border-color: var(--green-wa); background: rgba(37,211,102,0.08); }
+.fc-dropzone-cover .fc-dropzone-icon svg { color: var(--green-wa); }
+.fc-dropzone-cover .fc-dropzone-btn { background: var(--green-wa); }
 .fc-materials-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
 .fc-material-chip { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--white); border: 1px solid var(--line); border-radius: 8px; font-size: 0.82rem; }
 .fc-material-chip svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
@@ -98,7 +103,9 @@ body.fc-fullscreen-active { overflow: hidden; }
 .fc-live-preview-author-title { font-size: 0.7rem; color: var(--gold); font-weight: 600; }
 .fc-live-preview-author-name { font-size: 0.84rem; color: var(--ink); font-weight: 700; }
 .fc-live-preview-cover-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-bottom: 1.4rem; background: var(--ivory-dim); border: 1px dashed var(--line); display: flex; align-items: center; justify-content: center; color: var(--slate-light); font-size: 0.76rem; }
+.fc-live-preview-cover-placeholder[hidden] { display: none; }
 .fc-preview-demo { color: var(--slate-light); font-style: italic; }
+.fc-preview-title.fc-preview-demo { color: var(--ink); font-style: normal; }
 
 .fc-uploading-blot { display: inline-flex; align-items: center; gap: 6px; background: var(--gold-pale); color: var(--gold); border-radius: 6px; padding: 2px 10px 2px 6px; font-size: 0.85em; font-style: italic; user-select: none; cursor: default; }
 .fc-uploading-spinner { width: 11px; height: 11px; border: 2px solid rgba(184,145,64,0.3); border-top-color: var(--gold); border-radius: 50%; display: inline-block; animation: fcSpin 0.7s linear infinite; }
@@ -112,6 +119,10 @@ body.fc-fullscreen-active { overflow: hidden; }
 .fc-btn-secondary:hover { background: var(--line); }
 .fc-btn-primary { background: var(--gold); color: var(--white); }
 .fc-btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+.fc-btn-danger { background: transparent; border: 1px solid rgba(179,65,59,0.35); color: #B3413B; }
+.fc-btn-danger:hover { background: rgba(179,65,59,0.08); }
+.fc-link-btn-danger { background: transparent; color: #B3413B; border: 1px solid rgba(179,65,59,0.3); }
+.fc-link-btn-danger:hover { background: rgba(179,65,59,0.08); }
 
 .fc-sidebar { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.6rem; }
 .fc-sidebar h3 { font-size: 0.95rem; color: var(--ink); margin-bottom: 1.1rem; }
@@ -124,6 +135,11 @@ body.fc-fullscreen-active { overflow: hidden; }
 .fc-badge-draft { background: var(--gold-pale); color: var(--gold); }
 .fc-recent-item a { font-size: 0.78rem; font-weight: 600; color: var(--gold); }
 .fc-empty { font-size: 0.82rem; color: var(--slate-light); }
+.fc-recent-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+.fc-recent-actions a, .fc-recent-actions button { font-size: 0.76rem; font-weight: 600; }
+.fc-recent-edit { color: var(--gold); }
+.fc-recent-delete { background: none; border: none; color: #B3413B; cursor: pointer; padding: 0; font-family: inherit; }
+.fc-recent-delete:hover { text-decoration: underline; }
 
 .fc-preview-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.6rem; }
 .fc-preview-title { font-size: 1.5rem; color: var(--ink); font-weight: 600; margin-bottom: 1.2rem; line-height: 1.3; }
@@ -167,13 +183,16 @@ body.fc-fullscreen-active { overflow: hidden; }
     <div class="fc-topbar">
       <div>
         <div class="fc-eyebrow">RomaniCompliance — Redacción</div>
-        <h1>Hola, Federico</h1>
+        <h1>{{ $article->exists ? 'Editando artículo' : 'Hola, Federico' }}</h1>
       </div>
       <div class="fc-topbar-actions">
+        @if($article->exists)
+          <a href="{{ route('federico.editor') }}" class="fc-link-btn fc-link-btn-ghost">+ Nuevo artículo</a>
+        @endif
         <a href="{{ route('blog.index') }}" target="_blank" class="fc-link-btn fc-link-btn-ghost">Ver blog</a>
         <form method="POST" action="{{ route('federico.logout') }}">
           @csrf
-          <button type="submit" class="fc-link-btn fc-link-btn-ghost">Salir</button>
+          <button type="submit" class="fc-link-btn fc-link-btn-danger" title="Cierra la sesión: la próxima vez habrá que ingresar el código de acceso de nuevo">Cerrar sesión</button>
         </form>
       </div>
     </div>
@@ -196,17 +215,18 @@ body.fc-fullscreen-active { overflow: hidden; }
 
     <div class="fc-layout">
       <div class="fc-card">
-        <form method="POST" action="{{ route('federico.store') }}" enctype="multipart/form-data" id="fc-form" novalidate>
+        <form method="POST" action="{{ $article->exists ? route('federico.update', $article) : route('federico.store') }}" enctype="multipart/form-data" id="fc-form" novalidate>
           @csrf
+          @if($article->exists) @method('PUT') @endif
 
           <div class="fc-field">
             <label for="fc-title">Título del artículo</label>
-            <input type="text" name="title" id="fc-title" required maxlength="255" value="{{ old('title') }}" placeholder="Escriba un título claro y directo">
+            <input type="text" name="title" id="fc-title" required maxlength="255" value="{{ old('title', $article->title) }}" placeholder="Escriba un título claro y directo">
           </div>
 
           <div class="fc-field">
             <label for="fc-excerpt">Extracto <span>(opcional — resumen corto para las vistas previas del blog)</span></label>
-            <textarea name="excerpt" id="fc-excerpt" maxlength="500" rows="2" placeholder="Si lo deja vacío, se genera automáticamente a partir del contenido">{{ old('excerpt') }}</textarea>
+            <textarea name="excerpt" id="fc-excerpt" maxlength="500" rows="2" placeholder="Si lo deja vacío, se genera automáticamente a partir del contenido">{{ old('excerpt', $article->excerpt) }}</textarea>
           </div>
 
           <div class="fc-field-row">
@@ -214,7 +234,7 @@ body.fc-fullscreen-active { overflow: hidden; }
               <label for="fc-type">Tipo de contenido</label>
               <select name="type" id="fc-type">
                 @foreach($types as $value => $label)
-                  <option value="{{ $value }}" @selected(old('type', 'blog') == $value)>{{ $label }}</option>
+                  <option value="{{ $value }}" @selected(old('type', $article->type ?? 'blog') == $value)>{{ $label }}</option>
                 @endforeach
               </select>
             </div>
@@ -223,7 +243,7 @@ body.fc-fullscreen-active { overflow: hidden; }
               <select name="article_category_id" id="fc-category">
                 <option value="">Sin categoría</option>
                 @foreach($categories as $cat)
-                  <option value="{{ $cat->id }}" @selected(old('article_category_id') == $cat->id)>{{ $cat->name }}</option>
+                  <option value="{{ $cat->id }}" @selected(old('article_category_id', $article->article_category_id) == $cat->id)>{{ $cat->name }}</option>
                 @endforeach
               </select>
             </div>
@@ -231,17 +251,38 @@ body.fc-fullscreen-active { overflow: hidden; }
 
           <div class="fc-field">
             <label for="fc-tags">Etiquetas <span>(opcional, sepárelas con comas)</span></label>
-            <input type="text" name="tags" id="fc-tags" value="{{ old('tags') }}" placeholder="derechos humanos, compliance, ética">
+            <input type="text" name="tags" id="fc-tags" value="{{ old('tags', $article->exists ? $article->tags->pluck('name')->implode(', ') : '') }}" placeholder="derechos humanos, compliance, ética">
           </div>
 
           <div class="fc-field">
-            <label for="fc-cover">Imagen de portada <span>(opcional)</span></label>
-            <input type="file" name="cover_image" id="fc-cover" accept="image/*">
-            <img id="fc-cover-preview" class="fc-cover-preview" hidden>
+            <label>Imagen de portada <span>(opcional)</span></label>
+            <div class="fc-dropzone fc-dropzone-cover" id="fc-cover-dropzone" tabindex="0" role="button" aria-label="Agregar imagen de portada">
+              <div class="fc-dropzone-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+              </div>
+              <div class="fc-dropzone-text"><strong>Arrastre la portada aquí</strong><span>o haga clic para elegirla desde su computadora</span></div>
+              <span class="fc-dropzone-btn">Elegir portada</span>
+            </div>
+            <input type="file" name="cover_image" id="fc-cover" accept="image/*" hidden>
+            <input type="hidden" id="fc-existing-cover-url" value="{{ $article->cover_image ? asset('storage/'.$article->cover_image) : '' }}">
+            <img id="fc-cover-preview" class="fc-cover-preview" src="{{ $article->cover_image ? asset('storage/'.$article->cover_image) : '' }}" @if(! $article->cover_image) hidden @endif>
           </div>
 
           <div class="fc-field">
             <label>Material adicional <span>(opcional — PDFs descargables para los lectores, máx. 10MB cada uno)</span></label>
+            @if($article->exists && $article->materials->isNotEmpty())
+              <div class="fc-materials-list" id="fc-existing-materials">
+                @foreach($article->materials as $material)
+                  <div class="fc-material-chip" data-existing-id="{{ $material->id }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+                    <span class="fc-material-name">{{ $material->original_name }}</span>
+                    <span class="fc-material-size">{{ $material->humanSize() }}</span>
+                    <button type="button" aria-label="Quitar" onclick="fcRemoveExistingMaterial({{ $material->id }}, this)">&times;</button>
+                  </div>
+                @endforeach
+              </div>
+            @endif
+            <div id="fc-remove-materials-inputs"></div>
             <div class="fc-dropzone" id="fc-materials-dropzone" tabindex="0" role="button" aria-label="Agregar archivos PDF">
               <div class="fc-dropzone-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
@@ -276,15 +317,23 @@ body.fc-fullscreen-active { overflow: hidden; }
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
               También puede arrastrar y soltar una imagen directamente sobre el editor, o usar el ícono de imagen en la barra de herramientas.
             </div>
-            <textarea name="content" id="fc-content" hidden>{{ old('content') }}</textarea>
+            <textarea name="content" id="fc-content" hidden>{{ old('content', $article->content) }}</textarea>
           </div>
 
           <div class="fc-actions">
             <button type="button" class="fc-btn fc-btn-ghost" id="fc-preview-btn">Vista previa a pantalla completa</button>
             <button type="submit" name="action" value="draft" class="fc-btn fc-btn-secondary">Guardar borrador</button>
-            <button type="submit" name="action" value="publish" class="fc-btn fc-btn-primary">Publicar</button>
+            <button type="submit" name="action" value="publish" class="fc-btn fc-btn-primary">{{ $article->exists && $article->isPublished() ? 'Guardar cambios' : 'Publicar' }}</button>
           </div>
         </form>
+
+        @if($article->exists)
+          <form method="POST" action="{{ route('federico.destroy', $article) }}" style="margin-top:1.4rem;" onsubmit="return confirm('¿Eliminar este artículo? Esta acción no se puede deshacer.');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="fc-btn fc-btn-danger">Eliminar artículo</button>
+          </form>
+        @endif
       </div>
 
       <div class="fc-side-col">
@@ -315,9 +364,17 @@ body.fc-fullscreen-active { overflow: hidden; }
                 <span class="fc-badge {{ $item->isPublished() ? 'fc-badge-published' : 'fc-badge-draft' }}">{{ $item->isPublished() ? 'Publicado' : 'Borrador' }}</span>
                 <span>{{ $item->created_at->format('d/m/Y') }}</span>
               </div>
-              @if ($item->isPublished())
-                <a href="{{ route('blog.show', $item->slug) }}" target="_blank">Ver artículo →</a>
-              @endif
+              <div class="fc-recent-actions">
+                @if ($item->isPublished())
+                  <a href="{{ route('blog.show', $item->slug) }}" target="_blank">Ver →</a>
+                @endif
+                <a href="{{ route('federico.edit', $item) }}" class="fc-recent-edit">Editar</a>
+                <form method="POST" action="{{ route('federico.destroy', $item) }}" onsubmit="return confirm('¿Eliminar «{{ addslashes($item->title) }}»? Esta acción no se puede deshacer.');">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="fc-recent-delete">Eliminar</button>
+                </form>
+              </div>
             </div>
           @empty
             <p class="fc-empty">Aún no hay publicaciones. El primer artículo aparecerá aquí.</p>
@@ -597,10 +654,67 @@ quill.getModule('toolbar').addHandler('image', function () {
 document.getElementById('fc-cover').addEventListener('change', function (e) {
   var file = e.target.files[0];
   var img = document.getElementById('fc-cover-preview');
-  if (!file) { img.hidden = true; return; }
+  var existingUrl = document.getElementById('fc-existing-cover-url').value;
+  if (!file) {
+    if (existingUrl) { img.src = existingUrl; img.hidden = false; } else { img.hidden = true; }
+    return;
+  }
   img.src = URL.createObjectURL(file);
   img.hidden = false;
 });
+
+// Imagen de portada: zona visual de arrastrar y soltar (o clic para elegir),
+// igual que el material adicional, en lugar del <input type="file"> simple.
+(function setupCoverDropzone() {
+  var dropzone = document.getElementById('fc-cover-dropzone');
+  var input = document.getElementById('fc-cover');
+
+  function setFile(file) {
+    if (!file || !file.type || file.type.indexOf('image/') !== 0) {
+      alert('"' + (file ? file.name : '') + '" no es una imagen válida.');
+      return;
+    }
+    var dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  dropzone.addEventListener('click', function () { input.click(); });
+  dropzone.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+
+  var dragCounter = 0;
+  dropzone.addEventListener('dragenter', function (e) { e.preventDefault(); dragCounter++; dropzone.classList.add('fc-dragging'); });
+  dropzone.addEventListener('dragover', function (e) { e.preventDefault(); });
+  dropzone.addEventListener('dragleave', function (e) {
+    e.preventDefault();
+    dragCounter = Math.max(0, dragCounter - 1);
+    if (dragCounter === 0) dropzone.classList.remove('fc-dragging');
+  });
+  dropzone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dragCounter = 0;
+    dropzone.classList.remove('fc-dragging');
+    var dropped = e.dataTransfer && e.dataTransfer.files;
+    if (dropped && dropped.length) setFile(dropped[0]);
+  });
+})();
+
+// Quitar un material adicional ya existente (al editar un artículo): saca la
+// ficha visualmente y agrega un input oculto para que el servidor la borre
+// al guardar los cambios.
+function fcRemoveExistingMaterial(id, buttonEl) {
+  var chip = buttonEl.closest('.fc-material-chip');
+  if (chip) chip.parentNode.removeChild(chip);
+
+  var hidden = document.createElement('input');
+  hidden.type = 'hidden';
+  hidden.name = 'remove_materials[]';
+  hidden.value = id;
+  document.getElementById('fc-remove-materials-inputs').appendChild(hidden);
+}
 
 // Keep the hidden textarea in sync before every submit.
 document.getElementById('fc-form').addEventListener('submit', function (e) {
@@ -682,8 +796,13 @@ function fcUpdateLivePreview() {
   var coverWrap = document.getElementById('fc-live-preview-cover-wrap');
   var coverPlaceholder = document.getElementById('fc-live-preview-cover-placeholder');
   var coverImg = document.getElementById('fc-live-preview-cover');
+  var existingCoverUrl = document.getElementById('fc-existing-cover-url').value;
   if (coverInput.files && coverInput.files[0]) {
     coverImg.src = URL.createObjectURL(coverInput.files[0]);
+    coverWrap.hidden = false;
+    coverPlaceholder.hidden = true;
+  } else if (existingCoverUrl) {
+    coverImg.src = existingCoverUrl;
     coverWrap.hidden = false;
     coverPlaceholder.hidden = true;
   } else {
