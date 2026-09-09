@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleCategory;
+use App\Models\ArticleMaterial;
+use App\Models\Tag;
 use App\Models\User;
 use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
@@ -69,9 +72,12 @@ class FedericoEditorController extends Controller
             ->take(8)
             ->get();
 
+        $categories = ArticleCategory::orderBy('name')->get();
+
         return view('federico.editor', [
             'author' => $author,
             'recent' => $recent,
+            'categories' => $categories,
         ]);
     }
 
@@ -109,6 +115,9 @@ class FedericoEditorController extends Controller
             'excerpt' => ['nullable', 'string', 'max:500'],
             'content' => ['required', 'string'],
             'cover_image' => ['nullable', 'image', 'max:4096'],
+            'article_category_id' => ['nullable', 'exists:article_categories,id'],
+            'tags' => ['nullable', 'string'],
+            'materials.*' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
             'action' => ['required', 'in:draft,publish'],
         ]);
 
@@ -122,6 +131,7 @@ class FedericoEditorController extends Controller
 
         $article = new Article();
         $article->author_id = $author->id;
+        $article->article_category_id = $data['article_category_id'] ?? null;
         $article->title = $data['title'];
         $article->slug = $this->uniqueSlug($data['title']);
         $article->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($content), 160);
@@ -140,6 +150,25 @@ class FedericoEditorController extends Controller
         }
 
         $article->save();
+
+        $article->tags()->sync($this->extractTags($request));
+
+        if ($request->hasFile('materials')) {
+            foreach ($request->file('materials') as $file) {
+                if (! $file) {
+                    continue;
+                }
+
+                $path = $file->store('articles/materials', 'public');
+
+                ArticleMaterial::create([
+                    'article_id' => $article->id,
+                    'path' => $path,
+                    'original_name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                ]);
+            }
+        }
 
         if ($article->isPublished()) {
             return redirect()->route('blog.show', $article->slug)
@@ -162,6 +191,19 @@ class FedericoEditorController extends Controller
     private function author(): ?User
     {
         return User::where('email', self::AUTHOR_EMAIL)->first();
+    }
+
+    private function extractTags(Request $request): array
+    {
+        $names = array_filter(array_map('trim', explode(',', (string) $request->input('tags'))));
+        $ids = [];
+
+        foreach ($names as $name) {
+            $tag = Tag::firstOrCreate(['slug' => Str::slug($name)], ['name' => $name]);
+            $ids[] = $tag->id;
+        }
+
+        return $ids;
     }
 
     private function uniqueSlug(string $title): string

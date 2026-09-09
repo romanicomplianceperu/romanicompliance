@@ -23,11 +23,27 @@
 .fc-field { margin-bottom: 1.4rem; }
 .fc-field label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
 .fc-field label span { font-weight: 400; color: var(--slate-light); text-transform: none; letter-spacing: 0; }
-.fc-field input[type="text"], .fc-field textarea { width: 100%; box-sizing: border-box; padding: 11px 14px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--sans); font-size: 0.92rem; color: var(--ink); transition: border-color 0.2s; }
-.fc-field input[type="text"]:focus, .fc-field textarea:focus { outline: none; border-color: var(--gold); }
+.fc-field input[type="text"], .fc-field textarea, .fc-field select { width: 100%; box-sizing: border-box; padding: 11px 14px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--sans); font-size: 0.92rem; color: var(--ink); transition: border-color 0.2s; background: var(--white); }
+.fc-field input[type="text"]:focus, .fc-field textarea:focus, .fc-field select:focus { outline: none; border-color: var(--gold); }
 .fc-field textarea { resize: vertical; }
 .fc-field input[type="file"] { font-size: 0.84rem; }
 .fc-cover-preview { display: block; margin-top: 10px; max-width: 100%; max-height: 220px; border-radius: 8px; object-fit: cover; }
+.fc-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+@media (max-width: 560px) { .fc-field-row { grid-template-columns: 1fr; } }
+
+.fc-dropzone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 1.6rem 1rem; border: 2px dashed var(--line); border-radius: 10px; background: var(--ivory-dim); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+.fc-dropzone:hover, .fc-dropzone:focus-visible { border-color: var(--gold); background: var(--gold-pale); outline: none; }
+.fc-dropzone.fc-dragging { border-color: var(--gold); background: var(--gold-pale); }
+.fc-dropzone svg { width: 26px; height: 26px; color: var(--gold); }
+.fc-dropzone-text { font-size: 0.82rem; color: var(--slate); }
+.fc-dropzone-text strong { color: var(--ink); }
+.fc-materials-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.fc-material-chip { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--white); border: 1px solid var(--line); border-radius: 8px; font-size: 0.82rem; }
+.fc-material-chip svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
+.fc-material-chip .fc-material-name { flex: 1; color: var(--ink); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fc-material-chip .fc-material-size { color: var(--slate-light); font-size: 0.74rem; }
+.fc-material-chip button { background: none; border: none; color: var(--slate-light); cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 2px 4px; }
+.fc-material-chip button:hover { color: #B3413B; }
 
 .fc-page-wrap { position: relative; background: var(--ivory-dim); border: 1px solid var(--line); border-radius: 10px; padding: 1.4rem; }
 .ql-toolbar.ql-snow { border: 1px solid var(--line); border-radius: 8px; background: var(--white); margin-bottom: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); padding: 10px 12px; }
@@ -70,6 +86,10 @@ body.fc-fullscreen-active { overflow: hidden; }
 }
 .fc-btn-active { background: var(--ink); color: var(--white); border-color: var(--ink); }
 
+.fc-uploading-blot { display: inline-flex; align-items: center; gap: 6px; background: var(--gold-pale); color: var(--gold); border-radius: 6px; padding: 2px 10px 2px 6px; font-size: 0.85em; font-style: italic; user-select: none; cursor: default; }
+.fc-uploading-spinner { width: 11px; height: 11px; border: 2px solid rgba(184,145,64,0.3); border-top-color: var(--gold); border-radius: 50%; display: inline-block; animation: fcSpin 0.7s linear infinite; }
+@keyframes fcSpin { to { transform: rotate(360deg); } }
+
 .fc-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.6rem; flex-wrap: wrap; }
 .fc-btn { padding: 12px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s, transform 0.2s; }
 .fc-btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--slate); }
@@ -93,6 +113,7 @@ body.fc-fullscreen-active { overflow: hidden; }
 
 .fc-preview-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.6rem; }
 .fc-preview-title { font-size: 1.5rem; color: var(--ink); font-weight: 600; margin-bottom: 1.2rem; line-height: 1.3; }
+.fc-preview-excerpt { font-size: 0.9rem; color: var(--slate); font-style: italic; line-height: 1.6; margin: -0.6rem 0 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
 .fc-preview-cover-wrap img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 8px; margin-bottom: 1.4rem; display: block; }
 .fc-preview-body { font-size: 0.95rem; color: var(--ink); line-height: 1.85; max-height: 55vh; overflow-y: auto; }
 .fc-preview-body p { margin-bottom: 1.1rem; }
@@ -174,10 +195,36 @@ body.fc-fullscreen-active { overflow: hidden; }
             <textarea name="excerpt" id="fc-excerpt" maxlength="500" rows="2" placeholder="Si lo dejas vacío, se genera automáticamente a partir del contenido">{{ old('excerpt') }}</textarea>
           </div>
 
+          <div class="fc-field-row">
+            <div class="fc-field">
+              <label for="fc-category">Categoría <span>(opcional)</span></label>
+              <select name="article_category_id" id="fc-category">
+                <option value="">Sin categoría</option>
+                @foreach($categories as $cat)
+                  <option value="{{ $cat->id }}" @selected(old('article_category_id') == $cat->id)>{{ $cat->name }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="fc-field">
+              <label for="fc-tags">Etiquetas <span>(opcional, sepáralas con comas)</span></label>
+              <input type="text" name="tags" id="fc-tags" value="{{ old('tags') }}" placeholder="derechos humanos, compliance, ética">
+            </div>
+          </div>
+
           <div class="fc-field">
             <label for="fc-cover">Imagen de portada <span>(opcional)</span></label>
             <input type="file" name="cover_image" id="fc-cover" accept="image/*">
             <img id="fc-cover-preview" class="fc-cover-preview" hidden>
+          </div>
+
+          <div class="fc-field">
+            <label>Material adicional <span>(opcional — PDFs descargables para los lectores, máx. 10MB cada uno)</span></label>
+            <div class="fc-dropzone" id="fc-materials-dropzone" tabindex="0" role="button" aria-label="Agregar archivos PDF">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+              <div class="fc-dropzone-text"><strong>Arrastra tus PDFs aquí</strong> o haz clic para elegirlos</div>
+            </div>
+            <input type="file" name="materials[]" id="fc-materials-input" accept="application/pdf" multiple hidden>
+            <div id="fc-materials-list" class="fc-materials-list"></div>
           </div>
 
           <div class="fc-field">
@@ -193,6 +240,7 @@ body.fc-fullscreen-active { overflow: hidden; }
               <div class="fc-live-preview" id="fc-live-preview" hidden>
                 <div class="fc-preview-label">Vista previa en vivo</div>
                 <h2 id="fc-live-preview-title" class="fc-preview-title"></h2>
+                <p id="fc-live-preview-excerpt" class="fc-preview-excerpt" hidden></p>
                 <div id="fc-live-preview-cover-wrap" class="fc-preview-cover-wrap" hidden><img id="fc-live-preview-cover" alt=""></div>
                 <div id="fc-live-preview-body" class="fc-preview-body"></div>
               </div>
@@ -240,6 +288,7 @@ body.fc-fullscreen-active { overflow: hidden; }
     <button class="modal-close" type="button" onclick="fcClosePreview()">&times;</button>
     <div class="fc-preview-label">Vista previa — así se verá publicado</div>
     <h2 id="fc-preview-title" class="fc-preview-title"></h2>
+    <p id="fc-preview-excerpt" class="fc-preview-excerpt" hidden></p>
     <div id="fc-preview-cover-wrap" class="fc-preview-cover-wrap" hidden><img id="fc-preview-cover" alt=""></div>
     <div id="fc-preview-body" class="fc-preview-body"></div>
   </div>
@@ -249,6 +298,26 @@ body.fc-fullscreen-active { overflow: hidden; }
 @section('scripts')
 <script src="{{ asset("vendor/quill/quill.min.js") }}"></script>
 <script>
+// A genuine non-editable placeholder blot for "uploading image…", used
+// instead of inserting real, clickable/editable text. A plain inserted
+// string can be clicked into and edited like normal content, which then
+// breaks the later deleteText/insertEmbed swap — this atomic embed can't
+// be typed into, so it always behaves like a real placeholder.
+var Embed = Quill.import('blots/embed');
+class FcUploadingBlot extends Embed {
+  static create() {
+    var node = super.create();
+    node.setAttribute('contenteditable', 'false');
+    node.classList.add('fc-uploading-blot');
+    node.innerHTML = '<span class="fc-uploading-spinner"></span>Subiendo imagen…';
+    return node;
+  }
+  static value() { return true; }
+}
+FcUploadingBlot.blotName = 'fc-uploading';
+FcUploadingBlot.tagName = 'span';
+Quill.register(FcUploadingBlot);
+
 var quill = new Quill('#fc-editor', {
   theme: 'snow',
   placeholder: 'Escribe el contenido de tu artículo aquí…',
@@ -283,9 +352,8 @@ function fcUploadAndInsertImage(file) {
   if (!file || !file.type || file.type.indexOf('image/') !== 0) return;
 
   var range = quill.getSelection(true) || { index: quill.getLength() };
-  var placeholder = '…subiendo imagen…';
-  quill.insertText(range.index, placeholder, { italic: true });
-  quill.setSelection(range.index + placeholder.length);
+  quill.insertEmbed(range.index, 'fc-uploading', true, 'user');
+  quill.setSelection(range.index + 1);
 
   var formData = new FormData();
   formData.append('image', file);
@@ -300,12 +368,12 @@ function fcUploadAndInsertImage(file) {
       return res.json();
     })
     .then(function (data) {
-      quill.deleteText(range.index, placeholder.length);
+      quill.deleteText(range.index, 1);
       quill.insertEmbed(range.index, 'image', data.location, 'user');
       quill.setSelection(range.index + 1);
     })
     .catch(function () {
-      quill.deleteText(range.index, placeholder.length);
+      quill.deleteText(range.index, 1);
       alert('No se pudo subir la imagen. Verifica tu conexión e inténtalo de nuevo.');
     });
 }
@@ -353,6 +421,92 @@ quill.getModule('toolbar').addHandler('image', function () {
   });
 })();
 
+// Material adicional (PDFs): click-to-pick or drag-and-drop, kept in a
+// DataTransfer so the real file input carries every file (from either
+// source) when the form submits.
+(function setupMaterials() {
+  var dropzone = document.getElementById('fc-materials-dropzone');
+  var input = document.getElementById('fc-materials-input');
+  var list = document.getElementById('fc-materials-list');
+  var files = [];
+  var MAX_BYTES = 10 * 1024 * 1024;
+
+  function humanSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  function syncInput() {
+    var dt = new DataTransfer();
+    files.forEach(function (f) { dt.items.add(f); });
+    input.files = dt.files;
+  }
+
+  function render() {
+    list.innerHTML = '';
+    files.forEach(function (f, i) {
+      var chip = document.createElement('div');
+      chip.className = 'fc-material-chip';
+      chip.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>'
+        + '<span class="fc-material-name"></span>'
+        + '<span class="fc-material-size"></span>'
+        + '<button type="button" aria-label="Quitar">&times;</button>';
+      chip.querySelector('.fc-material-name').textContent = f.name;
+      chip.querySelector('.fc-material-size').textContent = humanSize(f.size);
+      chip.querySelector('button').addEventListener('click', function () {
+        files.splice(i, 1);
+        syncInput();
+        render();
+      });
+      list.appendChild(chip);
+    });
+  }
+
+  function addFiles(fileList) {
+    for (var i = 0; i < fileList.length; i++) {
+      var f = fileList[i];
+      if (f.type !== 'application/pdf') {
+        alert('"' + f.name + '" no es un PDF. Solo se aceptan archivos PDF como material adicional.');
+        continue;
+      }
+      if (f.size > MAX_BYTES) {
+        alert('"' + f.name + '" supera los 10MB permitidos.');
+        continue;
+      }
+      files.push(f);
+    }
+    syncInput();
+    render();
+  }
+
+  dropzone.addEventListener('click', function () { input.click(); });
+  dropzone.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  input.addEventListener('change', function () {
+    // The picked files already sit in a real FileList from the OS dialog;
+    // add them to our tracked array, then resync via DataTransfer.
+    addFiles(input.files);
+  });
+
+  var dragCounter = 0;
+  dropzone.addEventListener('dragenter', function (e) { e.preventDefault(); dragCounter++; dropzone.classList.add('fc-dragging'); });
+  dropzone.addEventListener('dragover', function (e) { e.preventDefault(); });
+  dropzone.addEventListener('dragleave', function (e) {
+    e.preventDefault();
+    dragCounter = Math.max(0, dragCounter - 1);
+    if (dragCounter === 0) dropzone.classList.remove('fc-dragging');
+  });
+  dropzone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dragCounter = 0;
+    dropzone.classList.remove('fc-dragging');
+    var dropped = e.dataTransfer && e.dataTransfer.files;
+    if (dropped && dropped.length) addFiles(dropped);
+  });
+})();
+
 // Cover image preview.
 document.getElementById('fc-cover').addEventListener('change', function (e) {
   var file = e.target.files[0];
@@ -388,6 +542,12 @@ function fcOpenPreview() {
 
   var title = document.getElementById('fc-title').value.trim();
   document.getElementById('fc-preview-title').textContent = title || 'Sin título todavía';
+
+  var excerpt = document.getElementById('fc-excerpt').value.trim();
+  var excerptEl = document.getElementById('fc-preview-excerpt');
+  excerptEl.textContent = excerpt;
+  excerptEl.hidden = !excerpt;
+
   document.getElementById('fc-preview-body').innerHTML = quill.root.innerHTML;
 
   var coverInput = document.getElementById('fc-cover');
@@ -421,6 +581,12 @@ function fcUpdateLivePreview() {
 
   var title = document.getElementById('fc-title').value.trim();
   document.getElementById('fc-live-preview-title').textContent = title || 'Sin título todavía';
+
+  var excerpt = document.getElementById('fc-excerpt').value.trim();
+  var liveExcerptEl = document.getElementById('fc-live-preview-excerpt');
+  liveExcerptEl.textContent = excerpt;
+  liveExcerptEl.hidden = !excerpt;
+
   document.getElementById('fc-live-preview-body').innerHTML = quill.root.innerHTML;
 
   var coverInput = document.getElementById('fc-cover');
@@ -446,6 +612,7 @@ function fcSetLivePreview(on) {
 fcLiveBtn.addEventListener('click', function () { fcSetLivePreview(!fcLiveActive); });
 quill.on('text-change', fcUpdateLivePreview);
 document.getElementById('fc-title').addEventListener('input', fcUpdateLivePreview);
+document.getElementById('fc-excerpt').addEventListener('input', fcUpdateLivePreview);
 document.getElementById('fc-cover').addEventListener('change', fcUpdateLivePreview);
 
 // Fullscreen editor mode.

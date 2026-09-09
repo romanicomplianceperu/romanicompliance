@@ -57,6 +57,16 @@
 .tags-row a { font-size: 0.72rem; padding: 5px 12px; background: var(--ivory-dim); color: var(--slate); border-radius: 20px; }
 .tags-row a:hover { background: var(--gold-pale); color: var(--gold); }
 
+.materials-block { background: var(--ivory); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 2rem; }
+.materials-block h4 { font-size: 0.85rem; color: var(--ink); margin-bottom: 0.9rem; }
+.material-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.material-item:first-of-type { border-top: none; padding-top: 0; }
+.material-item svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--gold); }
+.material-item .material-name { font-size: 0.84rem; color: var(--ink); font-weight: 600; }
+.material-item .material-meta { font-size: 0.7rem; color: var(--slate-light); }
+.material-item a.material-download { margin-left: auto; font-size: 0.74rem; font-weight: 700; color: var(--gold); white-space: nowrap; }
+.material-item a.material-download:hover { color: var(--gold-light); }
+
 .share-row { display: flex; align-items: center; gap: 10px; padding: 1.2rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 2.5rem; }
 .share-row span { font-size: 0.78rem; font-weight: 600; color: var(--slate); margin-right: 6px; }
 .share-btn { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--ivory-dim); color: var(--slate); transition: background 0.2s, color 0.2s; }
@@ -106,6 +116,22 @@
     </div>
 
     <div class="article-body">{!! $article->content !!}</div>
+
+    @if($article->materials->isNotEmpty())
+      <div class="materials-block">
+        <h4>Material adicional</h4>
+        @foreach($article->materials as $material)
+          <div class="material-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 15h6M9 11h2"></path></svg>
+            <div>
+              <div class="material-name">{{ $material->original_name }}</div>
+              @if($material->humanSize())<div class="material-meta">PDF · {{ $material->humanSize() }}</div>@endif
+            </div>
+            <a class="material-download" href="{{ asset('storage/'.$material->path) }}" target="_blank" download>Descargar →</a>
+          </div>
+        @endforeach
+      </div>
+    @endif
 
     @if($article->tags->isNotEmpty())
       <div class="tags-row">

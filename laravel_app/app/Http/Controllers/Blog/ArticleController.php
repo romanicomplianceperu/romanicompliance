@@ -40,7 +40,7 @@ class ArticleController extends Controller
     {
         abort_unless($article->isPublished(), 404);
 
-        $article->load('author', 'category', 'tags');
+        $article->load('author', 'category', 'tags', 'materials');
         $article->increment('views_count');
 
         $related = Article::published()
