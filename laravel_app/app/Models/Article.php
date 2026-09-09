@@ -15,6 +15,7 @@ class Article extends Model
     protected $fillable = [
         'author_id',
         'article_category_id',
+        'type',
         'title',
         'slug',
         'excerpt',
@@ -23,6 +24,12 @@ class Article extends Model
         'reading_minutes',
         'status',
         'published_at',
+    ];
+
+    public const TYPES = [
+        'noticia' => 'Noticia',
+        'blog' => 'Blog',
+        'articulo_especializado' => 'Artículo especializado',
     ];
 
     protected function casts(): array
@@ -55,6 +62,11 @@ class Article extends Model
     public function isPublished(): bool
     {
         return $this->status === 'published';
+    }
+
+    public function typeLabel(): string
+    {
+        return self::TYPES[$this->type] ?? self::TYPES['blog'];
     }
 
     public function scopePublished($query)

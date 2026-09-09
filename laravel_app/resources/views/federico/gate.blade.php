@@ -26,8 +26,8 @@
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg>
     </div>
     <div class="fc-gate-eyebrow">RomaniCompliance — Redacción</div>
-    <h1>Hola, Federico Chunga<br>¿Deseas publicar algo en RomaniCompliance?</h1>
-    <p class="fc-sub">Ingresa la contraseña que te compartieron para abrir tu espacio de publicación.</p>
+    <h1>Hola, Federico Chunga<br>¿Desea publicar algo en RomaniCompliance?</h1>
+    <p class="fc-sub">Ingrese el código de acceso que le compartieron para abrir su espacio de publicación.</p>
 
     @if ($errors->any())
       <div class="fc-gate-error">{{ $errors->first('password') }}</div>

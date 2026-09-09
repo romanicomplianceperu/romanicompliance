@@ -4,6 +4,7 @@
 
 @section('styles')
 .fc-shell { background: var(--ivory); min-height: calc(100vh - 71px); padding: 2.5rem 0 5rem; }
+.fc-shell .wrap { max-width: 1400px; }
 .fc-topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
 .fc-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
 .fc-topbar h1 { font-size: 1.6rem; color: var(--ink); font-weight: 600; }
@@ -18,7 +19,7 @@
 .fc-alert-error { background: rgba(179,65,59,0.08); border: 1px solid rgba(179,65,59,0.25); color: #B3413B; }
 .fc-alert-error div + div { margin-top: 4px; }
 
-.fc-layout { display: grid; grid-template-columns: 2.6fr 1fr; gap: 1.8rem; align-items: start; min-width: 0; }
+.fc-layout { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.8rem; align-items: start; min-width: 0; }
 .fc-layout > * { min-width: 0; }
 .fc-card { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.8rem; }
 .fc-field { margin-bottom: 1.4rem; }
@@ -82,18 +83,15 @@ body.fc-fullscreen-active { overflow: hidden; }
 #fc-preview-modal.active { z-index: 4500; }
 
 .fc-page-wrap.fc-dragging { outline: 3px dashed var(--gold); outline-offset: -3px; }
-.fc-page-wrap.fc-dragging::after { content: 'Suelta la imagen aquí para insertarla'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.9); font-size: 1rem; font-weight: 700; color: var(--gold); z-index: 30; pointer-events: none; border-radius: 10px; }
+.fc-page-wrap.fc-dragging::after { content: 'Suelte la imagen aquí para insertarla'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.9); font-size: 1rem; font-weight: 700; color: var(--gold); z-index: 30; pointer-events: none; border-radius: 10px; }
 .fc-editor-hint { font-size: 0.74rem; color: var(--slate-light); margin-top: 0.6rem; display: flex; align-items: center; gap: 6px; }
 .fc-editor-hint svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-.fc-editor-area { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: start; min-width: 0; }
-.fc-editor-area > * { min-width: 0; }
-.fc-live-preview { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.6rem; max-height: 780px; overflow-y: auto; position: sticky; top: 16px; }
-@media (max-width: 1300px) {
-  .fc-editor-area { grid-template-columns: 1fr; }
+.fc-side-col { display: flex; flex-direction: column; gap: 1.8rem; }
+.fc-live-preview { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.6rem; max-height: calc(100vh - 40px); overflow-y: auto; position: sticky; top: 16px; }
+@media (max-width: 900px) {
   .fc-live-preview { position: static; max-height: none; }
 }
-.fc-btn-active { background: var(--ink); color: var(--white); border-color: var(--ink); }
 
 .fc-live-preview-author { display: flex; align-items: center; gap: 10px; margin-bottom: 1.2rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
 .fc-live-preview-author img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
@@ -181,7 +179,7 @@ body.fc-fullscreen-active { overflow: hidden; }
     </div>
 
     @if (! $author)
-      <div class="fc-alert fc-alert-error">No se encontró la cuenta de Federico Chunga en el sistema, así que aún no podrás publicar. Contacta al administrador del sitio para que la revise.</div>
+      <div class="fc-alert fc-alert-error">No se encontró la cuenta de Federico Chunga en el sistema, así que aún no podrá publicar. Contacte al administrador del sitio para que la revise.</div>
     @endif
 
     @if (session('federico_success'))
@@ -203,15 +201,23 @@ body.fc-fullscreen-active { overflow: hidden; }
 
           <div class="fc-field">
             <label for="fc-title">Título del artículo</label>
-            <input type="text" name="title" id="fc-title" required maxlength="255" value="{{ old('title') }}" placeholder="Escribe un título claro y directo">
+            <input type="text" name="title" id="fc-title" required maxlength="255" value="{{ old('title') }}" placeholder="Escriba un título claro y directo">
           </div>
 
           <div class="fc-field">
             <label for="fc-excerpt">Extracto <span>(opcional — resumen corto para las vistas previas del blog)</span></label>
-            <textarea name="excerpt" id="fc-excerpt" maxlength="500" rows="2" placeholder="Si lo dejas vacío, se genera automáticamente a partir del contenido">{{ old('excerpt') }}</textarea>
+            <textarea name="excerpt" id="fc-excerpt" maxlength="500" rows="2" placeholder="Si lo deja vacío, se genera automáticamente a partir del contenido">{{ old('excerpt') }}</textarea>
           </div>
 
           <div class="fc-field-row">
+            <div class="fc-field">
+              <label for="fc-type">Tipo de contenido</label>
+              <select name="type" id="fc-type">
+                @foreach($types as $value => $label)
+                  <option value="{{ $value }}" @selected(old('type', 'blog') == $value)>{{ $label }}</option>
+                @endforeach
+              </select>
+            </div>
             <div class="fc-field">
               <label for="fc-category">Categoría <span>(opcional)</span></label>
               <select name="article_category_id" id="fc-category">
@@ -221,10 +227,11 @@ body.fc-fullscreen-active { overflow: hidden; }
                 @endforeach
               </select>
             </div>
-            <div class="fc-field">
-              <label for="fc-tags">Etiquetas <span>(opcional, sepáralas con comas)</span></label>
-              <input type="text" name="tags" id="fc-tags" value="{{ old('tags') }}" placeholder="derechos humanos, compliance, ética">
-            </div>
+          </div>
+
+          <div class="fc-field">
+            <label for="fc-tags">Etiquetas <span>(opcional, sepárelas con comas)</span></label>
+            <input type="text" name="tags" id="fc-tags" value="{{ old('tags') }}" placeholder="derechos humanos, compliance, ética">
           </div>
 
           <div class="fc-field">
@@ -239,7 +246,7 @@ body.fc-fullscreen-active { overflow: hidden; }
               <div class="fc-dropzone-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
               </div>
-              <div class="fc-dropzone-text"><strong>Arrastra tus PDFs aquí</strong><span>o haz clic para elegirlos desde tu computadora</span></div>
+              <div class="fc-dropzone-text"><strong>Arrastre sus PDFs aquí</strong><span>o haga clic para elegirlos desde su computadora</span></div>
               <span class="fc-dropzone-btn">Elegir archivos</span>
             </div>
             <input type="file" name="materials[]" id="fc-materials-input" accept="application/pdf" multiple hidden>
@@ -248,35 +255,26 @@ body.fc-fullscreen-active { overflow: hidden; }
 
           <div class="fc-field">
             <label>Contenido</label>
-            <div class="fc-editor-area" id="fc-editor-area">
-              <div class="fc-page-wrap" id="fc-page-wrap">
-                <button type="button" class="fc-fs-toggle" id="fc-fullscreen-btn" title="Pantalla completa" aria-label="Pantalla completa">
-                  <svg id="fc-fs-icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"></path></svg>
-                  <svg id="fc-fs-icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M9 3v3a2 2 0 01-2 2H4M15 3v3a2 2 0 002 2h3M9 21v-3a2 2 0 00-2-2H4M15 21v-3a2 2 0 012-2h3"></path></svg>
-                </button>
-                <div id="fc-editor"></div>
+
+            <div class="fc-dropzone" id="fc-image-dropzone" tabindex="0" role="button" aria-label="Agregar una imagen al contenido" style="margin-bottom: 1.1rem;">
+              <div class="fc-dropzone-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
               </div>
-              <div class="fc-live-preview" id="fc-live-preview">
-                <div class="fc-preview-label">Así se verá publicado</div>
-                @if($author)
-                  <div class="fc-live-preview-author">
-                    <img src="{{ $author->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $author->name }}">
-                    <div>
-                      <div class="fc-live-preview-author-title">{{ $author->title }}</div>
-                      <div class="fc-live-preview-author-name">{{ $author->name }}</div>
-                    </div>
-                  </div>
-                @endif
-                <h2 id="fc-live-preview-title" class="fc-preview-title"></h2>
-                <p id="fc-live-preview-excerpt" class="fc-preview-excerpt"></p>
-                <div id="fc-live-preview-cover-wrap" class="fc-preview-cover-wrap" hidden><img id="fc-live-preview-cover" alt=""></div>
-                <div id="fc-live-preview-cover-placeholder" class="fc-live-preview-cover-placeholder">Sin imagen de portada todavía</div>
-                <div id="fc-live-preview-body" class="fc-preview-body"></div>
-              </div>
+              <div class="fc-dropzone-text"><strong>Arrastre una imagen aquí</strong><span>o haga clic para elegirla — se insertará en el contenido</span></div>
+              <span class="fc-dropzone-btn">Elegir imagen</span>
+            </div>
+            <input type="file" id="fc-image-input" accept="image/*" multiple hidden>
+
+            <div class="fc-page-wrap" id="fc-page-wrap">
+              <button type="button" class="fc-fs-toggle" id="fc-fullscreen-btn" title="Pantalla completa" aria-label="Pantalla completa">
+                <svg id="fc-fs-icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"></path></svg>
+                <svg id="fc-fs-icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M9 3v3a2 2 0 01-2 2H4M15 3v3a2 2 0 002 2h3M9 21v-3a2 2 0 00-2-2H4M15 21v-3a2 2 0 012-2h3"></path></svg>
+              </button>
+              <div id="fc-editor"></div>
             </div>
             <div class="fc-editor-hint">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
-              Puedes arrastrar y soltar una imagen directamente sobre el editor, o usar el ícono de imagen en la barra de herramientas.
+              También puede arrastrar y soltar una imagen directamente sobre el editor, o usar el ícono de imagen en la barra de herramientas.
             </div>
             <textarea name="content" id="fc-content" hidden>{{ old('content') }}</textarea>
           </div>
@@ -289,23 +287,43 @@ body.fc-fullscreen-active { overflow: hidden; }
         </form>
       </div>
 
-      <aside class="fc-sidebar">
-        <h3>Tus publicaciones</h3>
-        @forelse ($recent as $item)
-          <div class="fc-recent-item">
-            <div class="fc-recent-title">{{ $item->title }}</div>
-            <div class="fc-recent-meta">
-              <span class="fc-badge {{ $item->isPublished() ? 'fc-badge-published' : 'fc-badge-draft' }}">{{ $item->isPublished() ? 'Publicado' : 'Borrador' }}</span>
-              <span>{{ $item->created_at->format('d/m/Y') }}</span>
+      <div class="fc-side-col">
+        <div class="fc-live-preview" id="fc-live-preview">
+          <div class="fc-preview-label">Así se verá publicado</div>
+          @if($author)
+            <div class="fc-live-preview-author">
+              <img src="{{ $author->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $author->name }}">
+              <div>
+                <div class="fc-live-preview-author-title">{{ $author->title }}</div>
+                <div class="fc-live-preview-author-name">{{ $author->name }}</div>
+              </div>
             </div>
-            @if ($item->isPublished())
-              <a href="{{ route('blog.show', $item->slug) }}" target="_blank">Ver artículo →</a>
-            @endif
-          </div>
-        @empty
-          <p class="fc-empty">Aún no has publicado nada. Tu primer artículo aparecerá aquí.</p>
-        @endforelse
-      </aside>
+          @endif
+          <h2 id="fc-live-preview-title" class="fc-preview-title"></h2>
+          <p id="fc-live-preview-excerpt" class="fc-preview-excerpt"></p>
+          <div id="fc-live-preview-cover-wrap" class="fc-preview-cover-wrap" hidden><img id="fc-live-preview-cover" alt=""></div>
+          <div id="fc-live-preview-cover-placeholder" class="fc-live-preview-cover-placeholder">Sin imagen de portada todavía</div>
+          <div id="fc-live-preview-body" class="fc-preview-body"></div>
+        </div>
+
+        <aside class="fc-sidebar">
+          <h3>Sus publicaciones</h3>
+          @forelse ($recent as $item)
+            <div class="fc-recent-item">
+              <div class="fc-recent-title">{{ $item->title }}</div>
+              <div class="fc-recent-meta">
+                <span class="fc-badge {{ $item->isPublished() ? 'fc-badge-published' : 'fc-badge-draft' }}">{{ $item->isPublished() ? 'Publicado' : 'Borrador' }}</span>
+                <span>{{ $item->created_at->format('d/m/Y') }}</span>
+              </div>
+              @if ($item->isPublished())
+                <a href="{{ route('blog.show', $item->slug) }}" target="_blank">Ver artículo →</a>
+              @endif
+            </div>
+          @empty
+            <p class="fc-empty">Aún no hay publicaciones. El primer artículo aparecerá aquí.</p>
+          @endforelse
+        </aside>
+      </div>
     </div>
   </div>
 </div>
@@ -326,7 +344,7 @@ body.fc-fullscreen-active { overflow: hidden; }
 @section('scripts')
 <script src="{{ asset("vendor/quill/quill.min.js") }}"></script>
 <script>
-// A genuine non-editable placeholder blot for "uploading image…", used
+// A genuine non-editable placeholder blot for "subiendo imagen…", used
 // instead of inserting real, clickable/editable text. A plain inserted
 // string can be clicked into and edited like normal content, which then
 // breaks the later deleteText/insertEmbed swap — this atomic embed can't
@@ -348,7 +366,7 @@ Quill.register(FcUploadingBlot);
 
 var quill = new Quill('#fc-editor', {
   theme: 'snow',
-  placeholder: 'Escribe el contenido de tu artículo aquí…',
+  placeholder: 'Escriba el contenido de su artículo aquí…',
   modules: {
     toolbar: [
       [{ header: 2 }, { header: 3 }, { header: 4 }, { font: [] }],
@@ -375,7 +393,8 @@ var quill = new Quill('#fc-editor', {
 
 // Shared image upload: sends the file to the server and embeds the returned
 // URL, instead of inlining a base64 blob into the article content. Used by
-// both the toolbar image button and drag-and-drop.
+// the toolbar image button, the dedicated image dropzone, and drag-and-drop
+// directly onto the editor.
 function fcUploadAndInsertImage(file) {
   if (!file || !file.type || file.type.indexOf('image/') !== 0) return;
 
@@ -402,7 +421,7 @@ function fcUploadAndInsertImage(file) {
     })
     .catch(function () {
       quill.deleteText(range.index, 1);
-      alert('No se pudo subir la imagen. Verifica tu conexión e inténtalo de nuevo.');
+      alert('No se pudo subir la imagen. Verifique su conexión e inténtelo de nuevo.');
     });
 }
 
@@ -446,6 +465,45 @@ quill.getModule('toolbar').addHandler('image', function () {
     for (var i = 0; i < files.length; i++) {
       fcUploadAndInsertImage(files[i]);
     }
+  });
+})();
+
+// Dedicated image dropzone above the editor: a visible, explicit zone that
+// accepts drag-and-drop or a click-to-browse, just like the PDF zone below,
+// instead of relying only on the small toolbar icon.
+(function setupImageDropzone() {
+  var dropzone = document.getElementById('fc-image-dropzone');
+  var input = document.getElementById('fc-image-input');
+
+  function addFiles(fileList) {
+    for (var i = 0; i < fileList.length; i++) {
+      fcUploadAndInsertImage(fileList[i]);
+    }
+  }
+
+  dropzone.addEventListener('click', function () { input.click(); });
+  dropzone.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  input.addEventListener('change', function () {
+    addFiles(input.files);
+    input.value = '';
+  });
+
+  var dragCounter = 0;
+  dropzone.addEventListener('dragenter', function (e) { e.preventDefault(); dragCounter++; dropzone.classList.add('fc-dragging'); });
+  dropzone.addEventListener('dragover', function (e) { e.preventDefault(); });
+  dropzone.addEventListener('dragleave', function (e) {
+    e.preventDefault();
+    dragCounter = Math.max(0, dragCounter - 1);
+    if (dragCounter === 0) dropzone.classList.remove('fc-dragging');
+  });
+  dropzone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dragCounter = 0;
+    dropzone.classList.remove('fc-dragging');
+    var dropped = e.dataTransfer && e.dataTransfer.files;
+    if (dropped && dropped.length) addFiles(dropped);
   });
 })();
 
@@ -553,14 +611,14 @@ document.getElementById('fc-form').addEventListener('submit', function (e) {
 
   if (!title) {
     e.preventDefault();
-    alert('Escribe un título para el artículo.');
+    alert('Escriba un título para el artículo.');
     document.getElementById('fc-title').focus();
     return;
   }
 
   if (!contentText) {
     e.preventDefault();
-    alert('Escribe el contenido del artículo antes de continuar.');
+    alert('Escriba el contenido del artículo antes de continuar.');
   }
 });
 
@@ -597,12 +655,12 @@ function fcClosePreview() {
 }
 document.getElementById('fc-preview-btn').addEventListener('click', fcOpenPreview);
 
-// Live preview: an always-visible side panel that updates as you type,
-// so you can always see how the article will look — with sample text
-// standing in for anything you haven't written yet.
-var FC_DEMO_TITLE = 'Así se verá el título de tu artículo';
-var FC_DEMO_EXCERPT = 'Aquí aparecerá el extracto que escribas arriba, o uno generado automáticamente a partir del contenido si lo dejas vacío.';
-var FC_DEMO_BODY = '<p>El contenido de tu artículo se mostrará aquí, formateado tal como lo verán los lectores en la web: con las mismas fuentes, tamaños y colores.</p>';
+// Live preview: an always-visible side panel that updates as se escribe,
+// so siempre se puede ver cómo lucirá el artículo — con texto de ejemplo
+// en lugar de lo que aún no se ha escrito.
+var FC_DEMO_TITLE = 'Así se verá el título del artículo';
+var FC_DEMO_EXCERPT = 'Aquí aparecerá el extracto que se escriba arriba, o uno generado automáticamente a partir del contenido si se deja vacío.';
+var FC_DEMO_BODY = '<p>El contenido del artículo se mostrará aquí, formateado tal como lo verán los lectores en la web: con las mismas fuentes, tamaños y colores.</p>';
 
 function fcUpdateLivePreview() {
   var title = document.getElementById('fc-title').value.trim();

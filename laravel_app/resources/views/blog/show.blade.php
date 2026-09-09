@@ -6,7 +6,8 @@
 @section('styles')
 .article-hero { background: var(--ink); padding: 3rem 0 2rem; position: relative; }
 .article-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-.article-hero-category { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gold); color: var(--white); padding: 5px 14px; border-radius: 20px; margin-bottom: 1rem; }
+.article-hero-category { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gold); color: var(--white); padding: 5px 14px; border-radius: 20px; margin-bottom: 1rem; margin-right: 6px; }
+.article-hero-type { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(255,255,255,0.12); color: var(--gold-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 1rem; margin-right: 6px; }
 .article-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--white); font-weight: 400; line-height: 1.25; margin-bottom: 1rem; max-width: 780px; }
 .article-hero-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.4rem; }
 .article-hero-meta span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; background: rgba(255,255,255,0.08); color: var(--gold-light); padding: 5px 12px; border-radius: 20px; }
@@ -87,6 +88,7 @@
 @section('content')
 <section class="article-hero">
   <div class="wrap">
+    <span class="article-hero-type">{{ $article->typeLabel() }}</span>
     @if($article->category)
       <span class="article-hero-category">{{ $article->category->name }}</span>
     @endif

@@ -45,7 +45,7 @@ class FedericoEditorController extends Controller
         $submitted = mb_strtolower(trim((string) $request->input('password')));
 
         if (! hash_equals(self::PASSWORD, $submitted)) {
-            return back()->withErrors(['password' => 'Código de acceso incorrecto. Inténtalo de nuevo.']);
+            return back()->withErrors(['password' => 'Código de acceso incorrecto. Inténtelo de nuevo.']);
         }
 
         $request->session()->put(self::SESSION_KEY, true);
@@ -80,6 +80,7 @@ class FedericoEditorController extends Controller
             'author' => $author,
             'recent' => $recent,
             'categories' => $categories,
+            'types' => Article::TYPES,
         ]);
     }
 
@@ -109,7 +110,7 @@ class FedericoEditorController extends Controller
         $author = $this->author();
 
         if (! $author) {
-            return back()->withErrors(['title' => 'No se encontró la cuenta de Federico Chunga. Contacta al administrador del sitio.']);
+            return back()->withErrors(['title' => 'No se encontró la cuenta de Federico Chunga. Contacte al administrador del sitio.']);
         }
 
         $data = $request->validate([
@@ -118,6 +119,7 @@ class FedericoEditorController extends Controller
             'content' => ['required', 'string'],
             'cover_image' => ['nullable', 'image', 'max:4096'],
             'article_category_id' => ['nullable', 'exists:article_categories,id'],
+            'type' => ['required', 'in:'.implode(',', array_keys(Article::TYPES))],
             'tags' => ['nullable', 'string'],
             'materials.*' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
             'action' => ['required', 'in:draft,publish'],
@@ -126,7 +128,7 @@ class FedericoEditorController extends Controller
         $content = HtmlSanitizer::clean($data['content']);
 
         if (trim(strip_tags($content)) === '') {
-            return back()->withInput()->withErrors(['content' => 'Escribe el contenido del artículo antes de continuar.']);
+            return back()->withInput()->withErrors(['content' => 'Escriba el contenido del artículo antes de continuar.']);
         }
 
         $wordCount = str_word_count(strip_tags($content));
@@ -134,6 +136,7 @@ class FedericoEditorController extends Controller
         $article = new Article();
         $article->author_id = $author->id;
         $article->article_category_id = $data['article_category_id'] ?? null;
+        $article->type = $data['type'];
         $article->title = $data['title'];
         $article->slug = $this->uniqueSlug($data['title']);
         $article->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($content), 160);
