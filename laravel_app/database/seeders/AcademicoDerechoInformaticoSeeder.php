@@ -161,7 +161,7 @@ TXT;
                         ['answer' => 'previo', 'options' => ['previo', 'posterior', 'simultáneo']],
                     ],
                 ],
-                'points' => 2,
+                'points' => 1,
             ],
             [
                 'type' => 'fillblank',
@@ -172,7 +172,7 @@ TXT;
                         ['answer' => 'Protección', 'options' => ['Protección', 'Tratamiento', 'Regulación']],
                     ],
                 ],
-                'points' => 2,
+                'points' => 1,
             ],
             [
                 'type' => 'matching',
@@ -200,6 +200,28 @@ TXT;
                     ],
                 ],
                 'points' => 5,
+            ],
+            [
+                'type' => 'fillblank',
+                'prompt' => 'Elige la opción correcta para completar la sigla ARCO.',
+                'payload' => [
+                    'template' => 'La sigla ARCO significa: Acceso, Rectificación, Cancelación y ___.',
+                    'blanks' => [
+                        ['answer' => 'Oposición', 'options' => ['Oposición', 'Portabilidad', 'Desindexación']],
+                    ],
+                ],
+                'points' => 1,
+            ],
+            [
+                'type' => 'fillblank',
+                'prompt' => 'Elige la opción correcta para completar la ampliación de derechos.',
+                'payload' => [
+                    'template' => 'El Reglamento aprobado por el D.S. N.° 016-2024-JUS amplió los ARCO incorporando la portabilidad y la ___.',
+                    'blanks' => [
+                        ['answer' => 'desindexación', 'options' => ['desindexación', 'indexación', 'tercerización']],
+                    ],
+                ],
+                'points' => 1,
             ],
         ];
 

@@ -214,6 +214,21 @@
   </div>
 @endif
 
+@if(! $grading)
+  {{-- Shared custom "select" used by every fill-in-the-blank blank: a blurred-backdrop
+       panel listing the options as tappable rows, never the browser's native <select>. --}}
+  <div class="ac-select-overlay" id="acSelectOverlay">
+    <div class="ac-select-backdrop"></div>
+    <div class="ac-select-panel">
+      <div class="ac-select-panel-head">
+        <span class="ac-select-panel-title">Elige la opción correcta</span>
+        <button type="button" class="ac-select-close" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="ac-select-options" id="acSelectOptionsList"></div>
+    </div>
+  </div>
+@endif
+
 @include('academico._floating-cta')
 @endsection
 
@@ -609,9 +624,11 @@
   }
 
   // A blank is written as "___" (three or more underscores) inside ex.template; each one
-  // renders as a row of selectable option chips (ex.blanks[i].options — the right word
-  // plus up to 2 distractors, order shuffled server-side) instead of free text, so every
-  // answer is one of a fixed set of choices and grading is never ambiguous.
+  // renders inline as a small "Elige…" trigger. Tapping it opens the shared custom select
+  // overlay (openBlankSelector, defined below) listing ex.blanks[i].options — the right
+  // word plus up to 2 distractors, order shuffled server-side — as tappable rows, so every
+  // answer is one of a fixed set of choices (grading is never ambiguous) and the picker is
+  // never the browser's own native <select>.
   function renderFillBlank(ex) {
     const card = el('div', 'ac-ex-card');
     card.appendChild(exHeader(ex));
@@ -627,41 +644,80 @@
       if (part) wrap.appendChild(document.createTextNode(part));
       if (idx < parts.length - 1) {
         const blank = blanks[idx] || { options: [] };
-        const optRow = el('div', 'ac-fill-options');
         const correctWord = (ex.correct_answer || [])[idx];
-        blank.options.forEach(opt => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'ac-fill-opt';
-          btn.textContent = opt;
-          if (answers[idx] === opt) btn.classList.add('selected');
-          if (GRADED) {
-            btn.disabled = true;
-            if (opt === correctWord) btn.classList.add('is-correct-answer');
-            else if (answers[idx] === opt) btn.classList.add('is-wrong-pick');
-          } else {
-            btn.addEventListener('click', () => {
-              answers[idx] = opt;
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.className = 'ac-fill-select-trigger';
+
+        function refreshTrigger() {
+          trigger.textContent = answers[idx] || 'Elige…';
+          trigger.classList.toggle('is-placeholder', ! answers[idx]);
+        }
+
+        if (GRADED) {
+          trigger.disabled = true;
+          trigger.textContent = answers[idx] || 'Sin responder';
+          if (answers[idx] != null && answers[idx] === correctWord) trigger.classList.add('is-correct-answer');
+          else trigger.classList.add('is-wrong-pick');
+        } else {
+          refreshTrigger();
+          trigger.addEventListener('click', () => {
+            openBlankSelector(blank.options || [], answers[idx], (picked) => {
+              answers[idx] = picked;
               state.exercises[ex.id] = answers;
-              optRow.querySelectorAll('.ac-fill-opt').forEach(b => b.classList.remove('selected'));
-              btn.classList.add('selected');
+              refreshTrigger();
               markDirty();
             });
-          }
-          optRow.appendChild(btn);
-        });
-        wrap.appendChild(optRow);
+          });
+        }
+        wrap.appendChild(trigger);
       }
     });
     card.appendChild(wrap);
 
     if (! GRADED) {
-      card.appendChild(el('p', 'ac-ex-hint', 'Toca la opción correcta para cada espacio en blanco.'));
+      card.appendChild(el('p', 'ac-ex-hint', 'Toca el espacio en blanco para elegir la opción correcta.'));
     } else if (! ex.correct) {
       card.appendChild(el('div', 'ac-order-correct-note', 'Respuesta correcta: ' + (ex.correct_answer || []).join(', ')));
     }
 
     return card;
+  }
+
+  // ── Shared custom "select" overlay used by every fill-in-the-blank trigger ──
+  // A single overlay/panel is reused for whichever blank is currently open, instead of
+  // each blank owning its own dropdown, so there's one blurred-backdrop panel on screen
+  // at a time (mirroring the submit-confirmation modal's pattern) rather than the
+  // browser's native <select> menu.
+  const selectOverlay = document.getElementById('acSelectOverlay');
+  const selectOptionsEl = document.getElementById('acSelectOptionsList');
+
+  function closeBlankSelector() {
+    if (selectOverlay) selectOverlay.classList.remove('active');
+  }
+
+  function openBlankSelector(options, currentValue, onPick) {
+    if (! selectOverlay || ! selectOptionsEl) return;
+    selectOptionsEl.innerHTML = '';
+    options.forEach(opt => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'ac-select-option';
+      item.textContent = opt;
+      if (opt === currentValue) item.classList.add('selected');
+      item.addEventListener('click', () => {
+        onPick(opt);
+        closeBlankSelector();
+      });
+      selectOptionsEl.appendChild(item);
+    });
+    selectOverlay.classList.add('active');
+  }
+
+  if (selectOverlay) {
+    selectOverlay.querySelector('.ac-select-backdrop').addEventListener('click', closeBlankSelector);
+    const closeBtn = selectOverlay.querySelector('.ac-select-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeBlankSelector);
   }
 
   const root = document.getElementById('exercisesRoot');

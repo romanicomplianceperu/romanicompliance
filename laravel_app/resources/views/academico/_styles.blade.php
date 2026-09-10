@@ -249,15 +249,33 @@
 .ac-mcq-opt.answer-wrong { border-color: #B3413B; background: rgba(179,65,59,0.08); color: #B3413B; }
 .ac-mcq-opt:disabled { cursor: default; opacity: 0.92; }
 
-/* Fill in the blank */
-.ac-fill-text { font-size: 0.98rem; color: var(--ink); background: var(--ivory-dim); border-radius: 10px; padding: 1.1rem 1.2rem; line-height: 2.2; }
-.ac-fill-options { display: inline-flex; flex-wrap: wrap; gap: 6px; margin: 4px 4px 8px; vertical-align: middle; }
-.ac-fill-opt { min-height: 42px; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); font-size: 0.85rem; font-weight: 600; padding: 0.6rem 0.95rem; border-radius: 20px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease; }
-.ac-fill-opt:hover:not(:disabled) { border-color: var(--gold); }
-.ac-fill-opt.selected { border-color: var(--gold); background: var(--gold-pale); color: var(--ink); }
-.ac-fill-opt.is-correct-answer { border-color: #1F7A4D; background: rgba(31,122,77,0.1); color: #1F7A4D; }
-.ac-fill-opt.is-wrong-pick { border-color: #B3413B; background: rgba(179,65,59,0.08); color: #B3413B; }
-.ac-fill-opt:disabled { cursor: default; opacity: 0.92; }
+/* Fill in the blank — each blank is a tappable "dropdown" trigger inline in the
+   sentence; tapping it opens a custom selector panel (.ac-select-*) instead of the
+   browser's native <select>, so the picker looks and feels consistent everywhere. */
+.ac-fill-text { font-size: 0.98rem; color: var(--ink); background: var(--ivory-dim); border-radius: 10px; padding: 1.1rem 1.2rem; line-height: 2.4; }
+.ac-fill-select-trigger { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; border: 1.5px dashed var(--gold); background: var(--white); color: var(--ink); font-size: 0.88rem; font-weight: 700; padding: 0.5rem 0.9rem; border-radius: 20px; cursor: pointer; margin: 3px 4px; vertical-align: middle; transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; }
+.ac-fill-select-trigger::after { content: '▾'; font-size: 0.7em; opacity: 0.7; }
+.ac-fill-select-trigger:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-pale); box-shadow: 0 2px 8px rgba(139,115,64,0.18); }
+.ac-fill-select-trigger.is-placeholder { color: var(--slate); font-weight: 600; border-style: dashed; }
+.ac-fill-select-trigger.is-correct-answer { border-style: solid; border-color: #1F7A4D; background: rgba(31,122,77,0.1); color: #1F7A4D; }
+.ac-fill-select-trigger.is-correct-answer::after { content: '✓'; }
+.ac-fill-select-trigger.is-wrong-pick { border-style: solid; border-color: #B3413B; background: rgba(179,65,59,0.08); color: #B3413B; }
+.ac-fill-select-trigger.is-wrong-pick::after { content: '✕'; }
+.ac-fill-select-trigger:disabled { cursor: default; }
+
+/* Custom select overlay: a blurred backdrop (matches the site-wide modal pattern) with a
+   compact panel listing the options as tappable rows — never the browser's own <select>. */
+.ac-select-overlay { display: none; position: fixed; inset: 0; z-index: 260; align-items: center; justify-content: center; }
+.ac-select-overlay.active { display: flex; }
+.ac-select-backdrop { position: absolute; inset: 0; background: rgba(11,24,41,0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); animation: fadeIn 0.2s ease; }
+.ac-select-panel { position: relative; z-index: 1; background: var(--white); border-radius: 14px; width: 92%; max-width: 380px; padding: 1.3rem; box-shadow: 0 24px 70px rgba(11,24,41,0.28); animation: slideUp 0.25s ease; max-height: 72vh; overflow-y: auto; box-sizing: border-box; }
+.ac-select-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 0.9rem; }
+.ac-select-panel-title { font-weight: 700; font-size: 0.92rem; color: var(--ink); line-height: 1.4; }
+.ac-select-close { flex-shrink: 0; border: none; background: var(--ivory-dim); width: 30px; height: 30px; border-radius: 50%; font-size: 1rem; color: var(--slate); cursor: pointer; line-height: 1; }
+.ac-select-options { display: flex; flex-direction: column; gap: 8px; }
+.ac-select-option { text-align: left; min-height: 46px; padding: 12px 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--ivory-dim); color: var(--ink); font-size: 0.92rem; font-weight: 600; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
+.ac-select-option:hover { border-color: var(--gold); }
+.ac-select-option.selected { border-color: var(--gold); background: var(--gold-pale); }
 
 /* Matching (drag and drop) */
 .ac-match-tray { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; min-height: 50px; padding: 12px; background: var(--ivory-dim); border-radius: 10px; }
@@ -331,6 +349,7 @@
   .ac-score-banner .score-value { font-size: 1.6rem; }
   .ac-case-collapsed > summary { font-size: 0.8rem; padding: 0.65rem 0.9rem; }
   .ac-modal-btn-row { flex-direction: column; }
+  .ac-select-panel { padding: 1.1rem; width: 94%; }
 }
 
 .ac-modal-btn-row { display: flex; gap: 10px; }
