@@ -57,6 +57,8 @@ img { max-width: 100%; display: block; }
 .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
 .badge-gold { background: var(--gold-pale); color: var(--gold); }
 .badge-gray { background: var(--ivory-dim); color: var(--slate); }
+.badge-success { background: rgba(31,122,77,0.12); color: #1F7A4D; }
+.badge-warning { background: rgba(184,138,0,0.12); color: #8A6400; }
 
 .form-group { margin-bottom: 1.2rem; }
 .form-group label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }

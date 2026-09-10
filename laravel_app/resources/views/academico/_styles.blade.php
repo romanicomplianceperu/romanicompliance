@@ -101,6 +101,13 @@
 .ac-case-card .body p { font-size: 0.97rem; color: var(--ink); line-height: 1.9; margin-bottom: 1.1rem; white-space: pre-line; }
 .ac-case-doc-link { display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 700; color: var(--gold); margin-top: 0.6rem; }
 
+.ac-case-collapsed { margin-bottom: 1.6rem; }
+.ac-case-collapsed > summary { cursor: pointer; list-style: none; font-size: 0.85rem; font-weight: 700; color: var(--gold); padding: 0.7rem 1rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--white); }
+.ac-case-collapsed > summary::-webkit-details-marker { display: none; }
+.ac-case-collapsed > summary::before { content: '▸ '; }
+.ac-case-collapsed[open] > summary::before { content: '▾ '; }
+.ac-case-collapsed[open] > summary { border-radius: 10px 10px 0 0; margin-bottom: 0; }
+
 .ac-case-highlight { background: var(--ivory-dim); border-left: 3px solid var(--gold); border-radius: 0 10px 10px 0; padding: 1rem 1.3rem; margin: 1.2rem 0; }
 .ac-case-highlight-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gold); margin-bottom: 0.6rem; }
 .ac-case-highlight ul { margin: 0; padding-left: 1.1rem; }
@@ -243,12 +250,14 @@
 .ac-mcq-opt:disabled { cursor: default; opacity: 0.92; }
 
 /* Fill in the blank */
-.ac-fill-text { font-size: 0.98rem; color: var(--ink); background: var(--ivory-dim); border-radius: 10px; padding: 1.1rem 1.2rem; line-height: 2.4; }
-.ac-fill-input { display: inline-block; min-width: 90px; margin: 0 2px; padding: 4px 8px; border: none; border-bottom: 2px solid var(--gold); background: var(--white); color: var(--ink); font-size: 0.95rem; font-weight: 600; text-align: center; border-radius: 4px 4px 0 0; }
-.ac-fill-input:focus { outline: none; border-color: var(--ink); background: var(--gold-pale); }
-.ac-fill-input:disabled { cursor: default; }
-.ac-fill-input.answer-correct { border-color: #1F7A4D; background: rgba(31,122,77,0.1); color: #1F7A4D; }
-.ac-fill-input.answer-wrong { border-color: #B3413B; background: rgba(179,65,59,0.08); color: #B3413B; }
+.ac-fill-text { font-size: 0.98rem; color: var(--ink); background: var(--ivory-dim); border-radius: 10px; padding: 1.1rem 1.2rem; line-height: 2.2; }
+.ac-fill-options { display: inline-flex; flex-wrap: wrap; gap: 6px; margin: 4px 4px 8px; vertical-align: middle; }
+.ac-fill-opt { min-height: 42px; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); font-size: 0.85rem; font-weight: 600; padding: 0.6rem 0.95rem; border-radius: 20px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease; }
+.ac-fill-opt:hover:not(:disabled) { border-color: var(--gold); }
+.ac-fill-opt.selected { border-color: var(--gold); background: var(--gold-pale); color: var(--ink); }
+.ac-fill-opt.is-correct-answer { border-color: #1F7A4D; background: rgba(31,122,77,0.1); color: #1F7A4D; }
+.ac-fill-opt.is-wrong-pick { border-color: #B3413B; background: rgba(179,65,59,0.08); color: #B3413B; }
+.ac-fill-opt:disabled { cursor: default; opacity: 0.92; }
 
 /* Matching (drag and drop) */
 .ac-match-tray { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; min-height: 50px; padding: 12px; background: var(--ivory-dim); border-radius: 10px; }
@@ -302,6 +311,7 @@
 .ac-critica-section { margin-bottom: 1.6rem; }
 .ac-critica-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
 .ac-critica-head h3 { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); margin: 0; }
+.ac-optional-notice { font-size: 0.8rem; color: var(--gold); background: var(--gold-pale); border-radius: 10px; padding: 0.7rem 1rem; margin-bottom: 1.2rem; line-height: 1.5; }
 .ac-critica-badge { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--slate); background: var(--ivory-dim); padding: 4px 10px; border-radius: 12px; }
 
 /* Autosave status */
@@ -317,7 +327,13 @@
   .ac-ex-points { align-self: flex-start; }
   .ac-question-actions { flex-direction: column; align-items: stretch; }
   .ac-question-actions button { width: 100%; }
+  .ac-score-banner { padding: 1.2rem 1.1rem; }
+  .ac-score-banner .score-value { font-size: 1.6rem; }
+  .ac-case-collapsed > summary { font-size: 0.8rem; padding: 0.65rem 0.9rem; }
+  .ac-modal-btn-row { flex-direction: column; }
 }
+
+.ac-modal-btn-row { display: flex; gap: 10px; }
 
 /* Access-code gate, shown as a blurred-backdrop modal window over the course page */
 .ac-gate-box { max-width: 420px; text-align: left; }

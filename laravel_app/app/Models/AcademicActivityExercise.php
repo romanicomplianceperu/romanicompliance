@@ -52,7 +52,7 @@ class AcademicActivityExercise extends Model
             ],
             'fillblank' => $base + [
                 'template' => $this->payload['template'] ?? '',
-                'blanksCount' => count($this->payload['blanks'] ?? []),
+                'blanks' => $this->shuffledBlankOptions(),
             ],
             default => $base,
         };
@@ -154,9 +154,12 @@ class AcademicActivityExercise extends Model
     }
 
     /**
-     * A fill-in-the-blank exercise is correct when every blank matches its expected word,
-     * compared case- and accent-insensitively (so "protección"/"Protección"/"PROTECCION"
-     * all count) so a student isn't marked wrong over capitalization or a missing tilde.
+     * A fill-in-the-blank exercise is correct when the option picked for every blank
+     * matches its expected word, compared case- and accent-insensitively (so
+     * "protección"/"Protección"/"PROTECCION" all count) so a student isn't marked
+     * wrong over capitalization or a missing tilde. Each blank offers up to 3
+     * selectable options (the right word plus distractors) rather than free text,
+     * so grading is always unambiguous.
      */
     private function fillBlankIsCorrect(mixed $studentAnswer): bool
     {
@@ -164,15 +167,16 @@ class AcademicActivityExercise extends Model
             return false;
         }
 
-        $expected = array_values($this->payload['blanks'] ?? []);
+        $blanks = array_values($this->payload['blanks'] ?? []);
         $given = array_values($studentAnswer);
 
-        if (count($expected) === 0 || count($given) !== count($expected)) {
+        if (count($blanks) === 0 || count($given) !== count($blanks)) {
             return false;
         }
 
-        foreach ($expected as $i => $word) {
-            if ($this->normalizeBlankAnswer($given[$i] ?? '') !== $this->normalizeBlankAnswer($word)) {
+        foreach ($blanks as $i => $blank) {
+            $answer = is_array($blank) ? ($blank['answer'] ?? '') : $blank;
+            if ($this->normalizeBlankAnswer($given[$i] ?? '') !== $this->normalizeBlankAnswer($answer)) {
                 return false;
             }
         }
@@ -193,9 +197,28 @@ class AcademicActivityExercise extends Model
             'matching' => $this->payload['pairs'] ?? [],
             'ordering' => $this->payload['correctOrder'] ?? [],
             'memory' => collect($this->payload['pairs'] ?? [])->pluck('id')->values()->all(),
-            'fillblank' => $this->payload['blanks'] ?? [],
+            'fillblank' => collect($this->payload['blanks'] ?? [])
+                ->map(fn ($blank) => is_array($blank) ? ($blank['answer'] ?? '') : $blank)
+                ->values()->all(),
             default => null,
         };
+    }
+
+    /**
+     * Each blank's options (correct word + distractors), shuffled into a stable order per
+     * exercise+blank so the correct answer isn't always in the same position but also
+     * doesn't reshuffle on every request. Never reveals which option is correct.
+     */
+    private function shuffledBlankOptions(): array
+    {
+        return collect($this->payload['blanks'] ?? [])->values()->map(function ($blank, $i) {
+            $options = is_array($blank) ? ($blank['options'] ?? []) : [$blank];
+            mt_srand(($this->id ?: 1) + 3000 + $i);
+            $shuffled = collect($options)->shuffle()->values()->all();
+            mt_srand();
+
+            return ['options' => $shuffled];
+        })->all();
     }
 
     private function shuffledRight(): array

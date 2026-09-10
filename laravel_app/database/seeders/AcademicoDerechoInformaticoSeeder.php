@@ -153,19 +153,24 @@ TXT;
             ],
             [
                 'type' => 'fillblank',
-                'prompt' => 'Completa la frase con las palabras que faltan.',
+                'prompt' => 'Elige la opción correcta para cada espacio en blanco.',
                 'payload' => [
                     'template' => 'Los datos sensibles exigen consentimiento ___, ___, informado y por escrito.',
-                    'blanks' => ['expreso', 'previo'],
+                    'blanks' => [
+                        ['answer' => 'expreso', 'options' => ['expreso', 'tácito', 'presunto']],
+                        ['answer' => 'previo', 'options' => ['previo', 'posterior', 'simultáneo']],
+                    ],
                 ],
                 'points' => 2,
             ],
             [
                 'type' => 'fillblank',
-                'prompt' => 'Completa el nombre de la norma.',
+                'prompt' => 'Elige la opción correcta para completar el nombre de la norma.',
                 'payload' => [
                     'template' => 'La Ley N.° 29733 es la Ley de ___ de Datos Personales.',
-                    'blanks' => ['Protección'],
+                    'blanks' => [
+                        ['answer' => 'Protección', 'options' => ['Protección', 'Tratamiento', 'Regulación']],
+                    ],
                 ],
                 'points' => 2,
             ],

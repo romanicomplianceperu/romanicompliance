@@ -332,7 +332,7 @@ class AcademicoController extends Controller
 
         return redirect()
             ->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug])
-            ->with('academico_success', $data['action'] === 'enviar' ? 'Actividad enviada correctamente.' : 'Avance guardado.');
+            ->with('academico_success', $data['action'] === 'enviar' ? 'Enviado correctamente.' : 'Avance guardado.');
     }
 
     /**

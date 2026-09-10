@@ -38,11 +38,16 @@
   @else
     <div class="table-wrap"><table class="table">
       <thead>
-        <tr><th>Modo</th><th>Integrantes</th><th>IP</th><th>Enviado</th><th>Puntaje</th><th>Estado</th><th></th></tr>
+        <tr><th>Modo</th><th>Integrantes</th><th>IP</th><th>Enviado</th><th>Puntaje</th><th>Preguntas abiertas</th><th>Estado</th><th></th></tr>
       </thead>
       <tbody>
         @foreach($submissions as $submission)
-          @php $submissionGrading = $submission->isSubmitted() ? $activity->grade($submission) : null; @endphp
+          @php
+            $submissionGrading = $submission->isSubmitted() ? $activity->grade($submission) : null;
+            $openTotal = $activity->questions->count();
+            $openAnswers = $submission->answers['questions'] ?? [];
+            $openAnswered = collect($openAnswers)->filter(fn ($a) => trim((string) $a) !== '')->count();
+          @endphp
           <tr>
             <td>
               @if($submission->mode === 'grupal')
@@ -72,6 +77,17 @@
               @endif
             </td>
             <td>
+              @if($openTotal === 0)
+                <span class="form-hint">—</span>
+              @elseif($openAnswered === 0)
+                <span class="badge badge-gray">0/{{ $openTotal }}</span>
+              @elseif($openAnswered === $openTotal)
+                <span class="badge badge-success">{{ $openAnswered }}/{{ $openTotal }} ✓</span>
+              @else
+                <span class="badge badge-warning">{{ $openAnswered }}/{{ $openTotal }}</span>
+              @endif
+            </td>
+            <td>
               <form action="{{ route('admin.academico.submissions.status', $submission) }}" method="POST" style="display:flex;gap:6px;align-items:center;">
                 @csrf @method('PATCH')
                 <select name="status" onchange="this.form.submit()" style="padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:0.78rem;">
@@ -86,7 +102,7 @@
             </td>
           </tr>
           <tr id="answers-{{ $submission->id }}" style="display:none;">
-            <td colspan="7">
+            <td colspan="8">
               <div style="background:var(--ivory-dim);border-radius:8px;padding:12px 16px;font-size:0.82rem;">
                 @php $qs = $submission->answers['questions'] ?? []; @endphp
                 @forelse($qs as $qid => $answer)

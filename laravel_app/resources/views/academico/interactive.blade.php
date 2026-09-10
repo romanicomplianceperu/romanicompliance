@@ -35,6 +35,35 @@
       <div class="ac-form-error">{{ session('academico_error') }}</div>
     @endif
 
+    @if($grading)
+      {{-- Once the activity is graded, the score is what the student cares about first —
+           no reason to make them scroll past the case again to find it. --}}
+      <div class="ac-score-banner">
+        <div class="score-value">{{ $grading['earned_points'] }} / {{ $grading['total_points'] }} <small>puntos</small></div>
+        <div class="score-percent">{{ $grading['percent'] }}% de aciertos en los ejercicios autocalificables ({{ $grading['correct'] }} de {{ $grading['total'] }})</div>
+        @if(count($grading['by_type']) > 1)
+          <div class="ac-score-stats">
+            @foreach($grading['by_type'] as $type => $stat)
+              @php $statPct = $stat['total'] > 0 ? (int) round($stat['correct'] / $stat['total'] * 100) : 0; @endphp
+              <div class="ac-score-stat">
+                <div class="stat-row">
+                  <span class="stat-label">{{ \App\Models\AcademicActivity::exerciseTypeLabel($type) }}</span>
+                  <span class="stat-value">{{ $stat['correct'] }}/{{ $stat['total'] }}</span>
+                </div>
+                <div class="stat-bar"><div class="stat-fill" style="width:{{ $statPct }}%;"></div></div>
+              </div>
+            @endforeach
+          </div>
+        @endif
+      </div>
+    @endif
+
+    @if(! $canEdit)
+      <div class="ac-response-sent" style="margin-bottom:1.6rem;">
+        Actividad enviada el {{ $submission->submitted_at?->timezone('America/Lima')->format('d/m/Y H:i') }} h. Ya no se puede editar.
+      </div>
+    @endif
+
     <div class="ac-case-toolbar">
       @if($activity->due_at)
         <div class="ac-deadline-badge {{ $activity->isPastDue() ? 'closed' : '' }}">
@@ -58,56 +87,65 @@
       @endforeach
     </div>
 
-    <div class="ac-case-card">
-      <div class="ac-case-tags">
-        <span class="ac-case-tag">Semana {{ $activity->week_number }}</span>
-        @if($activity->unit)<span class="ac-case-tag">{{ $activity->unit }}</span>@endif
-        @if($activity->modality)<span class="ac-case-tag">{{ $activity->modality }}</span>@endif
-      </div>
-      <h2>{{ $activity->case_title ?? $activity->title }}</h2>
-      @if($activity->case_body)
-        <div class="body">
-          @foreach($activity->caseBodySections() as $section)
-            @if($section['heading'])
-              <div class="ac-case-highlight">
-                <div class="ac-case-highlight-title">{{ $section['heading'] }}</div>
-                <ul>
-                  @foreach($section['items'] as $item)
-                    <li>{{ $item }}</li>
-                  @endforeach
-                </ul>
-              </div>
-            @else
-              @foreach($section['items'] as $item)
-                <p>{{ $item }}</p>
-              @endforeach
-            @endif
-          @endforeach
-        </div>
-      @endif
-    </div>
-
-    @if(! $canEdit)
-      <div class="ac-response-sent" style="margin-bottom:1.6rem;">
-        Actividad enviada el {{ $submission->submitted_at?->timezone('America/Lima')->format('d/m/Y H:i') }} h. Ya no se puede editar.
-      </div>
-    @endif
-
     @if($grading)
-      <div class="ac-score-banner">
-        <div class="score-value">{{ $grading['earned_points'] }} / {{ $grading['total_points'] }} <small>puntos</small></div>
-        <div class="score-percent">{{ $grading['percent'] }}% de aciertos en los ejercicios autocalificables ({{ $grading['correct'] }} de {{ $grading['total'] }})</div>
-        @if(count($grading['by_type']) > 1)
-          <div class="ac-score-stats">
-            @foreach($grading['by_type'] as $type => $stat)
-              @php $statPct = $stat['total'] > 0 ? (int) round($stat['correct'] / $stat['total'] * 100) : 0; @endphp
-              <div class="ac-score-stat">
-                <div class="stat-row">
-                  <span class="stat-label">{{ \App\Models\AcademicActivity::exerciseTypeLabel($type) }}</span>
-                  <span class="stat-value">{{ $stat['correct'] }}/{{ $stat['total'] }}</span>
+      {{-- The case was already read before submitting — keep it out of the way, but still
+           reachable in case someone wants to double-check a detail against their score. --}}
+      <details class="ac-case-collapsed">
+        <summary>Ver el caso de nuevo</summary>
+        <div class="ac-case-card" style="margin-top:1rem;">
+          <div class="ac-case-tags">
+            <span class="ac-case-tag">Semana {{ $activity->week_number }}</span>
+            @if($activity->unit)<span class="ac-case-tag">{{ $activity->unit }}</span>@endif
+            @if($activity->modality)<span class="ac-case-tag">{{ $activity->modality }}</span>@endif
+          </div>
+          <h2>{{ $activity->case_title ?? $activity->title }}</h2>
+          @if($activity->case_body)
+            <div class="body">
+              @foreach($activity->caseBodySections() as $section)
+                @if($section['heading'])
+                  <div class="ac-case-highlight">
+                    <div class="ac-case-highlight-title">{{ $section['heading'] }}</div>
+                    <ul>
+                      @foreach($section['items'] as $item)
+                        <li>{{ $item }}</li>
+                      @endforeach
+                    </ul>
+                  </div>
+                @else
+                  @foreach($section['items'] as $item)
+                    <p>{{ $item }}</p>
+                  @endforeach
+                @endif
+              @endforeach
+            </div>
+          @endif
+        </div>
+      </details>
+    @else
+      <div class="ac-case-card">
+        <div class="ac-case-tags">
+          <span class="ac-case-tag">Semana {{ $activity->week_number }}</span>
+          @if($activity->unit)<span class="ac-case-tag">{{ $activity->unit }}</span>@endif
+          @if($activity->modality)<span class="ac-case-tag">{{ $activity->modality }}</span>@endif
+        </div>
+        <h2>{{ $activity->case_title ?? $activity->title }}</h2>
+        @if($activity->case_body)
+          <div class="body">
+            @foreach($activity->caseBodySections() as $section)
+              @if($section['heading'])
+                <div class="ac-case-highlight">
+                  <div class="ac-case-highlight-title">{{ $section['heading'] }}</div>
+                  <ul>
+                    @foreach($section['items'] as $item)
+                      <li>{{ $item }}</li>
+                    @endforeach
+                  </ul>
                 </div>
-                <div class="stat-bar"><div class="stat-fill" style="width:{{ $statPct }}%;"></div></div>
-              </div>
+              @else
+                @foreach($section['items'] as $item)
+                  <p>{{ $item }}</p>
+                @endforeach
+              @endif
             @endforeach
           </div>
         @endif
@@ -135,6 +173,7 @@
             <h3>Respuesta crítica</h3>
           </div>
           <p class="ac-ex-intro">Estas son las preguntas del caso que revisa directamente su docente; respondan con argumentos propios.</p>
+          <div class="ac-optional-notice">📝 Estas preguntas son opcionales y no suman a los {{ $activity->exercises->sum('points') }} puntos autocalificables, pero tu docente las considerará como puntaje adicional para el curso en general.</div>
           @php $savedQuestions = $submission->answers['questions'] ?? []; @endphp
           @foreach($activity->questions as $i => $question)
             <div class="ac-question-card">
@@ -153,13 +192,27 @@
         <div class="ac-question-actions" style="margin-top:1rem;">
           <span class="ac-autosave-status" id="autosaveStatus"></span>
           <button type="submit" class="ac-btn-ghost" onclick="return prepareSubmit('borrador');">Guardar avance</button>
-          <button type="submit" class="ac-btn-solid" onclick="return prepareSubmit('enviar') && confirm('¿Enviar la actividad? Revisen sus respuestas antes de confirmar.');">Enviar actividad</button>
+          <button type="button" class="ac-btn-solid" id="openSubmitConfirm">Enviar actividad</button>
         </div>
       @endif
     </form>
 
   </div>
 </div>
+
+@if($canEdit)
+  <div class="modal-overlay" id="submitConfirmModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box" style="max-width:420px;text-align:center;">
+      <h3>¿Enviar la actividad?</h3>
+      <p class="modal-text">Revisen sus respuestas antes de confirmar — una vez enviada, no podrán editarla si el plazo ya venció.</p>
+      <div class="ac-modal-btn-row">
+        <button type="button" class="ac-btn-ghost" id="cancelSubmitConfirm" style="flex:1;justify-content:center;">Cancelar</button>
+        <button type="button" class="ac-btn-solid" id="confirmSubmitBtn" style="flex:1;justify-content:center;">Sí, enviar</button>
+      </div>
+    </div>
+  </div>
+@endif
 
 @include('academico._floating-cta')
 @endsection
@@ -176,7 +229,7 @@
   const CAN_EDIT = @json($canEdit);
   const SAVE_URL = @json($saveUrl);
   const CSRF_TOKEN = @json(csrf_token());
-  const JUST_SUBMITTED = @json(session('academico_success') === 'Actividad enviada correctamente.');
+  const JUST_SUBMITTED = @json(session('academico_success') === 'Enviado correctamente.');
   // Most activities have no pass_percent set (null) and keep celebrating on every submit,
   // exactly as before. When an activity DOES set one, confetti is reserved for a passing score.
   const PASS_PERCENT = @json($activity->pass_percent);
@@ -556,48 +609,54 @@
   }
 
   // A blank is written as "___" (three or more underscores) inside ex.template; each one
-  // becomes its own text input, in order, collected into an array for isCorrect() to check
-  // elementwise server-side (case/accent-insensitive there, so exact casing doesn't matter).
+  // renders as a row of selectable option chips (ex.blanks[i].options — the right word
+  // plus up to 2 distractors, order shuffled server-side) instead of free text, so every
+  // answer is one of a fixed set of choices and grading is never ambiguous.
   function renderFillBlank(ex) {
     const card = el('div', 'ac-ex-card');
     card.appendChild(exHeader(ex));
 
     const wrap = el('div', 'ac-fill-text');
     const parts = (ex.template || '').split(/_{3,}/);
-    const blanksCount = ex.blanksCount || Math.max(parts.length - 1, 0);
+    const blanks = ex.blanks || [];
     const saved = GRADED ? ex.student_answer : SAVED[ex.id];
-    const answers = (Array.isArray(saved) && saved.length === blanksCount) ? saved.slice() : new Array(blanksCount).fill('');
+    const answers = (Array.isArray(saved) && saved.length === blanks.length) ? saved.slice() : new Array(blanks.length).fill(null);
     state.exercises[ex.id] = answers;
 
-    const inputs = [];
     parts.forEach((part, idx) => {
       if (part) wrap.appendChild(document.createTextNode(part));
       if (idx < parts.length - 1) {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'ac-fill-input';
-        input.autocomplete = 'off';
-        input.value = answers[idx] || '';
-        input.style.width = Math.max(6, (answers[idx] || '').length + 4) + 'ch';
-        if (GRADED) {
-          input.disabled = true;
-          const correctWord = (ex.correct_answer || [])[idx];
-          input.classList.add(ex.correct ? 'answer-correct' : 'answer-wrong');
-        } else {
-          input.addEventListener('input', () => {
-            answers[idx] = input.value;
-            state.exercises[ex.id] = answers;
-            markDirty();
-          });
-        }
-        inputs.push(input);
-        wrap.appendChild(input);
+        const blank = blanks[idx] || { options: [] };
+        const optRow = el('div', 'ac-fill-options');
+        const correctWord = (ex.correct_answer || [])[idx];
+        blank.options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'ac-fill-opt';
+          btn.textContent = opt;
+          if (answers[idx] === opt) btn.classList.add('selected');
+          if (GRADED) {
+            btn.disabled = true;
+            if (opt === correctWord) btn.classList.add('is-correct-answer');
+            else if (answers[idx] === opt) btn.classList.add('is-wrong-pick');
+          } else {
+            btn.addEventListener('click', () => {
+              answers[idx] = opt;
+              state.exercises[ex.id] = answers;
+              optRow.querySelectorAll('.ac-fill-opt').forEach(b => b.classList.remove('selected'));
+              btn.classList.add('selected');
+              markDirty();
+            });
+          }
+          optRow.appendChild(btn);
+        });
+        wrap.appendChild(optRow);
       }
     });
     card.appendChild(wrap);
 
     if (! GRADED) {
-      card.appendChild(el('p', 'ac-ex-hint', 'Completa cada espacio en blanco con la palabra que corresponde.'));
+      card.appendChild(el('p', 'ac-ex-hint', 'Toca la opción correcta para cada espacio en blanco.'));
     } else if (! ex.correct) {
       card.appendChild(el('div', 'ac-order-correct-note', 'Respuesta correcta: ' + (ex.correct_answer || []).join(', ')));
     }
@@ -637,6 +696,26 @@
     document.getElementById('answersInput').value = JSON.stringify(collectAnswers());
     return true;
   };
+
+  // ── Custom "enviar actividad" confirmation, replacing the native confirm() popup ──
+  const openBtn = document.getElementById('openSubmitConfirm');
+  const submitModal = document.getElementById('submitConfirmModal');
+  if (openBtn && submitModal) {
+    const cancelBtn = document.getElementById('cancelSubmitConfirm');
+    const confirmBtn = document.getElementById('confirmSubmitBtn');
+    openBtn.addEventListener('click', () => submitModal.classList.add('active'));
+    cancelBtn.addEventListener('click', () => submitModal.classList.remove('active'));
+    submitModal.querySelector('.modal-backdrop').addEventListener('click', () => submitModal.classList.remove('active'));
+    confirmBtn.addEventListener('click', () => {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Enviando…';
+      prepareSubmit('enviar');
+      const form = document.getElementById('interactiveForm');
+      // requestSubmit() (unlike the older submit()) fires a real 'submit' event, so the
+      // site-wide loading spinner (bound to that event) shows while the request is in flight.
+      if (form.requestSubmit) form.requestSubmit(); else form.submit();
+    });
+  }
 
   // ── Autosave ──
   const statusEl = document.getElementById('autosaveStatus');
