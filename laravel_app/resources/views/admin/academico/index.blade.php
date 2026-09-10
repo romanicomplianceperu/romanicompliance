@@ -43,29 +43,76 @@
   </form>
 </div>
 
-<div class="card">
-  @if($activities->isEmpty())
-    <div class="empty-state">No hay actividades académicas para este filtro.</div>
-  @else
-    <div class="table-wrap"><table class="table">
-      <thead>
-        <tr><th>Actividad</th><th>Universidad / Curso</th><th>Vence</th><th>Código</th><th>Envíos</th><th>Último envío</th><th>Visitas</th><th></th></tr>
-      </thead>
-      <tbody>
-        @foreach($activities as $activity)
-          <tr>
-            <td>{{ $activity->title }}<br><span class="form-hint">{{ $activity->case_title }}</span></td>
-            <td>{{ $activity->course->university->short_name }} — {{ $activity->course->name }}</td>
-            <td>{{ $activity->due_at ? $activity->due_at->timezone('America/Lima')->format('d/m/Y H:i') : '—' }}</td>
-            <td>{{ $activity->access_code ?? '—' }}</td>
-            <td>{{ $activity->submissions_count }}</td>
-            <td>{{ $activity->submissions_max_created_at ? \Illuminate\Support\Carbon::parse($activity->submissions_max_created_at)->timezone('America/Lima')->format('d/m/Y H:i') : '—' }}</td>
-            <td>{{ $activity->visits_count }}</td>
-            <td style="text-align:right;"><a href="{{ route('admin.academico.show', $activity) }}" class="btn btn-outline btn-sm">Ver</a></td>
-          </tr>
-        @endforeach
-      </tbody>
-    </table></div>
-  @endif
+@php
+  $totalSubmissions = $activities->sum('submissions_count');
+  $totalVisits = $activities->sum('visits_count');
+  $overallConversion = $totalVisits > 0 ? (int) round($totalSubmissions / $totalVisits * 100) : 0;
+@endphp
+
+<div class="aca-stats-row">
+  <div class="aca-stat-card">
+    <div class="aca-stat-value">{{ $activities->count() }}</div>
+    <div class="aca-stat-label">Actividades</div>
+  </div>
+  <div class="aca-stat-card">
+    <div class="aca-stat-value">{{ $totalSubmissions }}</div>
+    <div class="aca-stat-label">Envíos totales</div>
+  </div>
+  <div class="aca-stat-card">
+    <div class="aca-stat-value">{{ $totalVisits }}</div>
+    <div class="aca-stat-label">Visitas totales</div>
+  </div>
+  <div class="aca-stat-card">
+    <div class="aca-stat-value accent">{{ $overallConversion }}%</div>
+    <div class="aca-stat-label">Conversión visita → envío</div>
+  </div>
 </div>
+
+@if($activities->isEmpty())
+  <div class="card"><div class="empty-state">No hay actividades académicas para este filtro.</div></div>
+@else
+  <div class="aca-activities-grid">
+    @foreach($activities as $activity)
+      @php
+        $conversion = $activity->visits_count > 0 ? (int) round($activity->submissions_count / $activity->visits_count * 100) : 0;
+        $dueBadge = null;
+        if ($activity->due_at) {
+          $dueBadge = $activity->due_at->isPast()
+            ? ['class' => 'badge-danger', 'label' => 'Vencido']
+            : ($activity->due_at->diffInHours(now()) <= 48
+                ? ['class' => 'badge-warning', 'label' => 'Vence pronto']
+                : ['class' => 'badge-gray', 'label' => $activity->due_at->timezone('America/Lima')->format('d/m/Y H:i')]);
+        }
+      @endphp
+      <a href="{{ route('admin.academico.show', $activity) }}" class="aca-activity-card">
+        <div class="aca-activity-head">
+          <div>
+            <div class="aca-activity-title">{{ $activity->title }}</div>
+            <div class="aca-activity-sub">{{ $activity->course->university->short_name }} — {{ $activity->course->name }}</div>
+          </div>
+          @if($dueBadge)
+            <span class="badge {{ $dueBadge['class'] }}">{{ $dueBadge['label'] }}</span>
+          @else
+            <span class="badge badge-gray">Sin fecha límite</span>
+          @endif
+        </div>
+
+        <div class="aca-activity-numbers">
+          <div class="n"><span class="v">{{ $activity->submissions_count }}</span><span class="l">Envíos</span></div>
+          <div class="n"><span class="v">{{ $activity->visits_count }}</span><span class="l">Visitas</span></div>
+          <div class="n"><span class="v">{{ $conversion }}%</span><span class="l">Conversión</span></div>
+        </div>
+        <div class="aca-conv-track"><div class="aca-conv-fill" style="width:{{ $conversion }}%;"></div></div>
+
+        <div class="aca-activity-foot">
+          <span class="form-hint">
+            Código: {{ $activity->access_code ?? '—' }} ·
+            Último envío: {{ $activity->submissions_max_created_at ? \Illuminate\Support\Carbon::parse($activity->submissions_max_created_at)->timezone('America/Lima')->format('d/m/Y H:i') : '—' }}
+          </span>
+          <span class="btn btn-outline btn-sm">Ver →</span>
+        </div>
+      </a>
+    @endforeach
+  </div>
+@endif
 @endsection

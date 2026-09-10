@@ -19,6 +19,35 @@
 @endsection
 
 @section('content')
+@if($justRegistered ?? false)
+  {{-- Full-screen welcome greeting shown once, right after registering (individual or
+       group — the group's first member is treated as its leader for this greeting).
+       Brief and self-dismissing so it never blocks the activity for long. --}}
+  @php $acLeaderName = $submission->members->first()->full_name ?? 'estudiante'; @endphp
+  <div class="ac-welcome-screen" id="acWelcomeScreen">
+    <div class="ac-welcome-box">
+      <div class="ac-welcome-check">✓</div>
+      <h2>¡Hola, {{ $acLeaderName }}!</h2>
+      <p>Ya quedaste registrado{{ $submission->mode === 'grupal' ? ' junto a tu equipo' : '' }}. Desarrolla los ejercicios con calma — tus respuestas se guardan solas mientras avanzas.</p>
+      <div class="ac-welcome-hint">Toca en cualquier parte para empezar</div>
+    </div>
+  </div>
+  <script>
+  (function () {
+    var screenEl = document.getElementById('acWelcomeScreen');
+    if (! screenEl) return;
+    var dismissed = false;
+    function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      screenEl.classList.add('is-leaving');
+      setTimeout(function () { screenEl.remove(); }, 400);
+    }
+    screenEl.addEventListener('click', dismiss);
+    setTimeout(dismiss, 3200);
+  })();
+  </script>
+@endif
 @php $acCrumbExtra = $activity->title; @endphp
 @include('academico._course-header')
 

@@ -59,6 +59,30 @@ img { max-width: 100%; display: block; }
 .badge-gray { background: var(--ivory-dim); color: var(--slate); }
 .badge-success { background: rgba(31,122,77,0.12); color: #1F7A4D; }
 .badge-warning { background: rgba(184,138,0,0.12); color: #8A6400; }
+.badge-danger { background: var(--danger-pale); color: var(--danger); }
+
+/* ── Académico — visual overview (stat cards + activity cards instead of a plain table) ── */
+.aca-stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 1.5rem; }
+.aca-stat-card { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 1.1rem 1.3rem; }
+.aca-stat-card .aca-stat-value { font-family: var(--serif); font-size: 1.8rem; font-weight: 600; color: var(--ink); line-height: 1; }
+.aca-stat-card .aca-stat-value.accent { color: var(--gold); }
+.aca-stat-card .aca-stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-light); margin-top: 6px; }
+.aca-activities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.aca-activity-card { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem 1.3rem; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+.aca-activity-card:hover { border-color: var(--gold); box-shadow: var(--shadow-s); }
+.aca-activity-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.aca-activity-title { font-weight: 700; font-size: 0.95rem; color: var(--ink); line-height: 1.35; }
+.aca-activity-sub { font-size: 0.74rem; color: var(--slate-light); margin-top: 3px; }
+.aca-activity-numbers { display: flex; gap: 1.3rem; }
+.aca-activity-numbers .n .v { font-weight: 700; font-size: 1.15rem; color: var(--ink); line-height: 1; }
+.aca-activity-numbers .n .l { display: block; font-size: 0.64rem; text-transform: uppercase; color: var(--slate-light); letter-spacing: 0.04em; margin-top: 3px; }
+.aca-conv-track { background: var(--ivory-dim); border-radius: 20px; height: 6px; overflow: hidden; }
+.aca-conv-fill { background: var(--gold); height: 100%; border-radius: 20px; }
+.aca-activity-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 2px; }
+@media (max-width: 480px) {
+  .aca-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .aca-activities-grid { grid-template-columns: 1fr; }
+}
 
 .form-group { margin-bottom: 1.2rem; }
 .form-group label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }

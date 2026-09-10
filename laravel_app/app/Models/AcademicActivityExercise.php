@@ -184,6 +184,44 @@ class AcademicActivityExercise extends Model
         return true;
     }
 
+    /**
+     * Human-readable Spanish rendering of a student's raw answer for this exercise,
+     * used in the admin panel so a teacher can see exactly what was picked (not just
+     * the score) without having to decode the raw JSON payload themselves.
+     */
+    public function formatStudentAnswer(mixed $answer): string
+    {
+        $isBlank = $answer === null || $answer === ''
+            || (is_array($answer) && count(array_filter($answer, fn ($v) => $v !== null && $v !== '')) === 0);
+
+        if ($isBlank) {
+            return 'Sin responder';
+        }
+
+        return match ($this->type) {
+            'vf' => match ($this->normalizeBool($answer)) {
+                true => 'Verdadero',
+                false => 'Falso',
+                default => 'Sin responder',
+            },
+            'mcq' => $this->payload['options'][(int) $answer] ?? 'Sin responder',
+            'ordering' => collect($answer)
+                ->map(fn ($id) => collect($this->payload['items'] ?? [])->firstWhere('id', $id)['text'] ?? $id)
+                ->implode(' → '),
+            'fillblank' => collect($answer)->map(fn ($a) => $a ?: '—')->implode(', '),
+            'matching' => collect($answer)
+                ->map(function ($rightId, $leftId) {
+                    $leftText = collect($this->payload['left'] ?? [])->firstWhere('id', $leftId)['text'] ?? $leftId;
+                    $rightText = collect($this->payload['right'] ?? [])->firstWhere('id', $rightId)['text'] ?? $rightId;
+
+                    return $leftText.' → '.$rightText;
+                })
+                ->implode('; '),
+            'memory' => is_array($answer) ? implode(', ', $answer) : (string) $answer,
+            default => is_scalar($answer) ? (string) $answer : 'Sin responder',
+        };
+    }
+
     private function normalizeBlankAnswer(mixed $value): string
     {
         return trim(mb_strtolower(\Illuminate\Support\Str::ascii((string) $value)));

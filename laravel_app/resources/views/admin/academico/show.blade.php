@@ -15,6 +15,35 @@
   <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
+@php
+  $completedSubmissions = $submissions->filter(fn ($s) => $s->isSubmitted());
+  $avgDurationSeconds = $completedSubmissions->isNotEmpty()
+    ? (int) round($completedSubmissions->avg(fn ($s) => $s->durationSeconds()))
+    : null;
+  $avgDurationLabel = $avgDurationSeconds === null
+    ? '—'
+    : ($avgDurationSeconds < 3600 ? intdiv($avgDurationSeconds, 60).' min' : intdiv($avgDurationSeconds, 3600).'h '.intdiv($avgDurationSeconds % 3600, 60).'min');
+@endphp
+
+<div class="aca-stats-row">
+  <div class="aca-stat-card">
+    <div class="aca-stat-value">{{ $submissions->count() }}</div>
+    <div class="aca-stat-label">Envíos registrados</div>
+  </div>
+  <div class="aca-stat-card">
+    <div class="aca-stat-value">{{ $completedSubmissions->count() }}</div>
+    <div class="aca-stat-label">Actividades completadas</div>
+  </div>
+  <div class="aca-stat-card">
+    <div class="aca-stat-value accent">{{ $avgDurationLabel }}</div>
+    <div class="aca-stat-label">Tiempo promedio en la actividad</div>
+  </div>
+  <div class="aca-stat-card">
+    <div class="aca-stat-value">{{ $visitsCount }}</div>
+    <div class="aca-stat-label">Visitas totales</div>
+  </div>
+</div>
+
 <div class="card">
   <h3 style="font-size:1rem;margin-bottom:1rem;">Configuración de acceso</h3>
   <form action="{{ route('admin.academico.update', $activity) }}" method="POST">
@@ -38,7 +67,7 @@
   @else
     <div class="table-wrap"><table class="table">
       <thead>
-        <tr><th>Modo</th><th>Integrantes</th><th>IP</th><th>Enviado</th><th>Puntaje</th><th>Preguntas abiertas</th><th>Estado</th><th></th></tr>
+        <tr><th>Modo</th><th>Integrantes</th><th>IP</th><th>Enviado</th><th>Duración</th><th>Puntaje</th><th>Preguntas abiertas</th><th>Estado</th><th></th></tr>
       </thead>
       <tbody>
         @foreach($submissions as $submission)
@@ -67,6 +96,13 @@
                 {{ $submission->submitted_at->timezone('America/Lima')->format('d/m/Y H:i') }}
               @else
                 <span class="badge badge-gray">Sin enviar</span>
+              @endif
+            </td>
+            <td>
+              @if($submission->isSubmitted())
+                {{ $submission->durationLabel() }}
+              @else
+                <span class="badge badge-gray">En curso</span>
               @endif
             </td>
             <td>
@@ -102,14 +138,40 @@
             </td>
           </tr>
           <tr id="answers-{{ $submission->id }}" style="display:none;">
-            <td colspan="8">
-              <div style="background:var(--ivory-dim);border-radius:8px;padding:12px 16px;font-size:0.82rem;">
-                @php $qs = $submission->answers['questions'] ?? []; @endphp
-                @forelse($qs as $qid => $answer)
-                  <div style="margin-bottom:8px;"><strong>Pregunta #{{ $qid }}:</strong><br>{{ $answer ?: '(sin responder)' }}</div>
-                @empty
-                  <em>Sin respuestas de texto registradas todavía.</em>
-                @endforelse
+            <td colspan="9">
+              <div style="background:var(--ivory-dim);border-radius:8px;padding:14px 18px;font-size:0.82rem;">
+                @if($submissionGrading)
+                  <div style="font-weight:700;margin-bottom:10px;">Ejercicios autocalificables — {{ $submissionGrading['earned_points'] }}/{{ $submissionGrading['total_points'] }} pts</div>
+                  @foreach($activity->exercises as $exercise)
+                    @php
+                      $item = $submissionGrading['items'][$exercise->id] ?? null;
+                      $isCorrect = (bool) ($item['correct'] ?? false);
+                      $answerText = $exercise->formatStudentAnswer($item['student_answer'] ?? null);
+                      $exLabel = $exercise->type === 'fillblank' ? ($exercise->payload['template'] ?? $exercise->prompt) : $exercise->prompt;
+                    @endphp
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);">
+                      <span style="flex-shrink:0;">{{ $isCorrect ? '✅' : '❌' }}</span>
+                      <div style="flex:1;min-width:0;">
+                        <div style="color:var(--slate);font-size:0.74rem;margin-bottom:2px;">{{ $exLabel }}</div>
+                        <div>{{ $answerText }}</div>
+                      </div>
+                      <span style="flex-shrink:0;font-size:0.7rem;color:var(--slate-light);white-space:nowrap;">{{ $exercise->points }} pt{{ $exercise->points === 1 ? '' : 's' }}</span>
+                    </div>
+                  @endforeach
+                @elseif($activity->exercises->isNotEmpty())
+                  <em>Todavía no envió la actividad — no hay respuestas de ejercicios que mostrar.</em>
+                @endif
+
+                @if($activity->questions->isNotEmpty())
+                  @php $qs = $submission->answers['questions'] ?? []; @endphp
+                  <div style="font-weight:700;margin:14px 0 8px;">Preguntas de reflexión (no puntúan, puntaje adicional)</div>
+                  @foreach($activity->questions as $question)
+                    <div style="margin-bottom:8px;">
+                      <div style="color:var(--slate);font-size:0.74rem;margin-bottom:2px;">{{ $question->prompt }}</div>
+                      <div>{{ ($qs[$question->id] ?? '') ?: '(sin responder)' }}</div>
+                    </div>
+                  @endforeach
+                @endif
               </div>
             </td>
           </tr>

@@ -34,6 +34,43 @@ class AcademicSubmission extends Model
         return ! is_null($this->submitted_at);
     }
 
+    /**
+     * Seconds between registering (when this row was created) and submitting the
+     * activity — the closest signal we have to "time spent on the activity" without
+     * needing extra client-side tracking. Null while still in progress.
+     */
+    public function durationSeconds(): ?int
+    {
+        if (! $this->submitted_at) {
+            return null;
+        }
+
+        return $this->created_at->diffInSeconds($this->submitted_at);
+    }
+
+    /**
+     * Human-readable Spanish rendering of durationSeconds(), used in the admin panel.
+     */
+    public function durationLabel(): string
+    {
+        $seconds = $this->durationSeconds();
+        if ($seconds === null) {
+            return 'En curso';
+        }
+        if ($seconds < 60) {
+            return $seconds.'s';
+        }
+
+        $minutes = intdiv($seconds, 60);
+        if ($minutes < 60) {
+            return $minutes.' min';
+        }
+
+        $hours = intdiv($minutes, 60);
+
+        return $hours.'h '.($minutes % 60).'min';
+    }
+
     public function displayName(): string
     {
         if ($this->mode === 'grupal') {

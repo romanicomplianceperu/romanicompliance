@@ -191,6 +191,7 @@ class AcademicoController extends Controller
             'grading' => $grading,
             'isClosed' => $activity->isPastDue() && $submission->isSubmitted(),
             'canEdit' => ! $activity->isPastDue() || ! $submission->isSubmitted(),
+            'justRegistered' => (bool) session('academico_just_registered'),
         ]);
     }
 
@@ -278,6 +279,10 @@ class AcademicoController extends Controller
         }
 
         session([$this->submissionSessionKey($activity) => $submission->id]);
+        // One-shot flag (flash session, read once on the very next request) so the
+        // interactive page can greet the student by name right after registering,
+        // without showing that welcome screen again on every later visit/reload.
+        session()->flash('academico_just_registered', true);
 
         return redirect()->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug]);
     }

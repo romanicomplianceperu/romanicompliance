@@ -43,7 +43,7 @@ class AcademicoController extends Controller
 
     public function show(AcademicActivity $activity)
     {
-        $activity->load('course.university');
+        $activity->load('course.university', 'exercises', 'questions');
 
         $submissions = $activity->submissions()->with('members')->get();
         $visits = $activity->visits()->limit(200)->get();

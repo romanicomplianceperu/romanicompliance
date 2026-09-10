@@ -363,3 +363,18 @@
 @media (max-width: 480px) {
   .ac-gate-box { padding: 1.6rem; }
 }
+
+/* Full-screen welcome greeting, shown once right after registering. Sits above the
+   confirmation/select overlays (z-index 700) but never overlaps them in practice —
+   this only appears on a fresh page load, before either modal exists. */
+.ac-welcome-screen { position: fixed; inset: 0; z-index: 700; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, var(--ink), #16283F); padding: 24px; cursor: pointer; animation: fadeIn 0.35s ease; transition: opacity 0.4s ease; }
+.ac-welcome-screen.is-leaving { opacity: 0; }
+.ac-welcome-box { max-width: 420px; text-align: center; animation: slideUp 0.5s ease; }
+.ac-welcome-check { width: 56px; height: 56px; border-radius: 50%; background: var(--gold); color: var(--ink); font-size: 1.6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.3rem; }
+.ac-welcome-box h2 { font-family: var(--serif); font-size: 1.7rem; color: var(--white); margin-bottom: 0.9rem; }
+.ac-welcome-box p { font-size: 0.95rem; color: rgba(255,255,255,0.82); line-height: 1.6; margin-bottom: 1.4rem; }
+.ac-welcome-hint { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-light); }
+@media (max-width: 480px) {
+  .ac-welcome-box h2 { font-size: 1.4rem; }
+  .ac-welcome-box p { font-size: 0.88rem; }
+}

@@ -176,7 +176,7 @@ TXT;
             ],
             [
                 'type' => 'matching',
-                'prompt' => 'Arrastra cada dato a la categoría que le corresponde: General o Sensible.',
+                'prompt' => 'Toca cada dato y luego toca la categoría a la que corresponde: General o Sensible.',
                 'payload' => [
                     'left' => [
                         ['id' => 'd1', 'text' => 'Nombre completo y número de DNI de un cliente.'],
