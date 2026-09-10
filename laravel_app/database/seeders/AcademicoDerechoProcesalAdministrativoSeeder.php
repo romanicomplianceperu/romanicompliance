@@ -79,9 +79,11 @@ TXT;
                 'status' => 'disponible',
                 'access_code' => 'procesal1009',
                 'due_at' => null,
-                // 20 puntos en total repartidos entre los ejercicios de abajo; el confeti
-                // solo se muestra si el envío alcanza 55% (11/20) o más.
-                'pass_percent' => 55,
+                // 20 puntos en total repartidos entre los ejercicios de abajo. A pedido de
+                // Omar, el confeti se muestra siempre al enviar (sin importar el puntaje),
+                // igual que en Derecho Mercantil II — a diferencia de Derecho Informático,
+                // que sí exige 55% para mostrarlo.
+                'pass_percent' => null,
             ]
         );
 
