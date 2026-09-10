@@ -11,7 +11,7 @@ class AcademicActivity extends Model
     protected $fillable = [
         'academic_course_id', 'slug', 'week_number', 'type', 'title',
         'case_title', 'unit', 'modality', 'group_size', 'case_body',
-        'case_document_path', 'status', 'access_code', 'due_at',
+        'case_document_path', 'status', 'access_code', 'due_at', 'pass_percent',
     ];
 
     protected $casts = [
@@ -164,6 +164,7 @@ class AcademicActivity extends Model
             'matching' => 'Emparejar',
             'ordering' => 'Ordenar',
             'memory' => 'Juego de memoria',
+            'fillblank' => 'Completar palabras',
             default => ucfirst($type),
         };
     }

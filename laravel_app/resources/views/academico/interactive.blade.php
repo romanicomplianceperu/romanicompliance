@@ -177,6 +177,11 @@
   const SAVE_URL = @json($saveUrl);
   const CSRF_TOKEN = @json(csrf_token());
   const JUST_SUBMITTED = @json(session('academico_success') === 'Actividad enviada correctamente.');
+  // Most activities have no pass_percent set (null) and keep celebrating on every submit,
+  // exactly as before. When an activity DOES set one, confetti is reserved for a passing score.
+  const PASS_PERCENT = @json($activity->pass_percent);
+  const GRADING_PERCENT = @json($grading['percent'] ?? null);
+  const PASSED_THRESHOLD = PASS_PERCENT === null || (GRADING_PERCENT !== null && GRADING_PERCENT >= PASS_PERCENT);
 
   const state = { exercises: {} };
 
@@ -550,6 +555,56 @@
     return card;
   }
 
+  // A blank is written as "___" (three or more underscores) inside ex.template; each one
+  // becomes its own text input, in order, collected into an array for isCorrect() to check
+  // elementwise server-side (case/accent-insensitive there, so exact casing doesn't matter).
+  function renderFillBlank(ex) {
+    const card = el('div', 'ac-ex-card');
+    card.appendChild(exHeader(ex));
+
+    const wrap = el('div', 'ac-fill-text');
+    const parts = (ex.template || '').split(/_{3,}/);
+    const blanksCount = ex.blanksCount || Math.max(parts.length - 1, 0);
+    const saved = GRADED ? ex.student_answer : SAVED[ex.id];
+    const answers = (Array.isArray(saved) && saved.length === blanksCount) ? saved.slice() : new Array(blanksCount).fill('');
+    state.exercises[ex.id] = answers;
+
+    const inputs = [];
+    parts.forEach((part, idx) => {
+      if (part) wrap.appendChild(document.createTextNode(part));
+      if (idx < parts.length - 1) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'ac-fill-input';
+        input.autocomplete = 'off';
+        input.value = answers[idx] || '';
+        input.style.width = Math.max(6, (answers[idx] || '').length + 4) + 'ch';
+        if (GRADED) {
+          input.disabled = true;
+          const correctWord = (ex.correct_answer || [])[idx];
+          input.classList.add(ex.correct ? 'answer-correct' : 'answer-wrong');
+        } else {
+          input.addEventListener('input', () => {
+            answers[idx] = input.value;
+            state.exercises[ex.id] = answers;
+            markDirty();
+          });
+        }
+        inputs.push(input);
+        wrap.appendChild(input);
+      }
+    });
+    card.appendChild(wrap);
+
+    if (! GRADED) {
+      card.appendChild(el('p', 'ac-ex-hint', 'Completa cada espacio en blanco con la palabra que corresponde.'));
+    } else if (! ex.correct) {
+      card.appendChild(el('div', 'ac-order-correct-note', 'Respuesta correcta: ' + (ex.correct_answer || []).join(', ')));
+    }
+
+    return card;
+  }
+
   const root = document.getElementById('exercisesRoot');
   if (root) {
     EXERCISES.forEach(ex => {
@@ -559,6 +614,7 @@
       else if (ex.type === 'matching') card = renderMatching(ex);
       else if (ex.type === 'ordering') card = renderOrdering(ex);
       else if (ex.type === 'memory') card = renderMemory(ex);
+      else if (ex.type === 'fillblank') card = renderFillBlank(ex);
       if (card) root.appendChild(card);
     });
   }
@@ -623,7 +679,7 @@
     window.addEventListener('pagehide', function () { if (dirty) doAutosave(); });
   }
 
-  if (JUST_SUBMITTED) {
+  if (JUST_SUBMITTED && PASSED_THRESHOLD) {
     fireConfetti();
   }
 })();

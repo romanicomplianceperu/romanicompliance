@@ -242,6 +242,14 @@
 .ac-mcq-opt.answer-wrong { border-color: #B3413B; background: rgba(179,65,59,0.08); color: #B3413B; }
 .ac-mcq-opt:disabled { cursor: default; opacity: 0.92; }
 
+/* Fill in the blank */
+.ac-fill-text { font-size: 0.98rem; color: var(--ink); background: var(--ivory-dim); border-radius: 10px; padding: 1.1rem 1.2rem; line-height: 2.4; }
+.ac-fill-input { display: inline-block; min-width: 90px; margin: 0 2px; padding: 4px 8px; border: none; border-bottom: 2px solid var(--gold); background: var(--white); color: var(--ink); font-size: 0.95rem; font-weight: 600; text-align: center; border-radius: 4px 4px 0 0; }
+.ac-fill-input:focus { outline: none; border-color: var(--ink); background: var(--gold-pale); }
+.ac-fill-input:disabled { cursor: default; }
+.ac-fill-input.answer-correct { border-color: #1F7A4D; background: rgba(31,122,77,0.1); color: #1F7A4D; }
+.ac-fill-input.answer-wrong { border-color: #B3413B; background: rgba(179,65,59,0.08); color: #B3413B; }
+
 /* Matching (drag and drop) */
 .ac-match-tray { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; min-height: 50px; padding: 12px; background: var(--ivory-dim); border-radius: 10px; }
 .ac-match-drag-chip { touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: pointer; background: var(--white); border: 1.5px solid var(--gold); color: var(--ink); font-size: 0.82rem; font-weight: 600; line-height: 1.4; padding: 0.7rem 0.95rem; min-height: 44px; box-sizing: border-box; display: flex; align-items: center; border-radius: 12px; box-shadow: 0 2px 6px rgba(11,24,41,0.06); transition: box-shadow 0.15s ease, transform 0.15s ease; }

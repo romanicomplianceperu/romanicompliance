@@ -50,6 +50,10 @@ class AcademicActivityExercise extends Model
             'memory' => $base + [
                 'cards' => $this->shuffledMemoryCards(),
             ],
+            'fillblank' => $base + [
+                'template' => $this->payload['template'] ?? '',
+                'blanksCount' => count($this->payload['blanks'] ?? []),
+            ],
             default => $base,
         };
     }
@@ -81,6 +85,7 @@ class AcademicActivityExercise extends Model
             'matching' => $this->matchingIsCorrect($studentAnswer),
             'ordering' => $this->orderingIsCorrect($studentAnswer),
             'memory' => $this->memoryIsCorrect($studentAnswer),
+            'fillblank' => $this->fillBlankIsCorrect($studentAnswer),
             default => false,
         };
     }
@@ -148,6 +153,38 @@ class AcademicActivityExercise extends Model
         return $expected === $got;
     }
 
+    /**
+     * A fill-in-the-blank exercise is correct when every blank matches its expected word,
+     * compared case- and accent-insensitively (so "protección"/"Protección"/"PROTECCION"
+     * all count) so a student isn't marked wrong over capitalization or a missing tilde.
+     */
+    private function fillBlankIsCorrect(mixed $studentAnswer): bool
+    {
+        if (! is_array($studentAnswer)) {
+            return false;
+        }
+
+        $expected = array_values($this->payload['blanks'] ?? []);
+        $given = array_values($studentAnswer);
+
+        if (count($expected) === 0 || count($given) !== count($expected)) {
+            return false;
+        }
+
+        foreach ($expected as $i => $word) {
+            if ($this->normalizeBlankAnswer($given[$i] ?? '') !== $this->normalizeBlankAnswer($word)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function normalizeBlankAnswer(mixed $value): string
+    {
+        return trim(mb_strtolower(\Illuminate\Support\Str::ascii((string) $value)));
+    }
+
     private function correctAnswerForDisplay(): mixed
     {
         return match ($this->type) {
@@ -156,6 +193,7 @@ class AcademicActivityExercise extends Model
             'matching' => $this->payload['pairs'] ?? [],
             'ordering' => $this->payload['correctOrder'] ?? [],
             'memory' => collect($this->payload['pairs'] ?? [])->pluck('id')->values()->all(),
+            'fillblank' => $this->payload['blanks'] ?? [],
             default => null,
         };
     }

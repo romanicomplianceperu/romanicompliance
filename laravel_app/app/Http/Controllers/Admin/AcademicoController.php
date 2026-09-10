@@ -5,18 +5,40 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicActivity;
 use App\Models\AcademicSubmission;
+use App\Models\AcademicUniversity;
 use Illuminate\Http\Request;
 
 class AcademicoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $activities = AcademicActivity::with('course.university')
-            ->withCount(['submissions', 'visits'])
-            ->orderByDesc('id')
-            ->get();
+        $universityId = $request->query('university');
+        $courseId = $request->query('course');
+        $sort = $request->query('sort', 'recent');
 
-        return view('admin.academico.index', compact('activities'));
+        $query = AcademicActivity::with('course.university')
+            ->withCount(['submissions', 'visits'])
+            ->withMax('submissions', 'created_at');
+
+        if ($universityId) {
+            $query->whereHas('course', fn ($q) => $q->where('university_id', $universityId));
+        }
+        if ($courseId) {
+            $query->where('academic_course_id', $courseId);
+        }
+
+        $activities = match ($sort) {
+            'activity' => $query->orderByDesc('id')->get(),
+            'due' => $query->orderByDesc('due_at')->get(),
+            default => $query->orderByRaw('submissions_max_created_at IS NULL, submissions_max_created_at DESC')->get(),
+        };
+
+        $universities = AcademicUniversity::orderBy('order')->get();
+        $courses = $universityId
+            ? AcademicUniversity::findOrFail($universityId)->courses()->orderBy('name')->get()
+            : collect();
+
+        return view('admin.academico.index', compact('activities', 'universities', 'courses', 'universityId', 'courseId', 'sort'));
     }
 
     public function show(AcademicActivity $activity)
