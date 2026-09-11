@@ -15,6 +15,22 @@
 .ac-choice-card h3 { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px; }
 .ac-choice-card p { font-size: 0.85rem; color: var(--slate); line-height: 1.55; }
 
+/* Convocatoria de practicantes — deliberately louder than the two choice cards above it,
+   since it's an invitation to apply, not just another way to navigate the section. */
+.ac-convocatoria-card { position: relative; display: block; max-width: 780px; width: 100%; margin-top: 1.6rem; padding: 2.2rem 2.4rem; border-radius: 18px; text-align: left; text-decoration: none; background: linear-gradient(135deg, var(--ink) 0%, #16283F 60%, #1D3452 100%); border: 1px solid rgba(201,169,97,0.35); box-shadow: 0 20px 50px rgba(11,24,41,0.18); overflow: hidden; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.ac-convocatoria-card::before { content: ''; position: absolute; top: -60%; right: -10%; width: 320px; height: 320px; background: radial-gradient(circle, rgba(201,169,97,0.25), transparent 70%); pointer-events: none; }
+.ac-convocatoria-card:hover { transform: translateY(-4px); box-shadow: 0 26px 60px rgba(11,24,41,0.26); }
+.ac-convocatoria-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink); background: linear-gradient(135deg, var(--gold-light), var(--gold)); padding: 5px 13px; border-radius: 20px; margin-bottom: 1rem; }
+.ac-convocatoria-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); animation: acPulse 1.8s ease-in-out infinite; }
+@keyframes acPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.ac-convocatoria-card h2 { font-family: var(--serif); font-size: clamp(1.25rem, 2.6vw, 1.55rem); color: var(--white); font-weight: 600; line-height: 1.3; margin-bottom: 0.7rem; max-width: 520px; }
+.ac-convocatoria-card > p { font-size: 0.88rem; color: rgba(255,255,255,0.72); line-height: 1.65; max-width: 520px; margin-bottom: 1.2rem; }
+.ac-convocatoria-highlights { list-style: none; padding: 0; margin: 0 0 1.5rem; display: flex; flex-direction: column; gap: 7px; }
+.ac-convocatoria-highlights li { font-size: 0.8rem; color: rgba(255,255,255,0.85); display: flex; align-items: flex-start; gap: 8px; }
+.ac-convocatoria-highlights li::before { content: '✓'; color: var(--gold-light); font-weight: 700; flex-shrink: 0; }
+.ac-convocatoria-cta { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--ink); font-weight: 700; font-size: 0.85rem; padding: 12px 26px; border-radius: 8px; }
+@media (max-width: 640px) { .ac-convocatoria-card { padding: 1.8rem 1.5rem; } }
+
 /* University cards */
 .ac-uni-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; max-width: 980px; width: 100%; }
 @media (max-width: 900px) { .ac-uni-grid { grid-template-columns: 1fr 1fr; } }

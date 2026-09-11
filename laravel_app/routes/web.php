@@ -30,6 +30,8 @@ use App\Http\Controllers\CourseQuestionController;
 use App\Http\Controllers\FedericoEditorController;
 use App\Http\Controllers\GuestEnrollController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InternshipApplicationController;
+use App\Http\Controllers\Admin\InternshipApplicationController as AdminInternshipApplicationController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\Learning\CatalogController;
 use App\Http\Controllers\Learning\CertificateController as LearningCertificateController;
@@ -71,6 +73,17 @@ Route::prefix('academico')->name('academico.')->group(function () {
     Route::get('/alumno', [AcademicoController::class, 'alumno'])->name('alumno');
     Route::get('/ingreso', [AcademicoController::class, 'identify'])->name('identify');
     Route::post('/ingreso', [AcademicoController::class, 'identifyStore'])->name('identify.store');
+
+    // Must be registered before the /{university} wildcard below, otherwise "convocatoria"
+    // gets swallowed as a university slug and 404s via firstOrFail() instead of ever
+    // reaching these controllers.
+    Route::prefix('convocatoria')->name('convocatoria.')->group(function () {
+        Route::get('/', [InternshipApplicationController::class, 'info'])->name('info');
+        Route::get('/postular', [InternshipApplicationController::class, 'form'])->name('form');
+        Route::post('/postular', [InternshipApplicationController::class, 'store'])->name('store');
+        Route::get('/gracias', [InternshipApplicationController::class, 'thanks'])->name('thanks');
+    });
+
     Route::get('/{university}', [AcademicoController::class, 'university'])->name('university');
     Route::get('/{university}/{course}', [AcademicoController::class, 'course'])->name('course');
     Route::post('/{university}/{course}/acceso', [AcademicoController::class, 'unlockCourse'])->name('course.unlock');
@@ -184,4 +197,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/academico/{activity}', [AdminAcademicoController::class, 'show'])->name('academico.show');
     Route::put('/academico/{activity}', [AdminAcademicoController::class, 'update'])->name('academico.update');
     Route::patch('/academico/envios/{submission}', [AdminAcademicoController::class, 'updateStatus'])->name('academico.submissions.status');
+
+    Route::get('/practicantes', [AdminInternshipApplicationController::class, 'index'])->name('internships.index');
+    Route::get('/practicantes/{internship}', [AdminInternshipApplicationController::class, 'show'])->name('internships.show');
+    Route::patch('/practicantes/{internship}/estado', [AdminInternshipApplicationController::class, 'updateStatus'])->name('internships.status');
 });
