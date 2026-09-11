@@ -4,22 +4,23 @@
 @section('description', 'Postula al programa de pasantías de Romani Compliance: aprende compliance, ALA/CFT y derecho penal con casos reales y mentoría directa de nuestro equipo.')
 
 @section('styles')
-.cv-urgency-banner { background: #E1261C; color: #fff; text-align: center; padding: 0.9rem 1.2rem; animation: cv-urgency-pulse 1.6s ease-in-out infinite; }
+.cv-urgency-banner { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--ink); text-align: center; padding: 0.9rem 1.2rem; }
 .cv-urgency-banner .wrap { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .cv-urgency-banner svg { width: 18px; height: 18px; flex-shrink: 0; }
 .cv-urgency-banner p { font-size: 0.85rem; font-weight: 600; line-height: 1.5; margin: 0; }
-.cv-urgency-banner strong { font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
-@keyframes cv-urgency-pulse {
-  0%, 100% { background: #E1261C; box-shadow: 0 0 0 rgba(225,38,28,0); }
-  50% { background: #FF453A; box-shadow: 0 0 18px rgba(255,69,58,0.55); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .cv-urgency-banner { animation: none; background: #E1261C; }
-}
+.cv-urgency-banner strong { font-weight: 800; }
 
 .cv-hero { background: linear-gradient(150deg, var(--ink) 0%, #16283F 55%, #1D3452 100%); padding: 4.5rem 0 4rem; position: relative; overflow: hidden; }
 .cv-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
 .cv-hero-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink); background: linear-gradient(135deg, var(--gold-light), var(--gold)); padding: 6px 16px; border-radius: 20px; margin-bottom: 1.4rem; }
+.cv-hero-badge.is-urgent { color: #fff; background: #E1261C; animation: cv-urgency-pulse 1.6s ease-in-out infinite; }
+@keyframes cv-urgency-pulse {
+  0%, 100% { background: #E1261C; box-shadow: 0 0 0 rgba(225,38,28,0); }
+  50% { background: #FF453A; box-shadow: 0 0 16px rgba(255,69,58,0.6); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-hero-badge.is-urgent { animation: none; background: #E1261C; }
+}
 .cv-hero h1 { font-family: var(--serif); font-size: clamp(1.9rem, 4.4vw, 3rem); color: var(--white); font-weight: 600; line-height: 1.2; margin-bottom: 1.1rem; max-width: 720px; }
 .cv-hero p { font-size: 1rem; color: rgba(255,255,255,0.68); max-width: 600px; line-height: 1.75; margin-bottom: 2rem; }
 .cv-hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
@@ -83,7 +84,7 @@
 @endif
 <section class="cv-hero">
   <div class="wrap">
-    <div class="cv-hero-badge">{{ $applicationsOpen ? 'Convocatoria abierta · Cierra '.$deadlineLabel : 'Convocatoria cerrada' }}</div>
+    <div class="cv-hero-badge {{ $applicationsOpen ? 'is-urgent' : '' }}">{{ $applicationsOpen ? 'Convocatoria abierta · Cierra '.$deadlineLabel : 'Convocatoria cerrada' }}</div>
     <h1>¿Te gustaría formar parte del equipo de Romani Compliance?</h1>
     <p>Buscamos estudiantes de derecho para realizar una pasantía en nuestro estudio: acompañarás casos reales de compliance corporativo, prevención de lavado de activos y derecho penal, con mentoría directa de nuestro equipo de abogados.</p>
     <div class="cv-hero-ctas">
