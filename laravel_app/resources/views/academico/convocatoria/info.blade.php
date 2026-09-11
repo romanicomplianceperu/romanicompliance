@@ -81,7 +81,6 @@
     <div class="section-header reveal">
       <div class="gold-line"></div>
       <h2>Lo que ganas en tu pasantía con nosotros</h2>
-      <p>Un programa de pasantías pensado para dejarte experiencia real, no solo horas firmadas.</p>
     </div>
     <div class="cv-benefits-grid">
       <div class="cv-benefit-card reveal stagger-1">
