@@ -67,7 +67,7 @@
     <p>Buscamos estudiantes de derecho para realizar una pasantía en nuestro estudio: acompañarás casos reales de compliance corporativo, prevención de lavado de activos y derecho penal, con mentoría directa de nuestro equipo de abogados.</p>
     <div class="cv-hero-ctas">
       @if($applicationsOpen)
-        <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero postular →</a>
+        <a href="#beneficios" class="cv-btn-gold">Conoce los beneficios →</a>
       @else
         <span class="cv-btn-gold" style="opacity:0.5;cursor:not-allowed;">Convocatoria cerrada</span>
       @endif
@@ -76,7 +76,7 @@
   </div>
 </section>
 
-<section class="cv-section">
+<section class="cv-section" id="beneficios">
   <div class="wrap">
     <div class="section-header reveal">
       <div class="gold-line"></div>
@@ -178,8 +178,8 @@
 <section class="cv-final-cta">
   <div class="wrap reveal">
     @if($applicationsOpen)
-      <h2>¿Listo para postular?</h2>
-      <p>El formulario te toma solo unos minutos. Cuéntanos sobre ti y nos pondremos en contacto contigo por WhatsApp. Postulaciones abiertas hasta el {{ $deadlineLabel }}.</p>
+      <h2>Ya conoces los beneficios, el equipo y tus funciones como pasante</h2>
+      <p>Si esto es para ti, el formulario te toma solo unos minutos. Cuéntanos sobre ti y nos pondremos en contacto contigo por WhatsApp. Postulaciones abiertas hasta el {{ $deadlineLabel }}.</p>
       <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero inscribirme →</a>
     @else
       <h2>La convocatoria ha finalizado</h2>
