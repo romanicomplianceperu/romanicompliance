@@ -142,9 +142,9 @@ class InternshipApplication extends Model
      * cliente para no tener que apagar el formulario a mano. store()/form() en el
      * controller usan applicationsOpen() para bloquear envíos fuera de plazo.
      */
-    public const APPLICATION_DEADLINE = '2026-09-13 12:00:00';
+    public const APPLICATION_DEADLINE = '2026-09-11 18:00:00';
 
-    public const APPLICATION_DEADLINE_LABEL = 'domingo 13 de septiembre, 12:00 p. m.';
+    public const APPLICATION_DEADLINE_LABEL = 'hoy, viernes 11 de septiembre, 6:00 p. m.';
 
     public static function applicationsOpen(): bool
     {

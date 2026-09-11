@@ -4,6 +4,12 @@
 @section('description', 'Postula al programa de pasantías de Romani Compliance: aprende compliance, ALA/CFT y derecho penal con casos reales y mentoría directa de nuestro equipo.')
 
 @section('styles')
+.cv-urgency-banner { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--ink); text-align: center; padding: 0.9rem 1.2rem; }
+.cv-urgency-banner .wrap { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.cv-urgency-banner svg { width: 18px; height: 18px; flex-shrink: 0; }
+.cv-urgency-banner p { font-size: 0.85rem; font-weight: 600; line-height: 1.5; margin: 0; }
+.cv-urgency-banner strong { font-weight: 800; }
+
 .cv-hero { background: linear-gradient(150deg, var(--ink) 0%, #16283F 55%, #1D3452 100%); padding: 4.5rem 0 4rem; position: relative; overflow: hidden; }
 .cv-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
 .cv-hero-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink); background: linear-gradient(135deg, var(--gold-light), var(--gold)); padding: 6px 16px; border-radius: 20px; margin-bottom: 1.4rem; }
@@ -60,9 +66,17 @@
 @endsection
 
 @section('content')
+@if($applicationsOpen)
+<div class="cv-urgency-banner">
+  <div class="wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+    <p>Por la gran acogida de esta convocatoria, estamos cerca de alcanzar el número máximo de postulantes. <strong>Cerraremos las inscripciones {{ $deadlineLabel }}.</strong> Gracias por su interés.</p>
+  </div>
+</div>
+@endif
 <section class="cv-hero">
   <div class="wrap">
-    <div class="cv-hero-badge">{{ $applicationsOpen ? 'Convocatoria abierta · Cierra el '.$deadlineLabel : 'Convocatoria cerrada' }}</div>
+    <div class="cv-hero-badge">{{ $applicationsOpen ? 'Convocatoria abierta · Cierra '.$deadlineLabel : 'Convocatoria cerrada' }}</div>
     <h1>¿Te gustaría formar parte del equipo de Romani Compliance?</h1>
     <p>Buscamos estudiantes de derecho para realizar una pasantía en nuestro estudio: acompañarás casos reales de compliance corporativo, prevención de lavado de activos y derecho penal, con mentoría directa de nuestro equipo de abogados.</p>
     <div class="cv-hero-ctas">
@@ -179,11 +193,11 @@
   <div class="wrap reveal">
     @if($applicationsOpen)
       <h2>Ya conoces los beneficios, el equipo y tus funciones como pasante</h2>
-      <p>Si esto es para ti, el formulario te toma solo unos minutos. Cuéntanos sobre ti y nos pondremos en contacto contigo por WhatsApp. Postulaciones abiertas hasta el {{ $deadlineLabel }}.</p>
+      <p>Si esto es para ti, el formulario te toma solo unos minutos. Cuéntanos sobre ti y nos pondremos en contacto contigo por WhatsApp. Postulaciones abiertas hasta {{ $deadlineLabel }}.</p>
       <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero inscribirme →</a>
     @else
       <h2>La convocatoria ha finalizado</h2>
-      <p>Cerramos la recepción de postulaciones el {{ $deadlineLabel }}. Gracias por tu interés — mantente atento a nuestras próximas convocatorias.</p>
+      <p>Cerramos la recepción de postulaciones {{ $deadlineLabel }}. Gracias por tu interés — mantente atento a nuestras próximas convocatorias.</p>
     @endif
   </div>
 </section>
