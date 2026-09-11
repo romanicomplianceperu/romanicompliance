@@ -4,11 +4,18 @@
 @section('description', 'Postula al programa de pasantías de Romani Compliance: aprende compliance, ALA/CFT y derecho penal con casos reales y mentoría directa de nuestro equipo.')
 
 @section('styles')
-.cv-urgency-banner { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--ink); text-align: center; padding: 0.9rem 1.2rem; }
+.cv-urgency-banner { background: #E1261C; color: #fff; text-align: center; padding: 0.9rem 1.2rem; animation: cv-urgency-pulse 1.6s ease-in-out infinite; }
 .cv-urgency-banner .wrap { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .cv-urgency-banner svg { width: 18px; height: 18px; flex-shrink: 0; }
 .cv-urgency-banner p { font-size: 0.85rem; font-weight: 600; line-height: 1.5; margin: 0; }
-.cv-urgency-banner strong { font-weight: 800; }
+.cv-urgency-banner strong { font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
+@keyframes cv-urgency-pulse {
+  0%, 100% { background: #E1261C; box-shadow: 0 0 0 rgba(225,38,28,0); }
+  50% { background: #FF453A; box-shadow: 0 0 18px rgba(255,69,58,0.55); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-urgency-banner { animation: none; background: #E1261C; }
+}
 
 .cv-hero { background: linear-gradient(150deg, var(--ink) 0%, #16283F 55%, #1D3452 100%); padding: 4.5rem 0 4rem; position: relative; overflow: hidden; }
 .cv-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
