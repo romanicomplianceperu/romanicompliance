@@ -16,7 +16,8 @@ use Illuminate\Database\Eloquent\Model;
 class InternshipApplication extends Model
 {
     protected $fillable = [
-        'full_name', 'phone', 'email', 'interest_area', 'occupation_status',
+        'full_name', 'phone', 'email', 'university', 'university_other',
+        'interest_area', 'occupation_status',
         'schedule_availability', 'weekly_hours', 'skills', 'academic_cycle',
         'specialized_answers', 'office_word_level', 'office_excel_level',
         'ai_tools', 'ai_tools_other', 'ai_tools_paid', 'cv_path', 'motivation',
@@ -28,6 +29,20 @@ class InternshipApplication extends Model
         'skills' => 'array',
         'specialized_answers' => 'array',
         'ai_tools' => 'array',
+    ];
+
+    /**
+     * "otro" revela un campo de texto libre en el formulario (ver university_other),
+     * igual que "otra" en AI_TOOLS.
+     */
+    public const UNIVERSITIES = [
+        'unp' => 'Universidad Nacional de Piura',
+        'upt' => 'Universidad Privada de Trujillo',
+        'udep' => 'Universidad de Piura',
+        'upao' => 'Universidad Privada Antenor Orrego',
+        'utp' => 'Universidad Tecnológica del Perú',
+        'ucv' => 'Universidad César Vallejo',
+        'otro' => 'Otra',
     ];
 
     public const INTEREST_AREAS = [
@@ -135,6 +150,15 @@ class InternshipApplication extends Model
     {
         return \Illuminate\Support\Carbon::now('America/Lima')
             ->lt(\Illuminate\Support\Carbon::parse(self::APPLICATION_DEADLINE, 'America/Lima'));
+    }
+
+    public function universityLabel(): string
+    {
+        if ($this->university === 'otro' && filled($this->university_other)) {
+            return $this->university_other;
+        }
+
+        return self::UNIVERSITIES[$this->university] ?? $this->university;
     }
 
     public function interestAreaLabel(): string

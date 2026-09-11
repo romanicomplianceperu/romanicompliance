@@ -41,6 +41,7 @@ class InternshipApplicationController extends Controller
         }
 
         return view('academico.convocatoria.form', [
+            'universities' => InternshipApplication::UNIVERSITIES,
             'interestAreas' => InternshipApplication::INTEREST_AREAS,
             'occupationStatuses' => InternshipApplication::OCCUPATION_STATUSES,
             'scheduleBlocks' => InternshipApplication::SCHEDULE_BLOCKS,
@@ -66,6 +67,8 @@ class InternshipApplicationController extends Controller
             'full_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:30'],
             'email' => ['required', 'email', 'max:255'],
+            'university' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::UNIVERSITIES))],
+            'university_other' => ['nullable', 'string', 'max:255'],
             'interest_area' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::INTEREST_AREAS))],
             'occupation_status' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::OCCUPATION_STATUSES))],
             'schedule_availability' => ['required', 'array', 'min:1'],
@@ -92,6 +95,7 @@ class InternshipApplicationController extends Controller
             'phone.required' => 'El número de celular es obligatorio.',
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.email' => 'Escribe un correo electrónico válido.',
+            'university.required' => 'Indica tu universidad de procedencia.',
             'interest_area.required' => 'Elige un área de interés.',
             'occupation_status.required' => 'Indica tu situación actual.',
             'schedule_availability.required' => 'Marca al menos un horario de disponibilidad.',
@@ -117,10 +121,14 @@ class InternshipApplicationController extends Controller
             return back()->withErrors(['specialized_answers' => 'Responde todas las preguntas antes de enviar.'])->withInput();
         }
 
-        // "Otra" solo vale si de verdad cuentan cuál — si no, "Otra" quedaría sin
+        // "Otra"/"otro" solo valen si de verdad cuentan cuál — si no, quedarían sin
         // información útil para el equipo.
         if (in_array('otra', $data['ai_tools'], true) && blank($data['ai_tools_other'] ?? null)) {
             return back()->withErrors(['ai_tools_other' => 'Cuéntanos cuál otra herramienta de IA usas.'])->withInput();
+        }
+
+        if ($data['university'] === 'otro' && blank($data['university_other'] ?? null)) {
+            return back()->withErrors(['university_other' => 'Cuéntanos el nombre de tu universidad.'])->withInput();
         }
 
         if ($request->hasFile('cv')) {

@@ -16,6 +16,7 @@
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:13.5px;line-height:1.6;border-collapse:collapse;">
         <tr><td style="padding:6px 0;color:#6B7280;width:170px;vertical-align:top;">Teléfono</td><td style="padding:6px 0;">{{ $application->phone }}</td></tr>
         <tr><td style="padding:6px 0;color:#6B7280;vertical-align:top;">Correo</td><td style="padding:6px 0;">{{ $application->email }}</td></tr>
+        <tr><td style="padding:6px 0;color:#6B7280;vertical-align:top;">Universidad</td><td style="padding:6px 0;">{{ $application->universityLabel() }}</td></tr>
         <tr><td style="padding:6px 0;color:#6B7280;vertical-align:top;">Área de interés</td><td style="padding:6px 0;">{{ $application->interestAreaLabel() }}</td></tr>
         <tr><td style="padding:6px 0;color:#6B7280;vertical-align:top;">Situación actual</td><td style="padding:6px 0;">{{ $application->occupationStatusLabel() }}</td></tr>
         <tr><td style="padding:6px 0;color:#6B7280;vertical-align:top;">Disponibilidad horaria</td><td style="padding:6px 0;">{{ implode(', ', $application->scheduleAvailabilityLabels()) }}</td></tr>

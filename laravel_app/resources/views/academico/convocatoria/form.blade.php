@@ -109,6 +109,19 @@
               <label class="field-label">Correo electrónico (institucional o personal)</label>
               <input type="email" name="email" value="{{ old('email') }}" required maxlength="255">
             </div>
+            <div class="cv-input-group full">
+              <label class="field-label">Universidad de procedencia</label>
+              <select name="university" id="universitySelect" required>
+                <option value="" disabled {{ old('university') ? '' : 'selected' }}>Selecciona tu universidad</option>
+                @foreach($universities as $key => $label)
+                  <option value="{{ $key }}" {{ old('university') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="cv-input-group full" id="universityOtherGroup" style="display:{{ old('university') === 'otro' ? 'block' : 'none' }};">
+              <label class="field-label">¿Cuál?</label>
+              <input type="text" name="university_other" id="universityOtherInput" value="{{ old('university_other') }}" maxlength="255" placeholder="Nombre de tu universidad">
+            </div>
           </div>
 
           <div class="cv-fieldset">
@@ -312,6 +325,21 @@
   }
 
   otraCheckbox.addEventListener('change', toggle);
+})();
+
+(function () {
+  var select = document.getElementById('universitySelect');
+  var otherGroup = document.getElementById('universityOtherGroup');
+  var otherInput = document.getElementById('universityOtherInput');
+  if (! select) return;
+
+  function toggle() {
+    var isOtro = select.value === 'otro';
+    otherGroup.style.display = isOtro ? 'block' : 'none';
+    if (! isOtro) otherInput.value = '';
+  }
+
+  select.addEventListener('change', toggle);
 })();
 
 (function () {

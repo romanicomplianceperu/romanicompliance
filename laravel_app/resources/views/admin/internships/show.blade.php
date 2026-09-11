@@ -44,6 +44,7 @@
 <div class="card">
   <h3 style="font-size:1rem;margin-bottom:1rem;">Perfil</h3>
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem 2rem;font-size:0.88rem;margin-bottom:1.2rem;">
+    <div><div class="form-hint" style="margin-bottom:2px;">Universidad</div>{{ $application->universityLabel() }}</div>
     <div><div class="form-hint" style="margin-bottom:2px;">Área de interés</div>{{ $application->interestAreaLabel() }}</div>
     <div><div class="form-hint" style="margin-bottom:2px;">Ciclo académico</div>{{ $application->academicCycleLabel() }}</div>
     <div><div class="form-hint" style="margin-bottom:2px;">Situación actual</div>{{ $application->occupationStatusLabel() }}</div>
