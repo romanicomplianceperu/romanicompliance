@@ -59,12 +59,24 @@
 .cv-dropzone-filename { font-size: 0.8rem; color: var(--gold); font-weight: 700; margin-top: 8px; }
 .cv-dropzone-remove { display: inline-block; margin-top: 6px; font-size: 0.72rem; color: var(--slate-light); text-decoration: underline; cursor: pointer; }
 
+.cv-optional-section { margin-bottom: 2.2rem; padding: 1.6rem 1.7rem; background: var(--ivory-dim); border: 1.5px dashed var(--line); border-radius: 14px; }
+.cv-optional-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); background: var(--white); border: 1px solid var(--gold-light); padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
+.cv-optional-title { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.cv-optional-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; margin-bottom: 1.5rem; }
+.cv-optional-item { margin-bottom: 1.7rem; }
+.cv-optional-item:last-child { margin-bottom: 0; }
+.cv-optional-item-label { font-size: 0.85rem; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.cv-optional-item .cv-dropzone { margin-left: 0; background: var(--white); }
+.cv-optional-item textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--line); border-radius: 8px; font-size: 0.9rem; font-family: var(--sans); color: var(--ink); background: var(--white); resize: vertical; min-height: 90px; }
+.cv-optional-item textarea:focus { outline: none; border-color: var(--gold); }
+
 @media (max-width: 640px) {
   .cv-form-header { padding: 1.8rem 1.5rem; }
   .cv-form-body { padding: 1.6rem 1.5rem 2rem; }
   .cv-input-row { grid-template-columns: 1fr; margin-left: 0; gap: 0; }
   .cv-input-group { margin-left: 0; }
   .cv-fieldset-hint, .cv-pill-group, .cv-skill-counter, .cv-q-block { margin-left: 0; }
+  .cv-optional-section { padding: 1.3rem 1.2rem; }
 }
 @endsection
 
@@ -268,23 +280,26 @@
             @endforeach
           </div>
 
-          <div class="cv-fieldset">
-            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">8</span> Tu CV <span class="cv-optional-tag">Opcional</span></div>
-            <div class="cv-fieldset-hint">Este paso es completamente opcional: no subir tu CV no elimina tu posibilidad de ser considerado, solo nos ayuda a conocerte un poco más si ya tienes uno listo.</div>
-            <div class="cv-dropzone" id="cvDropzone">
-              <input type="file" name="cv" id="cvFileInput" accept=".pdf,.doc,.docx" style="display:none;">
-              <div class="cv-dropzone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></div>
-              <div class="cv-dropzone-text" id="cvDropzoneText">Arrastra tu CV aquí o haz clic para elegir un archivo</div>
-              <div class="cv-dropzone-subtext">PDF o Word, máx. 5 MB</div>
-              <div class="cv-dropzone-filename" id="cvFileName" style="display:none;"></div>
-              <div class="cv-dropzone-remove" id="cvRemoveBtn" style="display:none;">Quitar archivo</div>
-            </div>
-          </div>
+          <div class="cv-optional-section">
+            <div class="cv-optional-eyebrow">✦ Esto es opcional</div>
+            <div class="cv-optional-title">Puedes enviar tu solicitud sin completar esto</div>
+            <div class="cv-optional-desc">Nada de lo que hay aquí abajo afecta tu postulación. Complétalo solo si quieres — no subirlo o dejarlo en blanco no reduce tus posibilidades de ser considerado.</div>
 
-          <div class="cv-fieldset">
-            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">9</span> ¿Por qué te interesa Romani Compliance? <span class="cv-optional-tag">Opcional</span></div>
-            <div class="cv-input-group full">
-              <textarea name="motivation" maxlength="2000" placeholder="Cuéntanos brevemente qué te motiva a postular (no es obligatorio)">{{ old('motivation') }}</textarea>
+            <div class="cv-optional-item">
+              <div class="cv-optional-item-label">Tu CV (PDF o Word)</div>
+              <div class="cv-dropzone" id="cvDropzone">
+                <input type="file" name="cv" id="cvFileInput" accept=".pdf,.doc,.docx" style="display:none;">
+                <div class="cv-dropzone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></div>
+                <div class="cv-dropzone-text" id="cvDropzoneText">Arrastra tu CV aquí o haz clic para elegir un archivo</div>
+                <div class="cv-dropzone-subtext">Máx. 5 MB · puedes dejarlo vacío</div>
+                <div class="cv-dropzone-filename" id="cvFileName" style="display:none;"></div>
+                <div class="cv-dropzone-remove" id="cvRemoveBtn" style="display:none;">Quitar archivo</div>
+              </div>
+            </div>
+
+            <div class="cv-optional-item">
+              <div class="cv-optional-item-label">¿Por qué te interesa Romani Compliance?</div>
+              <textarea name="motivation" maxlength="2000" placeholder="Cuéntanos brevemente qué te motiva a postular (puedes dejarlo en blanco)">{{ old('motivation') }}</textarea>
             </div>
           </div>
 
