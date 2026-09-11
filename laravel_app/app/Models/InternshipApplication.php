@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * A postulación (application) submitted from the public "convocatoria de practicantes"
+ * A postulación (application) submitted from the public "convocatoria de pasantías"
  * funnel: /academico/convocatoria -> .../postular -> .../gracias.
  *
  * All the option lists below (areas, disponibilidad, habilidades, ciclo, preguntas
@@ -19,7 +19,8 @@ class InternshipApplication extends Model
         'full_name', 'phone', 'email', 'interest_area', 'occupation_status',
         'schedule_availability', 'weekly_hours', 'skills', 'academic_cycle',
         'specialized_answers', 'office_word_level', 'office_excel_level',
-        'ai_tools', 'ai_tools_paid', 'motivation', 'status', 'ip_address', 'user_agent',
+        'ai_tools', 'ai_tools_other', 'ai_tools_paid', 'cv_path', 'motivation',
+        'status', 'ip_address', 'user_agent',
     ];
 
     protected $casts = [
@@ -37,7 +38,7 @@ class InternshipApplication extends Model
     public const OCCUPATION_STATUSES = [
         'solo_estudio' => 'Solo estudio',
         'estudio_y_trabajo' => 'Estudio y trabajo',
-        'trabajo_y_busco_practicas' => 'Trabajo actualmente y busco prácticas',
+        'trabajo_y_busco_practicas' => 'Trabajo actualmente y busco una pasantía',
     ];
 
     public const SCHEDULE_BLOCKS = [
@@ -99,11 +100,13 @@ class InternshipApplication extends Model
     /**
      * Herramientas de IA que el postulante usa. "ninguna" evita forzar a marcar algo
      * cuando no usa ninguna — sin esa opción, alguien honesto no tendría qué marcar.
+     * "otra" revela un campo de texto libre en el formulario (ver ai_tools_other).
      */
     public const AI_TOOLS = [
         'chatgpt' => 'ChatGPT',
         'claude' => 'Claude',
         'gemini' => 'Gemini',
+        'otra' => 'Otra',
         'ninguna' => 'Ninguna de las anteriores',
     ];
 
@@ -118,6 +121,21 @@ class InternshipApplication extends Model
         'aceptado' => 'Aceptado',
         'descartado' => 'Descartado',
     ];
+
+    /**
+     * La convocatoria se cierra sola en esta fecha (hora de Lima) — pedido explícito del
+     * cliente para no tener que apagar el formulario a mano. store()/form() en el
+     * controller usan applicationsOpen() para bloquear envíos fuera de plazo.
+     */
+    public const APPLICATION_DEADLINE = '2026-09-13 12:00:00';
+
+    public const APPLICATION_DEADLINE_LABEL = 'domingo 13 de septiembre, 12:00 p. m.';
+
+    public static function applicationsOpen(): bool
+    {
+        return \Illuminate\Support\Carbon::now('America/Lima')
+            ->lt(\Illuminate\Support\Carbon::parse(self::APPLICATION_DEADLINE, 'America/Lima'));
+    }
 
     public function interestAreaLabel(): string
     {
@@ -188,12 +206,23 @@ class InternshipApplication extends Model
     public function aiToolsLabels(): array
     {
         return collect($this->ai_tools ?? [])
-            ->map(fn ($key) => self::AI_TOOLS[$key] ?? $key)
+            ->map(function ($key) {
+                if ($key === 'otra' && filled($this->ai_tools_other)) {
+                    return 'Otra: '.$this->ai_tools_other;
+                }
+
+                return self::AI_TOOLS[$key] ?? $key;
+            })
             ->all();
     }
 
     public function aiToolsPaidLabel(): string
     {
         return self::YES_NO[$this->ai_tools_paid] ?? $this->ai_tools_paid;
+    }
+
+    public function cvUrl(): ?string
+    {
+        return $this->cv_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($this->cv_path) : null;
     }
 }

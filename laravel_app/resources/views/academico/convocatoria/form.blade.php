@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Postula a prácticas — Romani Compliance')
+@section('title', 'Postula a la pasantía — Romani Compliance')
 
 @section('styles')
 .cv-form-shell { padding: 3rem 0 5rem; background: var(--ivory); min-height: calc(100vh - 71px); }
@@ -47,6 +47,17 @@
 .cv-submit-btn { width: 100%; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--ink); font-weight: 700; font-size: 0.95rem; padding: 15px; border: none; border-radius: 8px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; font-family: var(--sans); }
 .cv-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(201,169,97,0.3); }
 
+.cv-ai-other { margin-left: 0; margin-top: 10px; max-width: 320px; }
+
+.cv-dropzone { margin-left: 36px; border: 1.5px dashed var(--line); border-radius: 12px; padding: 22px; text-align: center; cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease; }
+.cv-dropzone:hover, .cv-dropzone.is-dragover { border-color: var(--gold); background: var(--gold-pale); }
+.cv-dropzone.has-file { border-style: solid; border-color: var(--gold); }
+.cv-dropzone-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.cv-dropzone-text { font-size: 0.85rem; color: var(--ink); font-weight: 600; }
+.cv-dropzone-subtext { font-size: 0.74rem; color: var(--slate-light); margin-top: 4px; }
+.cv-dropzone-filename { font-size: 0.8rem; color: var(--gold); font-weight: 700; margin-top: 8px; }
+.cv-dropzone-remove { display: inline-block; margin-top: 6px; font-size: 0.72rem; color: var(--slate-light); text-decoration: underline; cursor: pointer; }
+
 @media (max-width: 640px) {
   .cv-form-header { padding: 1.8rem 1.5rem; }
   .cv-form-body { padding: 1.6rem 1.5rem 2rem; }
@@ -61,7 +72,7 @@
   <div class="wrap">
     <div class="cv-form-card">
       <div class="cv-form-header">
-        <div class="eyebrow">Convocatoria de practicantes</div>
+        <div class="eyebrow">Convocatoria de pasantías</div>
         <h1>Cuéntanos sobre ti</h1>
         <p>Toma solo unos minutos. Revisaremos tu perfil y te contactaremos por WhatsApp.</p>
       </div>
@@ -78,7 +89,7 @@
           </div>
         @endif
 
-        <form method="POST" action="{{ route('academico.convocatoria.store') }}" id="cvForm">
+        <form method="POST" action="{{ route('academico.convocatoria.store') }}" id="cvForm" enctype="multipart/form-data">
           @csrf
 
           <div class="cv-fieldset">
@@ -174,10 +185,14 @@
                 @php $oldAiTools = old('ai_tools', []); @endphp
                 @foreach($aiTools as $key => $label)
                   <label class="cv-pill">
-                    <input type="checkbox" name="ai_tools[]" value="{{ $key }}" {{ in_array($key, $oldAiTools) ? 'checked' : '' }}>
+                    <input type="checkbox" name="ai_tools[]" value="{{ $key }}" id="{{ $key === 'otra' ? 'aiToolOtraCheckbox' : '' }}" {{ in_array($key, $oldAiTools) ? 'checked' : '' }}>
                     <span class="pill-label">{{ $label }}</span>
                   </label>
                 @endforeach
+              </div>
+              <div class="cv-input-group cv-ai-other" id="aiToolOtherGroup" style="display:{{ in_array('otra', $oldAiTools) ? 'block' : 'none' }};">
+                <label class="field-label">¿Cuál?</label>
+                <input type="text" name="ai_tools_other" id="aiToolOtherInput" value="{{ old('ai_tools_other') }}" maxlength="255" placeholder="Nombre de la herramienta">
               </div>
             </div>
             <div class="cv-q-block">
@@ -240,7 +255,20 @@
           </div>
 
           <div class="cv-fieldset">
-            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">8</span> ¿Por qué te interesa Romani Compliance? <span class="cv-optional-tag">Opcional</span></div>
+            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">8</span> Tu CV <span class="cv-optional-tag">Opcional</span></div>
+            <div class="cv-fieldset-hint">Este paso es completamente opcional: no subir tu CV no elimina tu posibilidad de ser considerado, solo nos ayuda a conocerte un poco más si ya tienes uno listo.</div>
+            <div class="cv-dropzone" id="cvDropzone">
+              <input type="file" name="cv" id="cvFileInput" accept=".pdf,.doc,.docx" style="display:none;">
+              <div class="cv-dropzone-icon">📄</div>
+              <div class="cv-dropzone-text" id="cvDropzoneText">Arrastra tu CV aquí o haz clic para elegir un archivo</div>
+              <div class="cv-dropzone-subtext">PDF o Word, máx. 5 MB</div>
+              <div class="cv-dropzone-filename" id="cvFileName" style="display:none;"></div>
+              <div class="cv-dropzone-remove" id="cvRemoveBtn" style="display:none;">Quitar archivo</div>
+            </div>
+          </div>
+
+          <div class="cv-fieldset">
+            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">9</span> ¿Por qué te interesa Romani Compliance? <span class="cv-optional-tag">Opcional</span></div>
             <div class="cv-input-group full">
               <textarea name="motivation" maxlength="2000" placeholder="Cuéntanos brevemente qué te motiva a postular (no es obligatorio)">{{ old('motivation') }}</textarea>
             </div>
@@ -269,6 +297,71 @@
 
   inputs.forEach(function (i) { i.addEventListener('change', refresh); });
   refresh();
+})();
+
+(function () {
+  var otraCheckbox = document.getElementById('aiToolOtraCheckbox');
+  var otherGroup = document.getElementById('aiToolOtherGroup');
+  var otherInput = document.getElementById('aiToolOtherInput');
+  if (! otraCheckbox) return;
+
+  function toggle() {
+    otherGroup.style.display = otraCheckbox.checked ? 'block' : 'none';
+    if (! otraCheckbox.checked) otherInput.value = '';
+  }
+
+  otraCheckbox.addEventListener('change', toggle);
+})();
+
+(function () {
+  var dropzone = document.getElementById('cvDropzone');
+  var fileInput = document.getElementById('cvFileInput');
+  var textEl = document.getElementById('cvDropzoneText');
+  var nameEl = document.getElementById('cvFileName');
+  var removeBtn = document.getElementById('cvRemoveBtn');
+  if (! dropzone) return;
+
+  function showFile(file) {
+    dropzone.classList.add('has-file');
+    textEl.style.display = 'none';
+    nameEl.textContent = file.name;
+    nameEl.style.display = 'block';
+    removeBtn.style.display = 'inline-block';
+  }
+
+  function clearFile() {
+    fileInput.value = '';
+    dropzone.classList.remove('has-file');
+    textEl.style.display = 'block';
+    nameEl.style.display = 'none';
+    removeBtn.style.display = 'none';
+  }
+
+  dropzone.addEventListener('click', function (e) {
+    if (e.target !== removeBtn) fileInput.click();
+  });
+
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files.length) showFile(fileInput.files[0]);
+  });
+
+  removeBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    clearFile();
+  });
+
+  ['dragover', 'dragleave', 'drop'].forEach(function (evt) {
+    dropzone.addEventListener(evt, function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (evt === 'dragover') dropzone.classList.add('is-dragover');
+      if (evt === 'dragleave' || evt === 'drop') dropzone.classList.remove('is-dragover');
+      if (evt === 'drop' && e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        showFile(e.dataTransfer.files[0]);
+      }
+    });
+  });
 })();
 </script>
 @endsection

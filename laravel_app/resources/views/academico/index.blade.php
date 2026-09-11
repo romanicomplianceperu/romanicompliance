@@ -34,11 +34,11 @@
   </div>
 
   <a href="{{ route('academico.convocatoria.info') }}" class="ac-convocatoria-card">
-    <span class="ac-convocatoria-badge"><span class="dot"></span> Convocatoria abierta</span>
+    <span class="ac-convocatoria-badge"><span class="dot"></span> {{ \App\Models\InternshipApplication::applicationsOpen() ? 'Convocatoria abierta' : 'Convocatoria cerrada' }}</span>
     <h2>¿Te gustaría formar parte del equipo de Romani Compliance?</h2>
-    <p>Estamos buscando estudiantes de derecho para realizar prácticas en el estudio: casos reales de compliance, ALA/CFT y derecho penal, con mentoría directa de nuestros abogados.</p>
+    <p>Estamos buscando estudiantes de derecho para realizar una pasantía en el estudio: casos reales de compliance, ALA/CFT y derecho penal, con mentoría directa de nuestros abogados.</p>
     <ul class="ac-convocatoria-highlights">
-      <li>Certificado de prácticas en papel membretado y digital, con QR verificable</li>
+      <li>Certificado de pasantía en papel membretado y digital, con QR verificable</li>
       <li>Mentoría directa de abogados especializados</li>
       <li>Aprendizaje con casos y clientes reales</li>
     </ul>

@@ -20,7 +20,7 @@ class InternshipApplicationReceived extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nueva postulación de practicante: '.$this->application->full_name,
+            subject: 'Nueva postulación de pasantía: '.$this->application->full_name,
         );
     }
 

@@ -27,11 +27,19 @@ class InternshipApplicationController extends Controller
             ->orderBy('team_order')
             ->get();
 
-        return view('academico.convocatoria.info', compact('team'));
+        return view('academico.convocatoria.info', [
+            'team' => $team,
+            'applicationsOpen' => InternshipApplication::applicationsOpen(),
+            'deadlineLabel' => InternshipApplication::APPLICATION_DEADLINE_LABEL,
+        ]);
     }
 
     public function form()
     {
+        if (! InternshipApplication::applicationsOpen()) {
+            return redirect()->route('academico.convocatoria.info');
+        }
+
         return view('academico.convocatoria.form', [
             'interestAreas' => InternshipApplication::INTEREST_AREAS,
             'occupationStatuses' => InternshipApplication::OCCUPATION_STATUSES,
@@ -50,6 +58,10 @@ class InternshipApplicationController extends Controller
 
     public function store(Request $request)
     {
+        if (! InternshipApplication::applicationsOpen()) {
+            return redirect()->route('academico.convocatoria.info');
+        }
+
         $data = $request->validate([
             'full_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:30'],
@@ -68,7 +80,9 @@ class InternshipApplicationController extends Controller
             'office_excel_level' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::OFFICE_LEVELS))],
             'ai_tools' => ['required', 'array', 'min:1'],
             'ai_tools.*' => ['in:'.implode(',', array_keys(InternshipApplication::AI_TOOLS))],
+            'ai_tools_other' => ['nullable', 'string', 'max:255'],
             'ai_tools_paid' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::YES_NO))],
+            'cv' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
             'motivation' => ['nullable', 'string', 'max:2000'],
         ], [
             // Explicit Spanish messages — the app's base validation-message locale is
@@ -90,6 +104,8 @@ class InternshipApplicationController extends Controller
             'office_excel_level.required' => 'Indica tu nivel de manejo de Excel.',
             'ai_tools.required' => 'Marca las herramientas de IA que usas (o "Ninguna de las anteriores").',
             'ai_tools_paid.required' => 'Indica si tienes alguno de esos servicios en su versión paga o Plus.',
+            'cv.mimes' => 'El CV debe ser un archivo PDF o Word (.doc, .docx).',
+            'cv.max' => 'El CV no debe pesar más de 5 MB.',
             'motivation.max' => 'Ese comentario es demasiado largo.',
         ]);
 
@@ -101,6 +117,17 @@ class InternshipApplicationController extends Controller
             return back()->withErrors(['specialized_answers' => 'Responde todas las preguntas antes de enviar.'])->withInput();
         }
 
+        // "Otra" solo vale si de verdad cuentan cuál — si no, "Otra" quedaría sin
+        // información útil para el equipo.
+        if (in_array('otra', $data['ai_tools'], true) && blank($data['ai_tools_other'] ?? null)) {
+            return back()->withErrors(['ai_tools_other' => 'Cuéntanos cuál otra herramienta de IA usas.'])->withInput();
+        }
+
+        if ($request->hasFile('cv')) {
+            $data['cv_path'] = $request->file('cv')->store('internship-cvs', 'public');
+        }
+        unset($data['cv']);
+
         $data['ip_address'] = $request->ip();
         $data['user_agent'] = substr((string) $request->userAgent(), 0, 255);
 
@@ -111,7 +138,7 @@ class InternshipApplicationController extends Controller
         } catch (\Throwable $e) {
             // Never let a mail-server hiccup lose an application — it's already saved and
             // visible in the admin panel either way.
-            Log::warning('No se pudo enviar el correo de nueva postulación de practicante: '.$e->getMessage());
+            Log::warning('No se pudo enviar el correo de nueva postulación de pasantía: '.$e->getMessage());
         }
 
         session(['internship_application_name' => $application->full_name]);

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Convocatoria de Practicantes — Romani Compliance')
-@section('description', 'Postula al programa de prácticas de Romani Compliance: aprende compliance, ALA/CFT y derecho penal con casos reales y mentoría directa de nuestro equipo.')
+@section('title', 'Convocatoria de Pasantías — Romani Compliance')
+@section('description', 'Postula al programa de pasantías de Romani Compliance: aprende compliance, ALA/CFT y derecho penal con casos reales y mentoría directa de nuestro equipo.')
 
 @section('styles')
 .cv-hero { background: linear-gradient(150deg, var(--ink) 0%, #16283F 55%, #1D3452 100%); padding: 4.5rem 0 4rem; position: relative; overflow: hidden; }
@@ -60,11 +60,15 @@
 @section('content')
 <section class="cv-hero">
   <div class="wrap">
-    <div class="cv-hero-badge">Convocatoria abierta</div>
+    <div class="cv-hero-badge">{{ $applicationsOpen ? 'Convocatoria abierta · Cierra el '.$deadlineLabel : 'Convocatoria cerrada' }}</div>
     <h1>¿Te gustaría formar parte del equipo de Romani Compliance?</h1>
-    <p>Buscamos estudiantes de derecho para realizar prácticas en nuestro estudio: acompañarás casos reales de compliance corporativo, prevención de lavado de activos y derecho penal, con mentoría directa de nuestro equipo de abogados.</p>
+    <p>Buscamos estudiantes de derecho para realizar una pasantía en nuestro estudio: acompañarás casos reales de compliance corporativo, prevención de lavado de activos y derecho penal, con mentoría directa de nuestro equipo de abogados.</p>
     <div class="cv-hero-ctas">
-      <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero postular →</a>
+      @if($applicationsOpen)
+        <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero postular →</a>
+      @else
+        <span class="cv-btn-gold" style="opacity:0.5;cursor:not-allowed;">Convocatoria cerrada</span>
+      @endif
       <a href="{{ route('academico.index') }}" class="cv-btn-ghost">Volver a Académico</a>
     </div>
   </div>
@@ -74,8 +78,8 @@
   <div class="wrap">
     <div class="section-header reveal">
       <div class="gold-line"></div>
-      <h2>Lo que ganas al practicar con nosotros</h2>
-      <p>Un programa de prácticas pensado para dejarte experiencia real, no solo horas firmadas.</p>
+      <h2>Lo que ganas en tu pasantía con nosotros</h2>
+      <p>Un programa de pasantías pensado para dejarte experiencia real, no solo horas firmadas.</p>
     </div>
     <div class="cv-benefits-grid">
       <div class="cv-benefit-card reveal stagger-1">
@@ -86,17 +90,17 @@
       <div class="cv-benefit-card reveal stagger-2">
         <div class="cv-benefit-icon">🎓</div>
         <h4>Mentoría directa</h4>
-        <p>Acompañamiento cercano del equipo de abogados de Romani Compliance en cada tarea que asumas, en calidad de practicante en asistencia legal.</p>
+        <p>Acompañamiento cercano del equipo de abogados de Romani Compliance en cada tarea que asumas, en calidad de pasante en asistencia legal.</p>
       </div>
       <div class="cv-benefit-card reveal stagger-3">
         <div class="cv-benefit-icon">📜</div>
         <h4>Certificación verificable</h4>
-        <p>Certificados por horas de práctica, en papel membretado y versión digital con código QR verificable.</p>
+        <p>Certificados por horas de pasantía, en papel membretado y versión digital con código QR verificable.</p>
       </div>
       <div class="cv-benefit-card reveal stagger-1">
         <div class="cv-benefit-icon">📚</div>
         <h4>Acceso a cursos</h4>
-        <p>Cursos propios de Romani Compliance y cursos externos, para seguir formándote mientras practicas.</p>
+        <p>Cursos propios de Romani Compliance y cursos externos, para seguir formándote mientras haces tu pasantía.</p>
       </div>
       <div class="cv-benefit-card reveal stagger-2">
         <div class="cv-benefit-icon">📈</div>
@@ -106,7 +110,7 @@
       <div class="cv-benefit-card reveal stagger-3">
         <div class="cv-benefit-icon">🤝</div>
         <h4>Posibilidad de contratación</h4>
-        <p>Los mejores practicantes tienen la puerta abierta a continuar como colaboradores del estudio al finalizar sus prácticas.</p>
+        <p>Los mejores pasantes tienen la puerta abierta a continuar como colaboradores del estudio al finalizar su pasantía.</p>
       </div>
     </div>
   </div>
@@ -118,7 +122,7 @@
     <div class="section-header reveal">
       <div class="gold-line"></div>
       <h2>Aprenderás directamente de</h2>
-      <p>Participarás en calidad de practicante en asistencia legal, con acompañamiento directo de nuestro equipo.</p>
+      <p>Participarás en calidad de pasante en asistencia legal, con acompañamiento directo de nuestro equipo.</p>
     </div>
     <div class="cv-team-grid">
       @foreach($team as $member)
@@ -142,7 +146,7 @@
   <div class="wrap">
     <div class="section-header reveal">
       <div class="gold-line"></div>
-      <h2>Tus funciones como practicante</h2>
+      <h2>Tus funciones como pasante</h2>
       <p>Estas son algunas de las tareas en las que apoyarás, según el área en la que te desempeñes.</p>
     </div>
     <ul class="cv-functions-list">
@@ -164,7 +168,7 @@
       <div class="cv-cert-icon">🔗</div>
       <div>
         <h3>Certificado con QR verificable</h3>
-        <p>Al finalizar tus horas de práctica recibes un certificado en papel membretado con carta de recomendación, además de su versión digital con un código QR verificable que valida su autenticidad.</p>
+        <p>Al finalizar tus horas de pasantía recibes un certificado en papel membretado con carta de recomendación, además de su versión digital con un código QR verificable que valida su autenticidad.</p>
       </div>
     </div>
   </div>
@@ -172,9 +176,14 @@
 
 <section class="cv-final-cta">
   <div class="wrap reveal">
-    <h2>¿Listo para postular?</h2>
-    <p>El formulario te toma solo unos minutos. Cuéntanos sobre ti y nos pondremos en contacto contigo por WhatsApp.</p>
-    <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero inscribirme →</a>
+    @if($applicationsOpen)
+      <h2>¿Listo para postular?</h2>
+      <p>El formulario te toma solo unos minutos. Cuéntanos sobre ti y nos pondremos en contacto contigo por WhatsApp. Postulaciones abiertas hasta el {{ $deadlineLabel }}.</p>
+      <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero inscribirme →</a>
+    @else
+      <h2>La convocatoria ha finalizado</h2>
+      <p>Cerramos la recepción de postulaciones el {{ $deadlineLabel }}. Gracias por tu interés — mantente atento a nuestras próximas convocatorias.</p>
+    @endif
   </div>
 </section>
 @endsection

@@ -6,7 +6,7 @@
 <div class="page-head">
   <div>
     <h2 style="font-size:1.15rem">{{ $application->full_name }}</h2>
-    <div class="form-hint">Solicitud de practicante · {{ $application->created_at->timezone('America/Lima')->format('d/m/Y H:i') }}</div>
+    <div class="form-hint">Solicitud de pasantía · {{ $application->created_at->timezone('America/Lima')->format('d/m/Y H:i') }}</div>
   </div>
   <a href="{{ route('admin.internships.index') }}" class="btn btn-outline btn-sm">← Volver</a>
 </div>
@@ -30,6 +30,14 @@
     <div><div class="form-hint" style="margin-bottom:2px;">Teléfono</div><a href="tel:{{ $application->phone }}">{{ $application->phone }}</a></div>
     <div><div class="form-hint" style="margin-bottom:2px;">Correo</div><a href="mailto:{{ $application->email }}">{{ $application->email }}</a></div>
     <div><div class="form-hint" style="margin-bottom:2px;">IP de envío</div>{{ $application->ip_address ?? '—' }}</div>
+    <div>
+      <div class="form-hint" style="margin-bottom:2px;">CV</div>
+      @if($application->cvUrl())
+        <a href="{{ $application->cvUrl() }}" target="_blank" rel="noopener">Descargar CV →</a>
+      @else
+        <span style="color:var(--slate-light);">No adjuntó CV</span>
+      @endif
+    </div>
   </div>
 </div>
 

@@ -1,10 +1,10 @@
 @extends('admin.layout')
 
-@section('title', 'Solicitudes de practicante')
+@section('title', 'Solicitudes de pasantía')
 
 @section('content')
 <div class="page-head">
-  <h2 style="font-size:1.15rem">Solicitudes de practicante</h2>
+  <h2 style="font-size:1.15rem">Solicitudes de pasantía</h2>
 </div>
 
 @if(session('success'))
@@ -38,7 +38,7 @@
 
 <div class="card">
   @if($applications->isEmpty())
-    <div class="empty-state">Todavía no hay solicitudes de practicante.</div>
+    <div class="empty-state">Todavía no hay solicitudes de pasantía.</div>
   @else
     <div class="table-wrap"><table class="table">
       <thead>
