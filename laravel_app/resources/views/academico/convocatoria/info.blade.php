@@ -20,7 +20,8 @@
 .cv-benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; }
 .cv-benefit-card { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 1.8rem 1.6rem; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
 .cv-benefit-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-m); border-color: var(--gold); }
-.cv-benefit-icon { width: 46px; height: 46px; border-radius: 12px; background: var(--gold-pale); color: var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.3rem; }
+.cv-benefit-icon { width: 46px; height: 46px; border-radius: 12px; background: var(--gold-pale); color: var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.cv-benefit-icon svg { width: 22px; height: 22px; }
 .cv-benefit-card h4 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--ink); }
 .cv-benefit-card p { font-size: 0.85rem; color: var(--slate); line-height: 1.65; }
 
@@ -38,7 +39,8 @@
 .cv-functions-list li .num { flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--gold-pale); color: var(--gold); font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
 .cv-cert-strip { background: linear-gradient(135deg, #16283F, var(--ink)); border-radius: 18px; padding: 2.6rem 2.4rem; display: flex; align-items: center; gap: 2.2rem; }
-.cv-cert-icon { width: 72px; height: 72px; border-radius: 16px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+.cv-cert-icon { width: 72px; height: 72px; border-radius: 16px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--ink); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cv-cert-icon svg { width: 32px; height: 32px; }
 .cv-cert-strip h3 { font-family: var(--serif); color: var(--white); font-size: 1.3rem; margin-bottom: 0.5rem; }
 .cv-cert-strip p { color: rgba(255,255,255,0.68); font-size: 0.88rem; line-height: 1.6; margin: 0; }
 
@@ -83,32 +85,32 @@
     </div>
     <div class="cv-benefits-grid">
       <div class="cv-benefit-card reveal stagger-1">
-        <div class="cv-benefit-icon">⚖️</div>
+        <div class="cv-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M3 7h18"/><path d="M7 7l-3.5 6.5a3.5 3.5 0 007 0L7 7z"/><path d="M17 7l-3.5 6.5a3.5 3.5 0 007 0L17 7z"/><path d="M8 21h8"/></svg></div>
         <h4>Aprendizaje en SPLAFT</h4>
         <p>Elaborarás documentación especializada, matrices de riesgo y análisis de normativa de la SBS, además de apoyar procesos de Due Diligence, con clientes y casos reales.</p>
       </div>
       <div class="cv-benefit-card reveal stagger-2">
-        <div class="cv-benefit-icon">🎓</div>
+        <div class="cv-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg></div>
         <h4>Mentoría directa</h4>
         <p>Acompañamiento cercano del equipo de abogados de Romani Compliance en cada tarea que asumas, en calidad de pasante en asistencia legal.</p>
       </div>
       <div class="cv-benefit-card reveal stagger-3">
-        <div class="cv-benefit-icon">📜</div>
+        <div class="cv-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="5"/><path d="M6.5 12l-1.5 7 4-2 4 2-1.5-7"/><path d="M14 4h7M14 8h7M14 12h4"/></svg></div>
         <h4>Certificación verificable</h4>
-        <p>Certificados por horas de pasantía, en papel membretado y versión digital con código QR verificable.</p>
+        <p>Certificados por horas de práctica, en papel membretado y versión digital con código QR verificable.</p>
       </div>
       <div class="cv-benefit-card reveal stagger-1">
-        <div class="cv-benefit-icon">📚</div>
+        <div class="cv-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 016.5 2H20v17H6.5A2.5 2.5 0 004 16.5v-12z"/><path d="M4 16.5A2.5 2.5 0 016.5 19H20"/></svg></div>
         <h4>Acceso a cursos</h4>
         <p>Cursos propios de Romani Compliance y cursos externos, para seguir formándote mientras haces tu pasantía.</p>
       </div>
       <div class="cv-benefit-card reveal stagger-2">
-        <div class="cv-benefit-icon">📈</div>
+        <div class="cv-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
         <h4>Crecimiento dentro del estudio</h4>
         <p>Posibilidad real de asumir mayores responsabilidades con el tiempo, dentro del estudio jurídico.</p>
       </div>
       <div class="cv-benefit-card reveal stagger-3">
-        <div class="cv-benefit-icon">🤝</div>
+        <div class="cv-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.2"/><path d="M2.5 20c0-3.5 2.5-6 5.5-6s5.5 2.5 5.5 6"/><circle cx="17" cy="7" r="2.6"/><path d="M15 14.3c2.6.4 4.5 2.6 4.5 5.7"/></svg></div>
         <h4>Posibilidad de contratación</h4>
         <p>Los mejores pasantes tienen la puerta abierta a continuar como colaboradores del estudio al finalizar su pasantía.</p>
       </div>
@@ -165,10 +167,10 @@
 <section class="cv-section alt">
   <div class="wrap">
     <div class="cv-cert-strip reveal">
-      <div class="cv-cert-icon">🔗</div>
+      <div class="cv-cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <div>
         <h3>Certificado con QR verificable</h3>
-        <p>Al finalizar tus horas de pasantía recibes un certificado en papel membretado con carta de recomendación, además de su versión digital con un código QR verificable que valida su autenticidad.</p>
+        <p>Al finalizar tus horas de práctica recibes un certificado en papel membretado con carta de recomendación, además de su versión digital con un código QR verificable que valida su autenticidad.</p>
       </div>
     </div>
   </div>

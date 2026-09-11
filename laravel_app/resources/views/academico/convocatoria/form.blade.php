@@ -52,7 +52,8 @@
 .cv-dropzone { margin-left: 36px; border: 1.5px dashed var(--line); border-radius: 12px; padding: 22px; text-align: center; cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease; }
 .cv-dropzone:hover, .cv-dropzone.is-dragover { border-color: var(--gold); background: var(--gold-pale); }
 .cv-dropzone.has-file { border-style: solid; border-color: var(--gold); }
-.cv-dropzone-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.cv-dropzone-icon { margin-bottom: 6px; color: var(--gold); display: flex; justify-content: center; }
+.cv-dropzone-icon svg { width: 26px; height: 26px; }
 .cv-dropzone-text { font-size: 0.85rem; color: var(--ink); font-weight: 600; }
 .cv-dropzone-subtext { font-size: 0.74rem; color: var(--slate-light); margin-top: 4px; }
 .cv-dropzone-filename { font-size: 0.8rem; color: var(--gold); font-weight: 700; margin-top: 8px; }
@@ -259,7 +260,7 @@
             <div class="cv-fieldset-hint">Este paso es completamente opcional: no subir tu CV no elimina tu posibilidad de ser considerado, solo nos ayuda a conocerte un poco más si ya tienes uno listo.</div>
             <div class="cv-dropzone" id="cvDropzone">
               <input type="file" name="cv" id="cvFileInput" accept=".pdf,.doc,.docx" style="display:none;">
-              <div class="cv-dropzone-icon">📄</div>
+              <div class="cv-dropzone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></div>
               <div class="cv-dropzone-text" id="cvDropzoneText">Arrastra tu CV aquí o haz clic para elegir un archivo</div>
               <div class="cv-dropzone-subtext">PDF o Word, máx. 5 MB</div>
               <div class="cv-dropzone-filename" id="cvFileName" style="display:none;"></div>
