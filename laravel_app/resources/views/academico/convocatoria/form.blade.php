@@ -145,7 +145,56 @@
           </div>
 
           <div class="cv-fieldset">
-            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">4</span> Tus habilidades</div>
+            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">4</span> Ofimática e inteligencia artificial</div>
+            <div class="cv-q-block">
+              <div class="q-text">Manejo de Word</div>
+              <div class="cv-pill-group" style="margin-left:0;">
+                @foreach($officeLevels as $key => $label)
+                  <label class="cv-pill">
+                    <input type="radio" name="office_word_level" value="{{ $key }}" {{ old('office_word_level') === $key ? 'checked' : '' }} required>
+                    <span class="pill-label">{{ $label }}</span>
+                  </label>
+                @endforeach
+              </div>
+            </div>
+            <div class="cv-q-block">
+              <div class="q-text">Manejo de Excel</div>
+              <div class="cv-pill-group" style="margin-left:0;">
+                @foreach($officeLevels as $key => $label)
+                  <label class="cv-pill">
+                    <input type="radio" name="office_excel_level" value="{{ $key }}" {{ old('office_excel_level') === $key ? 'checked' : '' }} required>
+                    <span class="pill-label">{{ $label }}</span>
+                  </label>
+                @endforeach
+              </div>
+            </div>
+            <div class="cv-q-block">
+              <div class="q-text">¿Cuáles de estas herramientas de inteligencia artificial usas?</div>
+              <div class="cv-pill-group" style="margin-left:0;">
+                @php $oldAiTools = old('ai_tools', []); @endphp
+                @foreach($aiTools as $key => $label)
+                  <label class="cv-pill">
+                    <input type="checkbox" name="ai_tools[]" value="{{ $key }}" {{ in_array($key, $oldAiTools) ? 'checked' : '' }}>
+                    <span class="pill-label">{{ $label }}</span>
+                  </label>
+                @endforeach
+              </div>
+            </div>
+            <div class="cv-q-block">
+              <div class="q-text">¿Tienes alguno de estos servicios de IA en su versión paga o Plus?</div>
+              <div class="cv-pill-group" style="margin-left:0;">
+                @foreach($yesNo as $key => $label)
+                  <label class="cv-pill">
+                    <input type="radio" name="ai_tools_paid" value="{{ $key }}" {{ old('ai_tools_paid') === $key ? 'checked' : '' }} required>
+                    <span class="pill-label">{{ $label }}</span>
+                  </label>
+                @endforeach
+              </div>
+            </div>
+          </div>
+
+          <div class="cv-fieldset">
+            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">5</span> Tus habilidades</div>
             <div class="cv-fieldset-hint">Marca hasta {{ $maxSkills }} habilidades en las que te sientas más fuerte</div>
             <div class="cv-skill-counter"><strong id="cvSkillCount">0</strong>/{{ $maxSkills }} seleccionadas</div>
             <div class="cv-pill-group">
@@ -160,7 +209,7 @@
           </div>
 
           <div class="cv-fieldset">
-            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">5</span> ¿En qué ciclo te encuentras?</div>
+            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">6</span> ¿En qué ciclo te encuentras?</div>
             <div class="cv-pill-group">
               @foreach($academicCycles as $key => $label)
                 <label class="cv-pill">
@@ -172,7 +221,7 @@
           </div>
 
           <div class="cv-fieldset">
-            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">6</span> Un poco de lo que ya conoces</div>
+            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">7</span> Un poco de lo que ya conoces</div>
             <div class="cv-fieldset-hint">No hay respuestas correctas o incorrectas, solo queremos ubicar de dónde partes</div>
             @php $oldAnswers = old('specialized_answers', []); @endphp
             @foreach($specializedQuestions as $qKey => $question)
@@ -191,7 +240,7 @@
           </div>
 
           <div class="cv-fieldset">
-            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">7</span> ¿Por qué te interesa Romani Compliance? <span class="cv-optional-tag">Opcional</span></div>
+            <div class="cv-fieldset-legend"><span class="cv-fieldset-num">8</span> ¿Por qué te interesa Romani Compliance? <span class="cv-optional-tag">Opcional</span></div>
             <div class="cv-input-group full">
               <textarea name="motivation" maxlength="2000" placeholder="Cuéntanos brevemente qué te motiva a postular (no es obligatorio)">{{ old('motivation') }}</textarea>
             </div>

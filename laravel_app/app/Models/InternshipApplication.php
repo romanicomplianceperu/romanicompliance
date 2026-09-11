@@ -18,13 +18,15 @@ class InternshipApplication extends Model
     protected $fillable = [
         'full_name', 'phone', 'email', 'interest_area', 'occupation_status',
         'schedule_availability', 'weekly_hours', 'skills', 'academic_cycle',
-        'specialized_answers', 'motivation', 'status', 'ip_address', 'user_agent',
+        'specialized_answers', 'office_word_level', 'office_excel_level',
+        'ai_tools', 'ai_tools_paid', 'motivation', 'status', 'ip_address', 'user_agent',
     ];
 
     protected $casts = [
         'schedule_availability' => 'array',
         'skills' => 'array',
         'specialized_answers' => 'array',
+        'ai_tools' => 'array',
     ];
 
     public const INTEREST_AREAS = [
@@ -85,6 +87,28 @@ class InternshipApplication extends Model
     public const ANSWER_OPTIONS = [
         'si' => 'Sí',
         'algo' => 'Algo he escuchado',
+        'no' => 'No',
+    ];
+
+    public const OFFICE_LEVELS = [
+        'basico' => 'Básico',
+        'intermedio' => 'Intermedio',
+        'avanzado' => 'Avanzado',
+    ];
+
+    /**
+     * Herramientas de IA que el postulante usa. "ninguna" evita forzar a marcar algo
+     * cuando no usa ninguna — sin esa opción, alguien honesto no tendría qué marcar.
+     */
+    public const AI_TOOLS = [
+        'chatgpt' => 'ChatGPT',
+        'claude' => 'Claude',
+        'gemini' => 'Gemini',
+        'ninguna' => 'Ninguna de las anteriores',
+    ];
+
+    public const YES_NO = [
+        'si' => 'Sí',
         'no' => 'No',
     ];
 
@@ -149,5 +173,27 @@ class InternshipApplication extends Model
     public function statusLabel(): string
     {
         return self::STATUSES[$this->status] ?? $this->status;
+    }
+
+    public function officeWordLevelLabel(): string
+    {
+        return self::OFFICE_LEVELS[$this->office_word_level] ?? $this->office_word_level;
+    }
+
+    public function officeExcelLevelLabel(): string
+    {
+        return self::OFFICE_LEVELS[$this->office_excel_level] ?? $this->office_excel_level;
+    }
+
+    public function aiToolsLabels(): array
+    {
+        return collect($this->ai_tools ?? [])
+            ->map(fn ($key) => self::AI_TOOLS[$key] ?? $key)
+            ->all();
+    }
+
+    public function aiToolsPaidLabel(): string
+    {
+        return self::YES_NO[$this->ai_tools_paid] ?? $this->ai_tools_paid;
     }
 }

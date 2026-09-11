@@ -42,6 +42,9 @@ class InternshipApplicationController extends Controller
             'academicCycles' => InternshipApplication::ACADEMIC_CYCLES,
             'specializedQuestions' => InternshipApplication::SPECIALIZED_QUESTIONS,
             'answerOptions' => InternshipApplication::ANSWER_OPTIONS,
+            'officeLevels' => InternshipApplication::OFFICE_LEVELS,
+            'aiTools' => InternshipApplication::AI_TOOLS,
+            'yesNo' => InternshipApplication::YES_NO,
         ]);
     }
 
@@ -61,6 +64,11 @@ class InternshipApplicationController extends Controller
             'academic_cycle' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::ACADEMIC_CYCLES))],
             'specialized_answers' => ['required', 'array', 'size:'.count(InternshipApplication::SPECIALIZED_QUESTIONS)],
             'specialized_answers.*' => ['in:'.implode(',', array_keys(InternshipApplication::ANSWER_OPTIONS))],
+            'office_word_level' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::OFFICE_LEVELS))],
+            'office_excel_level' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::OFFICE_LEVELS))],
+            'ai_tools' => ['required', 'array', 'min:1'],
+            'ai_tools.*' => ['in:'.implode(',', array_keys(InternshipApplication::AI_TOOLS))],
+            'ai_tools_paid' => ['required', 'in:'.implode(',', array_keys(InternshipApplication::YES_NO))],
             'motivation' => ['nullable', 'string', 'max:2000'],
         ], [
             // Explicit Spanish messages — the app's base validation-message locale is
@@ -78,6 +86,10 @@ class InternshipApplicationController extends Controller
             'skills.max' => 'Marca como máximo '.InternshipApplication::MAX_SKILLS.' habilidades.',
             'academic_cycle.required' => 'Indica en qué ciclo te encuentras.',
             'specialized_answers.required' => 'Responde todas las preguntas de conocimiento previo.',
+            'office_word_level.required' => 'Indica tu nivel de manejo de Word.',
+            'office_excel_level.required' => 'Indica tu nivel de manejo de Excel.',
+            'ai_tools.required' => 'Marca las herramientas de IA que usas (o "Ninguna de las anteriores").',
+            'ai_tools_paid.required' => 'Indica si tienes alguno de esos servicios en su versión paga o Plus.',
             'motivation.max' => 'Ese comentario es demasiado largo.',
         ]);
 

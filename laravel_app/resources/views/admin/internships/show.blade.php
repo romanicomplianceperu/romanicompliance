@@ -46,6 +46,16 @@
 </div>
 
 <div class="card">
+  <h3 style="font-size:1rem;margin-bottom:1rem;">Ofimática e inteligencia artificial</h3>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem 2rem;font-size:0.88rem;">
+    <div><div class="form-hint" style="margin-bottom:2px;">Word</div>{{ $application->officeWordLevelLabel() }}</div>
+    <div><div class="form-hint" style="margin-bottom:2px;">Excel</div>{{ $application->officeExcelLevelLabel() }}</div>
+    <div><div class="form-hint" style="margin-bottom:2px;">Herramientas de IA que usa</div>{{ implode(', ', $application->aiToolsLabels()) ?: '—' }}</div>
+    <div><div class="form-hint" style="margin-bottom:2px;">¿Versión paga/Plus?</div>{{ $application->aiToolsPaidLabel() }}</div>
+  </div>
+</div>
+
+<div class="card">
   <h3 style="font-size:1rem;margin-bottom:1rem;">Conocimiento previo</h3>
   <div style="font-size:0.85rem;">
     @foreach($application->specializedAnswerPairs() as $pair)
