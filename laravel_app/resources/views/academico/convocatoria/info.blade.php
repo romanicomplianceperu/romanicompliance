@@ -70,7 +70,7 @@
 <div class="cv-urgency-banner">
   <div class="wrap">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-    <p>Por la gran acogida de esta convocatoria, estamos cerca de alcanzar el número máximo de postulantes. <strong>Cerraremos las inscripciones {{ $deadlineLabel }}.</strong> Gracias por su interés.</p>
+    <p>Por la gran acogida de esta convocatoria, estamos cerca de alcanzar el número máximo de postulantes. <strong>Cerraremos las inscripciones {{ $deadlineLabel }}</strong> Gracias por su interés.</p>
   </div>
 </div>
 @endif
@@ -193,11 +193,11 @@
   <div class="wrap reveal">
     @if($applicationsOpen)
       <h2>Ya conoces los beneficios, el equipo y tus funciones como pasante</h2>
-      <p>Si esto es para ti, el formulario te toma solo unos minutos. Cuéntanos sobre ti y nos pondremos en contacto contigo por WhatsApp. Postulaciones abiertas hasta {{ $deadlineLabel }}.</p>
+      <p>Si esto es para ti, el formulario te toma solo unos minutos. Cuéntanos sobre ti y nos pondremos en contacto contigo por WhatsApp. Postulaciones abiertas hasta {{ $deadlineLabel }}</p>
       <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero inscribirme →</a>
     @else
       <h2>La convocatoria ha finalizado</h2>
-      <p>Cerramos la recepción de postulaciones {{ $deadlineLabel }}. Gracias por tu interés — mantente atento a nuestras próximas convocatorias.</p>
+      <p>Cerramos la recepción de postulaciones {{ $deadlineLabel }} Gracias por tu interés — mantente atento a nuestras próximas convocatorias.</p>
     @endif
   </div>
 </section>
