@@ -425,26 +425,44 @@
 
     const tray = el('div', 'ac-match-tray');
     const zonesWrap = el('div', 'ac-match-zones');
-    const zoneBoxes = {}, chipEls = {};
+    const zoneBoxes = {}, zoneEls = {}, chipEls = {};
 
     const pairs = Object.assign({}, GRADED ? (ex.student_answer || {}) : (SAVED[ex.id] || {}));
     state.exercises[ex.id] = pairs;
 
     // Tap-to-pick / tap-to-place instead of free dragging: tap a card to pick it up (it gets
-    // highlighted), then tap the box it belongs in. This needs no continuous pointer-tracking,
-    // so — unlike a real drag — it can't get interrupted mid-gesture and leave a card stuck
-    // floating on screen, which is exactly what was happening on some mobile browsers.
+    // highlighted and every category lights up as a valid target — the cue that tells the
+    // student "now tap the category this belongs to"), then tap the box it belongs in. This
+    // needs no continuous pointer-tracking, so — unlike a real drag — it can't get interrupted
+    // mid-gesture and leave a card stuck floating on screen, which is exactly what was
+    // happening on some mobile browsers.
     let picked = null;
+
+    function setZonesInviting(on) {
+      Object.values(zoneEls).forEach(z => z.classList.toggle('zone-inviting', on));
+    }
 
     function clearPicked() {
       if (picked) picked.classList.remove('picked');
       picked = null;
+      setZonesInviting(false);
     }
 
-    function place(chip, rightId) {
+    function place(chip, rightId, animate) {
       if (rightId && zoneBoxes[rightId]) {
         zoneBoxes[rightId].appendChild(chip);
         chip.classList.add('placed');
+        if (animate) {
+          const zone = zoneEls[rightId];
+          chip.classList.remove('just-placed');
+          zone.classList.remove('just-received');
+          // Force a reflow so re-adding the class restarts the animation even if the
+          // same chip was just moved from one category straight into another.
+          void chip.offsetWidth;
+          chip.classList.add('just-placed');
+          zone.classList.add('just-received');
+          setTimeout(() => { chip.classList.remove('just-placed'); zone.classList.remove('just-received'); }, 420);
+        }
       } else {
         tray.appendChild(chip);
         chip.classList.remove('placed');
@@ -458,11 +476,12 @@
       const box = el('div', 'zone-chips');
       zone.appendChild(box);
       zoneBoxes[r.id] = box;
+      zoneEls[r.id] = zone;
       if (! GRADED) {
         zone.addEventListener('click', function () {
           if (! picked) return;
           pairs[picked.dataset.leftId] = r.id;
-          place(picked, r.id);
+          place(picked, r.id, true);
           state.exercises[ex.id] = pairs;
           markDirty();
           clearPicked();
@@ -480,12 +499,13 @@
           clearPicked();
           picked = chip;
           chip.classList.add('picked');
+          setZonesInviting(true);
         });
       } else {
         chip.setAttribute('disabled', 'disabled');
       }
       chipEls[l.id] = chip;
-      place(chip, pairs[l.id]);
+      place(chip, pairs[l.id], false);
     });
 
     if (! GRADED) {
@@ -504,7 +524,7 @@
     card.appendChild(tray);
     card.appendChild(zonesWrap);
     if (! GRADED) {
-      card.appendChild(el('p', 'ac-ex-hint', 'Toca una tarjeta para elegirla y luego toca la casilla donde va. Toca una tarjeta ya colocada para volver a moverla.'));
+      card.appendChild(el('p', 'ac-ex-hint', 'Toca una tarjeta para elegirla: las categorías se iluminarán. Luego toca la categoría donde va. Toca una tarjeta ya colocada para volver a moverla.'));
     }
 
     if (GRADED) {

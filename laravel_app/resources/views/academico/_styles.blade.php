@@ -293,19 +293,30 @@
 .ac-select-option:hover { border-color: var(--gold); }
 .ac-select-option.selected { border-color: var(--gold); background: var(--gold-pale); }
 
-/* Matching (drag and drop) */
+/* Matching / categorizar (tap-to-pick, tap-to-place — no arrastrar y soltar) */
 .ac-match-tray { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; min-height: 50px; padding: 12px; background: var(--ivory-dim); border-radius: 10px; }
 .ac-match-drag-chip { touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: pointer; background: var(--white); border: 1.5px solid var(--gold); color: var(--ink); font-size: 0.82rem; font-weight: 600; line-height: 1.4; padding: 0.7rem 0.95rem; min-height: 44px; box-sizing: border-box; display: flex; align-items: center; border-radius: 12px; box-shadow: 0 2px 6px rgba(11,24,41,0.06); transition: box-shadow 0.15s ease, transform 0.15s ease; }
-.ac-match-drag-chip.picked { border-color: var(--gold); background: var(--gold-pale); box-shadow: 0 0 0 3px rgba(139,115,64,0.28); transform: translateY(-1px); }
+.ac-match-drag-chip.picked { border-color: var(--gold); background: var(--gold-pale); box-shadow: 0 0 0 3px rgba(139,115,64,0.28); transform: translateY(-1px) scale(1.03); }
 .ac-match-drag-chip.placed { cursor: pointer; border-color: #1F7A4D; }
 .ac-match-drag-chip[disabled] { cursor: default; }
 .ac-match-drag-chip.answer-correct { border-color: #1F7A4D !important; background: rgba(31,122,77,0.1) !important; }
 .ac-match-drag-chip.answer-wrong { border-color: #B3413B !important; background: rgba(179,65,59,0.08) !important; }
+.ac-match-drag-chip.just-placed { animation: ac-match-chip-land 0.42s ease; }
 .ac-match-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-.ac-match-zone { border: 1.5px dashed var(--line); border-radius: 12px; padding: 12px; min-height: 90px; background: var(--ivory); transition: border-color 0.15s ease, background 0.15s ease; cursor: pointer; }
+.ac-match-zone { border: 1.5px dashed var(--line); border-radius: 12px; padding: 12px; min-height: 90px; background: var(--ivory); transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; cursor: pointer; }
+/* While a card is picked up, every category lights up — the visual cue telling the
+   student "tap the one this belongs to" instead of needing to drag anything. */
+.ac-match-zone.zone-inviting { border-color: var(--gold); border-style: solid; background: var(--gold-pale); animation: ac-match-zone-breathe 1.1s ease-in-out infinite; }
+.ac-match-zone.just-received { animation: ac-match-zone-flash 0.42s ease-out; }
 .ac-match-zone .zone-title { font-size: 0.76rem; font-weight: 700; color: var(--slate); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
 .ac-match-zone .zone-chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 6px; }
 .ac-match-correct-note { margin-top: 6px; font-size: 0.74rem; color: #B3413B; font-weight: 600; }
+@keyframes ac-match-chip-land { 0% { transform: scale(0.85); opacity: 0.5; } 55% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ac-match-zone-flash { 0% { box-shadow: 0 0 0 0 rgba(31,122,77,0.45); border-color: #1F7A4D; } 100% { box-shadow: 0 0 0 12px rgba(31,122,77,0); border-color: var(--line); } }
+@keyframes ac-match-zone-breathe { 0%, 100% { box-shadow: 0 0 0 0 rgba(139,115,64,0.25); } 50% { box-shadow: 0 0 0 6px rgba(139,115,64,0.12); } }
+@media (prefers-reduced-motion: reduce) {
+  .ac-match-drag-chip.just-placed, .ac-match-zone.just-received, .ac-match-zone.zone-inviting { animation: none; }
+}
 @media (max-width: 480px) { .ac-match-drag-chip { width: 100%; } }
 
 /* Ordering (drag and drop, with up/down fallback) */
