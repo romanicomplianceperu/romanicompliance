@@ -75,10 +75,17 @@ class AcademicoController extends Controller
      */
     private function findGatingActivity(AcademicCourse $course): ?AcademicActivity
     {
+        // reorder() first: the activities() relation already applies its own
+        // orderBy('week_number') ascending, and orderByDesc() alone would just append a
+        // second ORDER BY clause after it instead of replacing it — MySQL then sorts by
+        // the (ascending) clause that came first, silently ignoring the desc one. That
+        // stayed invisible while each course had at most one access-coded activity; with
+        // two (e.g. an old week's case still open alongside the current week's), it picked
+        // the oldest one as "the" course gate instead of the latest.
         return $course->activities()
             ->whereNotNull('access_code')
             ->where('status', 'disponible')
-            ->orderByDesc('week_number')
+            ->reorder('week_number', 'desc')
             ->first();
     }
 
