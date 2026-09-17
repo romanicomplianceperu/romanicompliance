@@ -93,7 +93,7 @@ class AcademicoController extends Controller
     {
         $gatingActivity = $this->findGatingActivity($course);
 
-        if ($gatingActivity && ! session($this->unlockSessionKey($gatingActivity))) {
+        if ($gatingActivity && ! session($this->courseUnlockSessionKey($course))) {
             return view('academico.access-code', [
                 'university' => $university,
                 'course' => $course,
@@ -105,6 +105,21 @@ class AcademicoController extends Controller
         return null;
     }
 
+    /**
+     * The access code is for the course as a whole, not for one specific activity: once a
+     * student unlocks it (with any code that has ever been issued for a still-listed
+     * activity in this course), every gated activity in the course becomes accessible
+     * without asking again. Matching against all of them (not just the current "gating"
+     * one) keeps codes handed out in previous weeks working too.
+     */
+    private function courseAccessCodeMatches(AcademicCourse $course, ?string $code): bool
+    {
+        return $course->activities()
+            ->whereNotNull('access_code')
+            ->get()
+            ->contains(fn (AcademicActivity $activity) => $activity->checkAccessCode($code));
+    }
+
     public function unlockCourse(Request $request, string $universitySlug, string $courseSlug)
     {
         [$university, $course] = $this->resolve($universitySlug, $courseSlug);
@@ -114,11 +129,11 @@ class AcademicoController extends Controller
 
         $data = $request->validate(['code' => ['required', 'string', 'max:100']]);
 
-        if (! $gatingActivity->checkAccessCode($data['code'])) {
+        if (! $this->courseAccessCodeMatches($course, $data['code'])) {
             return back()->withErrors(['code' => 'El código de acceso no es correcto.'])->withInput();
         }
 
-        session([$this->unlockSessionKey($gatingActivity) => true]);
+        session([$this->courseUnlockSessionKey($course) => true]);
 
         return redirect()->route('academico.course', [$universitySlug, $courseSlug]);
     }
@@ -161,9 +176,7 @@ class AcademicoController extends Controller
 
     private function activityGated(Request $request, AcademicUniversity $university, AcademicCourse $course, AcademicActivity $activity)
     {
-        $unlockKey = $this->unlockSessionKey($activity);
-
-        if (! session($unlockKey)) {
+        if (! session($this->courseUnlockSessionKey($course))) {
             return view('academico.access-code', [
                 'university' => $university,
                 'course' => $course,
@@ -208,7 +221,7 @@ class AcademicoController extends Controller
         $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
 
         abort_unless(
-            ! $activity->requiresAccessCode() || session($this->unlockSessionKey($activity)),
+            ! $activity->requiresAccessCode() || session($this->courseUnlockSessionKey($course)),
             403
         );
 
@@ -224,11 +237,11 @@ class AcademicoController extends Controller
 
         $data = $request->validate(['code' => ['required', 'string', 'max:100']]);
 
-        if (! $activity->checkAccessCode($data['code'])) {
+        if (! $this->courseAccessCodeMatches($course, $data['code'])) {
             return back()->withErrors(['code' => 'El código de acceso no es correcto.'])->withInput();
         }
 
-        session([$this->unlockSessionKey($activity) => true]);
+        session([$this->courseUnlockSessionKey($course) => true]);
 
         return redirect()->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug]);
     }
@@ -238,7 +251,7 @@ class AcademicoController extends Controller
         [$university, $course] = $this->resolve($universitySlug, $courseSlug);
         $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
 
-        abort_unless($activity->requiresAccessCode() && session($this->unlockSessionKey($activity)), 403);
+        abort_unless($activity->requiresAccessCode() && session($this->courseUnlockSessionKey($course)), 403);
 
         $data = $request->validate([
             'mode' => ['required', 'in:individual,grupal'],
@@ -365,9 +378,14 @@ class AcademicoController extends Controller
         return redirect()->route('academico.index')->with('academico_success', 'Cerraste tu sesión del espacio académico.');
     }
 
-    private function unlockSessionKey(AcademicActivity $activity): string
+    /**
+     * The access code unlocks the whole course, not one activity — see
+     * courseAccessCodeMatches() — so this key is scoped to the course, not to whichever
+     * activity happened to prompt for it.
+     */
+    private function courseUnlockSessionKey(AcademicCourse $course): string
     {
-        return "academico_unlocked_activity_{$activity->id}";
+        return "academico_unlocked_course_{$course->id}";
     }
 
     private function submissionSessionKey(AcademicActivity $activity): string
