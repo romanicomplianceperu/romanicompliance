@@ -14,7 +14,6 @@ class AcademicoSeeder extends Seeder
     public function run(): void
     {
         $unpLogo = $this->storeAsset('unp-logo.png.b64', 'universities/unp.png');
-        $utpLogo = $this->storeAsset('utp-logo.jpg.b64', 'universities/utp.jpg');
         $upritLogo = $this->storeAsset('uprit-logo.png.b64', 'universities/uprit.png');
         $casePdf = $this->storeAsset('caso-semana-1.pdf.b64', 'academico/caso-semana-1-derecho-mercantil-ii.pdf');
 
@@ -29,17 +28,6 @@ class AcademicoSeeder extends Seeder
             ]
         );
 
-        $utp = AcademicUniversity::updateOrCreate(
-            ['slug' => 'utp'],
-            [
-                'name' => 'Universidad Tecnológica del Perú',
-                'short_name' => 'UTP',
-                'logo_url' => $utpLogo ?? 'https://upload.wikimedia.org/wikipedia/commons/5/50/Utplogonuevo.svg',
-                'status' => 'active',
-                'order' => 2,
-            ]
-        );
-
         $uprit = AcademicUniversity::updateOrCreate(
             ['slug' => 'uprit'],
             [
@@ -47,9 +35,12 @@ class AcademicoSeeder extends Seeder
                 'short_name' => 'UPRIT',
                 'logo_url' => $upritLogo ?? 'https://uprit.edu.pe/logo_uprit_light.svg',
                 'status' => 'active',
-                'order' => 3,
+                'order' => 2,
             ]
         );
+
+        // La Universidad Tecnológica del Perú (UTP) ya no forma parte del espacio académico publicado.
+        AcademicUniversity::where('slug', 'utp')->delete();
 
         $mercantil = AcademicCourse::updateOrCreate(
             ['university_id' => $unp->id, 'slug' => 'derecho-mercantil-ii'],

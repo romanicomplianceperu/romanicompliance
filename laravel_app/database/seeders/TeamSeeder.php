@@ -42,17 +42,6 @@ class TeamSeeder extends Seeder
                 'team_order' => 2,
             ],
             [
-                'email' => 'carrascomontañokyra@gmail.com',
-                'name' => 'Kyra Alejandra Carrasco Montaño',
-                'role' => 'student',
-                'title' => 'Asistente Legal',
-                'bio' => 'Soporte en la gestión documental del área de compliance, seguimiento de expedientes regulatorios, coordinación con entidades supervisoras, apoyo en la elaboración de políticas internas de prevención y asistencia en los programas de capacitación del estudio.',
-                'photo' => 'team/kyra-carrasco.png',
-                'linkedin_url' => 'https://www.linkedin.com/in/kyra-alejandra-carrasco-monta%C3%B1o-derecho?originalSubdomain=pe',
-                'team_rank' => 'associate',
-                'team_order' => 3,
-            ],
-            [
                 'email' => 'federico.chunga@romanicompliance.com',
                 'name' => 'Federico Chunga Fiestas',
                 'role' => 'student',
@@ -60,7 +49,7 @@ class TeamSeeder extends Seeder
                 'bio' => 'Consultor internacional especializado en conducta empresarial responsable, políticas públicas con enfoque de derechos humanos e integridad, lucha contra la corrupción, y Estado constitucional de derecho.',
                 'photo' => $federicoPhotoPath,
                 'team_rank' => 'associate',
-                'team_order' => 4,
+                'team_order' => 3,
             ],
         ];
 
@@ -82,6 +71,9 @@ class TeamSeeder extends Seeder
                 User::create(array_merge(['email' => $email], $data));
             }
         }
+
+        // Kyra Alejandra Carrasco Montaño ya no forma parte del equipo publicado en la web.
+        User::where('email', 'carrascomontañokyra@gmail.com')->update(['is_team_member' => false]);
 
         $this->command?->info('Equipo sembrado: '.count($members).' integrantes.');
     }
