@@ -345,15 +345,25 @@
 .dd-zone .dd-chip { display: block; margin-bottom: 6px; text-align: center; }
 .dd-feedback { margin-top: 1rem; font-size: 0.82rem; color: var(--slate); text-align: center; }
 .dd-reset { margin-top: 12px; font-size: 0.76rem; font-weight: 600; color: var(--gold); background: none; border: 1px solid var(--gold); border-radius: 20px; padding: 6px 14px; cursor: pointer; display: block; margin-left: auto; }
-.course-activity-card { position: relative; background: var(--gold-pale); border: 1px solid var(--line); border-radius: 12px; padding: 1.4rem; }
-.activity-question { background: var(--white); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; margin: 1rem 0; }
-.activity-actions, .activity-order { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .8rem; }
-.activity-actions button, .activity-order button { border: 1px solid var(--line); border-radius: 8px; background: var(--white); padding: .65rem .8rem; cursor: pointer; }
-.activity-order button.selected { border-color: var(--gold); background: var(--gold-pale); }
-.activity-feedback { display: block; margin-top: .7rem; color: var(--slate); }
+.course-activity-card { position: relative; background: linear-gradient(145deg,#f8f4e8,#fff); border: 1px solid #ded5bf; border-radius: 18px; padding: clamp(1rem,3vw,2rem); box-shadow: 0 14px 32px rgba(11,24,41,.08); }
+.course-activity-card .ix-intro { padding: 1rem 1.2rem; border-left: 3px solid var(--gold); background: rgba(255,255,255,.7); border-radius: 0 10px 10px 0; }
+.activity-question { background: var(--white); border: 1px solid #e5e1d8; border-radius: 14px; padding: 1.2rem; margin: 1rem 0; box-shadow: 0 5px 15px rgba(11,24,41,.04); }
+.activity-question strong { display:block; color:var(--ink); font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.55rem; }
+.activity-question p { color:var(--ink); line-height:1.6; }
+.activity-actions, .activity-order { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1rem; }
+.activity-actions button { min-width:120px; border:1px solid #d7d1c2; border-radius:999px; background:#fff; color:var(--ink); padding:.7rem 1rem; cursor:pointer; font-weight:700; transition:.18s ease; }
+.activity-actions button:hover, .activity-actions button.active { border-color:var(--gold); background:var(--gold-pale); transform:translateY(-1px); }
+.activity-order { display:grid; gap:.55rem; }
+.activity-order-row { display:grid; grid-template-columns:1fr auto; align-items:center; gap:.8rem; padding:.7rem .8rem; border:1px solid #e5e1d8; border-radius:10px; background:#fff; }
+.activity-order-row span { color:var(--ink); font-size:.88rem; }
+.activity-order-controls { display:flex; gap:.35rem; }
+.activity-order-controls button { width:32px; height:32px; border:1px solid #d7d1c2; border-radius:8px; background:#fff; color:var(--gold); cursor:pointer; font-weight:800; }
+.activity-order-controls button:hover { background:var(--gold-pale); }
+.activity-feedback { display: block; margin-top: .8rem; color: var(--slate); font-weight:600; }
 .course-glossary { position: fixed; z-index: 1200; inset: 8vh 5vw; max-width: 700px; margin: auto; padding: 1.5rem; overflow: auto; background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
 .course-glossary input { width: 100%; padding: .7rem; margin: .8rem 0; border: 1px solid var(--line); border-radius: 8px; }
-.course-glossary article { padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.course-glossary article { padding: .8rem 0; border-bottom: 1px solid var(--line); }
+.course-glossary article strong { color:var(--ink); }
 @endsection
 
 @section('content')
@@ -385,7 +395,7 @@
         $docLabels = ['docx' => 'Documento Word', 'doc' => 'Documento Word', 'xlsx' => 'Hoja de cálculo Excel', 'xls' => 'Hoja de cálculo Excel', 'pptx' => 'Presentación PowerPoint', 'ppt' => 'Presentación PowerPoint', 'pdf' => 'Documento PDF'];
         $docLabel = $docLabels[$ext] ?? 'Archivo descargable';
         $officePreviewable = in_array($ext, ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt']);
-        $fileUrl = asset('storage/'.$lesson->file_path);
+        $fileUrl = route('lessons.resource', $lesson);
       @endphp
       <div class="doc-badge-row"><span class="doc-badge {{ $ext }}">{{ $docLabel }} · vista previa</span></div>
       @if($officePreviewable)
@@ -403,7 +413,7 @@
         <div class="activity-question"><strong>1. Verdadero o falso</strong><p class="activity-statement"></p><div class="activity-actions"><button type="button" data-answer="true">Verdadero</button><button type="button" data-answer="false">Falso</button></div><small class="activity-feedback"></small></div>
         <div class="activity-question"><strong>2. Verdadero o falso</strong><p>Un puntaje alto de riesgo acredita por sí solo el origen ilícito de los fondos.</p><div class="activity-actions"><button type="button" class="extra-vf" data-correct="false">Verdadero</button><button type="button" class="extra-vf" data-correct="false">Falso</button></div><small class="activity-feedback"></small></div>
         <div class="activity-question"><strong>3. Verdadero o falso</strong><p>Los indicios deben analizarse en conjunto y debe revisarse la contraprueba.</p><div class="activity-actions"><button type="button" class="extra-vf" data-correct="true">Verdadero</button><button type="button" class="extra-vf" data-correct="true">Falso</button></div><small class="activity-feedback"></small></div>
-        <div class="activity-question"><strong>4. Ordenar ideas</strong><p>Selecciona los elementos en el orden correcto:</p><div class="activity-order"></div><small class="activity-feedback"></small></div>
+        <div class="activity-question"><strong>4. Ordenar ideas</strong><p>Utiliza las flechas para ordenar la secuencia correctamente:</p><div class="activity-order"></div><small class="activity-feedback"></small></div>
         <button type="button" class="btn btn-gold" onclick="openCourseGlossary()">Abrir glosario visual</button>
         <div class="course-glossary" id="courseGlossary" hidden><button type="button" onclick="closeCourseGlossary()" class="modal-close">×</button><h3>Glosario visual</h3><input id="glossarySearch" placeholder="Buscar término..."><div id="glossaryItems"></div></div>
       </div>
@@ -414,6 +424,23 @@
         const expected = button.dataset.correct === 'true' ? 'verdadero' : 'falso';
         question.querySelector('.activity-feedback').textContent = button.textContent.trim().toLowerCase() === expected ? 'Correcto' : 'Revisa tu respuesta';
       }));
+      </script>
+      <script>
+      (() => {
+        const card = document.querySelector('.course-activity-card');
+        const order = card?.querySelector('.activity-order');
+        if (!order) return;
+        const original = [...order.children].map(button => ({text: button.textContent, node: button}));
+        original.forEach(item => item.node.style.display = 'none');
+        const rows = original.map(item => { const row = document.createElement('div'); row.className = 'activity-order-row'; row.innerHTML = `<span>${item.text}</span><span class="activity-order-controls"><button type="button" aria-label="Subir">↑</button><button type="button" aria-label="Bajar">↓</button></span>`; return row; });
+        rows.forEach((row, index) => { row.querySelectorAll('button')[0].onclick = () => { if (index > 0) { order.insertBefore(row, rows[index - 1]); [rows[index - 1], rows[index]] = [rows[index], rows[index - 1]]; checkOrder(); } }; row.querySelectorAll('button')[1].onclick = () => { if (index < rows.length - 1) { order.insertBefore(rows[index + 1], row); [rows[index], rows[index + 1]] = [rows[index + 1], rows[index]]; checkOrder(); } }; order.appendChild(row); });
+        function checkOrder() { const expected = original.map(item => item.text).join('|'); const got = rows.map(row => row.querySelector('span').textContent).join('|'); const feedback = card.querySelectorAll('.activity-feedback')[1]; feedback.textContent = got === expected ? 'Orden correcto' : 'Sigue ajustando el orden'; }
+      })();
+      </script>
+      <script>
+      (() => { const terms = [
+        ['SPLAFT','Sistema de prevención y gestión del riesgo de lavado de activos y financiamiento del terrorismo.'],['RO','Reporte de Operaciones: comunicación objetiva y periódica de operaciones sujetas a registro.'],['ROS','Reporte de Operación Sospechosa remitido a la UIF ante una sospecha razonable.'],['OC','Oficial de Cumplimiento, responsable de la gestión del sistema de prevención.'],['IIF','Informe de Inteligencia Financiera elaborado por la UIF.'],['UIF-Perú','Unidad de Inteligencia Financiera adscrita a la SBS.'],['Sujeto obligado','Persona o entidad que debe aplicar medidas de prevención y reporte.'],['Debida diligencia','Procedimientos para conocer y verificar al cliente y sus operaciones.'],['KYC','Know Your Customer: conocimiento y verificación del cliente.'],['KYB','Know Your Business: conocimiento y verificación de la empresa.'],['Beneficiario final','Persona natural que posee o controla finalmente una estructura.'],['Operación inusual','Operación que no guarda relación con el perfil conocido del cliente.'],['Operación sospechosa','Operación inusual con indicios de vinculación a LA/FT.'],['Señal de alerta','Hecho o patrón que requiere análisis reforzado.'],['Perfil de riesgo','Valoración del riesgo inherente de un cliente o relación.'],['Riesgo inherente','Riesgo existente antes de aplicar controles.'],['Riesgo residual','Riesgo que permanece después de los controles.'],['Enfoque basado en riesgo','Priorización de controles según nivel de exposición.'],['Matriz de riesgo','Herramienta para identificar, medir y tratar riesgos.'],['Debida diligencia simplificada','Controles proporcionales para riesgos bajos.'],['Debida diligencia reforzada','Controles adicionales para riesgos altos.'],['PEP','Persona expuesta políticamente por su función pública o vínculo.'],['Lista de sanciones','Registro de personas o entidades sujetas a restricciones.'],['Secreto bancario','Reserva legal sobre información financiera, levantable según ley.'],['Reserva de identidad','Prohibición de revelar al cliente el reporte realizado.'],['Tipología','Patrón recurrente utilizado para lavar activos.'],['Colocación','Ingreso inicial de fondos ilícitos al sistema económico.'],['Estratificación','Movimientos destinados a dificultar el rastreo.'],['Integración','Reingreso de activos con apariencia de licitud.'],['Delito fuente','Actividad criminal que genera los fondos ilícitos.'],['Autolavado','Lavado realizado por quien cometió el delito fuente.'],['Conversión','Transformación de dinero o bienes de origen ilícito.'],['Transferencia','Traslado de activos para ocultar o distanciar su origen.'],['Tenencia','Posesión o conservación de bienes de origen ilícito.'],['Ocultamiento','Acción dirigida a esconder la procedencia o titularidad.'],['Prueba indiciaria','Inferencia basada en hechos acreditados y una regla lógica.'],['Hecho base','Dato probado que sirve como punto de partida.'],['Máxima de experiencia','Regla lógica o general que conecta el indicio.'],['Contraprueba','Evidencia que puede desvirtuar una inferencia.'],['Motivación','Explicación racional, suficiente y verificable de una decisión.'],['Blockchain','Registro distribuido e inmutable de transacciones.'],['Activo virtual','Representación digital de valor transferible o almacenable.'],['PSAV','Proveedor de Servicios de Activos Virtuales.'],['Wallet custodial','Billetera cuyas claves controla un proveedor.'],['Wallet no custodial','Billetera cuyas claves controla directamente el usuario.'],['Mixer','Servicio que mezcla fondos para dificultar la trazabilidad.'],['Chain analysis','Análisis de movimientos y vínculos en una blockchain.'],['Travel Rule','Regla de transmisión de datos entre PSAV.'],['P2P','Intercambio directo entre personas o contrapartes.'],['Puente entre cadenas','Servicio que traslada valor entre redes blockchain.'],['Cadena de custodia digital','Registro que protege integridad y autenticidad de evidencia digital.']
+      ]; const box = document.getElementById('courseGlossary'); window.openCourseGlossary = () => { box.hidden = false; const render = (query='') => { document.getElementById('glossaryItems').innerHTML = terms.filter(t => t[0].toLowerCase().includes(query.toLowerCase())).map(t => `<article><strong>${t[0]}</strong><p>${t[1]}</p></article>`).join(''); }; render(); document.getElementById('glossarySearch').oninput = event => render(event.target.value); }; })();
       </script>
     @elseif($lesson->type === 'text')
       <div class="lesson-text-content">{{ $lesson->content }}</div>

@@ -69,6 +69,7 @@ Route::get('/verificar/{code}', [CertificateVerificationController::class, 'show
 Route::get('/cursos', [CatalogController::class, 'index'])->name('courses.catalog');
 Route::get('/cursos/{course:slug}', [LearningCourseController::class, 'show'])->name('courses.show');
 Route::post('/cursos/{course:slug}/inicio-rapido', [GuestEnrollController::class, 'start'])->name('courses.guest-start');
+Route::get('/recursos/lecciones/{lesson}', [LearningLessonController::class, 'resource'])->name('lessons.resource');
 
 Route::get('/proyectos/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
 

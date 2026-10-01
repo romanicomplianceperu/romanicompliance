@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
+    public function resource(Lesson $lesson)
+    {
+        abort_unless($lesson->file_path && $lesson->module->course->is_published, 404);
+        $path = storage_path('app/public/'.$lesson->file_path);
+        abort_unless(is_file($path), 404);
+        return response()->file($path);
+    }
+
     public function show(Request $request, Lesson $lesson)
     {
         $course = $lesson->module->course;
