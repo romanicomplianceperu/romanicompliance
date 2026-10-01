@@ -10,9 +10,6 @@ class CourseController extends Controller
 {
     public function show(Request $request, Course $course)
     {
-        if ($course->slug === 'cuestiones-problematicas-lavado-activos') {
-            return redirect()->route('academico.course', ['university' => 'unp', 'course' => 'cuestiones-problematicas-lavado-activos']);
-        }
         $user = $request->user();
         abort_unless($course->is_published || ($user && $user->isAdmin()), 404);
 

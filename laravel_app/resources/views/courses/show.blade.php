@@ -307,7 +307,7 @@
         @if($course->duration_minutes)
           <div class="rd-meta-item"><div class="k">Duración</div><div class="v">{{ $course->lectiveHours() }} {{ $course->lectiveHours() === 1 ? 'hora' : 'horas' }}</div></div>
         @endif
-        <div class="rd-meta-item"><div class="k">Módulos</div><div class="v">{{ $course->modules->count() }}</div></div>
+        <div class="rd-meta-item"><div class="k">Actividades</div><div class="v">2</div></div>
         <div class="rd-meta-item"><div class="k">Certificación</div><div class="v">{{ $isOptionalCert ? 'S/ '.number_format($course->certificate_price ?? 0, 0) : 'Gratuita' }}, con QR</div></div>
       </div>
       <div class="rd-cta-row">
@@ -623,7 +623,7 @@
       <h3>Antes de empezar</h3>
       <p class="modal-sub">{{ \Illuminate\Support\Str::limit($course->description, 140) }}</p>
       <ul>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> {{ $course->modules->count() }} módulos con contenido práctico</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> 2 actividades prácticas interactivas</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Modelo descargable listo para usar</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Certificado {{ $isOptionalCert ? 'verificable por QR (S/ '.number_format($course->certificate_price ?? 0, 0).')' : 'gratuito, verificable por QR' }}</li>
       </ul>
@@ -635,6 +635,13 @@
       <p class="modal-sub">Nada de contraseñas ni registro, solo tu nombre y correo para guardar tu avance y tu certificado.</p>
       <form action="{{ route('courses.guest-start', $course) }}" method="POST">
         @csrf
+        <div class="rd-form-group">
+          <label>Modalidad de participación</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <label style="border:1px solid var(--line);padding:10px 14px;border-radius:8px;cursor:pointer;"><input type="radio" name="mode" value="individual" checked> Individual</label>
+            <label style="border:1px solid var(--line);padding:10px 14px;border-radius:8px;cursor:pointer;"><input type="radio" name="mode" value="grupal"> Grupal</label>
+          </div>
+        </div>
         <div class="rd-form-group">
           <label>Nombre completo</label>
           <input type="text" name="full_name" required autofocus autocomplete="off" spellcheck="false">
