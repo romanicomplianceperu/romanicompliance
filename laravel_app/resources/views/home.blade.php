@@ -71,7 +71,7 @@
 .plan-desc { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; min-height: 44px; }
 .plan-features { list-style: none; flex: 1; }
 .plan-features li { font-size: 0.8rem; color: rgba(255,255,255,0.65); padding: 6px 0; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
-.plan-features li::before { content: '\2014'; color: var(--gold-light); flex-shrink: 0; }
+.plan-features li::before { content: '\2713'; color: var(--gold-light); flex-shrink: 0; font-weight: 700; }
 .plan-cta { margin-top: 1.5rem; }
 .btn-plan-cta { display: block; text-align: center; padding: 11px; font-size: 0.8rem; font-weight: 600; border-radius: var(--radius); border: 1px solid var(--gold); color: var(--gold-light); background: transparent; cursor: pointer; font-family: var(--sans); transition: all 0.3s; width: 100%; }
 .btn-plan-cta:hover { background: var(--gold); color: var(--white); }

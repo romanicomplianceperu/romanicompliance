@@ -52,7 +52,7 @@
 .inm-panel-cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
 .inm-btn-wa { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--white); font-weight: 700; font-size: 0.85rem; padding: 12px 26px; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .inm-btn-wa:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(184,154,86,0.35); }
-.inm-btn-secondary { font-size: 0.82rem; font-weight: 600; color: var(--slate); }
+.inm-btn-secondary { display: inline-flex; align-items: center; background: none; border: none; padding: 0; margin: 0; font-family: var(--sans); font-size: 0.82rem; font-weight: 600; color: var(--slate); cursor: pointer; transition: color 0.2s ease; }
 .inm-btn-secondary:hover { color: var(--gold); }
 
 @media (max-width: 860px) {
