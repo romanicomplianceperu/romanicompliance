@@ -280,6 +280,18 @@
 .rd-ob-cta { margin-top: 1.6rem; }
 
 @media (max-width: 900px) { .rd-modules { gap: 0.8rem; } }
+.rd-welcome-modal { width: min(92vw, 720px); max-width: 720px !important; padding: 2rem; border-radius: 22px; }
+.rd-welcome-modal .modal-backdrop, #rdWelcomeModal .modal-backdrop { background: rgba(5, 14, 27, .62); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.rd-mode-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 1rem 0 1.4rem; }
+.rd-mode-choice { position: relative; display: flex; align-items: center; gap: 14px; min-height: 112px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, #fff, #f7f4ec); cursor: pointer; transition: .2s ease; }
+.rd-mode-choice:hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 12px 26px rgba(11,24,41,.12); }
+.rd-mode-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.rd-mode-choice:has(input:checked) { border-color: var(--gold); background: linear-gradient(145deg, #fff8e5, #f0e7cc); box-shadow: 0 0 0 3px rgba(184,154,86,.18); }
+.rd-mode-icon { width: 46px; height: 46px; display: grid; place-items: center; flex: 0 0 46px; border-radius: 13px; color: var(--gold); background: var(--ink); }
+.rd-mode-icon svg { width: 25px; height: 25px; }
+.rd-mode-copy strong { display: block; color: var(--ink); font-size: .98rem; }
+.rd-mode-copy span { display: block; color: var(--slate); font-size: .76rem; margin-top: 3px; }
+@media (max-width: 560px) { .rd-welcome-modal { padding: 1.2rem; } .rd-mode-grid { grid-template-columns: 1fr; } .rd-mode-choice { min-height: 92px; } }
 @endsection
 
 @section('content')
@@ -642,10 +654,10 @@
       <form action="{{ route('courses.guest-start', $course) }}" method="POST">
         @csrf
         <div class="rd-form-group">
-          <label>Modalidad de participación</label>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <label style="border:1px solid var(--line);padding:10px 14px;border-radius:8px;cursor:pointer;"><input type="radio" name="mode" value="individual" checked> Individual</label>
-            <label style="border:1px solid var(--line);padding:10px 14px;border-radius:8px;cursor:pointer;"><input type="radio" name="mode" value="grupal"> Grupal</label>
+          <label>¿Cómo participarás?</label>
+          <div class="rd-mode-grid">
+            <label class="rd-mode-choice"><input type="radio" name="mode" value="individual" checked><span class="rd-mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.7-3.4 2.8-5 6.5-5s5.8 1.6 6.5 5"/></svg></span><span class="rd-mode-copy"><strong>Individual</strong><span>Resolveré las actividades por mi cuenta</span></span></label>
+            <label class="rd-mode-choice"><input type="radio" name="mode" value="grupal"><span class="rd-mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="2.6"/><circle cx="16.5" cy="9" r="2.2"/><path d="M3.8 19c.5-3 2.1-4.5 5.2-4.5s4.7 1.5 5.2 4.5M14 15c2.8-.3 4.7 1 5.5 4"/></svg></span><span class="rd-mode-copy"><strong>Grupal</strong><span>Resolveremos las actividades como equipo</span></span></label>
           </div>
         </div>
         <div class="rd-form-group">
