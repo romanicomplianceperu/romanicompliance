@@ -47,6 +47,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/capacitaciones', 'capacitaciones')->name('capacitaciones');
 Route::view('/inmobiliario', 'inmobiliario.index')->name('inmobiliario');
+Route::prefix('aprendizaje')->name('aprendizaje.')->group(function () {
+    Route::view('/', 'aprendizaje.index')->name('index');
+    Route::view('/capacitaciones', 'aprendizaje.capacitaciones')->name('capacitaciones');
+});
 Route::get('/equipo', [TeamController::class, 'index'])->name('equipo');
 
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
