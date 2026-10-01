@@ -78,6 +78,16 @@ class CourseController extends Controller
         return redirect()->route('admin.courses.edit', $course)->with('success', 'Curso actualizado correctamente.');
     }
 
+    public function participants(Course $course)
+    {
+        $course->load(['enrollments.user', 'exam.attempts' => fn ($q) => $q->orderByDesc('attempt_number')]);
+
+        $exam = $course->exam;
+        $attemptsByUser = $exam ? $exam->attempts->groupBy('user_id') : collect();
+
+        return view('admin.courses.participants', compact('course', 'attemptsByUser'));
+    }
+
     public function destroy(Course $course)
     {
         if ($course->cover_image) {

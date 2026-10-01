@@ -28,7 +28,7 @@
                 <span class="badge badge-gray">Opcional</span>
               @endif
             </td>
-            <td>{{ $course->enrollments_count }}</td>
+            <td><a href="{{ route('admin.courses.participants', $course) }}">{{ $course->enrollments_count }}</a></td>
             <td>
               @if($course->is_published)
                 <span class="badge badge-gold">Publicado</span>
@@ -37,6 +37,7 @@
               @endif
             </td>
             <td style="text-align:right">
+              <a href="{{ route('admin.courses.participants', $course) }}" class="btn btn-outline btn-sm">Participantes</a>
               <a href="{{ route('admin.courses.edit', $course) }}" class="btn btn-outline btn-sm">Editar</a>
               <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" style="display:inline" onsubmit="return confirm('¿Eliminar este curso y todo su contenido?');">
                 @csrf @method('DELETE')

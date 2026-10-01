@@ -639,11 +639,32 @@
           <label>Nombre completo</label>
           <input type="text" name="full_name" required autofocus autocomplete="off" spellcheck="false">
         </div>
-        <div class="rd-form-group">
-          <label>Correo electrónico</label>
-          <input type="email" name="email" required autocomplete="off">
-          <div class="rd-form-hint">Lo usamos para tu certificado y para que no pierdas tu avance.</div>
-        </div>
+        @if($course->slug === 'cuestiones-problematicas-lavado-activos')
+          <div class="rd-form-group">
+            <label>Cargo</label>
+            <select name="position" id="rdPositionSelect" required onchange="document.getElementById('rdPositionOtherGroup').style.display = this.value === 'Otro' ? 'block' : 'none';">
+              <option value="">Seleccione...</option>
+              <option value="Juez">Juez</option>
+              <option value="Fiscal">Fiscal</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="rd-form-group" id="rdPositionOtherGroup" style="display:none;">
+            <label>Especifique su cargo</label>
+            <input type="text" name="position_other" autocomplete="off">
+          </div>
+          <div class="rd-form-group">
+            <label>Correo electrónico (opcional)</label>
+            <input type="email" name="email" autocomplete="off">
+            <div class="rd-form-hint">Si lo deja en blanco, igual podrá rendir la evaluación y obtener su nota.</div>
+          </div>
+        @else
+          <div class="rd-form-group">
+            <label>Correo electrónico</label>
+            <input type="email" name="email" required autocomplete="off">
+            <div class="rd-form-hint">Lo usamos para tu certificado y para que no pierdas tu avance.</div>
+          </div>
+        @endif
         <button type="submit" class="btn btn-gold btn-block" style="width:100%;justify-content:center;">Entrar al curso</button>
       </form>
       <p class="rd-form-hint" style="text-align:center;margin-top:12px;">¿Ya tienes cuenta? <a href="{{ route('login', ['intended' => route('courses.show', $course)]) }}" style="color:var(--gold);font-weight:600;">Inicia sesión</a></p>

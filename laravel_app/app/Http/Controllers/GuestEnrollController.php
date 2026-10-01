@@ -21,7 +21,16 @@ class GuestEnrollController extends Controller
         $data = $request->validate([
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
+            'position' => ['nullable', 'string', 'max:100'],
+            'position_other' => ['nullable', 'string', 'max:100'],
         ]);
+
+        $positionLabel = null;
+        if (! empty($data['position'])) {
+            $positionLabel = $data['position'] === 'Otro' && ! empty($data['position_other'])
+                ? $data['position_other']
+                : $data['position'];
+        }
 
         $user = $request->user();
 
@@ -54,6 +63,10 @@ class GuestEnrollController extends Controller
             }
 
             Auth::login($user, remember: true);
+        }
+
+        if ($positionLabel && $user->title !== $positionLabel) {
+            $user->update(['title' => $positionLabel]);
         }
 
         $course->enrollments()->firstOrCreate(
