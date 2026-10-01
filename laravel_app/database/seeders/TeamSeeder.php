@@ -51,6 +51,16 @@ class TeamSeeder extends Seeder
                 'team_rank' => 'associate',
                 'team_order' => 3,
             ],
+            [
+                'email' => 'xiomara.madrid@romanicompliance.com',
+                'name' => 'Xiomara Natali Madrid Ramos',
+                'role' => 'student',
+                'title' => 'Apoyo Legal Externo',
+                'bio' => 'Estudiante del XII ciclo de la carrera de Derecho en la Universidad Nacional de Piura, con más de 3 años de experiencia en el ámbito corporativo adquirida en estudios jurídicos, empresas privadas y el Centro de Arbitraje del Ilustre Colegio de Abogados de Piura. Colabora con Romani Compliance como apoyo legal externo en la elaboración de documentación normativa y el seguimiento de proyectos de cumplimiento.',
+                'photo' => 'team/xiomara-madrid.webp',
+                'team_rank' => 'associate',
+                'team_order' => 4,
+            ],
         ];
 
         foreach ($members as $data) {
