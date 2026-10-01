@@ -312,7 +312,7 @@
       <div class="rd-cta-row">
         @if($enrollment)
           @php $next = $course->nextLessonFor(auth()->user()); @endphp
-          @php $startUrl = $course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next ? route('lessons.show', $next) : route('courses.show', $course)); @endphp
+          @php $startUrl = $course->slug === 'cuestiones-problematicas-lavado-activos' ? route('courses.show', $course).'?activities=1' : ($course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next ? route('lessons.show', $next) : route('courses.show', $course))); @endphp
           <a href="{{ $startUrl }}" class="rd-btn-primary">
             {{ $enrollment->progress_percent > 0 ? 'Continuar curso' : 'Comenzar curso' }}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -439,7 +439,7 @@
 @if($course->modules->count() > 0)
 <section class="rd-section">
   <div class="wrap">
-    <div class="rd-eyebrow">Temario</div>
+    <div id="activitiesPanel" class="rd-eyebrow">Actividades</div>
     <h2>Actividades del curso</h2>
     <p class="rd-section-lead">Selecciona una actividad para comenzar a resolverla.</p>
     @if($course->slug === 'cuestiones-problematicas-lavado-activos')
@@ -574,7 +574,7 @@
       <p>Avanza a tu propio ritmo, autoevalúate al finalizar y obtén tu certificado verificable por QR.</p>
       @if($enrollment)
         @php $next2 = $course->nextLessonFor(auth()->user()); @endphp
-        @php $startUrl2 = $course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next2 ? route('lessons.show', $next2) : route('courses.show', $course)); @endphp
+        @php $startUrl2 = $course->slug === 'cuestiones-problematicas-lavado-activos' ? route('courses.show', $course).'?activities=1' : ($course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next2 ? route('lessons.show', $next2) : route('courses.show', $course))); @endphp
         <a href="{{ $startUrl2 }}" class="rd-btn-primary">Continuar curso</a>
       @else
         <button type="button" class="rd-btn-primary" onclick="rdOpenWelcome()">Inscribirme gratis</button>
@@ -923,6 +923,8 @@ function rdOnboardFinish() {
     @php $firstLesson = $course->nextLessonFor(auth()->user() ?? new \App\Models\User()); @endphp
     @if(auth()->check() && $course->slug === 'listas-internacionales-ft-fpadm')
       window.location.href = '{{ route('courses.subject-select', $course) }}';
+    @elseif(auth()->check() && $course->slug === 'cuestiones-problematicas-lavado-activos')
+      window.location.href = '{{ route('courses.show', $course) }}?activities=1';
     @elseif(auth()->check() && $firstLesson)
       window.location.href = '{{ route('lessons.show', $firstLesson) }}';
     @else
@@ -932,6 +934,10 @@ function rdOnboardFinish() {
       window.history.replaceState({}, '', url);
     @endif
   }, 950);
+}
+
+if (new URLSearchParams(window.location.search).get('activities') === '1') {
+  window.setTimeout(() => document.getElementById('activitiesPanel')?.scrollIntoView({behavior: 'smooth', block: 'start'}), 250);
 }
 
 @if(session('success') && str_contains(session('success'), 'completado todas las lecciones'))
