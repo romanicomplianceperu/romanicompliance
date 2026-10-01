@@ -6,7 +6,7 @@
 .take-hero { background: var(--ink); padding: 2.5rem 0; position: relative; }
 .take-hero-inner { display: flex; align-items: center; justify-content: space-between; }
 .take-hero h1 { font-size: 1.3rem; color: var(--white); font-weight: 400; }
-#timer { font-family: var(--serif); font-size: 1.4rem; color: var(--gold-light); font-weight: 600; }
+#timer { position: fixed; top: 1rem; right: 1rem; z-index: 1000; min-width: 112px; text-align: center; padding: .7rem 1rem; border: 1px solid var(--gold-light); border-radius: 999px; background: var(--ink); box-shadow: 0 8px 24px rgba(0,0,0,.2); font-family: var(--serif); font-size: 1.4rem; color: var(--gold-light); font-weight: 600; }
 
 .take-section { padding: 2.5rem 0; }
 .question-card { background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 1.8rem; margin-bottom: 1.2rem; }
@@ -23,7 +23,7 @@
     <h1>{{ $exam->title }}</h1>
     @if($exam->time_limit_minutes)
       @php $remaining = max(0, (int) round($exam->time_limit_minutes * 60 - now()->diffInSeconds($attempt->started_at, absolute: true))); @endphp
-      <div id="timer" data-seconds="{{ $remaining }}">--:--</div>
+      <div id="timer" data-seconds="{{ $remaining }}" aria-live="polite">--:--</div>
     @endif
   </div>
 </section>
@@ -54,8 +54,11 @@
 const timerEl = document.getElementById('timer');
 if (timerEl) {
   let seconds = parseInt(timerEl.dataset.seconds, 10);
+  let submitted = false;
   function render() {
+    if (submitted) return;
     if (seconds <= 0) {
+      submitted = true;
       document.getElementById('examForm').submit();
       return;
     }
