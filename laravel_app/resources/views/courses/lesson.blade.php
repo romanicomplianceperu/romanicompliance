@@ -355,6 +355,8 @@
 .activity-actions button:hover, .activity-actions button.active { border-color:var(--gold); background:var(--gold-pale); transform:translateY(-1px); }
 .activity-order { display:grid; gap:.55rem; }
 .activity-order-row { display:grid; grid-template-columns:1fr auto; align-items:center; gap:.8rem; padding:.7rem .8rem; border:1px solid #e5e1d8; border-radius:10px; background:#fff; }
+.activity-order-row.moving { animation: activityMove .35s ease; border-color:var(--gold); background:var(--gold-pale); }
+@keyframes activityMove { 0% { transform:translateY(0); opacity:.65; } 50% { transform:translateY(-4px); opacity:1; } 100% { transform:translateY(0); } }
 .activity-order-row span { color:var(--ink); font-size:.88rem; }
 .activity-order-controls { display:flex; gap:.35rem; }
 .activity-order-controls button { width:32px; height:32px; border:1px solid #d7d1c2; border-radius:8px; background:#fff; color:var(--gold); cursor:pointer; font-weight:800; }
@@ -459,7 +461,8 @@
         const original = [...order.children].map(button => ({text: button.textContent, node: button}));
         original.forEach(item => item.node.style.display = 'none');
         const rows = original.map(item => { const row = document.createElement('div'); row.className = 'activity-order-row'; row.innerHTML = `<span>${item.text}</span><span class="activity-order-controls"><button type="button" aria-label="Subir">↑</button><button type="button" aria-label="Bajar">↓</button></span>`; return row; });
-        rows.forEach((row, index) => { row.querySelectorAll('button')[0].onclick = () => { if (index > 0) { order.insertBefore(row, rows[index - 1]); [rows[index - 1], rows[index]] = [rows[index], rows[index - 1]]; checkOrder(); } }; row.querySelectorAll('button')[1].onclick = () => { if (index < rows.length - 1) { order.insertBefore(rows[index + 1], row); [rows[index], rows[index + 1]] = [rows[index + 1], rows[index]]; checkOrder(); } }; order.appendChild(row); });
+        const animate = row => { row.classList.remove('moving'); void row.offsetWidth; row.classList.add('moving'); };
+        rows.forEach((row, index) => { row.querySelectorAll('button')[0].onclick = () => { if (index > 0) { order.insertBefore(row, rows[index - 1]); [rows[index - 1], rows[index]] = [rows[index], rows[index - 1]]; animate(row); checkOrder(); } }; row.querySelectorAll('button')[1].onclick = () => { if (index < rows.length - 1) { order.insertBefore(rows[index + 1], row); [rows[index], rows[index + 1]] = [rows[index + 1], rows[index]]; animate(row); checkOrder(); } }; order.appendChild(row); });
         function checkOrder() { const expected = original.map(item => item.text).join('|'); const got = rows.map(row => row.querySelector('span').textContent).join('|'); const feedback = card.querySelectorAll('.activity-feedback')[1]; feedback.textContent = got === expected ? 'Orden correcto' : 'Sigue ajustando el orden'; }
       })();
       </script>

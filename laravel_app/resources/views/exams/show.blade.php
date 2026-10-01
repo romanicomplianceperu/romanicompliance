@@ -50,11 +50,11 @@
         <p>Cuando comiences, se registrará tu intento y el tiempo empleado.</p>
         <form action="{{ route('exams.start', $course) }}" method="POST" style="max-width:420px;margin:0 auto;text-align:left;">
           @csrf
-          <div class="form-group" style="margin-bottom:1rem;">
+          @if($course->slug !== 'cuestiones-problematicas-lavado-activos')<div class="form-group" style="margin-bottom:1rem;">
             <label style="font-size:0.72rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;display:block;">Nombre para tu certificado</label>
             <input type="text" name="certificate_name" value="{{ old('certificate_name', auth()->user()->name) }}" required style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:var(--radius);font-family:var(--sans);font-size:0.9rem;">
             <div class="form-hint" style="margin-top:4px;">Así aparecerá impreso en tu certificado. Puedes ajustarlo si lo necesitas.</div>
-          </div>
+          </div>@endif
           <button type="submit" class="btn btn-gold btn-block">Comenzar examen</button>
         </form>
       @else

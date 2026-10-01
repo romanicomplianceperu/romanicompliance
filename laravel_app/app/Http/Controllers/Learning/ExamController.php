@@ -31,9 +31,9 @@ class ExamController extends Controller
         $user = $request->user();
         abort_unless($course->isEnrolledBy($user), 403);
 
-        $data = $request->validate([
-            'certificate_name' => ['required', 'string', 'max:255'],
-        ]);
+        $data = $course->slug === 'cuestiones-problematicas-lavado-activos'
+            ? []
+            : $request->validate(['certificate_name' => ['required', 'string', 'max:255']]);
 
         $exam = $course->exam()->with('questions')->firstOrFail();
         abort_if($exam->questions->isEmpty(), 422, 'Este examen todavía no tiene preguntas.');
@@ -49,7 +49,7 @@ class ExamController extends Controller
 
         $attempt = $exam->attempts()->create([
             'user_id' => $user->id,
-            'holder_name' => $data['certificate_name'],
+            'holder_name' => $data['certificate_name'] ?? $user->name,
             'attempt_number' => $attemptsUsed + 1,
             'status' => 'in_progress',
             'started_at' => now(),
@@ -110,7 +110,7 @@ class ExamController extends Controller
             $course = $exam->course()->first();
             $hasCertificate = $course->certificates()->where('user_id', $attempt->user_id)->whereNull('revoked_at')->exists();
 
-            if (! $hasCertificate && ($course->certificate_type ?? 'gratuita') !== 'opcional') {
+            if ($course->slug !== 'cuestiones-problematicas-lavado-activos' && ! $hasCertificate && ($course->certificate_type ?? 'gratuita') !== 'opcional') {
                 app(CertificateService::class)->issue($request->user(), $course, $attempt, $attempt->holder_name);
             }
         }
