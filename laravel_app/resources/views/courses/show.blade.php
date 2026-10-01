@@ -308,7 +308,6 @@
           <div class="rd-meta-item"><div class="k">Duración</div><div class="v">{{ $course->lectiveHours() }} {{ $course->lectiveHours() === 1 ? 'hora' : 'horas' }}</div></div>
         @endif
         <div class="rd-meta-item"><div class="k">Actividades</div><div class="v">2</div></div>
-        <div class="rd-meta-item"><div class="k">Certificación</div><div class="v">{{ $isOptionalCert ? 'S/ '.number_format($course->certificate_price ?? 0, 0) : 'Gratuita' }}, con QR</div></div>
       </div>
       <div class="rd-cta-row">
         @if($enrollment)
@@ -318,11 +317,6 @@
             {{ $enrollment->progress_percent > 0 ? 'Continuar curso' : 'Comenzar curso' }}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          @if($course->exam)
-            <a href="{{ route('exams.show', $course) }}" class="rd-btn-secondary" title="Al hacer clic, darás el cuestionario para obtener tu certificado">
-              Obtener certificado
-            </a>
-          @endif
           <span class="rd-progress-chip">{{ $enrollment->progress_percent }}% completado</span>
         @else
           <button type="button" class="rd-btn-primary" onclick="rdOpenWelcome()">
@@ -382,7 +376,7 @@
       @if($course->exam)
         <div class="stat-pill"><span class="num">{{ $examQuestions }}</span><span class="lbl">Preguntas</span></div>
       @endif
-      <div class="stat-pill"><span class="num">{{ $isOptionalCert ? 'S/ '.number_format($course->certificate_price ?? 0, 0) : '100%' }}</span><span class="lbl">{{ $isOptionalCert ? 'Certificación' : 'Gratuito' }}</span></div>
+      <div class="stat-pill"><span class="num">100%</span><span class="lbl">Acceso gratuito</span></div>
     </div>
   </div>
 </section>
@@ -446,8 +440,19 @@
 <section class="rd-section">
   <div class="wrap">
     <div class="rd-eyebrow">Temario</div>
-    <h2>Módulos del curso</h2>
-    <p class="rd-section-lead">Programa estructurado en {{ $course->modules->count() }} módulos, pensado para avanzar a tu propio ritmo.</p>
+    <h2>Actividades del curso</h2>
+    <p class="rd-section-lead">Selecciona una actividad para comenzar a resolverla.</p>
+    @if($course->slug === 'cuestiones-problematicas-lavado-activos')
+      <div class="rd-modules">
+        @foreach($course->modules as $module)
+          @php $activityLesson = $module->lessons->first(); @endphp
+          <a class="rd-module-card rd-fade-up rd-delay-{{ min($loop->iteration, 4) }}" href="{{ $enrollment && $activityLesson ? route('lessons.show', $activityLesson) : '#rdWelcomeModal' }}" @if(!$enrollment) onclick="rdOpenWelcome(); return false;" @endif>
+            <div class="rd-module-num">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</div>
+            <div><h3>{{ preg_replace('/^Módulo\s*\d+:\s*/u', '', $module->title) }}</h3><p>Actividad interactiva con preguntas, ordenamiento de ideas y recursos de apoyo.</p></div>
+          </a>
+        @endforeach
+      </div>
+    @else
     <div class="rd-modules">
       @foreach($course->modules as $module)
         <div class="rd-module-card rd-fade-up rd-delay-{{ min($loop->iteration, 4) }}">
@@ -463,6 +468,7 @@
         </div>
       @endforeach
     </div>
+    @endif
   </div>
 </section>
 @endif
