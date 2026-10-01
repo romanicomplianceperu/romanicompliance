@@ -33,12 +33,15 @@
 .service-icon { width: 52px; height: 52px; border-radius: 12px; background: var(--gold-pale); color: var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; flex-shrink: 0; }
 .service-icon svg { width: 26px; height: 26px; }
 .service-card h4 { font-size: 1.15rem; margin-bottom: 0.6rem; }
-.service-card p { font-size: 0.85rem; color: var(--slate); line-height: 1.7; margin-bottom: 1.2rem; }
-.service-sublist { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.6rem; flex: 1; }
-.service-sublist li { font-size: 0.8rem; color: var(--ink); font-weight: 500; padding-left: 1.1rem; position: relative; }
-.service-sublist li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.service-card p { font-size: 0.85rem; color: var(--slate); line-height: 1.7; margin-bottom: 1.6rem; flex: 1; }
 .service-link { font-size: 0.78rem; font-weight: 600; color: var(--gold); display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
 .service-link:hover { gap: 10px; }
+.service-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; background: var(--gold); color: var(--white); font-family: var(--sans); font-size: 0.84rem; font-weight: 600; border: none; border-radius: var(--radius); cursor: pointer; text-decoration: none; transition: background 0.3s, transform 0.3s, box-shadow 0.3s; }
+.service-btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(139,115,64,0.28); }
+.service-btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+.service-btn-group .service-btn { flex: 1 1 calc(50% - 5px); min-width: 150px; }
+.service-btn-outline { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); }
+.service-btn-outline:hover { background: var(--gold); color: var(--white); }
 
 /* ── CURSOS ONLINE ── */
 .courses-online { padding: 5rem 0; background: var(--white); border-bottom: 1px solid var(--line); }
@@ -222,39 +225,22 @@
       <div class="service-card reveal stagger-1">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 3.3v5.4c0 5-3.4 8.8-8 10.3-4.6-1.5-8-5.3-8-10.3V5.8l8-3.3z"/><path d="M9 12l2 2 4-4.5"/></svg></div>
         <h4>Compliance &amp; Prevención LA/FT</h4>
-        <p>Diseño e implementación de modelos de prevención conforme a la Ley N.° 30424 y sistemas SPLAFT completos: manuales, matrices de riesgo, due diligence e investigación financiera para empresas de cualquier sector.</p>
-        <ul class="service-sublist">
-          <li>Compliance corporativo (Ley N.° 30424)</li>
-          <li>Prevención LA/FT (SPLAFT)</li>
-          <li>Due Diligence</li>
-          <li>Investigación financiera</li>
-        </ul>
-        <a href="javascript:void(0)" onclick="irAContacto('Compliance corporativo')" class="service-link">Consultar →</a>
+        <p>Diseño e implementación de modelos de prevención conforme a la Ley N.° 30424 y sistemas SPLAFT completos: manuales, matrices de riesgo, due diligence e investigación financiera para proteger a su organización frente a la responsabilidad penal y los riesgos de lavado de activos.</p>
+        <button type="button" onclick="irAContacto('Compliance corporativo')" class="service-btn">Consultar →</button>
       </div>
-      <div class="service-card service-card-feature reveal stagger-2">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9.5l7-5 7 5V21"/><path d="M9 21v-6h6v6"/><path d="M9 12h.01M15 12h.01M12 9h.01"/></svg></div>
-        <h4>Compliance Sectorial</h4>
-        <p>Programas de cumplimiento a medida para sectores con riesgos propios: sistemas SPLAF para notarías y due diligence, saneamiento técnico-legal y modelos de prevención para inmobiliarias, agentes y compradores.</p>
-        <ul class="service-sublist">
-          <li>Compliance Notarial</li>
-          <li>Compliance Inmobiliario</li>
-        </ul>
-        <div style="display:flex;flex-wrap:wrap;gap:16px;">
-          <a href="{{ route('inmobiliario') }}" class="service-link">Ver Compliance Inmobiliario →</a>
-          <a href="javascript:void(0)" onclick="irAContacto('Compliance Notarial')" class="service-link">Consultar Notarial →</a>
-        </div>
-      </div>
-      <div class="service-card reveal stagger-3">
+      <div class="service-card reveal stagger-2">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
         <h4>Asesoría Penal &amp; Capacitaciones</h4>
-        <p>Defensa técnica especializada en derecho penal y programas de formación en prevención LA/FT y compliance corporativo, con certificaciones para sujetos obligados, oficiales de cumplimiento y colaboradores.</p>
-        <ul class="service-sublist">
-          <li>Asesoría penal</li>
-          <li>Capacitaciones y certificaciones</li>
-        </ul>
-        <div style="display:flex;flex-wrap:wrap;gap:16px;">
-          <a href="{{ route('capacitaciones') }}" class="service-link">Ver programas →</a>
-          <a href="javascript:void(0)" onclick="irAContacto('Asesoría penal')" class="service-link">Consultar penal →</a>
+        <p>Defensa técnica especializada en derecho penal para personas naturales y jurídicas, junto con programas de formación y certificación en prevención LA/FT y compliance corporativo para su equipo.</p>
+        <button type="button" onclick="irAContacto('Asesoría penal')" class="service-btn">Consultar →</button>
+      </div>
+      <div class="service-card service-card-feature reveal stagger-3">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9.5l7-5 7 5V21"/><path d="M9 21v-6h6v6"/><path d="M9 12h.01M15 12h.01M12 9h.01"/></svg></div>
+        <h4>Compliance Inmobiliario / Notarial</h4>
+        <p>Due diligence de propiedades, saneamiento técnico-legal y modelos de prevención para inmobiliarias, agentes y compradores, junto con sistemas SPLAF a medida para notarías.</p>
+        <div class="service-btn-group">
+          <a href="{{ route('inmobiliario') }}" class="service-btn">Compliance Inmobiliario</a>
+          <button type="button" onclick="irAContacto('Compliance Notarial')" class="service-btn service-btn-outline">Compliance Notarial</button>
         </div>
       </div>
     </div>
