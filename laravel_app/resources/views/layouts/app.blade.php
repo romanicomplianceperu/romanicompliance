@@ -187,6 +187,7 @@ footer { background: var(--ink-90); padding: 2.5rem 0; border-top: 1px solid rgb
     <div class="nav-links">
       <a href="{{ route('home') }}#servicios">Servicios</a>
       <a href="{{ route('capacitaciones') }}" class="{{ request()->routeIs('capacitaciones') ? 'active' : '' }}">Capacitaciones</a>
+      <a href="{{ route('inmobiliario') }}" class="{{ request()->routeIs('inmobiliario') ? 'active' : '' }}">Inmobiliario</a>
       <a href="{{ route('equipo') }}" class="{{ request()->routeIs('equipo') ? 'active' : '' }}">Equipo</a>
       <a href="{{ route('blog.index') }}" class="{{ request()->routeIs('blog.*') ? 'active' : '' }}">Noticias</a>
       <a href="{{ route('home') }}#contacto">Contacto</a>
@@ -230,6 +231,7 @@ footer { background: var(--ink-90); padding: 2.5rem 0; border-top: 1px solid rgb
       <div class="footer-links">
         <a href="{{ route('home') }}#servicios">Servicios</a>
         <a href="{{ route('capacitaciones') }}">Capacitaciones</a>
+        <a href="{{ route('inmobiliario') }}">Inmobiliario</a>
         <a href="{{ route('equipo') }}">Equipo</a>
         <a href="{{ route('blog.index') }}">Noticias</a>
         <a href="{{ route('home') }}#contacto">Contacto</a>

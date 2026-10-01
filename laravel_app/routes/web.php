@@ -46,6 +46,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/capacitaciones', 'capacitaciones')->name('capacitaciones');
+Route::view('/inmobiliario', 'inmobiliario.index')->name('inmobiliario');
 Route::get('/equipo', [TeamController::class, 'index'])->name('equipo');
 
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
