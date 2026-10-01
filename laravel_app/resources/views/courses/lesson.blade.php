@@ -364,6 +364,16 @@
 .course-glossary input { width: 100%; padding: .7rem; margin: .8rem 0; border: 1px solid var(--line); border-radius: 8px; }
 .course-glossary article { padding: .8rem 0; border-bottom: 1px solid var(--line); }
 .course-glossary article strong { color:var(--ink); }
+.activity-memory-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.65rem; margin-top:1rem; }
+.memory-card { aspect-ratio:1.25; border:1px solid #d7d1c2; border-radius:12px; background:#0b1829; color:#d9bd78; display:grid; place-items:center; cursor:pointer; font-size:1.3rem; transition:.2s ease; }
+.memory-card:hover { transform:translateY(-2px); box-shadow:0 8px 16px rgba(11,24,41,.16); }
+.memory-card.revealed, .memory-card.matched { background:#fff8e5; color:var(--ink); border-color:var(--gold); }
+.memory-card.matched { box-shadow:0 0 0 3px rgba(31,122,77,.12); }
+.fillblank-list { display:grid; gap:.75rem; margin-top:1rem; }
+.fillblank-item { display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; color:var(--ink); line-height:1.6; }
+.fillblank-item select { appearance:none; -webkit-appearance:none; min-width:125px; padding:.5rem 2rem .5rem .75rem; border:1px solid #d7d1c2; border-radius:999px; background:#fff8e5; color:var(--ink); font-weight:700; cursor:pointer; }
+.fillblank-item select:focus { outline:2px solid rgba(184,154,86,.35); border-color:var(--gold); }
+@media(max-width:560px){.activity-memory-grid{grid-template-columns:repeat(4,1fr);gap:.4rem}.memory-card{font-size:1rem}}
 @endsection
 
 @section('content')
@@ -384,8 +394,8 @@
       </div>
     @elseif($lesson->type === 'pdf' && $lesson->file_path)
       <div class="doc-badge-row"><span class="doc-badge pdf">Documento PDF · vista previa</span></div>
-      <iframe src="{{ asset('storage/'.$lesson->file_path) }}" class="lesson-pdf"></iframe>
-      <a href="{{ asset('storage/'.$lesson->file_path) }}" target="_blank" class="lesson-file-link">
+      <iframe src="{{ route('lessons.resource', $lesson) }}" class="lesson-pdf"></iframe>
+      <a href="{{ route('lessons.resource', $lesson) }}" target="_blank" class="lesson-file-link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M12 4v11m0 0l4-4m-4 4l-4-4M5 19h14"/></svg>
         Descargar PDF
       </a>
@@ -414,9 +424,25 @@
         <div class="activity-question"><strong>2. Verdadero o falso</strong><p>Un puntaje alto de riesgo acredita por sí solo el origen ilícito de los fondos.</p><div class="activity-actions"><button type="button" class="extra-vf" data-correct="false">Verdadero</button><button type="button" class="extra-vf" data-correct="false">Falso</button></div><small class="activity-feedback"></small></div>
         <div class="activity-question"><strong>3. Verdadero o falso</strong><p>Los indicios deben analizarse en conjunto y debe revisarse la contraprueba.</p><div class="activity-actions"><button type="button" class="extra-vf" data-correct="true">Verdadero</button><button type="button" class="extra-vf" data-correct="true">Falso</button></div><small class="activity-feedback"></small></div>
         <div class="activity-question"><strong>4. Ordenar ideas</strong><p>Utiliza las flechas para ordenar la secuencia correctamente:</p><div class="activity-order"></div><small class="activity-feedback"></small></div>
+        <div class="activity-question"><strong>5. Juego de memoria</strong><p>Encuentra las parejas de conceptos relacionados.</p><div class="activity-memory-grid" data-memory></div><small class="activity-feedback"></small></div>
+        <div class="activity-question"><strong>6. Completa la frase</strong><p>Selecciona la palabra correcta en cada afirmación.</p><div class="fillblank-list" data-fillblank></div><small class="activity-feedback"></small></div>
         <button type="button" class="btn btn-gold" onclick="openCourseGlossary()">Abrir glosario visual</button>
         <div class="course-glossary" id="courseGlossary" hidden><button type="button" onclick="closeCourseGlossary()" class="modal-close">×</button><h3>Glosario visual</h3><input id="glossarySearch" placeholder="Buscar término..."><div id="glossaryItems"></div></div>
       </div>
+      <script>
+      (() => {
+        const card = document.querySelector('.course-activity-card');
+        const crypto = card.dataset.activity === 'cripto';
+        const memoryPairs = crypto ? [['W-001','Billetera'],['Mixer','Ocultamiento'],['PSAV','Proveedor'],['ROS','Reporte']] : [['Indicio','Hecho base'],['UIF','Inteligencia'],['Motivación','Decisión'],['Contraprueba','Desvirtuar']];
+        const memory = card.querySelector('[data-memory]');
+        const cards = memoryPairs.flatMap(([a,b], pair) => [{text:a,pair},{text:b,pair}]).sort(() => Math.random() - .5);
+        let open = [], matched = 0;
+        cards.forEach(item => { const button = document.createElement('button'); button.type='button'; button.className='memory-card'; button.textContent='+'; button.dataset.pair=item.pair; button.dataset.text=item.text; button.onclick=()=>{ if(button.classList.contains('matched') || open.includes(button) || open.length===2) return; button.classList.add('revealed'); button.textContent=item.text; open.push(button); if(open.length===2){ if(open[0].dataset.pair===open[1].dataset.pair){open.forEach(x=>x.classList.add('matched')); matched++; open=[]; if(matched===memoryPairs.length) memory.closest('.activity-question').querySelector('.activity-feedback').textContent='Memoria completada'; } else { setTimeout(()=>{open.forEach(x=>{x.classList.remove('revealed');x.textContent='+'});open=[]},700); } } }; memory.appendChild(button); });
+        const fill = card.querySelector('[data-fillblank]');
+        const sentences = crypto ? [['La billetera W-001 concentra fondos de múltiples _____.',['contrapartes','frutas','frases'],'contrapartes'],['El análisis de la cadena permite reconstruir la ruta de los _____.',['fondos','folios','formatos'],'fondos'],['Un mixer dificulta la _____.',['trazabilidad','tramitación','traducción'],'trazabilidad'],['La atribución de una dirección requiere _____.',['corroboración','decoración','fricción'],'corroboración']] : [['La prueba por indicios es una pauta jurídica de _____.',['valoración','variación','vegetación'],'valoración'],['La premisa menor contiene el hecho _____.',['base','básico','bajo'],'base'],['La máxima de experiencia enlaza el indicio con el hecho _____.',['presunto','presencial','personal'],'presunto'],['La sentencia debe tener una motivación _____.',['suficiente','superficial','secreta'],'suficiente']];
+        sentences.forEach(([text, options, answer])=>{const row=document.createElement('label');row.className='fillblank-item';const select=document.createElement('select');select.innerHTML='<option value="">Selecciona...</option>'+options.map(option=>`<option value="${option}">${option}</option>`).join('');select.onchange=()=>{const chosen=[...fill.querySelectorAll('select')].filter(x=>x.value).length;row.classList.toggle('correct',select.value===answer);if(chosen===sentences.length) fill.closest('.activity-question').querySelector('.activity-feedback').textContent=[...fill.querySelectorAll('select')].every(x=>x.value && x.closest('label').classList.contains('correct'))?'Todas correctas':'Revisa las respuestas';};row.append(text.replace('_____', ' '), select);fill.appendChild(row)});
+      })();
+      </script>
       <script>
       (()=>{const card=document.querySelector('.course-activity-card');const crypto=card.dataset.activity==='cripto';const st=card.querySelector('.activity-statement');const order=card.querySelector('.activity-order');const fb=card.querySelectorAll('.activity-feedback');const data=crypto?{statement:'La exposición a mixers y fondos vinculados a extorsión incrementa el riesgo de la billetera.',answer:'true',items:['Verificar entradas y salidas','Clasificar contrapartes','Valorar el patrón temporal','Proponer la ruta de investigación'],terms:[['Mixer','Servicio que mezcla fondos para dificultar el rastreo.'],['PSAV','Proveedor de servicios de activos virtuales.'],['Blockchain','Registro distribuido e inmutable de transacciones.'],['Sin atribuir','Exposición cuya identidad no ha sido determinada.']]}:{statement:'La prueba por indicios debe valorarse en conjunto y no de forma aislada.',answer:'true',items:['Hecho base o indicio','Máxima de experiencia','Hecho presunto'],terms:[['Prueba por indicios','Pauta jurídica de valoración, no medio de prueba autónomo.'],['Hecho base','Dato acreditado mediante prueba.'],['Contraprueba','Evidencia idónea que puede desvirtuar la inferencia.'],['Motivación','Explicación racional y suficiente de la decisión.']]};st.textContent=data.statement;const shuffled=[...data.items].sort(()=>Math.random()-.5);shuffled.forEach((x,i)=>{const b=document.createElement('button');b.type='button';b.textContent=x;b.dataset.i=i;b.onclick=()=>{b.classList.toggle('selected');if([...order.children].every(x=>x.classList.contains('selected'))){const got=[...order.children].filter(x=>x.classList.contains('selected')).map(x=>x.textContent);fb[1].textContent=JSON.stringify(got)===JSON.stringify(data.items)?'Correcto':'Revisa el orden';}};order.appendChild(b)});card.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>fb[0].textContent=b.dataset.answer===data.answer?'Correcto':'Revisa tu respuesta');window.openCourseGlossary=()=>{const g=document.getElementById('courseGlossary');g.hidden=false;const render=(q='')=>document.getElementById('glossaryItems').innerHTML=data.terms.filter(t=>t[0].toLowerCase().includes(q.toLowerCase())).map(t=>`<article><strong>${t[0]}</strong><p>${t[1]}</p></article>`).join('');render();document.getElementById('glossarySearch').oninput=e=>render(e.target.value)};window.closeCourseGlossary=()=>document.getElementById('courseGlossary').hidden=true})();
       document.querySelectorAll('.extra-vf').forEach(button => button.addEventListener('click', () => {
