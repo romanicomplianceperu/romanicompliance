@@ -32,8 +32,11 @@
 .service-card.service-card-feature { border-color: rgba(139,115,64,0.3); background: linear-gradient(165deg, var(--white) 60%, var(--gold-pale) 150%); }
 .service-icon { width: 52px; height: 52px; border-radius: 12px; background: var(--gold-pale); color: var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; flex-shrink: 0; }
 .service-icon svg { width: 26px; height: 26px; }
-.service-card h4 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-.service-card p { font-size: 0.82rem; color: var(--slate); line-height: 1.65; margin-bottom: 1.2rem; flex: 1; }
+.service-card h4 { font-size: 1.15rem; margin-bottom: 0.6rem; }
+.service-card p { font-size: 0.85rem; color: var(--slate); line-height: 1.7; margin-bottom: 1.2rem; }
+.service-sublist { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.6rem; flex: 1; }
+.service-sublist li { font-size: 0.8rem; color: var(--ink); font-weight: 500; padding-left: 1.1rem; position: relative; }
+.service-sublist li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
 .service-link { font-size: 0.78rem; font-weight: 600; color: var(--gold); display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
 .service-link:hover { gap: 10px; }
 
@@ -218,51 +221,41 @@
     <div class="services-grid">
       <div class="service-card reveal stagger-1">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 3.3v5.4c0 5-3.4 8.8-8 10.3-4.6-1.5-8-5.3-8-10.3V5.8l8-3.3z"/><path d="M9 12l2 2 4-4.5"/></svg></div>
-        <h4>Compliance corporativo</h4>
-        <p>Diseño e implementación de modelos de prevención conforme a la Ley N.° 30424. Programas de cumplimiento que protegen a su organización frente a la responsabilidad penal de la persona jurídica.</p>
+        <h4>Compliance &amp; Prevención LA/FT</h4>
+        <p>Diseño e implementación de modelos de prevención conforme a la Ley N.° 30424 y sistemas SPLAFT completos: manuales, matrices de riesgo, due diligence e investigación financiera para empresas de cualquier sector.</p>
+        <ul class="service-sublist">
+          <li>Compliance corporativo (Ley N.° 30424)</li>
+          <li>Prevención LA/FT (SPLAFT)</li>
+          <li>Due Diligence</li>
+          <li>Investigación financiera</li>
+        </ul>
         <a href="javascript:void(0)" onclick="irAContacto('Compliance corporativo')" class="service-link">Consultar →</a>
       </div>
-      <div class="service-card reveal stagger-2">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20.5 20.5l-4.9-4.9"/><path d="M8 10.5l1.8 1.8L13.5 8"/></svg></div>
-        <h4>Prevención LA/FT</h4>
-        <p>Asesoría integral en el Sistema de Prevención de Lavado de Activos y Financiamiento del Terrorismo. Manuales, matrices de riesgo, políticas DDC/KYC y capacitación al Oficial de Cumplimiento.</p>
-        <a href="javascript:void(0)" onclick="irAContacto('Prevención LA/FT (SPLAFT)')" class="service-link">Consultar →</a>
+      <div class="service-card service-card-feature reveal stagger-2">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9.5l7-5 7 5V21"/><path d="M9 21v-6h6v6"/><path d="M9 12h.01M15 12h.01M12 9h.01"/></svg></div>
+        <h4>Compliance Sectorial</h4>
+        <p>Programas de cumplimiento a medida para sectores con riesgos propios: sistemas SPLAF para notarías y due diligence, saneamiento técnico-legal y modelos de prevención para inmobiliarias, agentes y compradores.</p>
+        <ul class="service-sublist">
+          <li>Compliance Notarial</li>
+          <li>Compliance Inmobiliario</li>
+        </ul>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;">
+          <a href="{{ route('inmobiliario') }}" class="service-link">Ver Compliance Inmobiliario →</a>
+          <a href="javascript:void(0)" onclick="irAContacto('Compliance Notarial')" class="service-link">Consultar Notarial →</a>
+        </div>
       </div>
       <div class="service-card reveal stagger-3">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M5 6l14-1.2"/><path d="M5 6L2.5 11a2.5 2.5 0 005 0L5 6z"/><path d="M19 4.8L16.5 10a2.5 2.5 0 005 0L19 4.8z"/><path d="M5 21h14"/><path d="M12 5v16"/></svg></div>
-        <h4>Compliance Notarial</h4>
-        <p>Sistemas SPLAF a medida para notarías: manuales y matrices de riesgo, auditoría de legajos, capacitación obligatoria del personal, auditorías externas, simulacros de fiscalización UIF y canal de denuncias.</p>
-        <a href="javascript:void(0)" onclick="irAContacto('Compliance Notarial')" class="service-link">Consultar →</a>
-      </div>
-      <div class="service-card service-card-feature reveal stagger-4">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9.5l7-5 7 5V21"/><path d="M9 21v-6h6v6"/><path d="M9 12h.01M15 12h.01M12 9h.01"/></svg></div>
-        <h4>Compliance Inmobiliario</h4>
-        <p>Due diligence de macrolotes, modelos de prevención Ley N.° 30424 y saneamiento técnico-legal para inmobiliarias, agentes y compradores. Elija su perfil y vea el servicio diseñado para usted.</p>
-        <a href="{{ route('inmobiliario') }}" class="service-link">Ver servicios →</a>
-      </div>
-      <div class="service-card reveal stagger-5">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M6 10.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.5"/><path d="M22 8v6.5"/></svg></div>
-        <h4>Capacitaciones</h4>
-        <p>Programas de formación especializados en prevención LA/FT, compliance corporativo y gestión de riesgos. Certificaciones para sujetos obligados, oficiales de cumplimiento y colaboradores.</p>
-        <a href="{{ route('capacitaciones') }}" class="service-link">Ver programas →</a>
-      </div>
-      <div class="service-card reveal stagger-6">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
-        <h4>Investigación financiera</h4>
-        <p>Análisis de operaciones sospechosas, rastreo de flujos financieros y elaboración de informes técnicos para procedimientos regulatorios, administrativos y judiciales.</p>
-        <a href="javascript:void(0)" onclick="irAContacto('Investigación financiera')" class="service-link">Consultar →</a>
-      </div>
-      <div class="service-card reveal">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
-        <h4>Asesoría penal</h4>
-        <p>Asesoría personalizada en derecho penal para personas naturales y jurídicas. Defensa técnica, estrategia procesal y acompañamiento integral en todas las etapas del proceso penal.</p>
-        <a href="javascript:void(0)" onclick="irAContacto('Asesoría penal')" class="service-link">Consultar →</a>
-      </div>
-      <div class="service-card reveal">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h6"/></svg></div>
-        <h4>Due Diligence</h4>
-        <p>Investigaciones de debida diligencia sobre personas naturales y jurídicas. Verificación de antecedentes, análisis patrimonial y evaluación de riesgos reputacionales para operaciones corporativas.</p>
-        <a href="javascript:void(0)" onclick="irAContacto('Due Diligence')" class="service-link">Consultar →</a>
+        <h4>Asesoría Penal &amp; Capacitaciones</h4>
+        <p>Defensa técnica especializada en derecho penal y programas de formación en prevención LA/FT y compliance corporativo, con certificaciones para sujetos obligados, oficiales de cumplimiento y colaboradores.</p>
+        <ul class="service-sublist">
+          <li>Asesoría penal</li>
+          <li>Capacitaciones y certificaciones</li>
+        </ul>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;">
+          <a href="{{ route('capacitaciones') }}" class="service-link">Ver programas →</a>
+          <a href="javascript:void(0)" onclick="irAContacto('Asesoría penal')" class="service-link">Consultar penal →</a>
+        </div>
       </div>
     </div>
   </div>
