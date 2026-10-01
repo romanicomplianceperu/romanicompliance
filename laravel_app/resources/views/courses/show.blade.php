@@ -281,6 +281,8 @@
 
 @media (max-width: 900px) { .rd-modules { gap: 0.8rem; } }
 .rd-welcome-modal { width: min(92vw, 720px); max-width: 720px !important; padding: 2rem; border-radius: 22px; }
+.rd-welcome-modal #rdStep1 { display:none !important; }
+.rd-welcome-modal #rdStep2 { display:block !important; }
 .rd-welcome-modal .modal-backdrop, #rdWelcomeModal .modal-backdrop { background: rgba(5, 14, 27, .62); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .rd-mode-select { position:relative; margin-top:.55rem; }
 .rd-mode-select select { width:100%; appearance:none; -webkit-appearance:none; padding:1rem 3rem 1rem 1rem; border:1px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); font-size:.95rem; font-weight:700; cursor:pointer; }
@@ -659,8 +661,8 @@
     </div>
 
     <div class="rd-step" id="rdStep2">
-      <h3>¿Cómo te llamas?</h3>
-      <p class="modal-sub">Nada de contraseñas ni registro, solo tu nombre y correo para guardar tu avance y tu certificado.</p>
+      <h3>Identifica tu participación</h3>
+      <p class="modal-sub">Registra tu nombre como participante o representante del grupo para ingresar directamente a las actividades.</p>
       <form action="{{ route('courses.guest-start', $course) }}" method="POST">
         @csrf
         <div class="rd-form-group">
@@ -795,7 +797,7 @@
 
 @section('scripts')
 <script>
-function rdOpenWelcome() { document.getElementById('rdWelcomeModal')?.classList.add('active'); }
+function rdOpenWelcome() { document.getElementById('rdWelcomeModal')?.classList.add('active'); document.getElementById('rdStep1')?.classList.remove('active'); document.getElementById('rdStep2')?.classList.add('active'); }
 function rdCloseWelcome() { document.getElementById('rdWelcomeModal')?.classList.remove('active'); }
 function rdGoStep2() {
   document.getElementById('rdStep1').classList.remove('active');
