@@ -25,7 +25,7 @@ class EmbajadaLavadoActivosCourseSeeder extends Seeder
                 'category_id' => $category->id,
                 'created_by' => $admin?->id,
                 'title' => 'Cuestiones Problemáticas del Delito de Lavado de Activos',
-                'description' => 'Taller dirigido a jueces, fiscales y operadores de justicia sobre los problemas sustantivos y probatorios del delito de lavado de activos, con la Casación N.° 1726-2019/Ayacucho (caso Quispe Marmolejo y Velarde Laura) como eje metodológico. Programa INL - Embajada de los Estados Unidos en el Perú · Centro de Estudios en Justicia y Derechos Humanos (MINJUSDH) · NCSC Perú.',
+                'description' => 'Taller dirigido a jueces, fiscales y operadores de justicia sobre los problemas sustantivos y probatorios del delito de lavado de activos, con la Casación N.° 1726-2019/Ayacucho (caso Quispe Marmolejo y Velarde Laura) como eje metodológico.',
                 'cover_image' => 'courses/covers/lavado-activos-embajada.svg',
                 'instructor_name' => 'Denis Gabriel Romani Seminario',
                 'instructor_id' => $instructor?->id,
