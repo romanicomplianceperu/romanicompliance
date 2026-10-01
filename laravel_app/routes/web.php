@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ProjectParticipantController as AdminProjectParticipantController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\TrainingController as AdminTrainingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AcademicoController;
 use App\Http\Controllers\ProjectController;
@@ -41,6 +42,7 @@ use App\Http\Controllers\Learning\LessonController as LearningLessonController;
 use App\Http\Controllers\Learning\LessonNoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TrainingController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +54,15 @@ Route::prefix('aprendizaje')->name('aprendizaje.')->group(function () {
     Route::view('/capacitaciones', 'aprendizaje.capacitaciones')->name('capacitaciones');
 });
 Route::get('/equipo', [TeamController::class, 'index'])->name('equipo');
+
+Route::prefix('capacitacion')->name('capacitacion.')->group(function () {
+    Route::get('/{training:slug}', [TrainingController::class, 'show'])->name('show');
+    Route::get('/{training:slug}/registro', [TrainingController::class, 'identifyForm'])->name('identify');
+    Route::post('/{training:slug}/registro', [TrainingController::class, 'identifyStore'])->name('identify.store');
+    Route::get('/{training:slug}/cuestionario', [TrainingController::class, 'quiz'])->name('quiz');
+    Route::post('/{training:slug}/cuestionario', [TrainingController::class, 'submit'])->name('submit');
+    Route::get('/{training:slug}/resultado/{attempt}', [TrainingController::class, 'result'])->name('result');
+});
 
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
 Route::post('/login', [StudentAuthController::class, 'authenticate'])->name('login.attempt')->middleware('guest');
@@ -202,6 +213,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/academico/{activity}', [AdminAcademicoController::class, 'show'])->name('academico.show');
     Route::put('/academico/{activity}', [AdminAcademicoController::class, 'update'])->name('academico.update');
     Route::patch('/academico/envios/{submission}', [AdminAcademicoController::class, 'updateStatus'])->name('academico.submissions.status');
+
+    Route::get('/capacitaciones-embajada', [AdminTrainingController::class, 'index'])->name('trainings.index');
+    Route::get('/capacitaciones-embajada/{training}', [AdminTrainingController::class, 'show'])->name('trainings.show');
 
     Route::get('/practicantes', [AdminInternshipApplicationController::class, 'index'])->name('internships.index');
     Route::get('/practicantes/{internship}', [AdminInternshipApplicationController::class, 'show'])->name('internships.show');
