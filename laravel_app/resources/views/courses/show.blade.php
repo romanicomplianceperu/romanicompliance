@@ -284,9 +284,7 @@
 .rd-welcome-modal #rdStep1 { display:none !important; }
 .rd-welcome-modal #rdStep2 { display:block !important; }
 .rd-welcome-modal .modal-backdrop, #rdWelcomeModal .modal-backdrop { background: rgba(5, 14, 27, .62); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-.rd-mode-select { position:relative; margin-top:.55rem; }
-.rd-mode-select select { width:100%; appearance:none; -webkit-appearance:none; padding:1rem 3rem 1rem 1rem; border:1px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); font-size:.95rem; font-weight:700; cursor:pointer; }
-.rd-mode-select:after { content:'⌄'; position:absolute; right:1rem; top:50%; transform:translateY(-55%); color:var(--gold); font-size:1.35rem; pointer-events:none; }
+.rd-mode-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin:1rem 0 1.4rem; }
 .rd-mode-choice { position: relative; display: flex; align-items: center; gap: 14px; min-height: 112px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, #fff, #f7f4ec); cursor: pointer; transition: .2s ease; }
 .rd-mode-choice:hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 12px 26px rgba(11,24,41,.12); }
 .rd-mode-choice input { position: absolute; opacity: 0; pointer-events: none; }
@@ -297,13 +295,13 @@
 .rd-mode-copy span { display: block; color: var(--slate); font-size: .76rem; margin-top: 3px; }
 .rd-group-members { margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.72); }
 .rd-member-row { display: grid; grid-template-columns: 1.2fr 1fr auto; gap: .5rem; margin: .55rem 0; }
-.rd-member-row input { min-width: 0; padding: .65rem .7rem; border: 1px solid var(--line); border-radius: 8px; }
+.rd-member-row input, .rd-member-row select { min-width: 0; padding: .65rem .7rem; border: 1px solid var(--line); border-radius: 8px; background:#fff; }
 .rd-member-row button { width: 36px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }
 .rd-position-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: .6rem; }
 .rd-position-choice { min-height: 76px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); cursor: pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-weight:600; }
 .rd-position-choice svg { width: 24px; height: 24px; color: var(--gold); }
 .rd-position-choice:hover, .rd-position-choice.selected { border-color: var(--gold); background: var(--gold-pale); box-shadow: 0 0 0 3px rgba(184,154,86,.14); }
-@media (max-width: 560px) { .rd-welcome-modal { padding: 1.2rem; } }
+@media (max-width: 560px) { .rd-welcome-modal { padding: 1.2rem; } .rd-mode-grid{grid-template-columns:1fr} }
 @endsection
 
 @section('content')
@@ -666,7 +664,10 @@
       <form action="{{ route('courses.guest-start', $course) }}" method="POST">
         @csrf
         <div class="rd-form-group">
-          <div class="rd-mode-select"><select name="mode" id="rdModeSelect"><option value="individual">Individual: resolveré las actividades por mi cuenta</option><option value="grupal">Grupal: resolveremos las actividades como equipo</option></select></div>
+          <div class="rd-mode-grid">
+            <label class="rd-mode-choice"><input type="radio" name="mode" value="individual" checked><span class="rd-mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.7-3.4 2.8-5 6.5-5s5.8 1.6 6.5 5"/></svg></span><span class="rd-mode-copy"><strong>Individual</strong><span>Resolveré las actividades por mi cuenta</span></span></label>
+            <label class="rd-mode-choice"><input type="radio" name="mode" value="grupal"><span class="rd-mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="2.6"/><circle cx="16.5" cy="9" r="2.2"/><path d="M3.8 19c.5-3 2.1-4.5 5.2-4.5s4.7 1.5 5.2 4.5M14 15c2.8-.3 4.7 1 5.5 4"/></svg></span><span class="rd-mode-copy"><strong>Grupal</strong><span>Resolveremos las actividades como equipo</span></span></label>
+          </div>
         </div>
         <div class="rd-group-members" id="rdGroupMembers" hidden>
           <label>Integrantes del grupo</label>
@@ -681,7 +682,12 @@
         @if($course->slug === 'cuestiones-problematicas-lavado-activos')
           <div class="rd-form-group">
             <label>Cargo</label>
-            <select name="position" id="rdPositionSelect" required><option value="">Seleccione su cargo...</option><option value="Juez">Juez</option><option value="Fiscal">Fiscal</option><option value="Otro">Otro</option></select>
+            <input type="hidden" name="position" id="rdPositionSelect" required>
+            <div class="rd-position-grid">
+              <button type="button" class="rd-position-choice" data-position="Juez"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 20h14M7 20V9l5-4 5 4v11M9 12h6M9 16h6"/></svg><span>Juez</span></button>
+              <button type="button" class="rd-position-choice" data-position="Fiscal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"/></svg><span>Fiscal</span></button>
+              <button type="button" class="rd-position-choice" data-position="Otro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg><span>Otro</span></button>
+            </div>
           </div>
           <div class="rd-form-group" id="rdPositionOtherGroup" style="display:none;">
             <label>Especifique su cargo</label>
@@ -809,21 +815,24 @@ let rdMemberIndex = 0;
 function rdAddMemberRow() {
   const row = document.createElement('div');
   row.className = 'rd-member-row';
-  row.innerHTML = `<input name="members[${rdMemberIndex}][name]" placeholder="Nombre completo" required><input name="members[${rdMemberIndex}][role]" placeholder="Cargo" required><button type="button" aria-label="Quitar integrante">×</button>`;
+  row.innerHTML = `<input name="members[${rdMemberIndex}][name]" placeholder="Nombre completo" required><select name="members[${rdMemberIndex}][role]" required><option value="">Cargo...</option><option value="Juez">Juez</option><option value="Fiscal">Fiscal</option><option value="Otro">Otro</option></select><button type="button" aria-label="Quitar integrante">×</button>`;
   row.querySelector('button').onclick = () => row.remove();
   rdMemberRows.appendChild(row); rdMemberIndex++;
 }
-document.getElementById('rdModeSelect')?.addEventListener('change', event => {
-  const group = event.target.value === 'grupal';
+document.querySelectorAll('input[name="mode"]').forEach(input => input.addEventListener('change', event => {
+  const group = event.target.value === 'grupal' && event.target.checked;
   document.getElementById('rdRepresentativeLabel').textContent = group ? 'Nombre del representante del grupo' : 'Nombre del participante';
   rdGroupMembers.hidden = !group;
   if (group && !rdMemberRows.children.length) { rdAddMemberRow(); rdAddMemberRow(); }
   document.querySelectorAll('#rdGroupMembers input').forEach(field => field.required = group);
-});
+}));
 document.getElementById('rdAddMember')?.addEventListener('click', rdAddMemberRow);
-document.getElementById('rdPositionSelect')?.addEventListener('change', event => {
-  document.getElementById('rdPositionOtherGroup').style.display = event.target.value === 'Otro' ? 'block' : 'none';
-});
+document.querySelectorAll('.rd-position-choice').forEach(button => button.addEventListener('click', () => {
+  document.querySelectorAll('.rd-position-choice').forEach(item => item.classList.remove('selected'));
+  button.classList.add('selected');
+  document.getElementById('rdPositionSelect').value = button.dataset.position;
+  document.getElementById('rdPositionOtherGroup').style.display = button.dataset.position === 'Otro' ? 'block' : 'none';
+}));
 (function () {
   const cta = document.getElementById('floatingQuizCta');
   if (!cta) return;
