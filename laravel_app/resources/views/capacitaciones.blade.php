@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Capacitaciones — Romani Compliance')
+@section('title', 'Capacitaciones · Romani Compliance')
 @section('description', 'Programas de capacitación especializados en prevención LA/FT, compliance corporativo y gestión de riesgos para oficiales de cumplimiento y sujetos obligados.')
 
 @section('styles')

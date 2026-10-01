@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Personaliza tu capacitación — '.$course->title)
+@section('title', 'Personaliza tu capacitación · '.$course->title)
 
 @php
   $ssIcons = [
@@ -132,7 +132,7 @@
         <div class="ss-picker-content" id="ssPickerContent" style="display:none;">
           <h3 id="ssPickerTitle"></h3>
           <div class="ss-norm-box">
-            <div class="ss-norm-eyebrow">Normativa aplicable — SBS / UIF-Perú</div>
+            <div class="ss-norm-eyebrow">Normativa aplicable: SBS / UIF-Perú</div>
             <p id="ssPickerSbs"></p>
           </div>
           <div class="ss-adapt-row">

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nuestro Equipo — Romani Compliance')
+@section('title', 'Nuestro Equipo · Romani Compliance')
 @section('description', 'Conozca al equipo de Romani Compliance: profesionales especializados en compliance corporativo, prevención LA/FT, derecho penal y due diligence.')
 
 @section('styles')

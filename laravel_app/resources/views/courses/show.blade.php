@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $course->title.' — Romani Compliance')
+@section('title', $course->title.' · Romani Compliance')
 
 @php
   $rdGreetingWord = 'Bienvenido';
@@ -332,7 +332,7 @@
         @endif
       </div>
       @if(!$enrollment)
-        <span class="rd-login-note">No necesitas crear una cuenta — solo tu nombre. @auth @else ¿Ya tienes cuenta? <a href="{{ route('login', ['intended' => route('courses.show', $course)]) }}">Inicia sesión</a> @endauth</span>
+        <span class="rd-login-note">No necesitas crear una cuenta, solo tu nombre. @auth @else ¿Ya tienes cuenta? <a href="{{ route('login', ['intended' => route('courses.show', $course)]) }}">Inicia sesión</a> @endauth</span>
       @endif
     </div>
 
@@ -392,7 +392,7 @@
   <div class="wrap">
     <div class="rd-eyebrow">Vista previa</div>
     <h2>Un mapa interactivo, dentro del curso</h2>
-    <p class="rd-section-lead">Así se ve uno de los mapas interactivos del curso — haz clic en cualquier marcador para ver su estatus. Esto es solo una muestra; dentro del curso encontrarás más.</p>
+    <p class="rd-section-lead">Así se ve uno de los mapas interactivos del curso, haz clic en cualquier marcador para ver su estatus. Esto es solo una muestra; dentro del curso encontrarás más.</p>
     <div class="gm-map-wrap">
       <svg class="gm-map" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
         <rect x="0" y="0" width="900" height="400" rx="14" class="gm-ocean"/>
@@ -472,7 +472,7 @@
   <div class="wrap" style="max-width:820px;">
     <div class="rd-eyebrow">Vista previa</div>
     <h2>Un vistazo a la metodología</h2>
-    <p class="rd-section-lead">Así se ve el contenido dentro del curso — esto es solo una muestra.</p>
+    <p class="rd-section-lead">Así se ve el contenido dentro del curso, esto es solo una muestra.</p>
     @if(!empty($formulasPreview['formulas']))
       <div class="rd-formula-row">
         @foreach($formulasPreview['formulas'] as $f)
@@ -537,14 +537,14 @@
                 <td class="syllabus-lesson-num">{{ sprintf('%02d', $loop->iteration) }}</td>
                 <td>{{ $lesson->title }}</td>
                 <td><span class="syllabus-type-badge t-{{ $lesson->type }}">{{ $lesson->typeLabel() }}</span></td>
-                <td class="syllabus-duration">{{ $lesson->duration_minutes ? $lesson->duration_minutes.' min' : '—' }}</td>
+                <td class="syllabus-duration">{{ $lesson->duration_minutes ? $lesson->duration_minutes.' min' : '' }}</td>
               </tr>
             @endforeach
           @endforeach
           @if($course->exam)
             <tr class="module-row"><td colspan="4">Evaluación final</td></tr>
             <tr>
-              <td class="syllabus-lesson-num">—</td>
+              <td class="syllabus-lesson-num"></td>
               <td>{{ $course->exam->title }}</td>
               <td><span class="syllabus-type-badge t-interactive">{{ $examQuestions }} preguntas</span></td>
               <td class="syllabus-duration">{{ $course->exam->time_limit_minutes }} min</td>
@@ -632,7 +632,7 @@
 
     <div class="rd-step" id="rdStep2">
       <h3>¿Cómo te llamas?</h3>
-      <p class="modal-sub">Nada de contraseñas ni registro — solo tu nombre y correo para guardar tu avance y tu certificado.</p>
+      <p class="modal-sub">Nada de contraseñas ni registro, solo tu nombre y correo para guardar tu avance y tu certificado.</p>
       <form action="{{ route('courses.guest-start', $course) }}" method="POST">
         @csrf
         <div class="rd-form-group">
@@ -771,7 +771,7 @@ function rdGoStep2() {
       document.querySelectorAll('.gm-marker').forEach(m => m.classList.remove('active'));
       marker.classList.add('active');
       const statusLabel = data.status === 'red' ? 'High-Risk Jurisdiction subject to a Call for Action' : 'Jurisdiction under Increased Monitoring';
-      detail.innerHTML = '<strong>' + (data.name || '') + ' — ' + statusLabel + '</strong>' + (data.note || '');
+      detail.innerHTML = '<strong>' + (data.name || '') + ': ' + statusLabel + '</strong>' + (data.note || '');
       detail.classList.add('show');
     });
   });

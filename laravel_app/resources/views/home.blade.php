@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Romani Compliance — Compliance · ALA/CFT · Due Diligence')
+@section('title', 'Romani Compliance · Compliance · ALA/CFT · Due Diligence')
 @section('description', 'Romani Compliance: servicios especializados en Compliance corporativo, prevención de lavado de activos, derecho penal, Due Diligence e investigación financiera en Perú.')
 
 @section('styles')
@@ -520,7 +520,7 @@ async function enviarFormulario(e, form, msgId) {
         email: data.email,
         message: body,
         _cc: 'dromani@pucp.pe',
-        _subject: 'Consulta web — Romani Compliance'
+        _subject: 'Consulta web · Romani Compliance'
       })
     });
     form.style.display = 'none';

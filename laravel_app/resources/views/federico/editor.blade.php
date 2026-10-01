@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nuevo artículo — RomaniCompliance')
+@section('title', 'Nuevo artículo · RomaniCompliance')
 
 @section('styles')
 .fc-shell { background: var(--ivory); min-height: calc(100vh - 71px); padding: 2.5rem 0 5rem; }
@@ -182,7 +182,7 @@ body.fc-fullscreen-active { overflow: hidden; }
   <div class="wrap">
     <div class="fc-topbar">
       <div>
-        <div class="fc-eyebrow">RomaniCompliance — Redacción</div>
+        <div class="fc-eyebrow">RomaniCompliance · Redacción</div>
         <h1>{{ $article->exists ? 'Editando artículo' : 'Hola, Federico' }}</h1>
       </div>
       <div class="fc-topbar-actions">
@@ -225,7 +225,7 @@ body.fc-fullscreen-active { overflow: hidden; }
           </div>
 
           <div class="fc-field">
-            <label for="fc-excerpt">Extracto <span>(opcional — resumen corto para las vistas previas del blog)</span></label>
+            <label for="fc-excerpt">Extracto <span>(opcional: resumen corto para las vistas previas del blog)</span></label>
             <textarea name="excerpt" id="fc-excerpt" maxlength="500" rows="2" placeholder="Si lo deja vacío, se genera automáticamente a partir del contenido">{{ old('excerpt', $article->excerpt) }}</textarea>
           </div>
 
@@ -269,7 +269,7 @@ body.fc-fullscreen-active { overflow: hidden; }
           </div>
 
           <div class="fc-field">
-            <label>Material adicional <span>(opcional — PDFs descargables para los lectores, máx. 10MB cada uno)</span></label>
+            <label>Material adicional <span>(opcional: PDFs descargables para los lectores, máx. 10MB cada uno)</span></label>
             @if($article->exists && $article->materials->isNotEmpty())
               <div class="fc-materials-list" id="fc-existing-materials">
                 @foreach($article->materials as $material)
@@ -301,7 +301,7 @@ body.fc-fullscreen-active { overflow: hidden; }
               <div class="fc-dropzone-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
               </div>
-              <div class="fc-dropzone-text"><strong>Arrastre una imagen aquí</strong><span>o haga clic para elegirla — se insertará en el contenido</span></div>
+              <div class="fc-dropzone-text"><strong>Arrastre una imagen aquí</strong><span>o haga clic para elegirla, se insertará en el contenido</span></div>
               <span class="fc-dropzone-btn">Elegir imagen</span>
             </div>
             <input type="file" id="fc-image-input" accept="image/*" multiple hidden>
@@ -389,7 +389,7 @@ body.fc-fullscreen-active { overflow: hidden; }
   <div class="modal-backdrop" onclick="fcClosePreview()"></div>
   <div class="modal-box" style="max-width:760px;">
     <button class="modal-close" type="button" onclick="fcClosePreview()">&times;</button>
-    <div class="fc-preview-label">Vista previa — así se verá publicado</div>
+    <div class="fc-preview-label">Vista previa: así se verá publicado</div>
     <h2 id="fc-preview-title" class="fc-preview-title"></h2>
     <p id="fc-preview-excerpt" class="fc-preview-excerpt" hidden></p>
     <div id="fc-preview-cover-wrap" class="fc-preview-cover-wrap" hidden><img id="fc-preview-cover" alt=""></div>

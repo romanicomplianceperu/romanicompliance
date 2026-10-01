@@ -78,7 +78,7 @@
     </div>
 
     <h1>{{ $attempt->status === 'passed' ? '¡Felicidades, aprobaste!' : 'No alcanzaste la nota mínima' }}</h1>
-    <p class="subtitle">{{ $exam->title }} — {{ $course->title }}</p>
+    <p class="subtitle">{{ $exam->title }} · {{ $course->title }}</p>
 
     <div class="result-meta">
       <div class="result-meta-card"><div class="num">#{{ $attempt->attempt_number }}</div><div class="label">Intento</div></div>
@@ -91,7 +91,7 @@
         <div class="cert-banner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;color:var(--gold);"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 21l5-2.5L17 21l-1.5-8.5"/></svg></div>
         <div class="cert-banner-text">
           <h3>Tu certificado está listo</h3>
-          <p>Código {{ $certificate->code }} — disponible también en tu panel</p>
+          <p>Código {{ $certificate->code }}, disponible también en tu panel</p>
         </div>
         <a href="{{ route('certificates.download', $certificate) }}" class="btn btn-gold">Descargar certificado</a>
       </div>
@@ -107,7 +107,7 @@
       <div class="cert-banner">
         <div class="cert-banner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;color:var(--gold);"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
         <div class="cert-banner-text">
-          <h3>Aprobaste el examen — falta completar el pago</h3>
+          <h3>Aprobaste el examen, falta completar el pago</h3>
           <p>Esta es una certificación opcional de pago. Completa tu solicitud desde el curso para que emitamos tu certificado.</p>
         </div>
         <a href="{{ route('courses.show', $course) }}" class="btn btn-gold">Ir a completar el pago</a>

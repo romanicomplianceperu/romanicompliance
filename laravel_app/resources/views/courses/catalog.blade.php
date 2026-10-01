@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Cursos — Romani Compliance')
+@section('title', 'Cursos · Romani Compliance')
 
 @section('styles')
 .catalog-hero { background: var(--ink); padding: 3.5rem 0; position: relative; }

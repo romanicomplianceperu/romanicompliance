@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Validar certificado — Romani Compliance')
+@section('title', 'Validar certificado · Romani Compliance')
 
 @section('styles')
 .verify-section { min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 5rem 0; background: var(--ivory); }

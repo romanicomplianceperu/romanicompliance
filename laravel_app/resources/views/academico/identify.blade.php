@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Identifícate — Espacio Académico — Romani Compliance')
+@section('title', 'Identifícate · Espacio Académico · Romani Compliance')
 
 @section('styles')
 @include('academico._styles')
@@ -10,7 +10,7 @@
 <div class="ac-shell ac-full">
   <div class="ac-eyebrow">Un último paso</div>
   <h1 class="ac-title">¿Cómo te llamas?</h1>
-  <p class="ac-subtitle">Solo tu nombre — lo usamos para guardar tus participaciones y tu progreso.</p>
+  <p class="ac-subtitle">Solo tu nombre: lo usamos para guardar tus participaciones y tu progreso.</p>
 
   <div class="ac-id-card">
     <form method="POST" action="{{ route('academico.identify.store') }}">

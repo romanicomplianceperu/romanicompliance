@@ -7,7 +7,7 @@
 <body style="margin:0;padding:0;background:#F4F1EA;font-family:Arial,Helvetica,sans-serif;color:#0B1829;">
   <div style="max-width:560px;margin:0 auto;padding:28px 20px;">
     <div style="background:#0B1829;border-radius:10px 10px 0 0;padding:22px 26px;">
-      <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#C9A961;font-weight:700;margin-bottom:4px;">Romani Compliance — Espacio Académico</div>
+      <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#C9A961;font-weight:700;margin-bottom:4px;">Romani Compliance · Espacio Académico</div>
       <h1 style="font-size:19px;color:#fff;margin:0;font-weight:600;">Nueva postulación de pasantía</h1>
     </div>
     <div style="background:#fff;border:1px solid #E7E1D3;border-top:none;border-radius:0 0 10px 10px;padding:26px;">

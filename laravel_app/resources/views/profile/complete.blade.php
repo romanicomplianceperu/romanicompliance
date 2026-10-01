@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Completa tu perfil — Romani Compliance')
+@section('title', 'Completa tu perfil · Romani Compliance')
 
 @section('styles')
 .profile-section { min-height: 55vh; display: flex; align-items: center; justify-content: center; padding: 4rem 0; background: var(--ivory); }

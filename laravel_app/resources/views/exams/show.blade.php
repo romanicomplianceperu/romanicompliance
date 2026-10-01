@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $exam->title.' — '.$course->title)
+@section('title', $exam->title.' · '.$course->title)
 
 @section('styles')
 .exam-hero { background: var(--ink); padding: 3.5rem 0; position: relative; }
@@ -74,8 +74,8 @@
               <td>#{{ $attempt->attempt_number }}</td>
               <td>{{ $attempt->started_at?->format('d/m/Y') }}</td>
               <td>{{ $attempt->started_at?->format('H:i') }}</td>
-              <td>{{ $attempt->score !== null ? $attempt->score.'%' : '—' }}</td>
-              <td>{{ $attempt->time_spent_seconds ? gmdate('i:s', $attempt->time_spent_seconds) : '—' }}</td>
+              <td>{{ $attempt->score !== null ? $attempt->score.'%' : '' }}</td>
+              <td>{{ $attempt->time_spent_seconds ? gmdate('i:s', $attempt->time_spent_seconds) : '' }}</td>
               <td>
                 @if($attempt->status === 'in_progress')
                   <span class="status-tag status-in_progress">En curso</span>

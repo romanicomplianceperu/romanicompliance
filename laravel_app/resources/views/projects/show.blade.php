@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $project->name.' — '.$project->company->name.' — Romani Compliance')
+@section('title', $project->name.' · '.$project->company->name.' · Romani Compliance')
 @section('description', $project->description ?: $project->service)
 
 @section('styles')

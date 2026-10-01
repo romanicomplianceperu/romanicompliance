@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $course->title.' — Romani Compliance')
+@section('title', $course->title.' · Romani Compliance')
 @php
   $company = $course->project->company;
 

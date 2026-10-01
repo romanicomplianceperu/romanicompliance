@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $activity->title.' — '.$course->name.' — Espacio Académico')
+@section('title', $activity->title.' · '.$course->name.' · Espacio Académico')
 
 @section('styles')
 @include('academico._styles')
@@ -28,7 +28,7 @@
     <div class="ac-welcome-box">
       <div class="ac-welcome-check">✓</div>
       <h2>¡Hola, {{ $acLeaderName }}!</h2>
-      <p>Ya quedaste registrado{{ $submission->mode === 'grupal' ? ' junto a tu equipo' : '' }}. Desarrolla los ejercicios con calma — tus respuestas se guardan solas mientras avanzas.</p>
+      <p>Ya quedaste registrado{{ $submission->mode === 'grupal' ? ' junto a tu equipo' : '' }}. Desarrolla los ejercicios con calma, tus respuestas se guardan solas mientras avanzas.</p>
       <div class="ac-welcome-hint">Toca en cualquier parte para empezar</div>
     </div>
   </div>
@@ -96,7 +96,7 @@
     <div class="ac-case-toolbar">
       @if($activity->due_at)
         <div class="ac-deadline-badge {{ $activity->isPastDue() ? 'closed' : '' }}">
-          ⏱ {{ $activity->isPastDue() ? 'Plazo vencido — ' : 'Fecha límite: ' }}{{ $activity->due_at->timezone('America/Lima')->translatedFormat('d \d\e F, H:i').' h' }}
+          ⏱ {{ $activity->isPastDue() ? 'Plazo vencido: ' : 'Fecha límite: ' }}{{ $activity->due_at->timezone('America/Lima')->translatedFormat('d \d\e F, H:i').' h' }}
         </div>
       @endif
       <a href="{{ route('academico.activity.pdf', [$university->slug, $course->slug, $activity->slug]) }}" class="ac-pdf-btn" data-no-loader>📄 Descargar el caso en PDF</a>
@@ -106,7 +106,7 @@
       <div class="ac-group-code-banner">
         <div class="label">Tu código de grupo</div>
         <div class="code">grupo {{ $submission->group_code }}</div>
-        <div class="hint">Guárdalo — tu docente lo usará para revisar el avance de tu equipo.</div>
+        <div class="hint">Guárdalo: tu docente lo usará para revisar el avance de tu equipo.</div>
       </div>
     @endif
 
@@ -234,7 +234,7 @@
     <div class="modal-backdrop"></div>
     <div class="modal-box" style="max-width:420px;text-align:center;">
       <h3>¿Enviar la actividad?</h3>
-      <p class="modal-text">Revisen sus respuestas antes de confirmar — una vez enviada, no podrán editarla si el plazo ya venció.</p>
+      <p class="modal-text">Revisen sus respuestas antes de confirmar, una vez enviada no podrán editarla si el plazo ya venció.</p>
       <div class="ac-modal-btn-row">
         <button type="button" class="ac-btn-ghost" id="cancelSubmitConfirm" style="flex:1;justify-content:center;">Cancelar</button>
         <button type="button" class="ac-btn-solid" id="confirmSubmitBtn" style="flex:1;justify-content:center;">Sí, enviar</button>
@@ -534,7 +534,7 @@
         const isRight = chosen === correctPairs[l.id];
         chipEls[l.id].classList.add(isRight ? 'answer-correct' : 'answer-wrong');
         if (! isRight) {
-          const correctText = (ex.right.find(r => r.id === correctPairs[l.id]) || {}).text || '—';
+          const correctText = (ex.right.find(r => r.id === correctPairs[l.id]) || {}).text || '';
           chipEls[l.id].appendChild(el('div', 'ac-match-correct-note', 'Correcto: ' + correctText));
         }
       });
@@ -853,7 +853,7 @@
       if (statusEl) statusEl.textContent = data.ok ? ('Guardado automáticamente · ' + data.saved_at) : 'No se pudo guardar.';
     }).catch(() => {
       saving = false;
-      if (statusEl) statusEl.textContent = 'Sin conexión — reintentando…';
+      if (statusEl) statusEl.textContent = 'Sin conexión, reintentando…';
     });
   }
 

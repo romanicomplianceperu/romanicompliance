@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $article->title.' — Romani Compliance')
+@section('title', $article->title.' · Romani Compliance')
 @section('description', $article->excerpt)
 
 @section('styles')

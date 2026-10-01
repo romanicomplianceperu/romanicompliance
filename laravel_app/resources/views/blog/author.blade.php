@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $user->name.' — Autor — Romani Compliance')
+@section('title', $user->name.' · Autor · Romani Compliance')
 @section('description', $user->bio ? \Illuminate\Support\Str::limit($user->bio, 150) : $user->name)
 
 @section('styles')

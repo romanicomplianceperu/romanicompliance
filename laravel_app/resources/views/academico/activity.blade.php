@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $activity->title.' — '.$course->name.' — Espacio Académico')
+@section('title', $activity->title.' · '.$course->name.' · Espacio Académico')
 
 @section('styles')
 @include('academico._styles')
@@ -48,7 +48,7 @@
         <div class="ac-pending-box">
           <div class="icon">📄</div>
           <strong style="display:block;color:var(--ink);margin-bottom:6px;">Contenido del caso en preparación</strong>
-          <p style="font-size:0.85rem;">Esta pantalla ya está lista para mostrar el caso completo y sus preguntas — se publicará en cuanto se cargue el documento oficial de la Semana 1.</p>
+          <p style="font-size:0.85rem;">Esta pantalla ya está lista para mostrar el caso completo y sus preguntas, se publicará en cuanto se cargue el documento oficial de la Semana 1.</p>
         </div>
       @endif
     </div>

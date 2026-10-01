@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Postula a la pasantía — Romani Compliance')
+@section('title', 'Postula a la pasantía · Romani Compliance')
 
 @section('styles')
 .cv-form-shell { padding: 3rem 0 5rem; background: var(--ivory); min-height: calc(100vh - 71px); }
@@ -283,7 +283,7 @@
           <div class="cv-optional-section">
             <div class="cv-optional-eyebrow">✦ Esto es opcional</div>
             <div class="cv-optional-title">Puedes enviar tu solicitud sin completar esto</div>
-            <div class="cv-optional-desc">Nada de lo que hay aquí abajo afecta tu postulación. Complétalo solo si quieres — no subirlo o dejarlo en blanco no reduce tus posibilidades de ser considerado.</div>
+            <div class="cv-optional-desc">Nada de lo que hay aquí abajo afecta tu postulación. Complétalo solo si quieres: no subirlo o dejarlo en blanco no reduce tus posibilidades de ser considerado.</div>
 
             <div class="cv-optional-item">
               <div class="cv-optional-item-label">Tu CV (PDF o Word)</div>

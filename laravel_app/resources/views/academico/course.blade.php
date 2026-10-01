@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $course->name.' — '.$university->short_name.' — Espacio Académico')
+@section('title', $course->name.' · '.$university->short_name.' · Espacio Académico')
 
 @section('styles')
 @include('academico._styles')
@@ -52,7 +52,7 @@
           <span class="ac-activity-week">S{{ $activity->week_number }}</span>
           <span class="ac-activity-body">
             <h4>{{ $activity->title }}</h4>
-            <p>{{ ucfirst($activity->type) }}{{ $activity->case_title ? ' — '.$activity->case_title : '' }}</p>
+            <p>{{ ucfirst($activity->type) }}{{ $activity->case_title ? ': '.$activity->case_title : '' }}</p>
           </span>
           <span class="ac-status-badge {{ $activity->status }}">{{ ucfirst($activity->status) }}</span>
         </a>
@@ -61,7 +61,7 @@
           <span class="ac-activity-week">S{{ $activity->week_number }}</span>
           <span class="ac-activity-body">
             <h4>{{ $activity->title }}</h4>
-            <p>{{ ucfirst($activity->type) }}{{ $activity->case_title ? ' — '.$activity->case_title : '' }}</p>
+            <p>{{ ucfirst($activity->type) }}{{ $activity->case_title ? ': '.$activity->case_title : '' }}</p>
           </span>
           <span class="ac-status-badge {{ $activity->status }}">{{ ucfirst($activity->status) }}</span>
         </div>

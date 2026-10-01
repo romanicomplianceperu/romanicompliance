@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Acceso administradores — Romani Compliance')
+@section('title', 'Acceso administradores · Romani Compliance')
 
 @section('styles')
 .login-section { min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 5rem 0; background: var(--ivory); }

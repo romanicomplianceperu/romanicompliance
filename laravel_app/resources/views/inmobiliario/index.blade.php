@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Compliance Inmobiliario — Romani Compliance')
+@section('title', 'Compliance Inmobiliario · Romani Compliance')
 @section('description', 'Due diligence de macrolotes, modelos de prevención Ley N.° 30424 y saneamiento técnico-legal para inmobiliarias, agentes y compradores.')
 
 @section('styles')
@@ -67,7 +67,7 @@
   <div class="wrap">
     <div class="inm-hero reveal">
       <div class="inm-eyebrow">Compliance Inmobiliario</div>
-      <h1 class="inm-title">¿Qué perfil le describe mejor?</h1>
+      <h1 class="inm-title">¿Cómo podemos ayudarlo?</h1>
       <p class="inm-subtitle">Seleccione una opción y le mostraremos los servicios de compliance y saneamiento legal diseñados específicamente para su situación.</p>
     </div>
 
@@ -128,9 +128,9 @@
               <h4>Saneamiento Técnico-Legal Integrado</h4>
               <p>Alianza estratégica con CMAI S.A.C.: unimos el rigor del compliance y la seguridad jurídica con su sólida experiencia técnica en un solo servicio.</p>
               <ul class="inm-sublist">
-                <li><strong>Ingeniería y Diseño</strong> — levantamientos topográficos, habilitaciones urbanas y proyectos de arquitectura e ingeniería.</li>
-                <li><strong>Ejecución Técnica</strong> — independizaciones de lotes o departamentos y compatibilidad de zonificación.</li>
-                <li><strong>Gestión Legal y Municipal</strong> — trámites ante las municipalidades de Piura, Castilla, Veintiséis de Octubre, Catacaos y los Registros Públicos (SUNARP).</li>
+                <li><strong>Ingeniería y Diseño:</strong> levantamientos topográficos, habilitaciones urbanas y proyectos de arquitectura e ingeniería.</li>
+                <li><strong>Ejecución Técnica:</strong> independizaciones de lotes o departamentos y compatibilidad de zonificación.</li>
+                <li><strong>Gestión Legal y Municipal:</strong> trámites ante las municipalidades de Piura, Castilla, Veintiséis de Octubre, Catacaos y los Registros Públicos (SUNARP).</li>
               </ul>
             </div>
           </div>
@@ -193,7 +193,7 @@
       </div>
 
       <div class="inm-panel" id="inmPanel-cliente">
-        <div class="inm-panel-eyebrow">Soy Cliente — Compradores y propietarios</div>
+        <div class="inm-panel-eyebrow">Soy Cliente: compradores y propietarios</div>
         <h2>Compre o sanee su propiedad con tranquilidad</h2>
         <p class="intro">Dirigido a la persona que va a comprar el lote de sus sueños, una casa, o busca ordenar la propiedad heredada de su familia.</p>
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Convocatoria de Pasantías — Romani Compliance')
+@section('title', 'Convocatoria de Pasantías · Romani Compliance')
 @section('description', 'Postula al programa de pasantías de Romani Compliance: aprende compliance, ALA/CFT y derecho penal con casos reales y mentoría directa de nuestro equipo.')
 
 @section('styles')
@@ -183,7 +183,7 @@
       <a href="{{ route('academico.convocatoria.form') }}" class="cv-btn-gold">Quiero inscribirme →</a>
     @else
       <h2>La convocatoria ha finalizado</h2>
-      <p>Cerramos la recepción de postulaciones {{ $deadlineLabel }} Gracias por tu interés — mantente atento a nuestras próximas convocatorias.</p>
+      <p>Cerramos la recepción de postulaciones {{ $deadlineLabel }} Gracias por tu interés, mantente atento a nuestras próximas convocatorias.</p>
     @endif
   </div>
 </section>

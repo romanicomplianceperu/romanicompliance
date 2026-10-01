@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Solicitud enviada — Romani Compliance')
+@section('title', 'Solicitud enviada · Romani Compliance')
 
 @section('styles')
 .cv-thanks-shell { min-height: calc(100vh - 71px); display: flex; align-items: center; justify-content: center; background: linear-gradient(150deg, var(--ink) 0%, #16283F 55%, #1D3452 100%); padding: 3rem 1.5rem; text-align: center; }
@@ -20,7 +20,7 @@
     <h1>¡Gracias, {{ explode(' ', $name)[0] }}!</h1>
     <p>Recibimos tu solicitud. Revisaremos tu perfil con calma y muy pronto nos pondremos en contacto contigo.</p>
     <p class="whatsapp-note">Te escribiremos por WhatsApp en los próximos días.</p>
-    <p>Gracias por tu interés en formar parte de Romani Compliance — para nosotros es muy valioso.</p>
+    <p>Gracias por tu interés en formar parte de Romani Compliance, para nosotros es muy valioso.</p>
     <a href="{{ route('academico.index') }}" class="cv-thanks-back">← Volver a Académico</a>
   </div>
 </div>

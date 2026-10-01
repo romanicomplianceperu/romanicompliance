@@ -25,9 +25,9 @@
 
   <h1>{{ $activity->case_title ?? $activity->title }}</h1>
   <div class="meta">
-    @if($activity->unit) {{ $activity->unit }} — @endif
+    @if($activity->unit) {{ $activity->unit }}: @endif
     @if($activity->modality) {{ $activity->modality }} @endif
-    @if($activity->due_at) — Fecha límite: {{ $activity->due_at->timezone('America/Lima')->translatedFormat('d \d\e F, H:i') }} h @endif
+    @if($activity->due_at) · Fecha límite: {{ $activity->due_at->timezone('America/Lima')->translatedFormat('d \d\e F, H:i') }} h @endif
   </div>
 
   @foreach($activity->caseBodySections() as $section)
@@ -55,6 +55,6 @@
     @endforeach
   @endif
 
-  <div class="footer">Descargado de romanicompliance.com — Espacio Académico. Documento de referencia para trabajo en clase.</div>
+  <div class="footer">Descargado de romanicompliance.com · Espacio Académico. Documento de referencia para trabajo en clase.</div>
 </body>
 </html>

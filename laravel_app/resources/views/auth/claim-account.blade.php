@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Guarda tu certificado — Romani Compliance')
+@section('title', 'Guarda tu certificado · Romani Compliance')
 
 @section('content')
 <section style="padding:4rem 0;min-height:60vh;display:flex;align-items:center;">

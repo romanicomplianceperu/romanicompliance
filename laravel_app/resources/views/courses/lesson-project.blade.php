@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $lesson->title.' — '.$course->title)
+@section('title', $lesson->title.' · '.$course->title)
 
 @php
   $totalLessons = $course->modules->sum(fn ($m) => $m->lessons->count());
@@ -347,7 +347,7 @@
     </div>
 
     <div class="rdp-tabpanel" data-panel="apuntes">
-      <div class="rdp-notes-title">Apuntes — {{ $lesson->title }}</div>
+      <div class="rdp-notes-title">Apuntes: {{ $lesson->title }}</div>
       <div class="rdp-notes-toolbar">
         <button type="button" onclick="document.execCommand('bold')" title="Negrita"><strong>B</strong></button>
         <button type="button" onclick="document.execCommand('italic')" title="Cursiva"><em>I</em></button>

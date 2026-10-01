@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $lesson->title.' — '.$course->title)
+@section('title', $lesson->title.' · '.$course->title)
 
 @section('styles')
 .lesson-layout { display: grid; grid-template-columns: 2.2fr 1fr; gap: 2rem; padding: 2.5rem 0; align-items: start; }
@@ -449,7 +449,7 @@
                   @if(!empty($src['url']))
                     <a href="{{ $src['url'] }}" target="_blank" rel="noopener">↗</a>
                   @endif
-                  — {{ $src['desc'] ?? '' }}
+                  · {{ $src['desc'] ?? '' }}
                 </div>
               </div>
             @endforeach
@@ -544,7 +544,7 @@
                   @if(!empty($src['url']))
                     <a href="{{ $src['url'] }}" target="_blank" rel="noopener">↗</a>
                   @endif
-                  — {{ $src['desc'] ?? '' }}
+                  · {{ $src['desc'] ?? '' }}
                 </div>
               </div>
             @endforeach
@@ -756,7 +756,7 @@
     </div>
 
     <div class="rdp-tabpanel" data-panel="apuntes">
-      <div class="rdp-notes-title">Apuntes — {{ $lesson->title }}</div>
+      <div class="rdp-notes-title">Apuntes: {{ $lesson->title }}</div>
       <div class="rdp-notes-toolbar">
         <button type="button" onclick="document.execCommand('bold')" title="Negrita"><strong>B</strong></button>
         <button type="button" onclick="document.execCommand('italic')" title="Cursiva"><em>I</em></button>
@@ -785,7 +785,7 @@
             Obtener certificado
           </a>
           @if($progressPercent < 100)
-            <div class="rdp-cert-hint">Responde el cuestionario para certificarte — puedes darlo ahora, sin terminar el curso.</div>
+            <div class="rdp-cert-hint">Responde el cuestionario para certificarte: puedes darlo ahora, sin terminar el curso.</div>
           @endif
         @endif
         @if($course->slug === 'listas-internacionales-ft-fpadm')
@@ -1082,7 +1082,7 @@ function rdpTab(name) {
       document.querySelectorAll('.gm-marker').forEach(m => m.classList.remove('active'));
       marker.classList.add('active');
       const statusLabel = data.status === 'red' ? 'High-Risk Jurisdiction subject to a Call for Action' : 'Jurisdiction under Increased Monitoring';
-      detail.innerHTML = '<strong>' + (data.name || '') + ' — ' + statusLabel + '</strong>' + (data.note || 'Recuerda: esto es un factor de riesgo del país, no una designación de sanciones sobre una persona.');
+      detail.innerHTML = '<strong>' + (data.name || '') + ': ' + statusLabel + '</strong>' + (data.note || 'Recuerda: esto es un factor de riesgo del país, no una designación de sanciones sobre una persona.');
       detail.classList.add('show');
     });
   });
@@ -1283,7 +1283,7 @@ function rdpTab(name) {
 
       const feedback = document.getElementById('ddFeedback');
       if (correct) {
-        feedback.textContent = '✓ Correcto — ' + (dragged.dataset.hint || '');
+        feedback.textContent = '✓ Correcto: ' + (dragged.dataset.hint || '');
       } else {
         feedback.textContent = '✗ Esa no es su categoría. Vuelve a intentarlo.';
       }

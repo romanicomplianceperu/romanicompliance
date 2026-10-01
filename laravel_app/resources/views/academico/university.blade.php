@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $university->name.' — Espacio Académico — Romani Compliance')
+@section('title', $university->name.' · Espacio Académico · Romani Compliance')
 
 @section('styles')
 @include('academico._styles')

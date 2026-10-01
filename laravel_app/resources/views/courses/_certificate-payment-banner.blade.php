@@ -57,7 +57,7 @@
       <h4>Tu certificado está en proceso</h4>
       <p>Registramos tu solicitud para <strong>{{ $course->title }}</strong>. En cuanto confirmemos tu pago, emitiremos tu certificado y podrás descargarlo desde aquí.</p>
     @else
-      <h4>Completaste «{{ $course->title }}» — obtén tu certificación</h4>
+      <h4>Completaste «{{ $course->title }}», obtén tu certificación</h4>
       <p>Esta certificación tiene un costo de <strong>S/ {{ number_format($course->certificate_price ?? 0, 2) }}</strong>. Indica el nombre que debe aparecer en tu certificado y elige una opción.</p>
       <form action="{{ route('courses.claim-payment', $course) }}" method="POST" class="cert-payment-form">
         @csrf

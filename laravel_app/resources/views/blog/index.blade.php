@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Blog — Romani Compliance')
+@section('title', 'Blog · Romani Compliance')
 @section('description', 'Análisis jurídico, novedades regulatorias y contenido de interés sobre compliance, prevención LA/FT y derecho penal.')
 
 @section('styles')
