@@ -295,6 +295,10 @@
 .rd-member-row { display: grid; grid-template-columns: 1.2fr 1fr auto; gap: .5rem; margin: .55rem 0; }
 .rd-member-row input { min-width: 0; padding: .65rem .7rem; border: 1px solid var(--line); border-radius: 8px; }
 .rd-member-row button { width: 36px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }
+.rd-position-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: .6rem; }
+.rd-position-choice { min-height: 76px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); cursor: pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-weight:600; }
+.rd-position-choice svg { width: 24px; height: 24px; color: var(--gold); }
+.rd-position-choice:hover, .rd-position-choice.selected { border-color: var(--gold); background: var(--gold-pale); box-shadow: 0 0 0 3px rgba(184,154,86,.14); }
 @media (max-width: 560px) { .rd-welcome-modal { padding: 1.2rem; } .rd-mode-grid { grid-template-columns: 1fr; } .rd-mode-choice { min-height: 92px; } }
 @endsection
 
@@ -677,12 +681,12 @@
         @if($course->slug === 'cuestiones-problematicas-lavado-activos')
           <div class="rd-form-group">
             <label>Cargo</label>
-            <select name="position" id="rdPositionSelect" required onchange="document.getElementById('rdPositionOtherGroup').style.display = this.value === 'Otro' ? 'block' : 'none';">
-              <option value="">Seleccione...</option>
-              <option value="Juez">Juez</option>
-              <option value="Fiscal">Fiscal</option>
-              <option value="Otro">Otro</option>
-            </select>
+            <input type="hidden" name="position" id="rdPositionSelect" required>
+            <div class="rd-position-grid">
+              <button type="button" class="rd-position-choice" data-position="Juez"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 20h14M7 20V9l5-4 5 4v11M9 12h6M9 16h6"/></svg><span>Juez</span></button>
+              <button type="button" class="rd-position-choice" data-position="Fiscal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"/></svg><span>Fiscal</span></button>
+              <button type="button" class="rd-position-choice" data-position="Otro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg><span>Otro</span></button>
+            </div>
           </div>
           <div class="rd-form-group" id="rdPositionOtherGroup" style="display:none;">
             <label>Especifique su cargo</label>
@@ -821,6 +825,12 @@ document.querySelectorAll('input[name="mode"]').forEach(input => input.addEventL
   document.querySelectorAll('#rdGroupMembers input').forEach(field => field.required = group);
 }));
 document.getElementById('rdAddMember')?.addEventListener('click', rdAddMemberRow);
+document.querySelectorAll('.rd-position-choice').forEach(button => button.addEventListener('click', () => {
+  document.querySelectorAll('.rd-position-choice').forEach(item => item.classList.remove('selected'));
+  button.classList.add('selected');
+  document.getElementById('rdPositionSelect').value = button.dataset.position;
+  document.getElementById('rdPositionOtherGroup').style.display = button.dataset.position === 'Otro' ? 'block' : 'none';
+}));
 (function () {
   const cta = document.getElementById('floatingQuizCta');
   if (!cta) return;
