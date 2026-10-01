@@ -345,6 +345,15 @@
 .dd-zone .dd-chip { display: block; margin-bottom: 6px; text-align: center; }
 .dd-feedback { margin-top: 1rem; font-size: 0.82rem; color: var(--slate); text-align: center; }
 .dd-reset { margin-top: 12px; font-size: 0.76rem; font-weight: 600; color: var(--gold); background: none; border: 1px solid var(--gold); border-radius: 20px; padding: 6px 14px; cursor: pointer; display: block; margin-left: auto; }
+.course-activity-card { position: relative; background: var(--gold-pale); border: 1px solid var(--line); border-radius: 12px; padding: 1.4rem; }
+.activity-question { background: var(--white); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; margin: 1rem 0; }
+.activity-actions, .activity-order { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .8rem; }
+.activity-actions button, .activity-order button { border: 1px solid var(--line); border-radius: 8px; background: var(--white); padding: .65rem .8rem; cursor: pointer; }
+.activity-order button.selected { border-color: var(--gold); background: var(--gold-pale); }
+.activity-feedback { display: block; margin-top: .7rem; color: var(--slate); }
+.course-glossary { position: fixed; z-index: 1200; inset: 8vh 5vw; max-width: 700px; margin: auto; padding: 1.5rem; overflow: auto; background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+.course-glossary input { width: 100%; padding: .7rem; margin: .8rem 0; border: 1px solid var(--line); border-radius: 8px; }
+.course-glossary article { padding: .7rem 0; border-bottom: 1px solid var(--line); }
 @endsection
 
 @section('content')
@@ -388,6 +397,17 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M12 4v11m0 0l4-4m-4 4l-4-4M5 19h14"/></svg>
         Descargar {{ $docLabel }}
       </a>
+    @elseif($course->slug === 'cuestiones-problematicas-lavado-activos' && $lesson->type === 'text')
+      <div class="course-activity-card" data-activity="{{ str_contains($lesson->title, 'Casación') || str_contains($lesson->module->title, 'Ficha') ? 'casacion' : 'cripto' }}">
+        <p class="ix-intro">Resuelve las actividades directamente en la página. Selecciona una respuesta o toca los elementos para ordenarlos.</p>
+        <div class="activity-question"><strong>1. Verdadero o falso</strong><p class="activity-statement"></p><div class="activity-actions"><button type="button" data-answer="true">Verdadero</button><button type="button" data-answer="false">Falso</button></div><small class="activity-feedback"></small></div>
+        <div class="activity-question"><strong>2. Ordenar ideas</strong><p>Selecciona los elementos en el orden correcto:</p><div class="activity-order"></div><small class="activity-feedback"></small></div>
+        <button type="button" class="btn btn-gold" onclick="openCourseGlossary()">Abrir glosario visual</button>
+        <div class="course-glossary" id="courseGlossary" hidden><button type="button" onclick="closeCourseGlossary()" class="modal-close">×</button><h3>Glosario visual</h3><input id="glossarySearch" placeholder="Buscar término..."><div id="glossaryItems"></div></div>
+      </div>
+      <script>
+      (()=>{const card=document.querySelector('.course-activity-card');const crypto=card.dataset.activity==='cripto';const st=card.querySelector('.activity-statement');const order=card.querySelector('.activity-order');const fb=card.querySelectorAll('.activity-feedback');const data=crypto?{statement:'La exposición a mixers y fondos vinculados a extorsión incrementa el riesgo de la billetera.',answer:'true',items:['Verificar entradas y salidas','Clasificar contrapartes','Valorar el patrón temporal','Proponer la ruta de investigación'],terms:[['Mixer','Servicio que mezcla fondos para dificultar el rastreo.'],['PSAV','Proveedor de servicios de activos virtuales.'],['Blockchain','Registro distribuido e inmutable de transacciones.'],['Sin atribuir','Exposición cuya identidad no ha sido determinada.']]}:{statement:'La prueba por indicios debe valorarse en conjunto y no de forma aislada.',answer:'true',items:['Hecho base o indicio','Máxima de experiencia','Hecho presunto'],terms:[['Prueba por indicios','Pauta jurídica de valoración, no medio de prueba autónomo.'],['Hecho base','Dato acreditado mediante prueba.'],['Contraprueba','Evidencia idónea que puede desvirtuar la inferencia.'],['Motivación','Explicación racional y suficiente de la decisión.']]};st.textContent=data.statement;const shuffled=[...data.items].sort(()=>Math.random()-.5);shuffled.forEach((x,i)=>{const b=document.createElement('button');b.type='button';b.textContent=x;b.dataset.i=i;b.onclick=()=>{b.classList.toggle('selected');if([...order.children].every(x=>x.classList.contains('selected'))){const got=[...order.children].filter(x=>x.classList.contains('selected')).map(x=>x.textContent);fb[1].textContent=JSON.stringify(got)===JSON.stringify(data.items)?'Correcto':'Revisa el orden';}};order.appendChild(b)});card.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>fb[0].textContent=b.dataset.answer===data.answer?'Correcto':'Revisa tu respuesta');window.openCourseGlossary=()=>{const g=document.getElementById('courseGlossary');g.hidden=false;const render=(q='')=>document.getElementById('glossaryItems').innerHTML=data.terms.filter(t=>t[0].toLowerCase().includes(q.toLowerCase())).map(t=>`<article><strong>${t[0]}</strong><p>${t[1]}</p></article>`).join('');render();document.getElementById('glossarySearch').oninput=e=>render(e.target.value)};window.closeCourseGlossary=()=>document.getElementById('courseGlossary').hidden=true})();
+      </script>
     @elseif($lesson->type === 'text')
       <div class="lesson-text-content">{{ $lesson->content }}</div>
     @elseif(in_array($lesson->type, ['interactive', 'glossary', 'memory']) && $lesson->content)
