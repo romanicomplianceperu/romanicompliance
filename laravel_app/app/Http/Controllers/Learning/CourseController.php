@@ -64,6 +64,14 @@ class CourseController extends Controller
         return view('courses.subject-select', compact('course', 'nextUrl'));
     }
 
+    public function activities(Request $request, Course $course)
+    {
+        $user = $request->user();
+        abort_unless($course->isEnrolledBy($user) || $user->isAdmin(), 403);
+        $course->load('modules.lessons', 'category');
+        return view('courses.activities', compact('course'));
+    }
+
     public function claimPayment(Request $request, Course $course)
     {
         $user = $request->user();

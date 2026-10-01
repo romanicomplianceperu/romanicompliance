@@ -23,6 +23,10 @@ class GuestEnrollController extends Controller
             'email' => ['nullable', 'email', 'max:255'],
             'position' => ['nullable', 'string', 'max:100'],
             'position_other' => ['nullable', 'string', 'max:100'],
+            'mode' => ['nullable', 'in:individual,grupal'],
+            'members' => ['required_if:mode,grupal', 'nullable', 'array', 'min:2'],
+            'members.*.name' => ['required_with:members', 'string', 'max:255'],
+            'members.*.role' => ['required_with:members', 'string', 'max:120'],
         ]);
 
         $positionLabel = null;
@@ -73,6 +77,21 @@ class GuestEnrollController extends Controller
             ['user_id' => $user->id],
             ['status' => 'active', 'progress_percent' => 0]
         );
+
+        if (($data['mode'] ?? 'individual') === 'grupal') {
+            $members = collect($data['members'])->map(fn ($member) => [
+                'name' => trim($member['name']),
+                'role' => trim($member['role']),
+            ])->values()->all();
+            session([
+                'course_group_'.$course->id => [
+                    'code' => 'GRP-'.strtoupper(Str::random(5)),
+                    'members' => $members,
+                ],
+            ]);
+        } else {
+            session()->forget('course_group_'.$course->id);
+        }
 
         return redirect()->route('courses.show', ['course' => $course, 'bienvenida' => 1]);
     }

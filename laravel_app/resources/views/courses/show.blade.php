@@ -291,6 +291,10 @@
 .rd-mode-icon svg { width: 25px; height: 25px; }
 .rd-mode-copy strong { display: block; color: var(--ink); font-size: .98rem; }
 .rd-mode-copy span { display: block; color: var(--slate); font-size: .76rem; margin-top: 3px; }
+.rd-group-members { margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.72); }
+.rd-member-row { display: grid; grid-template-columns: 1.2fr 1fr auto; gap: .5rem; margin: .55rem 0; }
+.rd-member-row input { min-width: 0; padding: .65rem .7rem; border: 1px solid var(--line); border-radius: 8px; }
+.rd-member-row button { width: 36px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }
 @media (max-width: 560px) { .rd-welcome-modal { padding: 1.2rem; } .rd-mode-grid { grid-template-columns: 1fr; } .rd-mode-choice { min-height: 92px; } }
 @endsection
 
@@ -324,7 +328,7 @@
       <div class="rd-cta-row">
         @if($enrollment)
           @php $next = $course->nextLessonFor(auth()->user()); @endphp
-          @php $startUrl = $course->slug === 'cuestiones-problematicas-lavado-activos' ? route('courses.show', $course).'?activities=1' : ($course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next ? route('lessons.show', $next) : route('courses.show', $course))); @endphp
+          @php $startUrl = $course->slug === 'cuestiones-problematicas-lavado-activos' ? route('courses.activities', $course) : ($course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next ? route('lessons.show', $next) : route('courses.show', $course))); @endphp
           <a href="{{ $startUrl }}" class="rd-btn-primary">
             {{ $enrollment->progress_percent > 0 ? 'Continuar curso' : 'Comenzar curso' }}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -586,7 +590,7 @@
       <p>Avanza a tu propio ritmo, autoevalúate al finalizar y obtén tu certificado verificable por QR.</p>
       @if($enrollment)
         @php $next2 = $course->nextLessonFor(auth()->user()); @endphp
-        @php $startUrl2 = $course->slug === 'cuestiones-problematicas-lavado-activos' ? route('courses.show', $course).'?activities=1' : ($course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next2 ? route('lessons.show', $next2) : route('courses.show', $course))); @endphp
+        @php $startUrl2 = $course->slug === 'cuestiones-problematicas-lavado-activos' ? route('courses.activities', $course) : ($course->slug === 'listas-internacionales-ft-fpadm' ? route('courses.subject-select', $course) : ($next2 ? route('lessons.show', $next2) : route('courses.show', $course))); @endphp
         <a href="{{ $startUrl2 }}" class="rd-btn-primary">Continuar curso</a>
       @else
         <button type="button" class="rd-btn-primary" onclick="rdOpenWelcome()">Inscribirme gratis</button>
@@ -659,6 +663,12 @@
             <label class="rd-mode-choice"><input type="radio" name="mode" value="individual" checked><span class="rd-mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.7-3.4 2.8-5 6.5-5s5.8 1.6 6.5 5"/></svg></span><span class="rd-mode-copy"><strong>Individual</strong><span>Resolveré las actividades por mi cuenta</span></span></label>
             <label class="rd-mode-choice"><input type="radio" name="mode" value="grupal"><span class="rd-mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="2.6"/><circle cx="16.5" cy="9" r="2.2"/><path d="M3.8 19c.5-3 2.1-4.5 5.2-4.5s4.7 1.5 5.2 4.5M14 15c2.8-.3 4.7 1 5.5 4"/></svg></span><span class="rd-mode-copy"><strong>Grupal</strong><span>Resolveremos las actividades como equipo</span></span></label>
           </div>
+        </div>
+        <div class="rd-group-members" id="rdGroupMembers" hidden>
+          <label>Integrantes del grupo</label>
+          <p class="rd-form-hint">Añade a cada integrante y su cargo.</p>
+          <div id="rdMemberRows"></div>
+          <button type="button" class="btn btn-outline" id="rdAddMember">Agregar integrante</button>
         </div>
         <div class="rd-form-group">
           <label>Nombre completo</label>
@@ -794,6 +804,23 @@ function rdGoStep2() {
   document.getElementById('rdStep1').classList.remove('active');
   document.getElementById('rdStep2').classList.add('active');
 }
+const rdGroupMembers = document.getElementById('rdGroupMembers');
+const rdMemberRows = document.getElementById('rdMemberRows');
+let rdMemberIndex = 0;
+function rdAddMemberRow() {
+  const row = document.createElement('div');
+  row.className = 'rd-member-row';
+  row.innerHTML = `<input name="members[${rdMemberIndex}][name]" placeholder="Nombre completo" required><input name="members[${rdMemberIndex}][role]" placeholder="Cargo" required><button type="button" aria-label="Quitar integrante">×</button>`;
+  row.querySelector('button').onclick = () => row.remove();
+  rdMemberRows.appendChild(row); rdMemberIndex++;
+}
+document.querySelectorAll('input[name="mode"]').forEach(input => input.addEventListener('change', () => {
+  const group = input.value === 'grupal' && input.checked;
+  rdGroupMembers.hidden = !group;
+  if (group && !rdMemberRows.children.length) { rdAddMemberRow(); rdAddMemberRow(); }
+  document.querySelectorAll('#rdGroupMembers input').forEach(field => field.required = group);
+}));
+document.getElementById('rdAddMember')?.addEventListener('click', rdAddMemberRow);
 (function () {
   const cta = document.getElementById('floatingQuizCta');
   if (!cta) return;
@@ -936,7 +963,7 @@ function rdOnboardFinish() {
     @if(auth()->check() && $course->slug === 'listas-internacionales-ft-fpadm')
       window.location.href = '{{ route('courses.subject-select', $course) }}';
     @elseif(auth()->check() && $course->slug === 'cuestiones-problematicas-lavado-activos')
-      window.location.href = '{{ route('courses.show', $course) }}?activities=1';
+      window.location.href = '{{ route('courses.activities', $course) }}';
     @elseif(auth()->check() && $firstLesson)
       window.location.href = '{{ route('lessons.show', $firstLesson) }}';
     @else
