@@ -7,6 +7,7 @@ use App\Models\AcademicActivity;
 use App\Models\AcademicSubmission;
 use App\Models\AcademicUniversity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class AcademicoController extends Controller
 {
@@ -51,6 +52,24 @@ class AcademicoController extends Controller
         $uniqueIpsCount = $activity->visits()->distinct('ip_address')->count('ip_address');
 
         return view('admin.academico.show', compact('activity', 'submissions', 'visits', 'visitsCount', 'uniqueIpsCount'));
+    }
+
+    /**
+     * Publishes the Semana 6 activity from the admin panel for hosting without SSH: runs
+     * this activity's migration (only that one) and the (idempotent, updateOrCreate-based) Semana 6 seeder,
+     * which also copies the downloadable resolution PDF into public storage. Safe to press
+     * again — it never touches students' saved submissions.
+     */
+    public function installWeek6()
+    {
+        try {
+            Artisan::call('migrate', ['--path' => 'database/migrations/2026_10_19_120000_add_bonus_upload_to_academic_activities.php', '--force' => true]);
+            Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\AcademicoInformaticoSemana6Seeder', '--force' => true]);
+        } catch (\Throwable $e) {
+            return back()->with('error', 'No se pudo instalar: '.$e->getMessage());
+        }
+
+        return back()->with('success', 'Actividad Semana 6 de Derecho Informático instalada y lista en la web.');
     }
 
     public function update(Request $request, AcademicActivity $activity)

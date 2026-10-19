@@ -201,6 +201,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/preguntas-alumnos/{question}/responder', [AdminCourseQuestionController::class, 'answer'])->name('questions-support.answer');
 
     Route::get('/academico', [AdminAcademicoController::class, 'index'])->name('academico.index');
+    Route::post('/academico/instalar-semana-6', [AdminAcademicoController::class, 'installWeek6'])->name('academico.install-week6');
     Route::get('/academico/{activity}', [AdminAcademicoController::class, 'show'])->name('academico.show');
     Route::put('/academico/{activity}', [AdminAcademicoController::class, 'update'])->name('academico.update');
     Route::patch('/academico/envios/{submission}', [AdminAcademicoController::class, 'updateStatus'])->name('academico.submissions.status');
