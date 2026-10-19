@@ -13,7 +13,7 @@
 
 <div class="card" style="margin-bottom:1.2rem;">
   <h3 style="font-size:1rem;margin-bottom:6px;">Publicar actividad Semana 6 — Derecho Informático</h3>
-  <div class="form-hint" style="margin-bottom:12px;">Instala la actividad (R.D. 314-2026 DPDP) y el PDF descargable. Puedes volver a pulsarlo sin riesgo: no borra los envíos de los alumnos. Código de acceso: <strong>tutela1910</strong>.</div>
+  <div class="form-hint" style="margin-bottom:12px;">Instala la actividad (R.D. 314-2026 DPDP) y el PDF descargable. Puedes volver a pulsarlo sin riesgo: no borra los envíos de los alumnos. Código de acceso: <strong>digital20262</strong>.</div>
   <form method="POST" action="{{ route('admin.academico.install-week6') }}">
     @csrf
     <button type="submit" class="btn btn-gold btn-sm">Instalar / actualizar Semana 6</button>

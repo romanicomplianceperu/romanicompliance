@@ -88,7 +88,7 @@ TXT;
                 'case_body' => $caseBody,
                 'case_document_path' => $resolutionPdf,
                 'status' => 'disponible',
-                'access_code' => 'tutela1910',
+                'access_code' => 'digital20262',
                 'due_at' => null,
                 // 20 puntos autocalificables (5 ejercicios x 4 pts). El archivo opcional del
                 // ejercicio 6 suma +3 extra aparte; el confeti exige 55% (11/20) o más.
