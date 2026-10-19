@@ -168,11 +168,16 @@
                 @endif
 
                 @if($activity->hasBonusUpload())
-                  <div style="font-weight:700;margin:14px 0 8px;">Archivo opcional (PDF/Word, +{{ $activity->upload_bonus_points }} pts extra)</div>
+                  <div style="font-weight:700;margin:14px 0 8px;">Pregunta de desarrollo opcional (texto o archivo, +{{ $activity->upload_bonus_points }} pts extra)</div>
                   @if($submission->hasFile())
                     <div><a href="{{ $submission->fileUrl() }}" target="_blank" rel="noopener">📎 {{ $submission->file_name ?: 'Ver archivo' }}</a></div>
                   @else
                     <div class="form-hint">(no adjuntó archivo)</div>
+                  @endif
+                  @if($submission->bonusText() !== '')
+                    <div style="margin-top:6px;white-space:pre-line;">{{ $submission->bonusText() }}</div>
+                  @else
+                    <div class="form-hint">(no escribió respuesta)</div>
                   @endif
                 @endif
 

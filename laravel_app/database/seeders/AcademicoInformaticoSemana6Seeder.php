@@ -7,6 +7,7 @@ use App\Models\AcademicActivityExercise;
 use App\Models\AcademicCourse;
 use App\Models\AcademicUniversity;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Curso "Derecho Informático" (UNP) — actividad interactiva y autocalificada de la
@@ -47,6 +48,9 @@ class AcademicoInformaticoSemana6Seeder extends Seeder
             ]
         );
 
+        // La resolución original (versión pública) queda como recurso descargable para los alumnos.
+        $resolutionPdf = $this->storeAsset('rd-314-2026-jus-dgtaipd-dpdp.pdf.b64', 'academico/rd-314-2026-jus-dgtaipd-dpdp.pdf');
+
         $caseBody = <<<'TXT'
 Una persona que postulaba a un puesto de trabajo se enteró de que figuraba en el Sistema Informático de Denuncias Policiales (SIDPOL) de la Policía Nacional del Perú con una denuncia en su contra, registrada el 31 de octubre de 2024. Sostiene que la denuncia es falsa, que le ha cerrado puertas laborales y que afecta su imagen como estudiante universitario. El 22 de abril de 2025 pidió a la Dirección de Tecnología de la Información y Comunicaciones de la PNP (DIRTIC) que la anulara; la DIRTIC le respondió que, para anular un antecedente, debía presentar una copia certificada de la resolución judicial o fiscal que acredite que no se estableció responsabilidad penal (sobreseimiento, absolución, archivamiento definitivo o muerte del inculpado), y no lo hizo.
 
@@ -61,15 +65,16 @@ Decreto Legislativo N.° 1267, Ley de la PNP: arts. 2 y 43. D.S. N.° 025-2019-I
 Resolución Directoral N.° 314-2026-JUS/DGTAIPD-DPDP (Expediente N.° 96-2025-PTT), versión pública.
 
 INSTRUCCIONES
-Resuelvan los cinco ejercicios interactivos (verdadero o falso, ordenar, completar palabras, crucigrama y marcar): suman 20 puntos y se califican solos, con puntaje parcial dentro de cada ejercicio. Al final encontrarán un sexto ejercicio opcional en el que pueden subir un archivo PDF o Word para ganar +3 puntos extra. Tiempo estimado: 45 a 60 minutos.
+Resuelvan los cinco ejercicios interactivos (verdadero o falso, ordenar, completar palabras, crucigrama y marcar): suman 20 puntos y se califican solos, con puntaje parcial dentro de cada ejercicio. Al final encontrarán un sexto ejercicio opcional de desarrollo: pueden responderlo escribiendo en la misma página o subiendo un archivo PDF o Word para ganar +3 puntos extra. Pueden descargar la resolución original en PDF desde el botón de arriba. Tiempo estimado: 45 a 60 minutos.
 TXT;
 
         $uploadPrompt = <<<'TXT'
-Redacten, como abogados del reclamante, un breve escrito de 1 a 2 páginas (PDF o Word) que responda lo siguiente:
+Pregunta de desarrollo. Pueden responderla escribiendo directamente aquí abajo, o subiendo un archivo PDF o Word (como prefieran, o ambas): cualquiera de las dos vías suma los puntos extra.
+Respondan como abogados del reclamante, en 1 a 2 páginas:
 1) ¿Qué documento adicional debió presentar el reclamante ante la PNP según el art. 4.7.1 del D.S. N.° 025-2019-IN, y por qué le habría permitido sustentar la cancelación?
 2) Propongan dos argumentos para el recurso de apelación (plazo de 15 días hábiles), apoyándose en el art. 20 de la LPDP y el art. 82 del Reglamento.
 3) Expliquen por qué la PNP, aunque no necesita consentimiento para registrar denuncias en el SIDPOL, sigue obligada por los principios de finalidad, proporcionalidad, calidad y seguridad.
-Indiquen en la primera línea los nombres de los integrantes del grupo.
+Si suben archivo, indiquen en la primera línea los nombres de los integrantes del grupo.
 TXT;
 
         $activity = AcademicActivity::updateOrCreate(
@@ -81,6 +86,7 @@ TXT;
                 'case_title' => 'Tutela del derecho de cancelación: la denuncia policial en el SIDPOL',
                 'unit' => 'Unidad II — Protección de Datos Personales',
                 'case_body' => $caseBody,
+                'case_document_path' => $resolutionPdf,
                 'status' => 'disponible',
                 'access_code' => 'tutela1910',
                 'due_at' => null,
@@ -282,6 +288,18 @@ TXT;
             ->delete();
 
         $totalPoints = array_sum(array_column($exercises, 'points'));
-        $this->command?->info("Académico: Derecho Informático (UNP) — Actividad Semana 6 sembrada con código de acceso, {$totalPoints} puntos en ".count($exercises).' ejercicios autocalificables + archivo opcional (+3 extra).');
+        $this->command?->info("Académico: Derecho Informático (UNP) — Actividad Semana 6 sembrada con código de acceso, {$totalPoints} puntos en ".count($exercises).' ejercicios autocalificables + pregunta de desarrollo opcional (+3 extra).');
+    }
+
+    private function storeAsset(string $b64Filename, string $storagePath): ?string
+    {
+        $file = __DIR__.'/data/'.$b64Filename;
+        if (! file_exists($file)) {
+            return null;
+        }
+
+        Storage::disk('public')->put($storagePath, base64_decode(file_get_contents($file)));
+
+        return $storagePath;
     }
 }

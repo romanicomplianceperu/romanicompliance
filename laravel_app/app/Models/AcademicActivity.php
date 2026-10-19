@@ -154,7 +154,7 @@ class AcademicActivity extends Model
             'earned_points' => $earnedPoints,
             'percent' => $totalPoints > 0 ? (int) round($earnedPoints / $totalPoints * 100) : 0,
             'bonus_possible' => (int) $this->upload_bonus_points,
-            'bonus_points' => $this->upload_bonus_points && $submission->hasFile() ? (int) $this->upload_bonus_points : 0,
+            'bonus_points' => $this->upload_bonus_points && $submission->qualifiesForBonus() ? (int) $this->upload_bonus_points : 0,
             'items' => $items,
             'by_type' => $byType,
         ];

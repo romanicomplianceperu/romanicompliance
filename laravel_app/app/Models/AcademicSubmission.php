@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 
 class AcademicSubmission extends Model
 {
+    public const BONUS_TEXT_MIN_CHARS = 100;
+
     protected $fillable = [
         'academic_activity_id', 'mode', 'group_code', 'status',
         'answers', 'file_path', 'file_name', 'ip_address', 'user_agent', 'submitted_at',
@@ -32,6 +34,28 @@ class AcademicSubmission extends Model
     public function hasFile(): bool
     {
         return ! empty($this->file_path);
+    }
+
+    /**
+     * Text typed straight into the optional development question (exercise 6).
+     */
+    public function bonusText(): string
+    {
+        return trim((string) (($this->answers ?: [])['bonus_text'] ?? ''));
+    }
+
+    public function hasBonusText(): bool
+    {
+        return mb_strlen($this->bonusText()) >= self::BONUS_TEXT_MIN_CHARS;
+    }
+
+    /**
+     * The optional extra counts when the student either attached a file or wrote a real
+     * answer in the page — their choice.
+     */
+    public function qualifiesForBonus(): bool
+    {
+        return $this->hasFile() || $this->hasBonusText();
     }
 
     public function fileUrl(): ?string

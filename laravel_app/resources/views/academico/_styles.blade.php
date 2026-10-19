@@ -390,6 +390,10 @@
 .ac-cw-clue.answer-correct { background: rgba(31,122,77,0.08); }
 .ac-cw-clue.answer-wrong { background: rgba(179,65,59,0.06); }
 
+.ac-bonus-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gold); margin-bottom: 8px; }
+.ac-bonus-write { margin-bottom: 1.2rem; }
+.ac-bonus-write textarea { width: 100%; min-height: 200px; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-family: var(--sans); font-size: 0.88rem; color: var(--ink); resize: vertical; line-height: 1.6; }
+.ac-bonus-write textarea:focus { border-color: var(--gold); outline: none; }
 .ac-upload-brief p { font-size: 0.9rem; color: var(--ink); line-height: 1.65; margin-bottom: 0.6rem; }
 .ac-upload-drop { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; border: 2px dashed var(--gold); border-radius: 12px; background: var(--ivory-dim); padding: 1.4rem 1rem; cursor: pointer; transition: background 0.15s ease; }
 .ac-upload-drop:hover { background: var(--gold-pale); }

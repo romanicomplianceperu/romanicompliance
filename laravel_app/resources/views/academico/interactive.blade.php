@@ -73,9 +73,9 @@
         @if($grading['bonus_possible'] > 0)
           <div class="score-bonus {{ $grading['bonus_points'] > 0 ? 'earned' : '' }}">
             @if($grading['bonus_points'] > 0)
-              ⭐ +{{ $grading['bonus_points'] }} puntos extra por tu archivo · Puntaje final: {{ $grading['earned_points'] + $grading['bonus_points'] }} (máx. {{ $grading['total_points'] + $grading['bonus_possible'] }})
+              ⭐ +{{ $grading['bonus_points'] }} puntos extra por tu respuesta de desarrollo · Puntaje final: {{ $grading['earned_points'] + $grading['bonus_points'] }} (máx. {{ $grading['total_points'] + $grading['bonus_possible'] }})
             @else
-              Sin archivo adjunto: no sumaste los +{{ $grading['bonus_possible'] }} puntos extra del ejercicio 6.
+              No sumaste los +{{ $grading['bonus_possible'] }} puntos extra del ejercicio 6 (ni respuesta escrita suficiente ni archivo).
             @endif
           </div>
         @endif
@@ -109,6 +109,9 @@
         </div>
       @endif
       <a href="{{ route('academico.activity.pdf', [$university->slug, $course->slug, $activity->slug]) }}" class="ac-pdf-btn" data-no-loader>📄 Descargar el caso en PDF</a>
+      @if($activity->case_document_path)
+        <a href="{{ asset('storage/'.$activity->case_document_path) }}" class="ac-pdf-btn" download data-no-loader>📥 Descargar la resolución original (PDF)</a>
+      @endif
     </div>
 
     @if($submission->mode === 'grupal')
@@ -207,11 +210,11 @@
 
       @if($activity->hasBonusUpload())
         <div class="ac-ex-section">
-          <h3>Ejercicio 6 · Extra opcional</h3>
+          <h3>Ejercicio 6 · Pregunta de desarrollo (extra opcional)</h3>
           <div class="ac-ex-card ac-upload-card">
             <div class="ac-ex-header">
               <span class="ac-ex-points">+{{ $activity->upload_bonus_points }} pts extra</span>
-              <div class="ac-ex-prompt">Sube tu archivo (PDF o Word)</div>
+              <div class="ac-ex-prompt">Responde escribiendo aquí o sube tu archivo (PDF o Word)</div>
             </div>
             @if($activity->upload_prompt)
               <div class="ac-upload-brief">
@@ -220,7 +223,7 @@
                 @endforeach
               </div>
             @endif
-            <div class="ac-optional-notice">📎 Este ejercicio es opcional: no afecta tu nota de 0 a 20. Si adjuntas el archivo, se suman +{{ $activity->upload_bonus_points }} puntos extra.</div>
+            <div class="ac-optional-notice">📎 Este ejercicio es opcional: no afecta tu nota de 0 a 20. Si respondes escribiendo aquí (mínimo {{ \App\Models\AcademicSubmission::BONUS_TEXT_MIN_CHARS }} caracteres) o subes un archivo, se suman +{{ $activity->upload_bonus_points }} puntos extra.</div>
 
             @if($errors->has('file'))
               <div class="ac-form-error">{{ $errors->first('file') }}</div>
@@ -232,7 +235,14 @@
               </div>
             @endif
 
+            <div class="ac-bonus-write">
+              <div class="ac-bonus-label">✍️ Opción A: escribe tu respuesta aquí</div>
+              <textarea id="bonusText" maxlength="8000" placeholder="Desarrollen su respuesta a los puntos 1, 2 y 3…" {{ $canEdit ? '' : 'disabled' }}>{{ $submission->bonusText() }}</textarea>
+              <div class="ac-question-footer"><span class="ac-char-count" id="bonusTextCount">0 / 8000</span></div>
+            </div>
+
             @if($canEdit)
+              <div class="ac-bonus-label" style="margin-top:0.4rem;">📎 Opción B: sube un archivo</div>
               <label class="ac-upload-drop" for="bonusFile">
                 <span class="ac-upload-icon">⬆</span>
                 <span class="ac-upload-label" id="bonusFileLabel">{{ $submission->hasFile() ? 'Elegir otro archivo para reemplazarlo' : 'Toca aquí para elegir tu archivo' }}</span>
@@ -1061,6 +1071,14 @@
     if (closeBtn) closeBtn.addEventListener('click', closeBlankSelector);
   }
 
+  const bonusTextEl = document.getElementById('bonusText');
+  if (bonusTextEl) {
+    const bonusCount = document.getElementById('bonusTextCount');
+    function updateBonusCount() { bonusCount.textContent = bonusTextEl.value.length + ' / 8000'; }
+    bonusTextEl.addEventListener('input', function () { updateBonusCount(); markDirty(); });
+    updateBonusCount();
+  }
+
   // ── Optional bonus upload: show the chosen file's name (and reject a wrong type / size
   // right away rather than after a round trip to the server) ──
   const bonusFile = document.getElementById('bonusFile');
@@ -1105,7 +1123,8 @@
   function collectAnswers() {
     const questions = {};
     document.querySelectorAll('.js-answer').forEach(t => { questions[t.dataset.qid] = t.value; });
-    return { exercises: state.exercises, questions: questions };
+    const bonusTextEl = document.getElementById('bonusText');
+    return { exercises: state.exercises, questions: questions, bonus_text: bonusTextEl ? bonusTextEl.value : '' };
   }
 
   window.prepareSubmit = function (action) {
