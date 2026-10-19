@@ -69,7 +69,16 @@
            no reason to make them scroll past the case again to find it. --}}
       <div class="ac-score-banner">
         <div class="score-value">{{ $grading['earned_points'] }} / {{ $grading['total_points'] }} <small>puntos</small></div>
-        <div class="score-percent">{{ $grading['percent'] }}% de aciertos en los ejercicios autocalificables ({{ $grading['correct'] }} de {{ $grading['total'] }})</div>
+        <div class="score-percent">{{ $grading['percent'] }}% de aciertos en los ejercicios autocalificables ({{ $grading['correct'] }} de {{ $grading['total'] }} resueltos al 100%)</div>
+        @if($grading['bonus_possible'] > 0)
+          <div class="score-bonus {{ $grading['bonus_points'] > 0 ? 'earned' : '' }}">
+            @if($grading['bonus_points'] > 0)
+              ⭐ +{{ $grading['bonus_points'] }} puntos extra por tu archivo · Puntaje final: {{ $grading['earned_points'] + $grading['bonus_points'] }} (máx. {{ $grading['total_points'] + $grading['bonus_possible'] }})
+            @else
+              Sin archivo adjunto: no sumaste los +{{ $grading['bonus_possible'] }} puntos extra del ejercicio 6.
+            @endif
+          </div>
+        @endif
         @if(count($grading['by_type']) > 1)
           <div class="ac-score-stats">
             @foreach($grading['by_type'] as $type => $stat)
@@ -181,7 +190,7 @@
       </div>
     @endif
 
-    <form method="POST" action="{{ route('academico.activity.save', [$university->slug, $course->slug, $activity->slug]) }}" id="interactiveForm">
+    <form method="POST" action="{{ route('academico.activity.save', [$university->slug, $course->slug, $activity->slug]) }}" id="interactiveForm" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="action" id="actionInput" value="borrador">
       <input type="hidden" name="answers" id="answersInput">
@@ -193,6 +202,46 @@
             <p class="ac-ex-intro">Marca, empareja u ordena según corresponda. Tus respuestas se guardan automáticamente; el resultado recién se muestra cuando envíes la actividad.</p>
           @endif
           <div id="exercisesRoot" @if(! $canEdit) style="pointer-events:none;opacity:0.7;" @endif></div>
+        </div>
+      @endif
+
+      @if($activity->hasBonusUpload())
+        <div class="ac-ex-section">
+          <h3>Ejercicio 6 · Extra opcional</h3>
+          <div class="ac-ex-card ac-upload-card">
+            <div class="ac-ex-header">
+              <span class="ac-ex-points">+{{ $activity->upload_bonus_points }} pts extra</span>
+              <div class="ac-ex-prompt">Sube tu archivo (PDF o Word)</div>
+            </div>
+            @if($activity->upload_prompt)
+              <div class="ac-upload-brief">
+                @foreach(array_filter(array_map('trim', explode("\n", $activity->upload_prompt))) as $line)
+                  <p>{{ $line }}</p>
+                @endforeach
+              </div>
+            @endif
+            <div class="ac-optional-notice">📎 Este ejercicio es opcional: no afecta tu nota de 0 a 20. Si adjuntas el archivo, se suman +{{ $activity->upload_bonus_points }} puntos extra.</div>
+
+            @if($errors->has('file'))
+              <div class="ac-form-error">{{ $errors->first('file') }}</div>
+            @endif
+
+            @if($submission->hasFile())
+              <div class="ac-upload-current">
+                ✅ Archivo adjunto: <a href="{{ $submission->fileUrl() }}" target="_blank" rel="noopener" data-no-loader>{{ $submission->file_name ?: 'Ver archivo' }}</a>
+              </div>
+            @endif
+
+            @if($canEdit)
+              <label class="ac-upload-drop" for="bonusFile">
+                <span class="ac-upload-icon">⬆</span>
+                <span class="ac-upload-label" id="bonusFileLabel">{{ $submission->hasFile() ? 'Elegir otro archivo para reemplazarlo' : 'Toca aquí para elegir tu archivo' }}</span>
+                <span class="ac-upload-meta">PDF, DOC o DOCX · máx. 5 MB</span>
+              </label>
+              <input type="file" name="file" id="bonusFile" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="ac-upload-input">
+              <p class="ac-ex-hint">El archivo se sube cuando pulses «Guardar avance» o «Enviar actividad».</p>
+            @endif
+          </div>
         </div>
       @endif
 
@@ -733,6 +782,249 @@
     return card;
   }
 
+  // Long V/F block: one Verdadero/Falso pair per statement. In the graded review each
+  // statement is marked right/wrong and, when wrong, shows what the right answer was.
+  function renderVFGroup(ex) {
+    const card = el('div', 'ac-ex-card');
+    card.appendChild(exHeader(ex));
+
+    const saved = GRADED ? (ex.student_answer || {}) : (SAVED[ex.id] || {});
+    const answers = Object.assign({}, saved);
+    state.exercises[ex.id] = answers;
+    const correct = ex.correct_answer || {};
+
+    ex.statements.forEach((st, idx) => {
+      const row = el('div', 'ac-vfg-item');
+      row.appendChild(el('div', 'ac-vfg-text', (idx + 1) + '. ' + st.text));
+      const btns = el('div', 'ac-vf-row');
+      const trueBtn = el('button', 'ac-vf-btn', 'Verdadero');
+      const falseBtn = el('button', 'ac-vf-btn', 'Falso');
+      trueBtn.type = 'button'; falseBtn.type = 'button';
+
+      function normalized() {
+        const v = answers[st.id];
+        if (v === 'true' || v === true) return true;
+        if (v === 'false' || v === false) return false;
+        return null;
+      }
+      function refresh() {
+        trueBtn.classList.toggle('selected', normalized() === true);
+        falseBtn.classList.toggle('selected', normalized() === false);
+      }
+      refresh();
+
+      if (GRADED) {
+        trueBtn.disabled = true; falseBtn.disabled = true;
+        const right = correct[st.id];
+        [[trueBtn, true], [falseBtn, false]].forEach(([btn, val]) => {
+          if (val === right) btn.classList.add('answer-correct');
+          else if (val === normalized()) btn.classList.add('answer-wrong');
+        });
+      } else {
+        trueBtn.addEventListener('click', () => { answers[st.id] = true; state.exercises[ex.id] = answers; refresh(); markDirty(); });
+        falseBtn.addEventListener('click', () => { answers[st.id] = false; state.exercises[ex.id] = answers; refresh(); markDirty(); });
+      }
+      btns.append(trueBtn, falseBtn);
+      row.appendChild(btns);
+      card.appendChild(row);
+    });
+
+    if (! GRADED) {
+      card.appendChild(el('p', 'ac-ex-hint', 'Marca Verdadero o Falso en cada afirmación. Cada una vale lo mismo.'));
+    }
+    return card;
+  }
+
+  // "Marca todas las que correspondan": checkbox-style tiles grouped by question. Each
+  // option is its own yes/no decision (ticked or not), so the review marks every option.
+  function renderMulti(ex) {
+    const card = el('div', 'ac-ex-card');
+    card.appendChild(exHeader(ex));
+
+    const saved = GRADED ? (ex.student_answer || {}) : (SAVED[ex.id] || {});
+    const answers = {};
+    ex.questions.forEach(q => { answers[q.id] = Array.isArray(saved[q.id]) ? saved[q.id].map(n => parseInt(n, 10)) : []; });
+    state.exercises[ex.id] = answers;
+    const correct = ex.correct_answer || {};
+
+    ex.questions.forEach((q, qi) => {
+      const block = el('div', 'ac-multi-block');
+      block.appendChild(el('div', 'ac-multi-prompt', (qi + 1) + ') ' + q.prompt));
+      const list = el('div', 'ac-mcq-list');
+      q.options.forEach((opt, idx) => {
+        const btn = el('button', 'ac-mcq-opt ac-multi-opt');
+        btn.type = 'button';
+        const box = el('span', 'ac-multi-box', '');
+        btn.append(box, el('span', 'ac-multi-text', opt));
+        const isOn = () => answers[q.id].indexOf(idx) !== -1;
+        function refresh() {
+          btn.classList.toggle('selected', isOn());
+          box.textContent = isOn() ? '✓' : '';
+        }
+        refresh();
+
+        if (GRADED) {
+          btn.disabled = true;
+          const shouldBeOn = (correct[q.id] || []).indexOf(idx) !== -1;
+          if (shouldBeOn) btn.classList.add('answer-correct');
+          else if (isOn()) btn.classList.add('answer-wrong');
+          if (shouldBeOn && ! isOn()) btn.classList.add('answer-missed');
+        } else {
+          btn.addEventListener('click', () => {
+            const arr = answers[q.id];
+            const pos = arr.indexOf(idx);
+            if (pos === -1) arr.push(idx); else arr.splice(pos, 1);
+            arr.sort((a, b) => a - b);
+            state.exercises[ex.id] = answers;
+            refresh();
+            markDirty();
+          });
+        }
+        list.appendChild(btn);
+      });
+      block.appendChild(list);
+      card.appendChild(block);
+    });
+
+    if (! GRADED) {
+      card.appendChild(el('p', 'ac-ex-hint', 'Toca para marcar o desmarcar. Pueden ser correctas varias, una o ninguna por pregunta.'));
+    } else {
+      card.appendChild(el('p', 'ac-ex-hint', 'Verde: debía marcarse. Rojo: marcaste una que no correspondía. Borde punteado: se te olvidó marcarla.'));
+    }
+    return card;
+  }
+
+  // Crossword: a grid of one-letter inputs (only the cells that belong to a word exist),
+  // numbered where each word starts, with the Horizontales / Verticales clues underneath.
+  // Answers are saved as { "row,col": "A" }; typing a letter jumps to the next cell of the
+  // word being filled, Backspace on an empty cell steps back.
+  function renderCrossword(ex) {
+    const card = el('div', 'ac-ex-card');
+    card.appendChild(exHeader(ex));
+
+    const saved = GRADED ? (ex.student_answer || {}) : (SAVED[ex.id] || {});
+    const letters = Object.assign({}, saved);
+    state.exercises[ex.id] = letters;
+
+    const solution = (ex.correct_answer || {}).cells || {};
+    const solutionWords = (ex.correct_answer || {}).words || {};
+
+    const cellInfo = {}; // "r,c" -> { number, words: [word, ...] }
+    ex.words.forEach(w => {
+      for (let i = 0; i < w.length; i++) {
+        const r = w.row + (w.dir === 'down' ? i : 0);
+        const c = w.col + (w.dir === 'across' ? i : 0);
+        const key = r + ',' + c;
+        cellInfo[key] = cellInfo[key] || { words: [] };
+        cellInfo[key].words.push({ word: w, index: i });
+        if (i === 0) cellInfo[key].number = w.number;
+      }
+    });
+
+    function nextKey(word, index, step) {
+      const i = index + step;
+      if (i < 0 || i >= word.length) return null;
+      return (word.row + (word.dir === 'down' ? i : 0)) + ',' + (word.col + (word.dir === 'across' ? i : 0));
+    }
+
+    const scroller = el('div', 'ac-cw-scroll');
+    const grid = el('div', 'ac-cw-grid');
+    grid.style.setProperty('--cw-cols', ex.cols);
+    grid.style.gridTemplateColumns = 'repeat(' + ex.cols + ', var(--cw-cell))';
+    const inputs = {};
+    let activeDir = 'across';
+
+    for (let r = 0; r < ex.rows; r++) {
+      for (let c = 0; c < ex.cols; c++) {
+        const key = r + ',' + c;
+        const info = cellInfo[key];
+        if (! info) { grid.appendChild(el('div', 'ac-cw-blank')); continue; }
+        const cell = el('div', 'ac-cw-cell');
+        if (info.number) cell.appendChild(el('span', 'ac-cw-num', String(info.number)));
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.autocomplete = 'off';
+        input.setAttribute('autocapitalize', 'characters');
+        input.spellcheck = false;
+        input.className = 'ac-cw-input';
+        input.value = (letters[key] || '').toUpperCase();
+        inputs[key] = input;
+
+        if (GRADED) {
+          input.disabled = true;
+          const right = (solution[key] || '').toUpperCase();
+          const given = (letters[key] || '').toUpperCase();
+          cell.classList.add(given && given === right ? 'answer-correct' : 'answer-wrong');
+          if (given !== right) cell.title = 'Correcto: ' + right;
+        } else {
+          input.addEventListener('focus', () => { input.select(); });
+          input.addEventListener('input', () => {
+            const v = input.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/g, '').toUpperCase().slice(-1);
+            input.value = v;
+            if (v) letters[key] = v; else delete letters[key];
+            state.exercises[ex.id] = letters;
+            markDirty();
+            if (v) {
+              // Continue along the word in the direction being typed (prefer the one that has a next cell).
+              const options = info.words.slice().sort((a, b) => (a.word.dir === activeDir ? -1 : 1) - (b.word.dir === activeDir ? -1 : 1));
+              for (const o of options) {
+                const nk = nextKey(o.word, o.index, 1);
+                if (nk && inputs[nk]) { activeDir = o.word.dir; inputs[nk].focus(); break; }
+              }
+            }
+          });
+          input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && ! input.value) {
+              const o = info.words.find(x => x.word.dir === activeDir) || info.words[0];
+              const pk = nextKey(o.word, o.index, -1);
+              if (pk && inputs[pk]) { e.preventDefault(); inputs[pk].focus(); }
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+              const dr = e.key === 'ArrowDown' ? 1 : (e.key === 'ArrowUp' ? -1 : 0);
+              const dc = e.key === 'ArrowRight' ? 1 : (e.key === 'ArrowLeft' ? -1 : 0);
+              const nk = (r + dr) + ',' + (c + dc);
+              if (inputs[nk]) { e.preventDefault(); activeDir = dr ? 'down' : 'across'; inputs[nk].focus(); }
+            }
+          });
+        }
+        cell.appendChild(input);
+        grid.appendChild(cell);
+      }
+    }
+    scroller.appendChild(grid);
+    card.appendChild(scroller);
+
+    const clues = el('div', 'ac-cw-clues');
+    [['across', 'Horizontales →'], ['down', 'Verticales ↓']].forEach(([dir, title]) => {
+      const col = el('div', 'ac-cw-clue-col');
+      col.appendChild(el('div', 'ac-cw-clue-title', title));
+      ex.words.filter(w => w.dir === dir).sort((a, b) => a.number - b.number).forEach(w => {
+        const line = el('div', 'ac-cw-clue');
+        line.appendChild(el('strong', null, w.number + '. '));
+        line.appendChild(document.createTextNode(w.clue + ' (' + w.length + ' letras)'));
+        if (GRADED) {
+          const typed = [];
+          for (let i = 0; i < w.length; i++) {
+            const r = w.row + (w.dir === 'down' ? i : 0);
+            const c = w.col + (w.dir === 'across' ? i : 0);
+            typed.push((letters[r + ',' + c] || '_').toUpperCase());
+          }
+          const ok = typed.join('') === (solutionWords[w.id] || '').toUpperCase();
+          line.classList.add(ok ? 'answer-correct' : 'answer-wrong');
+          if (! ok) line.appendChild(el('div', 'ac-order-correct-note', 'Respuesta: ' + solutionWords[w.id]));
+        }
+        col.appendChild(line);
+      });
+      clues.appendChild(col);
+    });
+    card.appendChild(clues);
+
+    if (! GRADED) {
+      card.appendChild(el('p', 'ac-ex-hint', 'Toca una casilla y escribe: pasa sola a la siguiente letra. Sin tildes ni espacios. Cada palabra completa vale lo mismo.'));
+    }
+    return card;
+  }
+
   // ── Shared custom "select" overlay used by every fill-in-the-blank trigger ──
   // A single overlay/panel is reused for whichever blank is currently open, instead of
   // each blank owning its own dropdown, so there's one blurred-backdrop panel on screen
@@ -769,6 +1061,23 @@
     if (closeBtn) closeBtn.addEventListener('click', closeBlankSelector);
   }
 
+  // ── Optional bonus upload: show the chosen file's name (and reject a wrong type / size
+  // right away rather than after a round trip to the server) ──
+  const bonusFile = document.getElementById('bonusFile');
+  if (bonusFile) {
+    const bonusLabel = document.getElementById('bonusFileLabel');
+    bonusFile.addEventListener('change', function () {
+      const f = bonusFile.files[0];
+      if (! f) return;
+      if (! /\.(pdf|docx?)$/i.test(f.name) || f.size > 5 * 1024 * 1024) {
+        alert('El archivo debe ser PDF o Word (.pdf, .doc, .docx) y pesar menos de 5 MB.');
+        bonusFile.value = '';
+        return;
+      }
+      bonusLabel.textContent = '📎 ' + f.name + ' — listo para subir al guardar o enviar';
+    });
+  }
+
   const root = document.getElementById('exercisesRoot');
   if (root) {
     EXERCISES.forEach(ex => {
@@ -779,6 +1088,9 @@
       else if (ex.type === 'ordering') card = renderOrdering(ex);
       else if (ex.type === 'memory') card = renderMemory(ex);
       else if (ex.type === 'fillblank') card = renderFillBlank(ex);
+      else if (ex.type === 'vfgroup') card = renderVFGroup(ex);
+      else if (ex.type === 'multi') card = renderMulti(ex);
+      else if (ex.type === 'crossword') card = renderCrossword(ex);
       if (card) root.appendChild(card);
     });
   }

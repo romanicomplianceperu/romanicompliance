@@ -13,6 +13,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AcademicoController extends Controller
@@ -323,6 +324,11 @@ class AcademicoController extends Controller
         $data = $request->validate([
             'answers' => ['nullable', 'string'],
             'action' => ['required', 'in:borrador,enviar'],
+            'file' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+        ], [
+            'file.mimes' => 'El archivo debe ser un PDF o Word (.pdf, .doc, .docx).',
+            'file.max' => 'El archivo no debe pesar más de 5 MB.',
+            'file.uploaded' => 'No se pudo subir el archivo. Verifica que pese menos de 5 MB e inténtalo de nuevo.',
         ]);
 
         if ($data['action'] === 'enviar' && $activity->isPastDue()) {
@@ -340,6 +346,18 @@ class AcademicoController extends Controller
         }
 
         $submission->answers = is_array($decoded) ? $decoded : $submission->answers;
+
+        // Optional bonus upload (PDF/Word). Autosave requests never carry a file, so an
+        // already-attached one is only ever replaced when a new one is actually sent.
+        if ($activity->hasBonusUpload() && $request->hasFile('file')) {
+            $upload = $request->file('file');
+            $previous = $submission->file_path;
+            $submission->file_path = $upload->store('academic-submissions/'.$activity->id, 'public');
+            $submission->file_name = mb_substr($upload->getClientOriginalName(), 0, 255);
+            if ($previous) {
+                Storage::disk('public')->delete($previous);
+            }
+        }
 
         if ($data['action'] === 'enviar') {
             $submission->submitted_at = now();

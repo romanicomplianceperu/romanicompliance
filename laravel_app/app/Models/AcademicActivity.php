@@ -12,6 +12,7 @@ class AcademicActivity extends Model
         'academic_course_id', 'slug', 'week_number', 'type', 'title',
         'case_title', 'unit', 'modality', 'group_size', 'case_body',
         'case_document_path', 'status', 'access_code', 'due_at', 'pass_percent',
+        'upload_prompt', 'upload_bonus_points',
     ];
 
     protected $casts = [
@@ -129,9 +130,11 @@ class AcademicActivity extends Model
             $studentAnswer = $answers[$exercise->id] ?? null;
             $isCorrect = $exercise->isCorrect($studentAnswer);
             $totalPoints += $exercise->points;
+            // score() is 1.0/0.0 (same as isCorrect) for every classic exercise; the long
+            // multi-part types can earn a fraction of their points.
+            $earnedPoints += $exercise->points * $exercise->score($studentAnswer);
             if ($isCorrect) {
                 $correctCount++;
-                $earnedPoints += $exercise->points;
             }
             $items[$exercise->id] = $exercise->toGradedArray($studentAnswer);
 
@@ -142,15 +145,24 @@ class AcademicActivity extends Model
             }
         }
 
+        $earnedPoints = round($earnedPoints, 1);
+
         return [
             'total' => $exercises->count(),
             'correct' => $correctCount,
             'total_points' => $totalPoints,
             'earned_points' => $earnedPoints,
             'percent' => $totalPoints > 0 ? (int) round($earnedPoints / $totalPoints * 100) : 0,
+            'bonus_possible' => (int) $this->upload_bonus_points,
+            'bonus_points' => $this->upload_bonus_points && $submission->hasFile() ? (int) $this->upload_bonus_points : 0,
             'items' => $items,
             'by_type' => $byType,
         ];
+    }
+
+    public function hasBonusUpload(): bool
+    {
+        return (int) $this->upload_bonus_points > 0;
     }
 
     /**
@@ -165,6 +177,9 @@ class AcademicActivity extends Model
             'ordering' => 'Ordenar',
             'memory' => 'Juego de memoria',
             'fillblank' => 'Completar palabras',
+            'vfgroup' => 'Verdadero / Falso',
+            'multi' => 'Marcar',
+            'crossword' => 'Crucigrama',
             default => ucfirst($type),
         };
     }

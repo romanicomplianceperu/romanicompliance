@@ -11,7 +11,7 @@ class AcademicSubmission extends Model
 {
     protected $fillable = [
         'academic_activity_id', 'mode', 'group_code', 'status',
-        'answers', 'ip_address', 'user_agent', 'submitted_at',
+        'answers', 'file_path', 'file_name', 'ip_address', 'user_agent', 'submitted_at',
     ];
 
     protected $casts = [
@@ -27,6 +27,16 @@ class AcademicSubmission extends Model
     public function members(): HasMany
     {
         return $this->hasMany(AcademicSubmissionMember::class, 'academic_submission_id');
+    }
+
+    public function hasFile(): bool
+    {
+        return ! empty($this->file_path);
+    }
+
+    public function fileUrl(): ?string
+    {
+        return $this->hasFile() ? \Illuminate\Support\Facades\Storage::disk('public')->url($this->file_path) : null;
     }
 
     public function isSubmitted(): bool

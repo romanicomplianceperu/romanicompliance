@@ -359,6 +359,52 @@
 .ac-optional-notice { font-size: 0.8rem; color: var(--gold); background: var(--gold-pale); border-radius: 10px; padding: 0.7rem 1rem; margin-bottom: 1.2rem; line-height: 1.5; }
 .ac-critica-badge { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--slate); background: var(--ivory-dim); padding: 4px 10px; border-radius: 12px; }
 
+
+/* Long exercise types: V/F block, "marcar", crossword and the optional bonus upload. */
+.ac-fill-text { white-space: pre-line; }
+.ac-vfg-item { padding: 1rem 0; border-top: 1px solid var(--line); }
+.ac-vfg-item:first-of-type { border-top: none; padding-top: 0; }
+.ac-vfg-text { font-size: 0.92rem; color: var(--ink); line-height: 1.6; margin-bottom: 0.7rem; }
+.ac-multi-block { padding: 1rem 0; border-top: 1px solid var(--line); }
+.ac-multi-block:first-of-type { border-top: none; padding-top: 0; }
+.ac-multi-prompt { font-size: 0.92rem; font-weight: 700; color: var(--ink); line-height: 1.5; margin-bottom: 0.7rem; }
+.ac-multi-opt { display: flex; align-items: flex-start; gap: 12px; }
+.ac-multi-box { flex-shrink: 0; width: 22px; height: 22px; border: 1.5px solid var(--line); border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; color: var(--ink); background: var(--white); margin-top: 1px; }
+.ac-multi-opt.selected .ac-multi-box { border-color: var(--gold); background: var(--gold); color: var(--white); }
+.ac-multi-opt.answer-missed { border-style: dashed; }
+.ac-multi-text { line-height: 1.45; }
+
+.ac-cw-scroll { overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+.ac-cw-grid { --cw-cell: clamp(22px, calc((100vw - 110px) / var(--cw-cols, 13)), 34px); display: grid; gap: 2px; width: max-content; margin: 0 auto; }
+.ac-cw-blank { width: var(--cw-cell); height: var(--cw-cell); }
+.ac-cw-cell { position: relative; width: var(--cw-cell); height: var(--cw-cell); background: var(--white); border: 1.5px solid var(--ink); border-radius: 3px; }
+.ac-cw-num { position: absolute; top: 1px; left: 3px; font-size: 0.55rem; font-weight: 700; color: var(--gold); line-height: 1; pointer-events: none; }
+.ac-cw-input { width: 100%; height: 100%; border: none; background: transparent; text-align: center; font-size: 1rem; font-weight: 800; text-transform: uppercase; color: var(--ink); padding: 8px 0 0; font-family: var(--sans); border-radius: 3px; }
+.ac-cw-input:focus { outline: none; background: var(--gold-pale); }
+.ac-cw-cell.answer-correct { border-color: #1F7A4D; background: rgba(31,122,77,0.1); }
+.ac-cw-cell.answer-wrong { border-color: #B3413B; background: rgba(179,65,59,0.08); }
+.ac-cw-input:disabled { color: var(--ink); opacity: 1; -webkit-text-fill-color: var(--ink); }
+.ac-cw-clues { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: 1.2rem; }
+.ac-cw-clue-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gold); margin-bottom: 8px; }
+.ac-cw-clue { font-size: 0.82rem; color: var(--ink); line-height: 1.5; margin-bottom: 8px; padding: 4px 8px; border-radius: 6px; }
+.ac-cw-clue.answer-correct { background: rgba(31,122,77,0.08); }
+.ac-cw-clue.answer-wrong { background: rgba(179,65,59,0.06); }
+
+.ac-upload-brief p { font-size: 0.9rem; color: var(--ink); line-height: 1.65; margin-bottom: 0.6rem; }
+.ac-upload-drop { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; border: 2px dashed var(--gold); border-radius: 12px; background: var(--ivory-dim); padding: 1.4rem 1rem; cursor: pointer; transition: background 0.15s ease; }
+.ac-upload-drop:hover { background: var(--gold-pale); }
+.ac-upload-icon { font-size: 1.4rem; color: var(--gold); line-height: 1; }
+.ac-upload-label { font-size: 0.9rem; font-weight: 700; color: var(--ink); word-break: break-word; }
+.ac-upload-meta { font-size: 0.74rem; color: var(--slate-light); }
+.ac-upload-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.ac-upload-current { font-size: 0.86rem; color: #1F7A4D; background: rgba(31,122,77,0.08); border-radius: 8px; padding: 0.7rem 1rem; margin-bottom: 0.9rem; word-break: break-word; }
+.ac-upload-current a { color: #1F7A4D; font-weight: 700; text-decoration: underline; }
+.ac-score-banner .score-bonus { font-size: 0.82rem; color: rgba(255,255,255,0.65); margin-top: 8px; }
+.ac-score-banner .score-bonus.earned { color: var(--gold-light); font-weight: 700; }
+@media (max-width: 480px) {
+  .ac-cw-clues { grid-template-columns: 1fr; }
+}
+
 /* Autosave status */
 .ac-autosave-status { display: block; width: 100%; font-size: 0.76rem; color: var(--slate-light); margin-bottom: 4px; }
 @media (min-width: 640px) { .ac-autosave-status { width: auto; margin-right: auto; margin-bottom: 0; align-self: center; } }

@@ -108,6 +108,9 @@
             <td>
               @if($submissionGrading)
                 {{ $submissionGrading['earned_points'] }}/{{ $submissionGrading['total_points'] }} <span class="form-hint">({{ $submissionGrading['percent'] }}%)</span>
+                @if($submissionGrading['bonus_points'] > 0)
+                  <span class="badge badge-success">+{{ $submissionGrading['bonus_points'] }} extra</span>
+                @endif
               @else
                 <span class="form-hint">—</span>
               @endif
@@ -141,25 +144,36 @@
             <td colspan="9">
               <div style="background:var(--ivory-dim);border-radius:8px;padding:14px 18px;font-size:0.82rem;">
                 @if($submissionGrading)
-                  <div style="font-weight:700;margin-bottom:10px;">Ejercicios autocalificables — {{ $submissionGrading['earned_points'] }}/{{ $submissionGrading['total_points'] }} pts</div>
+                  <div style="font-weight:700;margin-bottom:10px;">Ejercicios autocalificables — {{ $submissionGrading['earned_points'] }}/{{ $submissionGrading['total_points'] }} pts@if($submissionGrading['bonus_possible'] > 0) · extra por archivo: +{{ $submissionGrading['bonus_points'] }} (de {{ $submissionGrading['bonus_possible'] }})@endif</div>
                   @foreach($activity->exercises as $exercise)
                     @php
                       $item = $submissionGrading['items'][$exercise->id] ?? null;
                       $isCorrect = (bool) ($item['correct'] ?? false);
+                      $exScore = $exercise->score($item['student_answer'] ?? null);
+                      $isPartial = ! $isCorrect && $exScore > 0;
                       $answerText = $exercise->formatStudentAnswer($item['student_answer'] ?? null);
                       $exLabel = $exercise->type === 'fillblank' ? ($exercise->payload['template'] ?? $exercise->prompt) : $exercise->prompt;
                     @endphp
                     <div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);">
-                      <span style="flex-shrink:0;">{{ $isCorrect ? '✅' : '❌' }}</span>
+                      <span style="flex-shrink:0;">{{ $isCorrect ? '✅' : ($isPartial ? '🟡' : '❌') }}</span>
                       <div style="flex:1;min-width:0;">
                         <div style="color:var(--slate);font-size:0.74rem;margin-bottom:2px;">{{ $exLabel }}</div>
                         <div>{{ $answerText }}</div>
                       </div>
-                      <span style="flex-shrink:0;font-size:0.7rem;color:var(--slate-light);white-space:nowrap;">{{ $exercise->points }} pt{{ $exercise->points === 1 ? '' : 's' }}</span>
+                      <span style="flex-shrink:0;font-size:0.7rem;color:var(--slate-light);white-space:nowrap;">{{ $isPartial ? round($exercise->points * $exScore, 1).' / ' : '' }}{{ $exercise->points }} pt{{ $exercise->points === 1 ? '' : 's' }}</span>
                     </div>
                   @endforeach
                 @elseif($activity->exercises->isNotEmpty())
                   <em>Todavía no envió la actividad — no hay respuestas de ejercicios que mostrar.</em>
+                @endif
+
+                @if($activity->hasBonusUpload())
+                  <div style="font-weight:700;margin:14px 0 8px;">Archivo opcional (PDF/Word, +{{ $activity->upload_bonus_points }} pts extra)</div>
+                  @if($submission->hasFile())
+                    <div><a href="{{ $submission->fileUrl() }}" target="_blank" rel="noopener">📎 {{ $submission->file_name ?: 'Ver archivo' }}</a></div>
+                  @else
+                    <div class="form-hint">(no adjuntó archivo)</div>
+                  @endif
                 @endif
 
                 @if($activity->questions->isNotEmpty())
