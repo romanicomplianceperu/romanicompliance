@@ -41,6 +41,12 @@ class AcademicoSemana7Seeder extends Seeder
         foreach ([$this->informatico(), $this->mercantil(), $this->procesal()] as $config) {
             $this->seed($unp, $config);
         }
+
+        // Desde la Semana 7 solo esta actividad está habilitada: todas las demás semanas
+        // (de cualquier curso) quedan cerradas. Se pueden reabrir una por una desde el panel
+        // admin (Académico → actividad → Estado).
+        $closed = AcademicActivity::where('week_number', '!=', 7)->where('status', '!=', 'cerrada')->update(['status' => 'cerrada']);
+        $this->command?->info("Académico: {$closed} actividad(es) de otras semanas inhabilitadas (cerradas).");
     }
 
     private function seed(AcademicUniversity $unp, array $config): void
@@ -55,7 +61,7 @@ class AcademicoSemana7Seeder extends Seeder
             [
                 'week_number' => 7,
                 'type' => 'participacion',
-                'title' => 'Actividad Semana 7',
+                'title' => 'SEMANA 7 - TRABAJO CALIFICADO',
                 'case_title' => $config['activity']['case_title'],
                 'unit' => $config['activity']['unit'],
                 'case_body' => $config['activity']['case_body'],

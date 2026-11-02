@@ -46,7 +46,7 @@
     </div>
 
     <h3 style="font-size:0.98rem;color:var(--ink);margin-bottom:1rem;">Actividades</h3>
-    @forelse($course->activities()->orderByDesc('week_number')->get() as $activity)
+    @forelse($course->activities()->reorder()->orderByRaw("status = 'disponible' desc")->orderByDesc('week_number')->get() as $activity)
       @if($activity->isAvailable())
         <a href="{{ route('academico.activity.show', [$university->slug, $course->slug, $activity->slug]) }}" class="ac-activity-card">
           <span class="ac-activity-week">S{{ $activity->week_number }}</span>

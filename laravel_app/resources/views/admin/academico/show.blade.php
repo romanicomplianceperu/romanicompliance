@@ -53,6 +53,14 @@
       <input type="text" name="access_code" value="{{ old('access_code', $activity->access_code) }}">
     </div>
     <div class="form-group">
+      <label>Estado (solo «disponible» se puede abrir y enviar)</label>
+      <select name="status">
+        <option value="disponible" @selected($activity->status === 'disponible')>Disponible</option>
+        <option value="cerrada" @selected($activity->status === 'cerrada')>Cerrada (inhabilitada)</option>
+        <option value="proximamente" @selected($activity->status === 'proximamente')>Próximamente</option>
+      </select>
+    </div>
+    <div class="form-group">
       <label>Fecha y hora límite</label>
       <input type="datetime-local" name="due_at" value="{{ $activity->due_at ? $activity->due_at->format('Y-m-d\TH:i') : '' }}">
     </div>

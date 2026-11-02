@@ -87,7 +87,8 @@ TXT;
                 'unit' => 'Unidad II — Protección de Datos Personales',
                 'case_body' => $caseBody,
                 'case_document_path' => $resolutionPdf,
-                'status' => 'disponible',
+                // Desde la Semana 7 solo esa semana está habilitada; la 6 queda cerrada.
+                'status' => 'cerrada',
                 'access_code' => 'digital20262',
                 'due_at' => null,
                 // 20 puntos autocalificables (5 ejercicios x 4 pts). El archivo opcional del

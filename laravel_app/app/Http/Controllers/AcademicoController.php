@@ -65,7 +65,13 @@ class AcademicoController extends Controller
             return $gate;
         }
 
-        $activities = $course->activities()->where('type', 'participacion')->get();
+        // reorder(): the relation already orders by week_number ascending, and a second
+        // orderBy would only be appended after it. Open activities first, newest week first.
+        $activities = $course->activities()->reorder()
+            ->where('type', 'participacion')
+            ->orderByRaw("status = 'disponible' desc")
+            ->orderByDesc('week_number')
+            ->get();
 
         return view('academico.participacion-index', compact('university', 'course', 'activities'));
     }
@@ -152,14 +158,14 @@ class AcademicoController extends Controller
             'visited_at' => now(),
         ]);
 
-        if ($activity->requiresAccessCode()) {
-            return $this->activityGated($request, $university, $course, $activity);
-        }
-
         if (! $activity->isAvailable()) {
             return redirect()
                 ->route('academico.participacion.index', [$universitySlug, $courseSlug])
                 ->with('academico_error', 'Esta actividad no está disponible por ahora.');
+        }
+
+        if ($activity->requiresAccessCode()) {
+            return $this->activityGated($request, $university, $course, $activity);
         }
 
         $activity->load('questions.responses');
@@ -252,20 +258,17 @@ class AcademicoController extends Controller
         [$university, $course] = $this->resolve($universitySlug, $courseSlug);
         $activity = $course->activities()->where('slug', $activitySlug)->firstOrFail();
 
-        abort_unless($activity->requiresAccessCode() && session($this->courseUnlockSessionKey($course)), 403);
+        abort_unless($activity->isAvailable() && $activity->requiresAccessCode() && session($this->courseUnlockSessionKey($course)), 403);
 
         $data = $request->validate([
             'mode' => ['required', 'in:individual,grupal'],
             'full_name' => ['required_if:mode,individual', 'nullable', 'string', 'max:255'],
             'email' => ['required_if:mode,individual', 'nullable', 'email', 'max:255'],
-            'phone' => ['required_if:mode,individual', 'nullable', 'string', 'max:30'],
+            'phone' => ['nullable', 'string', 'max:30'],
             'members' => ['required_if:mode,grupal', 'nullable', 'array', 'min:2'],
             'members.*.full_name' => ['required_with:members', 'string', 'max:255'],
             'members.*.email' => ['required_with:members', 'email', 'max:255'],
-            'members.*.phone' => ['required_with:members', 'string', 'max:30'],
-        ], [
-            'phone.required_if' => 'El número de celular es obligatorio.',
-            'members.*.phone.required_with' => 'El número de celular de cada integrante es obligatorio.',
+            'members.*.phone' => ['nullable', 'string', 'max:30'],
         ]);
 
         $submission = new AcademicSubmission([
@@ -286,7 +289,7 @@ class AcademicoController extends Controller
                 'academic_submission_id' => $submission->id,
                 'full_name' => Str::title(Str::lower(trim($data['full_name']))),
                 'email' => $data['email'],
-                'phone' => trim($data['phone']),
+                'phone' => trim((string) ($data['phone'] ?? '')) ?: null,
             ]);
         } else {
             foreach ($data['members'] as $member) {
@@ -294,7 +297,7 @@ class AcademicoController extends Controller
                     'academic_submission_id' => $submission->id,
                     'full_name' => Str::title(Str::lower(trim($member['full_name']))),
                     'email' => $member['email'],
-                    'phone' => trim($member['phone']),
+                    'phone' => trim((string) ($member['phone'] ?? '')) ?: null,
                 ]);
             }
         }
@@ -319,6 +322,17 @@ class AcademicoController extends Controller
                 return response()->json(['ok' => false, 'message' => 'Sesión expirada.'], 403);
             }
             abort(403);
+        }
+
+        if (! $activity->isAvailable()) {
+            $message = 'Esta actividad ya no está habilitada.';
+            if ($request->wantsJson()) {
+                return response()->json(['ok' => false, 'message' => $message], 403);
+            }
+
+            return redirect()
+                ->route('academico.participacion.index', [$universitySlug, $courseSlug])
+                ->with('academico_error', $message);
         }
 
         $data = $request->validate([

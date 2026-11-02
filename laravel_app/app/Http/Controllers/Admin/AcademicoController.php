@@ -94,11 +94,13 @@ class AcademicoController extends Controller
         $data = $request->validate([
             'access_code' => ['nullable', 'string', 'max:100'],
             'due_at' => ['nullable', 'date'],
+            'status' => ['required', 'in:disponible,proximamente,cerrada'],
         ]);
 
         $activity->update([
             'access_code' => $data['access_code'] ?: null,
             'due_at' => $data['due_at'] ?: null,
+            'status' => $data['status'],
         ]);
 
         return back()->with('success', 'Configuración de la actividad actualizada.');
