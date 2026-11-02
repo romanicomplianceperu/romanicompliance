@@ -30,7 +30,7 @@
             <h4>{{ $activity->title }}</h4>
             <p>{{ $activity->case_title ?? 'Participación en clase' }}</p>
           </span>
-          <span class="ac-status-badge {{ $activity->status }}">{{ ucfirst($activity->status) }}</span>
+          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->status === 'cerrada' ? 'Inhabilitada' : ucfirst($activity->status) }}</span>
         </a>
       @else
         <div class="ac-activity-card" style="opacity:0.55;cursor:default;">
@@ -39,11 +39,11 @@
             <h4>{{ $activity->title }}</h4>
             <p>{{ $activity->case_title ?? 'Participación en clase' }}</p>
           </span>
-          <span class="ac-status-badge {{ $activity->status }}">{{ ucfirst($activity->status) }}</span>
+          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->status === 'cerrada' ? 'Inhabilitada' : ucfirst($activity->status) }}</span>
         </div>
       @endif
     @empty
-      <p style="color:var(--slate-light);font-size:0.86rem;">Por ahora no hay actividades habilitadas.</p>
+      <p style="color:var(--slate-light);font-size:0.86rem;">Todavía no hay actividades de participación publicadas.</p>
     @endforelse
   </div>
 </div>

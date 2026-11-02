@@ -66,10 +66,10 @@ class AcademicoController extends Controller
         }
 
         // reorder(): the relation already orders by week_number ascending, and a second
-        // orderBy would only be appended after it. Only enabled activities are listed.
+        // orderBy would only be appended after it. Enabled activities first, then the rest (greyed out).
         $activities = $course->activities()->reorder()
             ->where('type', 'participacion')
-            ->where('status', 'disponible')
+            ->orderByRaw("status = 'disponible' desc")
             ->orderByDesc('week_number')
             ->get();
 
