@@ -66,10 +66,10 @@ class AcademicoController extends Controller
         }
 
         // reorder(): the relation already orders by week_number ascending, and a second
-        // orderBy would only be appended after it. Open activities first, newest week first.
+        // orderBy would only be appended after it. Only enabled activities are listed.
         $activities = $course->activities()->reorder()
             ->where('type', 'participacion')
-            ->orderByRaw("status = 'disponible' desc")
+            ->where('status', 'disponible')
             ->orderByDesc('week_number')
             ->get();
 
@@ -363,7 +363,7 @@ class AcademicoController extends Controller
 
         // Optional bonus upload (PDF/Word). Autosave requests never carry a file, so an
         // already-attached one is only ever replaced when a new one is actually sent.
-        if ($activity->hasBonusUpload() && $request->hasFile('file')) {
+        if ($activity->hasUpload() && $request->hasFile('file')) {
             $upload = $request->file('file');
             $previous = $submission->file_path;
             $submission->file_path = $upload->store('academic-submissions/'.$activity->id, 'public');
@@ -373,11 +373,21 @@ class AcademicoController extends Controller
             }
         }
 
-        if ($data['action'] === 'enviar') {
+        // A required work file blocks the final send: the answers are still saved as a
+        // draft (nothing typed is lost) and the student is told what is missing.
+        $missingRequiredFile = $data['action'] === 'enviar' && $activity->upload_required && ! $submission->hasFile();
+
+        if ($data['action'] === 'enviar' && ! $missingRequiredFile) {
             $submission->submitted_at = now();
         }
 
         $submission->save();
+
+        if ($missingRequiredFile) {
+            return redirect()
+                ->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug])
+                ->withErrors(['file' => 'Para enviar la actividad debes adjuntar tu trabajo en PDF o Word. Tus respuestas quedaron guardadas como borrador: sube el archivo y vuelve a enviar.']);
+        }
 
         if ($request->wantsJson()) {
             return response()->json([

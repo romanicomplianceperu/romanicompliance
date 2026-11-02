@@ -61,6 +61,9 @@
       </select>
     </div>
     <div class="form-group">
+      <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="upload_required" value="1" @checked($activity->upload_required) style="width:auto;"> Entrega del trabajo en PDF o Word obligatoria para enviar</label>
+    </div>
+    <div class="form-group">
       <label>Fecha y hora límite</label>
       <input type="datetime-local" name="due_at" value="{{ $activity->due_at ? $activity->due_at->format('Y-m-d\TH:i') : '' }}">
     </div>
@@ -175,8 +178,8 @@
                   <em>Todavía no envió la actividad — no hay respuestas de ejercicios que mostrar.</em>
                 @endif
 
-                @if($activity->hasBonusUpload())
-                  <div style="font-weight:700;margin:14px 0 8px;">Pregunta de desarrollo opcional (texto o archivo, +{{ $activity->upload_bonus_points }} pts extra)</div>
+                @if($activity->hasUpload())
+                  <div style="font-weight:700;margin:14px 0 8px;">{{ $activity->upload_required ? 'Trabajo del caso (PDF/Word) — obligatorio, lo califica el docente' : 'Pregunta de desarrollo opcional (texto o archivo, +'.$activity->upload_bonus_points.' pts extra)' }}</div>
                   @if($submission->hasFile())
                     <div><a href="{{ $submission->fileUrl() }}" target="_blank" rel="noopener">📎 {{ $submission->file_name ?: 'Ver archivo' }}</a></div>
                   @else

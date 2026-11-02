@@ -80,7 +80,10 @@ class AcademicoController extends Controller
     public function installWeek7()
     {
         try {
-            Artisan::call('migrate', ['--path' => 'database/migrations/2026_10_19_120000_add_bonus_upload_to_academic_activities.php', '--force' => true]);
+            Artisan::call('migrate', ['--path' => [
+                'database/migrations/2026_10_19_120000_add_bonus_upload_to_academic_activities.php',
+                'database/migrations/2026_11_02_120000_add_upload_required_to_academic_activities.php',
+            ], '--force' => true]);
             Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\AcademicoSemana7Seeder', '--force' => true]);
         } catch (\Throwable $e) {
             return back()->with('error', 'No se pudo instalar: '.$e->getMessage());
@@ -101,6 +104,7 @@ class AcademicoController extends Controller
             'access_code' => $data['access_code'] ?: null,
             'due_at' => $data['due_at'] ?: null,
             'status' => $data['status'],
+            'upload_required' => $request->boolean('upload_required'),
         ]);
 
         return back()->with('success', 'Configuración de la actividad actualizada.');

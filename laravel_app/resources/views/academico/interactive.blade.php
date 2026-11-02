@@ -208,12 +208,12 @@
         </div>
       @endif
 
-      @if($activity->hasBonusUpload())
+      @if($activity->hasUpload())
         <div class="ac-ex-section">
-          <h3>{{ $activity->questions->count() > 0 ? 'Trabajo del caso · Entrega en PDF o Word (extra opcional)' : 'Ejercicio 6 · Pregunta de desarrollo (extra opcional)' }}</h3>
+          <h3>{{ $activity->upload_required ? 'Trabajo del caso · Entrega obligatoria en PDF o Word' : ($activity->questions->count() > 0 ? 'Trabajo del caso · Entrega en PDF o Word (extra opcional)' : 'Ejercicio 6 · Pregunta de desarrollo (extra opcional)') }}</h3>
           <div class="ac-ex-card ac-upload-card">
             <div class="ac-ex-header">
-              <span class="ac-ex-points">+{{ $activity->upload_bonus_points }} pts extra</span>
+              <span class="ac-ex-points">{{ $activity->upload_required ? 'Obligatorio' : '+'.$activity->upload_bonus_points.' pts extra' }}</span>
               <div class="ac-ex-prompt">{{ $activity->questions->count() > 0 ? 'Sube el trabajo de tu equipo (PDF o Word)' : 'Responde escribiendo aquí o sube tu archivo (PDF o Word)' }}</div>
             </div>
             @if($activity->upload_prompt)
@@ -223,7 +223,9 @@
                 @endforeach
               </div>
             @endif
-            @if($activity->questions->count() > 0)
+            @if($activity->upload_required)
+              <div class="ac-optional-notice" style="color:#B3413B;background:rgba(179,65,59,0.08);">📎 La entrega del trabajo en PDF o Word es OBLIGATORIA: no podrás enviar la actividad sin adjuntarlo. Tu docente lo califica (no suma a los {{ $activity->exercises->sum('points') }} puntos autocalificables).</div>
+            @elseif($activity->questions->count() > 0)
               <div class="ac-optional-notice">📎 La entrega del trabajo no afecta tu nota de 0 a 20: si adjuntas tu archivo PDF o Word se suman +{{ $activity->upload_bonus_points }} puntos extra y tu docente lo revisa.</div>
             @else
             <div class="ac-optional-notice">📎 Este ejercicio es opcional: no afecta tu nota de 0 a 20. Si respondes escribiendo aquí (mínimo {{ \App\Models\AcademicSubmission::BONUS_TEXT_MIN_CHARS }} caracteres) o subes un archivo, se suman +{{ $activity->upload_bonus_points }} puntos extra.</div>
@@ -269,7 +271,7 @@
             <h3>Respuesta crítica</h3>
           </div>
           <p class="ac-ex-intro">Estas son las preguntas del caso que revisa directamente su docente; respondan con argumentos propios.</p>
-          @if($activity->hasBonusUpload())
+          @if($activity->hasUpload())
             <div class="ac-optional-notice">📝 Estas preguntas del caso las revisa directamente tu docente: no suman a los {{ $activity->exercises->sum('points') }} puntos autocalificables. Respóndanlas aquí y, además, pueden subir su trabajo completo en PDF o Word más abajo.</div>
           @else
             <div class="ac-optional-notice">📝 Estas preguntas son opcionales y no suman a los {{ $activity->exercises->sum('points') }} puntos autocalificables, pero tu docente las considerará como puntaje adicional para el curso en general.</div>
@@ -1151,7 +1153,18 @@
   if (openBtn && submitModal) {
     const cancelBtn = document.getElementById('cancelSubmitConfirm');
     const confirmBtn = document.getElementById('confirmSubmitBtn');
-    openBtn.addEventListener('click', () => submitModal.classList.add('active'));
+    openBtn.addEventListener('click', () => {
+      // Required work file: tell the student right away instead of after a round trip.
+      const needsFile = @json((bool) $activity->upload_required) && ! @json($submission->hasFile());
+      const fileInput = document.getElementById('bonusFile');
+      if (needsFile && fileInput && ! fileInput.files.length) {
+        const card = document.querySelector('.ac-upload-card');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        alert('Para enviar la actividad debes adjuntar tu trabajo en PDF o Word.');
+        return;
+      }
+      submitModal.classList.add('active');
+    });
     cancelBtn.addEventListener('click', () => submitModal.classList.remove('active'));
     submitModal.querySelector('.modal-backdrop').addEventListener('click', () => submitModal.classList.remove('active'));
     confirmBtn.addEventListener('click', () => {

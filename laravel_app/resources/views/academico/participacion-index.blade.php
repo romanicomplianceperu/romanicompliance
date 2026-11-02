@@ -43,7 +43,7 @@
         </div>
       @endif
     @empty
-      <p style="color:var(--slate-light);font-size:0.86rem;">Todavía no hay actividades de participación publicadas.</p>
+      <p style="color:var(--slate-light);font-size:0.86rem;">Por ahora no hay actividades habilitadas.</p>
     @endforelse
   </div>
 </div>

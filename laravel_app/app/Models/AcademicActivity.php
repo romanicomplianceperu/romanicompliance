@@ -12,11 +12,12 @@ class AcademicActivity extends Model
         'academic_course_id', 'slug', 'week_number', 'type', 'title',
         'case_title', 'unit', 'modality', 'group_size', 'case_body',
         'case_document_path', 'status', 'access_code', 'due_at', 'pass_percent',
-        'upload_prompt', 'upload_bonus_points',
+        'upload_prompt', 'upload_bonus_points', 'upload_required',
     ];
 
     protected $casts = [
         'due_at' => 'datetime',
+        'upload_required' => 'boolean',
     ];
 
     public function course(): BelongsTo
@@ -163,6 +164,15 @@ class AcademicActivity extends Model
     public function hasBonusUpload(): bool
     {
         return (int) $this->upload_bonus_points > 0;
+    }
+
+    /**
+     * Whether this activity has the "Trabajo del caso" upload card at all: either an
+     * optional upload that earns bonus points, or a required one the docente grades.
+     */
+    public function hasUpload(): bool
+    {
+        return $this->hasBonusUpload() || $this->upload_required;
     }
 
     /**

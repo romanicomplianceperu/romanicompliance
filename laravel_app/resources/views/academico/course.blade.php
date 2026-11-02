@@ -46,7 +46,7 @@
     </div>
 
     <h3 style="font-size:0.98rem;color:var(--ink);margin-bottom:1rem;">Actividades</h3>
-    @forelse($course->activities()->reorder()->orderByRaw("status = 'disponible' desc")->orderByDesc('week_number')->get() as $activity)
+    @forelse($course->activities()->reorder()->where('status', 'disponible')->orderByDesc('week_number')->get() as $activity)
       @if($activity->isAvailable())
         <a href="{{ route('academico.activity.show', [$university->slug, $course->slug, $activity->slug]) }}" class="ac-activity-card">
           <span class="ac-activity-week">S{{ $activity->week_number }}</span>
@@ -67,7 +67,7 @@
         </div>
       @endif
     @empty
-      <p style="color:var(--slate-light);font-size:0.86rem;">Todavía no hay actividades programadas.</p>
+      <p style="color:var(--slate-light);font-size:0.86rem;">Por ahora no hay actividades habilitadas.</p>
     @endforelse
   </div>
 </div>

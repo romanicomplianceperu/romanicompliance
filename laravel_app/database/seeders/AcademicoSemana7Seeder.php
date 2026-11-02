@@ -19,7 +19,7 @@ use Illuminate\Database\Seeder;
  * Cada actividad tiene 5 ejercicios largos autocalificables (verdadero o falso, ordenar,
  * completar con selector, crucigrama y marcar; 4 pts c/u = 20 puntos, con puntaje parcial),
  * más un caso complejo con preguntas de desarrollo que revisa el docente y la entrega
- * opcional del trabajo en PDF o Word (+3 puntos extra). Plazo de los tres cursos: viernes
+ * OBLIGATORIA del trabajo en PDF o Word (se califica aparte, sin puntos extra automáticos). Plazo de los tres cursos: viernes
  * 6 de noviembre de 2026, 8:00 p. m. (hora de Lima); se puede cambiar desde el panel admin
  * (Académico → actividad → «Fecha y hora límite»).
  *
@@ -71,7 +71,10 @@ class AcademicoSemana7Seeder extends Seeder
                 'due_at' => Carbon::parse('2026-11-06 20:00:00', 'America/Lima')->utc(),
                 'pass_percent' => 55,
                 'upload_prompt' => $config['activity']['upload_prompt'],
-                'upload_bonus_points' => 3,
+                // Entrega del trabajo (PDF/Word) OBLIGATORIA para enviar; la califica el docente,
+                // por eso no suma puntos extra automáticos.
+                'upload_required' => true,
+                'upload_bonus_points' => null,
             ]
         );
 
@@ -101,7 +104,7 @@ class AcademicoSemana7Seeder extends Seeder
             ->delete();
 
         $total = array_sum(array_column($config['exercises'], 'points'));
-        $this->command?->info("Académico: {$course->name} (UNP) — Actividad Semana 7 sembrada: {$total} pts autocalificables en ".count($config['exercises']).' ejercicios, '.count($config['questions']).' preguntas del caso y entrega opcional (+3).');
+        $this->command?->info("Académico: {$course->name} (UNP) — Actividad Semana 7 sembrada: {$total} pts autocalificables en ".count($config['exercises']).' ejercicios, '.count($config['questions']).' preguntas del caso y entrega obligatoria del trabajo.');
     }
 
     // ───────────────────────────── DERECHO INFORMÁTICO ─────────────────────────────
@@ -129,7 +132,7 @@ Código Procesal Constitucional (Ley N.° 31307): hábeas data, reclamo previo d
 Ley N.° 29733, Ley de Protección de Datos Personales y su Reglamento (D.S. N.° 016-2024-JUS): datos sensibles, derechos ARCO, tutela ante la ANPD.
 
 INSTRUCCIONES
-1) Resuelvan los cinco ejercicios interactivos (20 puntos, se califican solos). 2) Contesten las preguntas del caso en los cuadros de texto: las revisa directamente su docente. 3) Si desean, suban su trabajo completo en PDF o Word para ganar +3 puntos extra. Plazo: viernes 6 de noviembre, 8:00 p. m. Tiempo estimado: 90 minutos.
+1) Resuelvan los cinco ejercicios interactivos (20 puntos, se califican solos). 2) Contesten las preguntas del caso en los cuadros de texto: las revisa directamente su docente. 3) Suban su trabajo completo en PDF o Word: la entrega es OBLIGATORIA para poder enviar la actividad. Plazo: viernes 6 de noviembre, 8:00 p. m. Tiempo estimado: 90 minutos.
 TXT;
 
         $questions = [
@@ -349,7 +352,7 @@ Ley N.° 26887, Ley General de Sociedades: arts. 153-157 y 164 (directorio y vot
 Código Penal, art. 198 (administración fraudulenta) y Ley N.° 30424 (responsabilidad administrativa de la persona jurídica).
 
 INSTRUCCIONES
-1) Resuelvan los cinco ejercicios interactivos (20 puntos, se califican solos). 2) Contesten las preguntas del caso en los cuadros de texto: las revisa directamente su docente. 3) Si desean, suban su trabajo completo en PDF o Word para ganar +3 puntos extra. Plazo: viernes 6 de noviembre, 8:00 p. m. Tiempo estimado: 90 minutos.
+1) Resuelvan los cinco ejercicios interactivos (20 puntos, se califican solos). 2) Contesten las preguntas del caso en los cuadros de texto: las revisa directamente su docente. 3) Suban su trabajo completo en PDF o Word: la entrega es OBLIGATORIA para poder enviar la actividad. Plazo: viernes 6 de noviembre, 8:00 p. m. Tiempo estimado: 90 minutos.
 TXT;
 
         $questions = [
@@ -571,7 +574,7 @@ BASE NORMATIVA DE REFERENCIA
 TUO de la Ley N.° 27444, Ley del Procedimiento Administrativo General: arts. 3 (requisitos de validez), 10 (causales de nulidad), 12 y 13 (efectos), 14 (conservación), 212 (rectificación de errores), 213 (nulidad de oficio), 218 (recursos y plazo) y 226 (suspensión de la ejecución).
 
 INSTRUCCIONES
-1) Resuelvan los cinco ejercicios interactivos (20 puntos, se califican solos). 2) Contesten las preguntas del caso en los cuadros de texto: las revisa directamente su docente. 3) Si desean, suban su trabajo completo en PDF o Word para ganar +3 puntos extra. Plazo: viernes 6 de noviembre, 8:00 p. m. Tiempo estimado: 90 minutos.
+1) Resuelvan los cinco ejercicios interactivos (20 puntos, se califican solos). 2) Contesten las preguntas del caso en los cuadros de texto: las revisa directamente su docente. 3) Suban su trabajo completo en PDF o Word: la entrega es OBLIGATORIA para poder enviar la actividad. Plazo: viernes 6 de noviembre, 8:00 p. m. Tiempo estimado: 90 minutos.
 TXT;
 
         $questions = [
