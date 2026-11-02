@@ -12,12 +12,13 @@ class AcademicActivity extends Model
         'academic_course_id', 'slug', 'week_number', 'type', 'title',
         'case_title', 'unit', 'modality', 'group_size', 'case_body',
         'case_document_path', 'status', 'access_code', 'due_at', 'pass_percent',
-        'upload_prompt', 'upload_bonus_points', 'upload_required',
+        'upload_prompt', 'upload_bonus_points', 'upload_required', 'is_hidden',
     ];
 
     protected $casts = [
         'due_at' => 'datetime',
         'upload_required' => 'boolean',
+        'is_hidden' => 'boolean',
     ];
 
     public function course(): BelongsTo
@@ -47,7 +48,33 @@ class AcademicActivity extends Model
 
     public function isAvailable(): bool
     {
-        return $this->status === 'disponible';
+        return $this->status === 'disponible' && ! $this->is_hidden;
+    }
+
+    /**
+     * Activities students may see listed (hidden ones never are).
+     */
+    public function scopeVisible($query)
+    {
+        return $query->where('is_hidden', false);
+    }
+
+    /**
+     * Subtitle label of the activity in the lists: a graded work (the one that requires
+     * the student's file) reads "Trabajo calificado" instead of "Participación".
+     */
+    public function typeLabel(): string
+    {
+        return $this->upload_required ? 'Trabajo calificado' : ucfirst($this->type);
+    }
+
+    /**
+     * Badge text for the lists. Closed activities read "Vencida" (neutral grey) rather
+     * than a red "Cerrada", so students don't think the activity was taken away.
+     */
+    public function statusLabel(): string
+    {
+        return $this->status === 'cerrada' ? 'Vencida' : ucfirst($this->status);
     }
 
     public function requiresAccessCode(): bool

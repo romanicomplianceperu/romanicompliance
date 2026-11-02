@@ -43,13 +43,17 @@ class AcademicoSemana7Seeder extends Seeder
         }
 
         // Solo estas tres actividades (basadas en las diapositivas de la Semana 7) quedan
-        // habilitadas: TODAS las demás —de cualquier semana, incluidas otras actividades de
-        // Semana 7 creadas aparte— se marcan como cerradas (inhabilitadas), pero siguen
-        // listadas en gris. Se pueden reabrir una por una desde el panel admin
-        // (Académico → actividad → Estado).
+        // habilitadas. En la Semana 7 solo existe «SEMANA 7 - TRABAJO CALIFICADO»: cualquier
+        // otra actividad de Semana 7 creada aparte se cierra y se OCULTA por completo. Las
+        // demás semanas se cierran pero siguen listadas, con la etiqueta gris «Vencida».
+        // Todo se puede revertir una por una desde el panel admin (Académico → actividad).
         $keep = array_map(fn ($c) => $c['activity']['slug'], [$this->informatico(), $this->mercantil(), $this->procesal()]);
-        $closed = AcademicActivity::whereNotIn('slug', $keep)->where('status', '!=', 'cerrada')->update(['status' => 'cerrada']);
-        $this->command?->info("Académico: {$closed} actividad(es) anteriores inhabilitadas (cerradas).");
+
+        $hidden = AcademicActivity::whereNotIn('slug', $keep)->where('week_number', 7)
+            ->update(['status' => 'cerrada', 'is_hidden' => true]);
+        $closed = AcademicActivity::whereNotIn('slug', $keep)->where('week_number', '!=', 7)->where('status', '!=', 'cerrada')
+            ->update(['status' => 'cerrada']);
+        $this->command?->info("Académico: {$hidden} actividad(es) de Semana 7 ocultas y {$closed} de otras semanas marcadas como vencidas.");
     }
 
     private function seed(AcademicUniversity $unp, array $config): void
@@ -69,6 +73,7 @@ class AcademicoSemana7Seeder extends Seeder
                 'unit' => $config['activity']['unit'],
                 'case_body' => $config['activity']['case_body'],
                 'status' => 'disponible',
+                'is_hidden' => false,
                 'access_code' => $config['activity']['access_code'],
                 // Viernes 6 de noviembre de 2026, 8:00 p. m. (Lima). Editable desde el admin.
                 'due_at' => Carbon::parse('2026-11-06 20:00:00', 'America/Lima')->utc(),

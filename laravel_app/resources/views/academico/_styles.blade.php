@@ -103,7 +103,7 @@
 .ac-status-badge { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 11px; border-radius: 20px; flex-shrink: 0; }
 .ac-status-badge.disponible { background: rgba(31,122,77,0.1); color: #1F7A4D; }
 .ac-status-badge.proximamente { background: var(--ivory-dim); color: var(--slate-light); }
-.ac-status-badge.cerrada { background: rgba(179,65,59,0.08); color: #B3413B; }
+.ac-status-badge.cerrada { background: var(--ivory-dim); color: var(--slate-light); }
 .ac-status-badge.enviada { background: rgba(31,122,77,0.1); color: #1F7A4D; }
 .ac-status-badge.borrador { background: rgba(184,148,46,0.12); color: #8A6D1E; }
 .ac-status-badge.pendiente { background: var(--ivory-dim); color: var(--slate-light); }

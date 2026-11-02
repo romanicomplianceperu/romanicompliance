@@ -28,18 +28,18 @@
           <span class="ac-activity-week">S{{ $activity->week_number }}</span>
           <span class="ac-activity-body">
             <h4>{{ $activity->title }}</h4>
-            <p>{{ $activity->case_title ?? 'Participación en clase' }}</p>
+            <p>{{ $activity->upload_required ? 'Trabajo calificado'.($activity->case_title ? ': '.$activity->case_title : '') : ($activity->case_title ?? 'Participación en clase') }}</p>
           </span>
-          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->status === 'cerrada' ? 'Inhabilitada' : ucfirst($activity->status) }}</span>
+          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->statusLabel() }}</span>
         </a>
       @else
         <div class="ac-activity-card" style="opacity:0.55;cursor:default;">
           <span class="ac-activity-week">S{{ $activity->week_number }}</span>
           <span class="ac-activity-body">
             <h4>{{ $activity->title }}</h4>
-            <p>{{ $activity->case_title ?? 'Participación en clase' }}</p>
+            <p>{{ $activity->upload_required ? 'Trabajo calificado'.($activity->case_title ? ': '.$activity->case_title : '') : ($activity->case_title ?? 'Participación en clase') }}</p>
           </span>
-          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->status === 'cerrada' ? 'Inhabilitada' : ucfirst($activity->status) }}</span>
+          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->statusLabel() }}</span>
         </div>
       @endif
     @empty

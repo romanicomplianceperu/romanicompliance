@@ -64,6 +64,9 @@
       <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="upload_required" value="1" @checked($activity->upload_required) style="width:auto;"> Entrega del trabajo en PDF o Word obligatoria para enviar</label>
     </div>
     <div class="form-group">
+      <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="is_hidden" value="1" @checked($activity->is_hidden) style="width:auto;"> Ocultar esta actividad a los alumnos (no aparece en ninguna lista)</label>
+    </div>
+    <div class="form-group">
       <label>Fecha y hora límite</label>
       <input type="datetime-local" name="due_at" value="{{ $activity->due_at ? $activity->due_at->format('Y-m-d\TH:i') : '' }}">
     </div>

@@ -13,8 +13,8 @@
 @include('academico._course-tabs')
 
 @php
-  $currentActivity = $course->activities()->where('type', 'participacion')->where('status', 'disponible')->orderByDesc('week_number')->first()
-      ?? $course->activities()->where('type', 'participacion')->orderBy('week_number')->first();
+  $currentActivity = $course->activities()->visible()->where('type', 'participacion')->where('status', 'disponible')->orderByDesc('week_number')->first()
+      ?? $course->activities()->visible()->where('type', 'participacion')->orderBy('week_number')->first();
   $totalWeeks = $course->total_weeks ?: 16;
 @endphp
 
@@ -32,38 +32,38 @@
         <div class="k">Actividad actual</div>
         <div class="v" style="font-size:1rem;">{{ $currentActivity->title ?? 'Sin actividades aún' }}</div>
         @if($currentActivity)
-          <span class="ac-status-badge {{ $currentActivity->status }}" style="margin-top:8px;display:inline-block;">{{ ucfirst($currentActivity->status) }}</span>
+          <span class="ac-status-badge {{ $currentActivity->status }}" style="margin-top:8px;display:inline-block;">{{ $currentActivity->statusLabel() }}</span>
         @endif
       </div>
       <div class="ac-widget">
         <div class="k">Participaciones realizadas</div>
-        <div class="v">0 <small>de {{ $course->activities()->where('type', 'participacion')->count() }}</small></div>
+        <div class="v">0 <small>de {{ $course->activities()->visible()->where('type', 'participacion')->count() }}</small></div>
       </div>
       <div class="ac-widget">
         <div class="k">Actividades pendientes</div>
-        <div class="v">{{ $course->activities()->where('status', 'disponible')->count() }}</div>
+        <div class="v">{{ $course->activities()->visible()->where('status', 'disponible')->count() }}</div>
       </div>
     </div>
 
     <h3 style="font-size:0.98rem;color:var(--ink);margin-bottom:1rem;">Actividades</h3>
-    @forelse($course->activities()->reorder()->orderByRaw("status = 'disponible' desc")->orderByDesc('week_number')->get() as $activity)
+    @forelse($course->activities()->visible()->reorder()->orderByRaw("status = 'disponible' desc")->orderByDesc('week_number')->get() as $activity)
       @if($activity->isAvailable())
         <a href="{{ route('academico.activity.show', [$university->slug, $course->slug, $activity->slug]) }}" class="ac-activity-card">
           <span class="ac-activity-week">S{{ $activity->week_number }}</span>
           <span class="ac-activity-body">
             <h4>{{ $activity->title }}</h4>
-            <p>{{ ucfirst($activity->type) }}{{ $activity->case_title ? ': '.$activity->case_title : '' }}</p>
+            <p>{{ $activity->typeLabel() }}{{ $activity->case_title ? ': '.$activity->case_title : '' }}</p>
           </span>
-          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->status === 'cerrada' ? 'Inhabilitada' : ucfirst($activity->status) }}</span>
+          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->statusLabel() }}</span>
         </a>
       @else
         <div class="ac-activity-card" style="opacity:0.55;cursor:default;">
           <span class="ac-activity-week">S{{ $activity->week_number }}</span>
           <span class="ac-activity-body">
             <h4>{{ $activity->title }}</h4>
-            <p>{{ ucfirst($activity->type) }}{{ $activity->case_title ? ': '.$activity->case_title : '' }}</p>
+            <p>{{ $activity->typeLabel() }}{{ $activity->case_title ? ': '.$activity->case_title : '' }}</p>
           </span>
-          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->status === 'cerrada' ? 'Inhabilitada' : ucfirst($activity->status) }}</span>
+          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->statusLabel() }}</span>
         </div>
       @endif
     @empty
