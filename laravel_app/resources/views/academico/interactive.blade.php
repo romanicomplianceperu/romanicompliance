@@ -73,9 +73,9 @@
         @if($grading['bonus_possible'] > 0)
           <div class="score-bonus {{ $grading['bonus_points'] > 0 ? 'earned' : '' }}">
             @if($grading['bonus_points'] > 0)
-              ⭐ +{{ $grading['bonus_points'] }} puntos extra por tu respuesta de desarrollo · Puntaje final: {{ $grading['earned_points'] + $grading['bonus_points'] }} (máx. {{ $grading['total_points'] + $grading['bonus_possible'] }})
+              ⭐ +{{ $grading['bonus_points'] }} puntos extra por tu entrega · Puntaje final: {{ $grading['earned_points'] + $grading['bonus_points'] }} (máx. {{ $grading['total_points'] + $grading['bonus_possible'] }})
             @else
-              No sumaste los +{{ $grading['bonus_possible'] }} puntos extra del ejercicio 6 (ni respuesta escrita suficiente ni archivo).
+              No sumaste los +{{ $grading['bonus_possible'] }} puntos extra del ejercicio 6 (sin respuesta escrita suficiente ni archivo adjunto).
             @endif
           </div>
         @endif
@@ -210,11 +210,11 @@
 
       @if($activity->hasBonusUpload())
         <div class="ac-ex-section">
-          <h3>Ejercicio 6 · Pregunta de desarrollo (extra opcional)</h3>
+          <h3>{{ $activity->questions->count() > 0 ? 'Trabajo del caso · Entrega en PDF o Word (extra opcional)' : 'Ejercicio 6 · Pregunta de desarrollo (extra opcional)' }}</h3>
           <div class="ac-ex-card ac-upload-card">
             <div class="ac-ex-header">
               <span class="ac-ex-points">+{{ $activity->upload_bonus_points }} pts extra</span>
-              <div class="ac-ex-prompt">Responde escribiendo aquí o sube tu archivo (PDF o Word)</div>
+              <div class="ac-ex-prompt">{{ $activity->questions->count() > 0 ? 'Sube el trabajo de tu equipo (PDF o Word)' : 'Responde escribiendo aquí o sube tu archivo (PDF o Word)' }}</div>
             </div>
             @if($activity->upload_prompt)
               <div class="ac-upload-brief">
@@ -223,7 +223,11 @@
                 @endforeach
               </div>
             @endif
+            @if($activity->questions->count() > 0)
+              <div class="ac-optional-notice">📎 La entrega del trabajo no afecta tu nota de 0 a 20: si adjuntas tu archivo PDF o Word se suman +{{ $activity->upload_bonus_points }} puntos extra y tu docente lo revisa.</div>
+            @else
             <div class="ac-optional-notice">📎 Este ejercicio es opcional: no afecta tu nota de 0 a 20. Si respondes escribiendo aquí (mínimo {{ \App\Models\AcademicSubmission::BONUS_TEXT_MIN_CHARS }} caracteres) o subes un archivo, se suman +{{ $activity->upload_bonus_points }} puntos extra.</div>
+            @endif
 
             @if($errors->has('file'))
               <div class="ac-form-error">{{ $errors->first('file') }}</div>
@@ -235,14 +239,18 @@
               </div>
             @endif
 
+            @if($activity->questions->count() === 0)
             <div class="ac-bonus-write">
               <div class="ac-bonus-label">✍️ Opción A: escribe tu respuesta aquí</div>
               <textarea id="bonusText" maxlength="8000" placeholder="Desarrollen su respuesta a los puntos 1, 2 y 3…" {{ $canEdit ? '' : 'disabled' }}>{{ $submission->bonusText() }}</textarea>
               <div class="ac-question-footer"><span class="ac-char-count" id="bonusTextCount">0 / 8000</span></div>
             </div>
+            @endif
 
             @if($canEdit)
-              <div class="ac-bonus-label" style="margin-top:0.4rem;">📎 Opción B: sube un archivo</div>
+              @if($activity->questions->count() === 0)
+                <div class="ac-bonus-label" style="margin-top:0.4rem;">📎 Opción B: sube un archivo</div>
+              @endif
               <label class="ac-upload-drop" for="bonusFile">
                 <span class="ac-upload-icon">⬆</span>
                 <span class="ac-upload-label" id="bonusFileLabel">{{ $submission->hasFile() ? 'Elegir otro archivo para reemplazarlo' : 'Toca aquí para elegir tu archivo' }}</span>
@@ -261,7 +269,11 @@
             <h3>Respuesta crítica</h3>
           </div>
           <p class="ac-ex-intro">Estas son las preguntas del caso que revisa directamente su docente; respondan con argumentos propios.</p>
-          <div class="ac-optional-notice">📝 Estas preguntas son opcionales y no suman a los {{ $activity->exercises->sum('points') }} puntos autocalificables, pero tu docente las considerará como puntaje adicional para el curso en general.</div>
+          @if($activity->hasBonusUpload())
+            <div class="ac-optional-notice">📝 Estas preguntas del caso las revisa directamente tu docente: no suman a los {{ $activity->exercises->sum('points') }} puntos autocalificables. Respóndanlas aquí y, además, pueden subir su trabajo completo en PDF o Word más abajo.</div>
+          @else
+            <div class="ac-optional-notice">📝 Estas preguntas son opcionales y no suman a los {{ $activity->exercises->sum('points') }} puntos autocalificables, pero tu docente las considerará como puntaje adicional para el curso en general.</div>
+          @endif
           @php $savedQuestions = $submission->answers['questions'] ?? []; @endphp
           @foreach($activity->questions as $i => $question)
             <div class="ac-question-card">

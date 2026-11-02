@@ -21,6 +21,15 @@
 </div>
 
 <div class="card" style="margin-bottom:1.2rem;">
+  <h3 style="font-size:1rem;margin-bottom:6px;">Publicar Semana 7 — los 3 cursos de la UNP</h3>
+  <div class="form-hint" style="margin-bottom:12px;">Instala la actividad de Derecho Informático (hábeas data), Derecho Mercantil II (directorio y gerencia) y Derecho Procesal Administrativo (nulidad del acto). Plazo: viernes 6 de noviembre, 8:00 p. m. (lo cambias en cada actividad → «Fecha y hora límite»). Puedes volver a pulsarlo sin riesgo. Códigos de acceso: <strong>digital20262</strong> (Informático), <strong>mercantil0611</strong> (Mercantil II), <strong>procesal0611</strong> (Procesal Administrativo).</div>
+  <form method="POST" action="{{ route('admin.academico.install-week7') }}">
+    @csrf
+    <button type="submit" class="btn btn-gold btn-sm">Instalar / actualizar Semana 7</button>
+  </form>
+</div>
+
+<div class="card" style="margin-bottom:1.2rem;">
   <form method="GET" action="{{ route('admin.academico.index') }}" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;">
     <div>
       <label class="form-hint" style="display:block;margin-bottom:4px;">Universidad</label>

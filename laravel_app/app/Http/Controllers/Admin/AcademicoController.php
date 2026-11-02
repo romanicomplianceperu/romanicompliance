@@ -72,6 +72,23 @@ class AcademicoController extends Controller
         return back()->with('success', 'Actividad Semana 6 de Derecho Informático instalada y lista en la web.');
     }
 
+    /**
+     * Publishes the Semana 7 activities (Derecho Informático, Derecho Mercantil II and
+     * Derecho Procesal Administrativo) from the admin panel, without SSH. Same idea as
+     * installWeek6(): idempotent, never touches students' saved submissions.
+     */
+    public function installWeek7()
+    {
+        try {
+            Artisan::call('migrate', ['--path' => 'database/migrations/2026_10_19_120000_add_bonus_upload_to_academic_activities.php', '--force' => true]);
+            Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\AcademicoSemana7Seeder', '--force' => true]);
+        } catch (\Throwable $e) {
+            return back()->with('error', 'No se pudo instalar: '.$e->getMessage());
+        }
+
+        return back()->with('success', 'Actividades de la Semana 7 instaladas: Derecho Informático, Derecho Mercantil II y Derecho Procesal Administrativo.');
+    }
+
     public function update(Request $request, AcademicActivity $activity)
     {
         $data = $request->validate([
