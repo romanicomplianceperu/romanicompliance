@@ -6,7 +6,7 @@
 @section('description', $service['card'])
 
 @section('styles')
-.sv-hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(56px, 8vw, 110px) 0 clamp(64px, 8vw, 104px); }
+.sv-hero { position: relative; overflow: hidden; background: linear-gradient(135deg, #0E2766 0%, #143A9C 55%, #2050D6 100%); color: #fff; padding: clamp(44px, 6vw, 80px) 0 clamp(48px, 6vw, 80px); }
 .sv-hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 56px 56px; animation: gridMove 24s linear infinite; mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, #000 10%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, #000 10%, transparent 75%); opacity: .7; }
 .sv-hero::after { content: ''; position: absolute; width: 560px; height: 560px; right: -160px; top: -200px; border-radius: 50%; background: radial-gradient(circle, rgba(31,79,216,.5), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
 @keyframes gridMove { to { background-position: 56px 56px, 56px 56px; } }
@@ -14,7 +14,7 @@
 .sv-hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1.35fr 1fr; gap: 56px; align-items: end; }
 .sv-crumb { display: flex; gap: 8px; align-items: center; font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,.6); margin-bottom: 28px; }
 .sv-crumb a:hover { color: #fff; }
-.sv-hero .lead { color: rgba(255,255,255,.72); }
+.sv-hero .lead { color: rgba(255,255,255,.82); }
 .sv-side { color: var(--ink); box-shadow: 0 30px 80px -30px rgba(0,0,0,.6); }
 .sv-hero .lead { margin: 24px 0 36px; }
 .sv-actions { display: flex; gap: 12px; flex-wrap: wrap; }

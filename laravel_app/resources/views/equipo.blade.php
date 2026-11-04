@@ -37,7 +37,7 @@
 <section class="pg-hero">
   <div class="wrap">
     <div class="kicker rv">Equipo</div>
-    <h1 class="display rv" style="font-size:clamp(2.4rem,5.4vw,4.6rem)">Las personas detrás de cada caso.</h1>
+    <h1 class="display rv">Las personas detrás de cada caso.</h1>
     <p class="lead rv">Abogados y especialistas en compliance, prevención de lavado de activos y derecho penal económico, con un mismo estándar de rigor y reserva.</p>
   </div>
 </section>

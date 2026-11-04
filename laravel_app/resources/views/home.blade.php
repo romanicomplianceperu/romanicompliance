@@ -4,27 +4,27 @@
 
 @section('styles')
 /* Portada */
-.hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(64px, 9vw, 120px) 0 clamp(56px, 7vw, 96px); }
+.hero { position: relative; overflow: hidden; background: linear-gradient(135deg, #0E2766 0%, #143A9C 55%, #2050D6 100%); color: #fff; padding: clamp(44px, 6vw, 80px) 0 clamp(40px, 5vw, 64px); }
 .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); animation: gridMove 22s linear infinite; }
 @keyframes gridMove { to { background-position: 64px 64px, 64px 64px; } }
 .hero .glow { position: absolute; border-radius: 50%; filter: blur(10px); pointer-events: none; }
-.hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
+.hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(127,163,255,.38), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
 .hero .g2 { width: 420px; height: 420px; left: -160px; bottom: -200px; background: radial-gradient(circle, rgba(127,163,255,.25), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
 @keyframes drift { to { transform: translate(-70px, 60px) scale(1.12); } }
 .hero .wrap { position: relative; z-index: 1; }
 .hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 30px; }
 .hero-tag i { width: 8px; height: 8px; border-radius: 50%; background: #3DDC97; box-shadow: 0 0 0 4px rgba(61,220,151,.18); animation: blink 2.4s ease-in-out infinite; }
 @keyframes blink { 50% { box-shadow: 0 0 0 8px rgba(61,220,151,0); } }
-.hero h1 { max-width: 1040px; }
+.hero h1 { max-width: 900px; font-size: clamp(2.2rem, 4.3vw, 3.9rem); }
 .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(6px); animation: wIn .8s var(--ease) forwards; }
 @keyframes wIn { to { opacity: 1; transform: none; filter: none; } }
-.hero h1 em { font-style: normal; color: var(--blue-l); position: relative; }
-.hero .lead { margin: 28px 0 38px; color: rgba(255,255,255,.72); }
+.hero h1 em { font-style: normal; color: #AFC6FF; position: relative; }
+.hero .lead { margin: 20px 0 28px; color: rgba(255,255,255,.82); max-width: 640px; }
 .hero-acts { display: flex; gap: 12px; flex-wrap: wrap; }
-.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(48px, 7vw, 80px); border-top: 1px solid rgba(255,255,255,.12); }
-.facts div { padding: 26px 26px 0 0; }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(32px, 4.5vw, 52px); border-top: 1px solid rgba(255,255,255,.18); max-width: 900px; }
+.facts div { padding: 20px 26px 0 0; }
 .facts b { display: block; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-.facts span { color: rgba(255,255,255,.62); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
+.facts span { color: rgba(255,255,255,.75); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
 @media (prefers-reduced-motion: reduce) { .hero h1 .w { animation: none; opacity: 1; transform: none; filter: none; } .hero::before, .hero .glow { animation: none; } }
 @media (max-width: 720px) { .facts { grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 36px; border-top: 0; } .facts div { padding: 16px 12px; border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); } .facts b { font-size: 1.7rem; } .facts span { font-size: .76rem; line-height: 1.3; } .hero-acts .b { flex: 1 1 100%; justify-content: center; } }
 
@@ -80,24 +80,21 @@
 @media (max-width: 720px) { .dg { grid-template-columns: 1fr; text-align: left; gap: 0; } .dg .mg { width: 76px; height: 76px; position: absolute; right: 18px; top: 18px; } .dg .mg b { font-size: 0; } .dg h3 { padding-right: 70px; font-size: 1.35rem; } .dg .acts .b { flex: 1 1 100%; justify-content: center; } }
 
 /* Método (sin numeración) */
-.steps4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; position: relative; }
-.steps4 > div { position: relative; padding: 28px; border-radius: 22px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); transition: background .3s, border-color .3s, transform .35s var(--ease); }
-.steps4 > div:hover { background: rgba(127,163,255,.09); border-color: rgba(127,163,255,.3); transform: translateY(-4px); }
-.steps4 .no { width: 52px; height: 52px; border-radius: 16px; background: rgba(127,163,255,.14); color: var(--blue-l); display: grid; place-items: center; font-size: 24px; margin-bottom: 22px; }
-.steps4 h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
-.steps4 p { color: rgba(255,255,255,.65); }
-.steps4 .bar { position: absolute; left: 28px; right: 28px; bottom: 0; height: 3px; border-radius: 3px; background: var(--blue-l); transform: scaleX(0); transform-origin: left; transition: transform 1s var(--ease); }
-.steps4.in .bar { transform: scaleX(1); }
-.steps4.in > div:nth-child(2) .bar { transition-delay: .3s; } .steps4.in > div:nth-child(3) .bar { transition-delay: .6s; } .steps4.in > div:nth-child(4) .bar { transition-delay: .9s; }
-@media (max-width: 1020px) { .steps4 { grid-template-columns: 1fr 1fr; } }
+.hm-split { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(40px, 7vw, 110px); align-items: start; }
+.hm-split .sticky { position: sticky; top: 120px; }
+@media (max-width: 900px) { .hm-split { grid-template-columns: 1fr; gap: 28px; } .hm-split .sticky { position: static; } }
 
 /* Clientes */
 .logos { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 .logos-track { display: flex; gap: 14px; width: max-content; animation: marquee 34s linear infinite; }
 .logos-track > div { width: 200px; height: 92px; border-radius: 18px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; padding: 18px 26px; flex-shrink: 0; }
-.logos-track img { max-height: 46px; max-width: 100%; width: auto; object-fit: contain; filter: grayscale(1); opacity: .75; transition: filter .3s, opacity .3s; }
-.logos-track > div:hover img { filter: none; opacity: 1; }
-.logos-track .txt { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; color: var(--muted); }
+.logos-track img { max-height: 46px; max-width: 100%; width: auto; object-fit: contain; transition: transform .3s var(--ease); }
+.logos-track > div:hover img { transform: scale(1.06); }
+.logos-track > div.dk { background: #0D1227; border-color: #0D1227; }
+.logos-track > div.bm { padding: 8px 10px; }
+.logos-track > div.bm img { max-height: 56px; width: 100%; }
+.logos-track .txt { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; color: #1A1A1A; }
+.logos-track .txt span { color: #C9971C; }
 .logos:hover .logos-track { animation-play-state: paused; }
 @keyframes marquee { to { transform: translateX(calc(-50% - 7px)); } }
 @media (max-width: 720px) { .logos-track > div { width: 150px; height: 72px; padding: 14px 18px; border-radius: 14px; } .logos-track img { max-height: 34px; } .logos-track .txt { font-size: 1.1rem; } }
@@ -166,7 +163,6 @@
   <div class="wrap">
     <div class="sec-head">
       <div><div class="kicker rv">Servicios</div><h2 class="h2 rv">¿Qué necesita resolver?</h2></div>
-      <p class="lead rv m-hide" style="max-width:420px">Elija su situación. Cada servicio tiene su propia página con herramientas para entender su caso.</p>
     </div>
     <div class="svw rv">
       <div class="svw-tabs" role="tablist" aria-label="Servicios">
@@ -195,29 +191,40 @@
       </div>
     </div>
 
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-dark on-dark" id="metodo">
+  <div class="wrap hm-split">
+    <div class="sticky">
+      <div class="kicker rv">Cómo trabajamos</div>
+      <h2 class="h2 rv">Un método claro, de principio a fin.</h2>
+      <p class="lead rv" style="margin-top:18px">En cada servicio sabrá en qué etapa está su caso y qué sigue.</p>
+    </div>
+    <div class="tl">
+      <div class="tl-fill"></div>
+        <div class="tl-step rv" style="--d:0.00s"><div class="tl-dot"></div><div><h3>Diagnóstico inicial</h3><p>Escuchamos su caso y revisamos su exposición.</p></div></div>
+        <div class="tl-step rv" style="--d:0.05s"><div class="tl-dot"></div><div><h3>Análisis de riesgos</h3><p>Identificamos lo urgente y lo que puede esperar.</p></div></div>
+        <div class="tl-step rv" style="--d:0.10s"><div class="tl-dot"></div><div><h3>Estrategia</h3><p>Le proponemos un plan concreto, con plazos y entregables.</p></div></div>
+        <div class="tl-step rv" style="--d:0.15s"><div class="tl-dot"></div><div><h3>Ejecución</h3><p>Documentos, implementación o defensa, con rigor y a tiempo.</p></div></div>
+        <div class="tl-step rv" style="--d:0.20s"><div class="tl-dot"></div><div><h3>Seguimiento</h3><p>Le acompañamos hasta cerrar el caso.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="padding:clamp(40px,5vw,64px) 0 0" id="diagnostico">
+  <div class="wrap">
     <div class="dg rv">
       <div>
-        <span class="pill info">Gratis · 2 minutos</span>
+        <span class="pill info">Gratis · 2 minutos · PDF</span>
         <h3>Mida el riesgo de su organización.</h3>
-        <p class="muted">Nueve preguntas, un puntaje de 0 a 100 y sus prioridades en un PDF que puede descargar.</p>
         <div class="acts">
           <a href="{{ route('services.show', 'compliance-penal') }}#herramienta" class="b b-primary">Empezar diagnóstico @include('site.partials.icon', ['name' => 'arrow'])</a>
           <a href="{{ route('capacitaciones') }}" class="b b-ghost">Capacitación</a>
         </div>
       </div>
       <div class="mg" aria-hidden="true"><svg viewBox="0 0 150 150"><circle class="t" cx="75" cy="75" r="64"/><circle class="v" cx="75" cy="75" r="64"/></svg><b>Su<br>puntaje</b></div>
-    </div>
-  </div>
-</section>
-
-<section class="sec sec-dark on-dark">
-  <div class="wrap">
-    <div class="sec-head"><div><div class="kicker rv">Cómo trabajamos</div><h2 class="h2 rv">Claridad desde la primera conversación.</h2></div></div>
-    <div class="steps4 m-scroll" id="steps4">
-      @foreach([['chat', 'Escuchamos', 'Entendemos su caso, sus plazos y lo que está en juego.'], ['shield', 'Diagnosticamos', 'Le decimos dónde está el riesgo y qué opciones tiene.'], ['doc', 'Ejecutamos', 'Documentos, defensas y respuestas con rigor técnico y a tiempo.'], ['check', 'Acompañamos', 'Seguimos a su lado hasta cerrar el caso.']] as $i => [$ic, $t, $d])
-        <div class="rv" style="--d:{{ $i * 0.1 }}s"><div class="no">@include('site.partials.icon', ['name' => $ic])</div><h3>{{ $t }}</h3><p>{{ $d }}</p><span class="bar"></span></div>
-      @endforeach
-    </div>
   </div>
 </section>
 
@@ -228,10 +235,11 @@
   <div class="logos rv">
     <div class="logos-track">
       @for($i = 0; $i < 3; $i++)
-        <div><img src="{{ asset('images/clientes/red-digital.svg') }}" alt="Red Digital"></div>
+        <div class="dk"><img src="{{ asset('images/clientes/red-digital.svg') }}" alt="Red Digital"></div>
         <div><img src="{{ asset('images/clientes/qr-pay.png') }}" alt="QR Pay"></div>
-        <div><span class="txt">GoldLion</span></div>
-        <div><img src="{{ asset('images/clientes/san-jorge.png') }}" alt="Créditos San Jorge"></div>
+        <div class="dk bm"><img src="{{ asset('images/clientes/buscamundos.png') }}?v=1" alt="Buscamundos"></div>
+        <div><span class="txt">Gold<span>Lion</span></span></div>
+        <div><img src="{{ asset('images/clientes/san-jorge.png') }}?v=2" alt="Créditos San Jorge" style="max-height:64px"></div>
       @endfor
     </div>
   </div>
@@ -354,9 +362,6 @@
     new IntersectionObserver((es, o) => es.forEach((e) => { if (!e.isIntersecting) return; o.disconnect(); const end = +el.dataset.count, suf = el.dataset.suffix || ''; let t0; const step = (t) => { t0 = t0 || t; const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))) + suf; if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }), { threshold: 0.6 }).observe(el);
   });
 
-  // Línea del método: se dibuja al entrar en pantalla
-  const s4 = document.getElementById('steps4');
-  new IntersectionObserver((es, o) => es.forEach((e) => { if (e.isIntersecting) { s4.classList.add('in'); o.disconnect(); } }), { threshold: 0.35 }).observe(s4);
 
   // ?servicio=... preselecciona el tema del formulario
   const pre = new URLSearchParams(location.search).get('servicio');

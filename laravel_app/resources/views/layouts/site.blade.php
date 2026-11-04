@@ -48,7 +48,7 @@ button { font: inherit; color: inherit; }
 @media (max-width: 720px) { .wrap { padding: 0 20px; } body { font-size: 16px; } }
 
 /* Tipografía */
-.display { font-size: clamp(2.5rem, 6.4vw, 5.6rem); font-weight: 800; line-height: 1.02; letter-spacing: -0.045em; }
+.display { font-size: clamp(2.3rem, 4.6vw, 4.2rem); font-weight: 800; line-height: 1.02; letter-spacing: -0.045em; }
 .h2 { font-size: clamp(2rem, 4.2vw, 3.4rem); font-weight: 800; line-height: 1.06; letter-spacing: -0.035em; }
 .h3 { font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; }
 .lead { font-size: clamp(1.08rem, 1.6vw, 1.3rem); color: var(--muted); line-height: 1.6; max-width: 640px; }
@@ -79,11 +79,11 @@ button { font: inherit; color: inherit; }
 .lnk:hover .ic { transform: translateX(4px); }
 
 /* Navegación: cabecera azul animada */
-.nav { position: sticky; top: 0; z-index: 100; background: rgba(10,23,48,.96); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); color: #fff; transition: box-shadow .3s, background .3s; }
+.nav { position: sticky; top: 0; z-index: 100; background: rgba(6,12,28,.97); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); color: #fff; transition: box-shadow .3s, background .3s; }
 .nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--blue-l) 30%, #fff 50%, var(--blue-l) 70%, transparent); background-size: 200% 100%; animation: navline 6s linear infinite; opacity: .55; }
 @keyframes navline { from { background-position: 200% 0; } to { background-position: 0 0; } }
 .nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); background: rgba(10,23,48,.92); }
-.nav-in { max-width: var(--max); margin: 0 auto; padding: 0 32px; height: 78px; display: flex; align-items: center; gap: 28px; }
+.nav-in { max-width: var(--max); margin: 0 auto; padding: 0 32px; height: 70px; display: flex; align-items: center; gap: 28px; }
 .nav-in > * { animation: navIn .7s var(--ease) both; }
 .nav-links > *, .nav-actions > * { animation: navIn .7s var(--ease) both; }
 .nav-links > *:nth-child(1) { animation-delay: .05s; } .nav-links > *:nth-child(2) { animation-delay: .1s; } .nav-links > *:nth-child(3) { animation-delay: .15s; } .nav-links > *:nth-child(4) { animation-delay: .2s; } .nav-links > *:nth-child(5) { animation-delay: .25s; } .nav-links > *:nth-child(6) { animation-delay: .3s; }
@@ -123,7 +123,7 @@ button { font: inherit; color: inherit; }
 body.menu-open .nav-burger span { background: transparent; }
 body.menu-open .nav-burger span::before { transform: translateY(6px) rotate(45deg); }
 body.menu-open .nav-burger span::after { transform: translateY(-6px) rotate(-45deg); }
-.m-menu { position: fixed; inset: 78px 0 0; z-index: 99; background: var(--ink); color: #fff; padding: 20px 20px 40px; overflow-y: auto; opacity: 0; visibility: hidden; clip-path: inset(0 0 100% 0); transition: opacity .3s, clip-path .5s var(--ease), visibility .3s; }
+.m-menu { position: fixed; inset: 70px 0 0; z-index: 99; background: var(--ink); color: #fff; padding: 20px 20px 40px; overflow-y: auto; opacity: 0; visibility: hidden; clip-path: inset(0 0 100% 0); transition: opacity .3s, clip-path .5s var(--ease), visibility .3s; }
 body.menu-open .m-menu { opacity: 1; visibility: visible; clip-path: inset(0 0 0 0); }
 .m-menu > * { opacity: 0; transform: translateY(12px); transition: opacity .4s var(--ease), transform .4s var(--ease); }
 body.menu-open .m-menu > * { opacity: 1; transform: none; }

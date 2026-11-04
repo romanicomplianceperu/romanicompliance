@@ -35,7 +35,7 @@
 <section class="pg-hero">
   <div class="wrap">
     <div class="kicker rv">Publicaciones</div>
-    <h1 class="display rv" style="font-size:clamp(2.4rem,5.4vw,4.6rem)">Análisis y novedades regulatorias.</h1>
+    <h1 class="display rv">Análisis y novedades regulatorias.</h1>
     <p class="lead rv">Lo que cambia en compliance, prevención de lavado de activos y derecho penal económico, explicado con claridad.</p>
   </div>
 </section>
