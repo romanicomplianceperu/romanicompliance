@@ -79,10 +79,10 @@ button { font: inherit; color: inherit; }
 .lnk:hover .ic { transform: translateX(4px); }
 
 /* Navegación: cabecera azul animada */
-.nav { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, #000 0%, #04080F 45%, #0A1730 100%); backdrop-filter: saturate(140%) blur(18px); -webkit-backdrop-filter: saturate(140%) blur(18px); color: #fff; transition: box-shadow .3s, background .3s; }
-.nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--blue-l) 30%, #fff 50%, var(--blue-l) 70%, transparent); background-size: 200% 100%; animation: navline 6s linear infinite; opacity: .55; }
+.nav { position: sticky; top: 0; z-index: 100; background: var(--ink); color: #fff; transition: box-shadow .3s, background .3s; }
+.nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(127,163,255,.22); }
 @keyframes navline { from { background-position: 200% 0; } to { background-position: 0 0; } }
-.nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); background: linear-gradient(180deg, rgba(0,0,0,.96), rgba(5,9,20,.9)); }
+.nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); }
 .nav-in { max-width: var(--max); margin: 0 auto; padding: 0 32px; height: 70px; display: flex; align-items: center; gap: 28px; }
 .nav-in > * { animation: navIn .7s var(--ease) both; }
 .nav-links > *, .nav-actions > * { animation: navIn .7s var(--ease) both; }
@@ -163,7 +163,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 /* Línea de tiempo animada */
 .tl { position: relative; display: grid; gap: 0; }
 .tl::before { content: ''; position: absolute; left: 23px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
-.tl-fill { position: absolute; left: 23px; top: 8px; width: 2px; height: 0; background: var(--blue); transition: height .15s linear; }
+.tl-fill { position: absolute; left: 23px; top: 8px; bottom: 8px; width: 2px; background: var(--blue); transform-origin: top; transform: scaleY(0); transition: transform .12s linear; will-change: transform; }
 .tl-step { position: relative; display: grid; grid-template-columns: 48px 1fr; gap: 24px; padding: 0 0 44px; }
 .tl-step:last-child { padding-bottom: 0; }
 .tl-dot { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--line); background: #fff; display: grid; place-items: center; font-weight: 800; font-size: 0.95rem; color: var(--muted-2); position: relative; z-index: 1; transition: border-color .4s, color .4s, background .4s; }
@@ -182,6 +182,8 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 @media (max-width: 720px) {
   .m-scroll { display: flex !important; grid-template-columns: none !important; gap: 12px !important; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 -20px; padding: 4px 20px 6px; scroll-padding: 0 20px; }
   .m-scroll::-webkit-scrollbar { display: none; }
+  .m-scroll { overscroll-behavior-x: contain; touch-action: pan-x pan-y; }
+  .m-scroll > .rv, .m-scroll > * > .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
   .m-scroll > * { flex: 0 0 82%; scroll-snap-align: start; min-width: 0; }
   .m-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
   .m-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: width .3s var(--ease), background .3s; }
@@ -428,7 +430,8 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 window.RC = (function () {
   const WA = @json(\App\Support\ServiceCatalog::WHATSAPP);
   const nav = document.getElementById('nav');
-  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive: true });
+  let navTick = false;
+  addEventListener('scroll', () => { if (navTick) return; navTick = true; requestAnimationFrame(() => { nav.classList.toggle('scrolled', scrollY > 8); navTick = false; }); }, { passive: true });
 
   // Menú de servicios (escritorio) y menú móvil
   const drop = document.getElementById('navDrop');
@@ -462,7 +465,8 @@ window.RC = (function () {
     const d = document.createElement('div'); d.className = 'm-dots'; d.setAttribute('aria-hidden', 'true');
     d.innerHTML = '<i></i>'.repeat(n); sc.after(d);
     const paint = () => { const w = sc.children[0].getBoundingClientRect().width + 12; const i = Math.min(n - 1, Math.round(sc.scrollLeft / (w || 1))); d.querySelectorAll('i').forEach((x, k) => x.classList.toggle('on', k === i)); };
-    sc.addEventListener('scroll', paint, { passive: true }); paint();
+    let tick = false;
+    sc.addEventListener('scroll', () => { if (tick) return; tick = true; requestAnimationFrame(() => { paint(); tick = false; }); }, { passive: true }); paint();
   });
   dots();
 
@@ -474,11 +478,13 @@ window.RC = (function () {
       const r = tl.getBoundingClientRect();
       const h = Math.max(0, Math.min(r.height - 16, mid - r.top));
       const fill = tl.querySelector('.tl-fill');
-      if (fill) fill.style.height = h + 'px';
+      if (fill) fill.style.transform = 'scaleY(' + (h / Math.max(1, r.height - 16)).toFixed(4) + ')';
       tl.querySelectorAll('.tl-step').forEach((s) => s.classList.toggle('lit', s.getBoundingClientRect().top + 24 < mid));
     });
   }
-  if (timelines.length) { addEventListener('scroll', paintTimelines, { passive: true }); addEventListener('resize', paintTimelines); paintTimelines(); }
+  let tlTick = false;
+  const tlFrame = () => { if (tlTick) return; tlTick = true; requestAnimationFrame(() => { paintTimelines(); tlTick = false; }); };
+  if (timelines.length) { addEventListener('scroll', tlFrame, { passive: true }); addEventListener('resize', tlFrame); paintTimelines(); }
 
   // Cargador al navegar dentro del sitio
   const loader = document.getElementById('loader');

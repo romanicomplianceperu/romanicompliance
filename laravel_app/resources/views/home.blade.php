@@ -5,9 +5,9 @@
 @section('styles')
 /* Portada */
 .hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(44px, 6vw, 80px) 0 clamp(40px, 5vw, 64px); }
-.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); animation: gridMove 22s linear infinite; }
+.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); }
 @keyframes gridMove { to { background-position: 64px 64px, 64px 64px; } }
-.hero .glow { position: absolute; border-radius: 50%; filter: blur(10px); pointer-events: none; }
+.hero .glow { position: absolute; border-radius: 50%; pointer-events: none; will-change: transform; }
 .hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
 .hero .g2 { width: 420px; height: 420px; left: -160px; bottom: -200px; background: radial-gradient(circle, rgba(127,163,255,.25), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
 @keyframes drift { to { transform: translate(-70px, 60px) scale(1.12); } }
@@ -66,7 +66,7 @@
 
 /* Diagnóstico destacado */
 .dg { margin-top: 18px; display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center; border: 1px solid var(--line); border-radius: 26px; padding: clamp(22px, 3.5vw, 40px); background: #fff; position: relative; overflow: hidden; }
-.dg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(31,79,216,.06) 50%, transparent 70%); background-size: 220% 100%; animation: sweep 5s ease-in-out infinite; }
+.dg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(31,79,216,.06) 50%, transparent 70%); background-size: 220% 100%; }
 @keyframes sweep { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 .dg > * { position: relative; }
 .dg h3 { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; margin: 8px 0; }
