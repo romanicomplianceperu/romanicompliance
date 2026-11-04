@@ -42,24 +42,25 @@
 .svw-tab:hover { color: var(--ink); background: var(--soft); }
 .svw-tab[aria-selected="true"] { color: var(--ink); background: #fff; border-color: var(--line); box-shadow: 0 14px 34px -24px rgba(10,23,48,.4); }
 .svw-tab[aria-selected="true"] .mi { background: var(--blue); color: #fff; }
-.svw-panel { position: relative; overflow: hidden; border-radius: 26px; background: linear-gradient(150deg, var(--navy), var(--ink)); color: #fff; padding: clamp(26px, 4vw, 48px); min-height: 420px; display: flex; flex-direction: column; }
+.svw-panel { position: relative; overflow: hidden; border-radius: 26px; background: linear-gradient(150deg, var(--navy), var(--ink)); color: #fff; padding: clamp(26px, 4vw, 48px); min-height: 340px; display: flex; flex-direction: column; }
 .svw-panel .big { position: absolute; right: -40px; bottom: -40px; font-size: 280px; color: rgba(127,163,255,.08); }
 .svw-panel .q { font-size: .95rem; font-weight: 700; color: var(--blue-l); margin-bottom: 14px; }
 .svw-panel h3 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 14px; }
 .svw-panel p { color: rgba(255,255,255,.72); font-size: 1.08rem; max-width: 560px; }
-.svw-panel .chips { margin: 24px 0 30px; position: relative; }
+.svw-panel p { margin-bottom: 30px; }
 .svw-panel .acts { margin-top: auto; display: flex; gap: 10px; flex-wrap: wrap; position: relative; }
 .svw-pane { animation: paneIn .45s var(--ease); display: flex; flex-direction: column; flex: 1; }
 @media (max-width: 900px) {
   .svw { grid-template-columns: 1fr; gap: 14px; }
-  .svw-tabs { display: flex; overflow-x: auto; gap: 8px; margin: 0 -20px; padding: 2px 20px 6px; scrollbar-width: none; scroll-snap-type: x proximity; }
-  .svw-tabs::-webkit-scrollbar { display: none; }
-  .svw-tab { flex: 0 0 auto; padding: 9px 14px 9px 9px; border-radius: 999px; border-color: var(--line); background: #fff; font-size: .9rem; scroll-snap-align: start; }
-  .svw-tab .mi { width: 30px; height: 30px; border-radius: 50%; font-size: 15px; }
+  .svw-tabs { display: grid; gap: 8px; }
+  .svw-tab { padding: 12px 42px 12px 14px; border-color: var(--line); background: #fff; font-size: .98rem; position: relative; }
+  .svw-tab::after { content: ''; position: absolute; right: 18px; top: 50%; width: 8px; height: 8px; border-right: 2px solid var(--muted-2); border-bottom: 2px solid var(--muted-2); transform: translateY(-70%) rotate(45deg); transition: transform .3s var(--ease); }
+  .svw-tab[aria-selected="true"]::after { transform: translateY(-30%) rotate(-135deg); border-color: var(--blue); }
+  .svw-tab .mi { width: 36px; height: 36px; border-radius: 11px; font-size: 18px; }
+  .svw-tabs .svw-panel { margin: 2px 0 8px; animation: paneIn .4s var(--ease); }
   .svw-panel { min-height: 0; border-radius: 22px; }
   .svw-panel .big { font-size: 180px; right: -30px; bottom: -30px; }
   .svw-panel p { font-size: 1rem; }
-  .svw-panel .chips { margin: 18px 0 22px; }
   .svw-panel .acts .b { flex: 1; }
 }
 
@@ -100,15 +101,27 @@
 @media (max-width: 720px) { .logos-track > div { width: 150px; height: 72px; padding: 14px 18px; border-radius: 14px; } .logos-track img { max-height: 34px; } .logos-track .txt { font-size: 1.1rem; } }
 
 /* Dirección (compacta) */
-.dir { display: grid; grid-template-columns: auto 1fr; gap: clamp(22px, 4vw, 48px); align-items: center; background: var(--soft); border-radius: 28px; padding: clamp(22px, 4vw, 44px); }
-.dir-ph { width: 190px; height: 190px; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 35%, #2F5FE6, #10264D 70%); position: relative; flex-shrink: 0; }
-.dir-ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
-.dir h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; }
-.dir .role { color: var(--blue); font-weight: 700; margin: 6px 0 14px; }
+.dir { display: grid; grid-template-columns: auto 1fr; gap: clamp(28px, 5vw, 56px); align-items: center; background: var(--soft); border-radius: 28px; padding: clamp(24px, 4vw, 48px); }
+.dir-ph { width: 200px; height: 200px; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 35%, #2F5FE6, #10264D 72%); position: relative; flex-shrink: 0; border: 6px solid #fff; box-shadow: 0 24px 50px -24px rgba(10,23,48,.55); }
+.dir-ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
+.dir h2 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
+.dir .role { color: var(--blue); font-weight: 700; margin: 8px 0 14px; }
 .dir p.bio { color: var(--muted); max-width: 640px; }
-.dir .chips { margin-top: 16px; }
-.dir .contact { display: flex; gap: 10px 22px; flex-wrap: wrap; margin-top: 18px; }
-@media (max-width: 720px) { .dir { grid-template-columns: 1fr; text-align: left; } .dir-ph { width: 96px; height: 96px; } .dir-top { display: flex; gap: 16px; align-items: center; } .dir p.bio { font-size: .95rem; } }
+.dir .chips { margin-top: 18px; }
+.dir .chip { background: #fff; border: 1px solid var(--line); }
+.dir .contact { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+@media (max-width: 720px) {
+  .dir { grid-template-columns: 1fr; text-align: center; gap: 18px; padding: 28px 20px; }
+  .dir-top { display: flex; justify-content: center; }
+  .dir-ph { width: 150px; height: 150px; border-width: 5px; }
+  .dir .kicker { justify-content: center; margin-bottom: 8px; }
+  .dir h2 { font-size: 1.5rem; }
+  .dir .role { font-size: .95rem; margin: 6px 0 12px; }
+  .dir p.bio { font-size: .95rem; }
+  .dir .chips { justify-content: center; gap: 6px; }
+  .dir .chip { font-size: .8rem; padding: 6px 11px; }
+  .dir .contact .b { flex: 1 1 100%; justify-content: center; }
+}
 
 /* Contacto en azul */
 .ct-sec { position: relative; overflow: hidden; color: #fff; background: linear-gradient(150deg, var(--ink) 0%, #10264D 45%, #1F4FD8 140%); }
@@ -177,7 +190,6 @@
             <div class="q">«{{ $s['situation'] }}»</div>
             <h3>{{ $s['name'] }}</h3>
             <p>{{ $s['card'] }}</p>
-            <div class="chips">@foreach(array_slice($s['includes'], 0, 3) as $it)<span class="chip">@include('site.partials.icon', ['name' => 'check']) {{ $it }}</span>@endforeach</div>
             <div class="acts">
               @if(isset($s['cta2']))
                 <a href="{{ route('services.show', $slug) }}#inmobiliario" class="b b-primary">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
@@ -249,7 +261,7 @@
   <div class="wrap">
     <div class="dir rv">
       <div class="dir-top">
-        <div class="dir-ph"><img src="{{ asset('images/denis-romani-avatar.webp') }}?v=2" alt="Denis Gabriel Romani Seminario" loading="lazy"></div>
+        <div class="dir-ph"><img src="{{ asset('images/denis-romani-avatar.webp') }}?v=2" alt="Denis Gabriel Romani Seminario"></div>
       </div>
       <div>
         <div class="kicker">Dirección</div>
@@ -257,7 +269,7 @@
         <div class="role">Abogado especialista en compliance y ALA/CFT</div>
         <p class="bio">Máster en Derecho Penal (PUCP) y en Cumplimiento Normativo Penal (Universidad de Castilla-La Mancha). Más de quince años en investigación financiera, prevención de lavado de activos y compliance corporativo.</p>
         <div class="chips"><span class="chip">PUCP</span><span class="chip">UCLM</span><span class="chip">ISO 37001:2021</span><span class="chip">Compliance Officer</span></div>
-        <div class="contact"><a href="mailto:denis@romanicompliance.com" class="lnk">Escribirle</a><a href="{{ route('equipo') }}" class="lnk">Conocer al equipo @include('site.partials.icon', ['name' => 'arrow'])</a></div>
+        <div class="contact"><a href="mailto:denis@romanicompliance.com" class="b b-primary">Escribirle</a><a href="{{ route('equipo') }}" class="b b-ghost">Conocer al equipo @include('site.partials.icon', ['name' => 'arrow'])</a></div>
       </div>
     </div>
   </div>
@@ -355,8 +367,17 @@
   tabs.forEach((t) => t.addEventListener('click', () => {
     tabs.forEach((x) => x.setAttribute('aria-selected', x === t));
     document.querySelectorAll('.svw-pane').forEach((p) => { p.hidden = p.id !== 'svp-' + t.dataset.k; });
-    if (matchMedia('(max-width: 900px)').matches) t.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    place();
+    if (mq.matches) setTimeout(() => t.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 60);
   }));
+  // En el móvil la tarjeta del servicio se abre justo debajo del elegido, como una lista
+  const mq = matchMedia('(max-width: 900px)'), panel = document.querySelector('.svw-panel'), home = panel && panel.parentNode;
+  function place() {
+    if (!panel) return;
+    const act = tabs.find((x) => x.getAttribute('aria-selected') === 'true') || tabs[0];
+    if (mq.matches) { if (act.nextElementSibling !== panel) act.after(panel); } else if (panel.parentNode !== home) home.appendChild(panel);
+  }
+  place(); mq.addEventListener ? mq.addEventListener('change', place) : mq.addListener(place);
   // Cifras que cuentan al aparecer
   document.querySelectorAll('[data-count]').forEach((el) => {
     new IntersectionObserver((es, o) => es.forEach((e) => { if (!e.isIntersecting) return; o.disconnect(); const end = +el.dataset.count, suf = el.dataset.suffix || ''; let t0; const step = (t) => { t0 = t0 || t; const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))) + suf; if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }), { threshold: 0.6 }).observe(el);
