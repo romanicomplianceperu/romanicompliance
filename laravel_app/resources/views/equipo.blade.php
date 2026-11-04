@@ -45,7 +45,7 @@
 @if($director)
 <section class="sec" style="padding-top:0">
   <div class="wrap lead-m">
-    <div class="ph rv"><img src="{{ asset('images/denis-romani.webp') }}" alt="{{ $director->name }}"></div>
+    <div class="ph rv"><img src="{{ asset('images/denis-romani.webp') }}?v=2" alt="{{ $director->name }}"></div>
     <div>
       <div class="kicker rv">Dirección</div>
       <h2 class="h2 rv">{{ $director->name }}</h2>

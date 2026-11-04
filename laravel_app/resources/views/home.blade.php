@@ -105,7 +105,7 @@
 /* Dirección (compacta) */
 .dir { display: grid; grid-template-columns: auto 1fr; gap: clamp(22px, 4vw, 48px); align-items: center; background: var(--soft); border-radius: 28px; padding: clamp(22px, 4vw, 44px); }
 .dir-ph { width: 190px; height: 190px; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 35%, #2F5FE6, #10264D 70%); position: relative; flex-shrink: 0; }
-.dir-ph img { position: absolute; left: 50%; top: 6%; transform: translateX(-50%); width: 112%; max-width: none; height: auto; }
+.dir-ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
 .dir h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; }
 .dir .role { color: var(--blue); font-weight: 700; margin: 6px 0 14px; }
 .dir p.bio { color: var(--muted); max-width: 640px; }
@@ -113,7 +113,16 @@
 .dir .contact { display: flex; gap: 10px 22px; flex-wrap: wrap; margin-top: 18px; }
 @media (max-width: 720px) { .dir { grid-template-columns: 1fr; text-align: left; } .dir-ph { width: 96px; height: 96px; } .dir-top { display: flex; gap: 16px; align-items: center; } .dir p.bio { font-size: .95rem; } }
 
-/* Contacto */
+/* Contacto en azul */
+.ct-sec { position: relative; overflow: hidden; color: #fff; background: linear-gradient(150deg, var(--ink) 0%, #10264D 45%, #1F4FD8 140%); }
+.ct-sec::before { content: ''; position: absolute; width: 620px; height: 620px; right: -200px; top: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(127,163,255,.3), transparent 62%); pointer-events: none; }
+.ct-sec .wrap { position: relative; }
+.ct-sec .lead { color: rgba(255,255,255,.75); }
+.ct-sec .ct-ch a { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14); color: #fff; }
+.ct-sec .ct-ch a:hover { border-color: var(--blue-l); background: rgba(255,255,255,.12); }
+.ct-sec .ct-ch a .icon-tile { background: rgba(127,163,255,.18); color: var(--blue-l); }
+.ct-sec .ct-ch small { color: rgba(255,255,255,.6); }
+.ct-sec .form { color: var(--ink); border-color: transparent; box-shadow: 0 40px 90px -40px rgba(0,0,0,.6); }
 .ct { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(36px, 6vw, 96px); align-items: start; }
 .ct-ch { display: grid; gap: 12px; margin-top: 30px; }
 .ct-ch a { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: 16px; border: 1px solid var(--line); background: #fff; font-weight: 700; transition: border-color .25s; }
@@ -136,7 +145,6 @@
 <section class="hero">
   <span class="glow g1" aria-hidden="true"></span><span class="glow g2" aria-hidden="true"></span>
   <div class="wrap">
-    <div class="hero-tag rv"><i></i> Firma especializada en Lima, Perú</div>
     <h1 class="display" id="heroTitle">Especialistas en compliance penal y <em>prevención de lavado de activos.</em></h1>
     <p class="lead rv" style="--d:.35s">Acompañamos a empresas, sujetos obligados y proveedores de activos virtuales en el Perú: diseñamos su sistema de prevención, respondemos ante la UIF y la Fiscalía, y defendemos cuando hay una investigación.</p>
     <div class="hero-acts rv" style="--d:.45s">
@@ -176,10 +184,10 @@
             <div class="chips">@foreach(array_slice($s['includes'], 0, 3) as $it)<span class="chip">@include('site.partials.icon', ['name' => 'check']) {{ $it }}</span>@endforeach</div>
             <div class="acts">
               @if(isset($s['cta2']))
-                <a href="{{ route('services.show', $slug) }}#inmobiliario" class="b b-light">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
+                <a href="{{ route('services.show', $slug) }}#inmobiliario" class="b b-primary">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
                 <a href="{{ route('services.show', $slug) }}#notarial" class="b b-ghost-dark">{{ $s['cta2'] }}</a>
               @else
-                <a href="{{ route('services.show', $slug) }}" class="b b-light">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
+                <a href="{{ route('services.show', $slug) }}" class="b b-primary">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
               @endif
             </div>
           </div>
@@ -233,7 +241,7 @@
   <div class="wrap">
     <div class="dir rv">
       <div class="dir-top">
-        <div class="dir-ph"><img src="{{ asset('images/denis-romani.webp') }}" alt="Denis Gabriel Romani Seminario" loading="lazy"></div>
+        <div class="dir-ph"><img src="{{ asset('images/denis-romani-avatar.webp') }}?v=2" alt="Denis Gabriel Romani Seminario" loading="lazy"></div>
       </div>
       <div>
         <div class="kicker">Dirección</div>
@@ -282,7 +290,7 @@
   </div>
 </section>
 
-<section class="sec" id="contacto">
+<section class="sec ct-sec on-dark" id="contacto">
   <div class="wrap ct">
     <div>
       <div class="kicker rv">Contacto</div>
