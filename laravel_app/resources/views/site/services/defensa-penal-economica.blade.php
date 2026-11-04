@@ -7,6 +7,7 @@
 .pm-prog { position: absolute; left: 6%; top: 25px; height: 2px; background: var(--blue); width: 0; transition: width .6s var(--ease); }
 .pm-node { position: relative; z-index: 1; background: none; border: 0; cursor: pointer; text-align: center; padding: 0 6px; }
 .pm-node .d { width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 50%; border: 2px solid var(--line); background: #fff; display: grid; place-items: center; font-weight: 800; color: var(--muted-2); transition: all .35s var(--ease); }
+.pm-node .d::after { content: ''; width: 12px; height: 12px; border-radius: 50%; background: currentColor; }
 .pm-node.done .d { border-color: var(--blue); color: var(--blue); }
 .pm-node.cur .d { background: var(--blue); border-color: var(--blue); color: #fff; transform: scale(1.12); box-shadow: 0 0 0 8px rgba(31,79,216,.12); }
 .pm-node b { display: block; font-size: .92rem; line-height: 1.3; }

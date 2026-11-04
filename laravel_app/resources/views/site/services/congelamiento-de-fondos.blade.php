@@ -8,7 +8,7 @@
 .caf-cols h4 { font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; }
 .caf-cols ol { list-style: none; counter-reset: n; display: grid; gap: 12px; }
 .caf-cols ol li { counter-increment: n; display: grid; grid-template-columns: 30px 1fr; gap: 10px; color: var(--muted); }
-.caf-cols ol li::before { content: counter(n); width: 26px; height: 26px; border-radius: 50%; background: var(--blue-50); color: var(--blue); font-weight: 800; font-size: .85rem; display: grid; place-items: center; }
+.caf-cols ol li::before { content: ''; width: 10px; height: 10px; margin: 8px 0 0 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 5px var(--blue-50); }
 @media (max-width: 760px) { .caf-cols { grid-template-columns: 1fr; } }
 @endsection
 

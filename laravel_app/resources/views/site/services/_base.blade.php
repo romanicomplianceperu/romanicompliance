@@ -58,6 +58,8 @@
 @keyframes pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
 .lead-ok h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
 .lead-ok p { color: rgba(255,255,255,.7); margin-bottom: 18px; }
+@media (max-width: 900px) { .sv-side { display: none; } .sv-hero { padding: 44px 0 52px; } .sv-hero .lead { margin: 16px 0 26px; } }
+@media (max-width: 720px) { .sv-actions .b { flex: 1 1 100%; justify-content: center; } .deliv .card { padding: 18px; } .faq summary { font-size: 1.02rem; padding: 20px 0; } .sv-tool-head { margin-bottom: 24px; } }
 @yield('page_styles')
 @endsection
 
@@ -90,7 +92,7 @@
 <section class="sec sec-soft" id="herramienta">
   <div class="wrap">
     <div class="sv-tool-head">
-      <div class="kicker rv"><span class="n">01</span> Herramienta</div>
+      <div class="kicker rv">Herramienta</div>
       <h2 class="h2 rv">{{ $service['tool_title'] }}</h2>
       <p class="lead rv" style="margin-top:16px">{{ $service['tool_sub'] }}</p>
     </div>
@@ -103,14 +105,14 @@
 <section class="sec sec-dark on-dark">
   <div class="wrap sv-split">
     <div class="sticky">
-      <div class="kicker rv"><span class="n">02</span> Cómo trabajamos</div>
+      <div class="kicker rv">Cómo trabajamos</div>
       <h2 class="h2 rv">Un método claro, de principio a fin.</h2>
       <p class="lead rv" style="margin-top:18px">Sabrá en todo momento en qué etapa está su caso, qué estamos haciendo y qué sigue.</p>
     </div>
     <div class="tl">
       <div class="tl-fill"></div>
       @foreach($service['steps'] as $i => [$title, $text])
-        <div class="tl-step rv" style="--d:{{ $i * 0.05 }}s"><div class="tl-dot">{{ $i + 1 }}</div><div><h3>{{ $title }}</h3><p>{{ $text }}</p></div></div>
+        <div class="tl-step rv" style="--d:{{ $i * 0.05 }}s"><div class="tl-dot"></div><div><h3>{{ $title }}</h3><p>{{ $text }}</p></div></div>
       @endforeach
     </div>
   </div>
@@ -119,9 +121,9 @@
 <section class="sec">
   <div class="wrap">
     <div class="sec-head">
-      <div><div class="kicker rv"><span class="n">03</span> Lo que recibe</div><h2 class="h2 rv">Entregables concretos.</h2></div>
+      <div><div class="kicker rv">Lo que recibe</div><h2 class="h2 rv">Entregables concretos.</h2></div>
     </div>
-    <div class="deliv">
+    <div class="deliv m-scroll">
       @foreach($service['deliverables'] as $i => $d)
         <div class="card rv" style="--d:{{ $i * 0.04 }}s">@include('site.partials.icon', ['name' => 'check']) {{ $d }}</div>
       @endforeach
@@ -131,7 +133,7 @@
 
 <section class="sec sec-soft">
   <div class="wrap sv-split">
-    <div class="sticky"><div class="kicker rv"><span class="n">04</span> Preguntas frecuentes</div><h2 class="h2 rv">Lo que suelen preguntarnos.</h2></div>
+    <div class="sticky"><div class="kicker rv">Preguntas frecuentes</div><h2 class="h2 rv">Lo que suelen preguntarnos.</h2></div>
     <div class="faq rv">
       @foreach($service['faqs'] as [$q, $a])
         <details><summary>{{ $q }} <span class="pm">@include('site.partials.icon', ['name' => 'plus'])</span></summary><p>{{ $a }}</p></details>
@@ -178,7 +180,7 @@
 <section class="sec sec-soft" style="padding-top:0;background:#fff">
   <div class="wrap">
     <div class="sec-head"><div><div class="kicker rv">Otros servicios</div><h2 class="h3 rv" style="font-size:1.6rem">También podemos ayudarle con</h2></div><a href="{{ route('home') }}#servicios" class="lnk rv">Ver todos @include('site.partials.icon', ['name' => 'arrow'])</a></div>
-    <div class="others">
+    <div class="others m-scroll">
       @foreach($others as $slug => $o)
         <a href="{{ route('services.show', $slug) }}" class="card card-link rv" style="--d:{{ $loop->index * 0.06 }}s">
           <div class="icon-tile">@include('site.partials.icon', ['name' => $o['icon']])</div>

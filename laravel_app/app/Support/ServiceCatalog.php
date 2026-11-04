@@ -24,7 +24,7 @@ class ServiceCatalog
                 'hero_title' => 'Prevención que resiste una revisión.',
                 'hero_sub' => 'Diseñamos e implementamos su modelo de prevención penal y su sistema SPLAFT con documentos que su equipo entiende y aplica, no carpetas que solo se archivan.',
                 'tool_title' => 'Diagnóstico de riesgo',
-                'tool_sub' => 'Ocho preguntas para medir qué tan preparado está su sistema de prevención. Toma dos minutos.',
+                'tool_sub' => 'Nueve preguntas para medir qué tan preparado está su sistema de prevención. Toma dos minutos.',
                 'steps' => [
                     ['Diagnóstico inicial', 'Revisamos su actividad, su exposición y lo que ya tiene implementado.'],
                     ['Matriz de riesgos', 'Identificamos y priorizamos los riesgos LA/FT y penales propios de su operación.'],

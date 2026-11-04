@@ -3,102 +3,154 @@
 @php $services = \App\Support\ServiceCatalog::all(); @endphp
 
 @section('styles')
-/* Portada azul, continuación de la cabecera */
-.hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(64px, 9vw, 120px) 0 clamp(56px, 7vw, 96px); }
-.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); animation: gridMove 22s linear infinite; }
+/* Portada azul con la foto del director e insignias animadas */
+.hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(48px, 7vw, 96px) 0 0; }
+.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 80% at 72% 40%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 80% at 72% 40%, #000 5%, transparent 72%); animation: gridMove 22s linear infinite; }
 @keyframes gridMove { to { background-position: 64px 64px, 64px 64px; } }
-.hero .glow { position: absolute; border-radius: 50%; filter: blur(10px); pointer-events: none; }
-.hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
-.hero .g2 { width: 420px; height: 420px; left: -160px; bottom: -200px; background: radial-gradient(circle, rgba(127,163,255,.25), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
-@keyframes drift { to { transform: translate(-70px, 60px) scale(1.12); } }
-.hero .wrap { position: relative; z-index: 1; }
-.hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 30px; }
-.hero-tag i { width: 8px; height: 8px; border-radius: 50%; background: #3DDC97; box-shadow: 0 0 0 4px rgba(61,220,151,.18); animation: blink 2.4s ease-in-out infinite; }
-@keyframes blink { 50% { box-shadow: 0 0 0 8px rgba(61,220,151,0); } }
-.hero h1 { max-width: 1040px; }
+.hero .glow { position: absolute; border-radius: 50%; pointer-events: none; }
+.hero .g1 { width: 680px; height: 680px; right: -140px; top: -120px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
+.hero .g2 { width: 420px; height: 420px; left: -180px; bottom: -220px; background: radial-gradient(circle, rgba(127,163,255,.22), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
+@keyframes drift { to { transform: translate(-60px, 50px) scale(1.1); } }
+.hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: end; }
+.hero-txt { padding-bottom: clamp(48px, 7vw, 96px); }
+.hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 26px; }
+.hero-tag i { width: 8px; height: 8px; border-radius: 50%; background: #3DDC97; animation: blink 2.4s ease-in-out infinite; }
+@keyframes blink { 0%, 100% { box-shadow: 0 0 0 0 rgba(61,220,151,.5); } 50% { box-shadow: 0 0 0 7px rgba(61,220,151,0); } }
+.hero h1 { font-size: clamp(2.3rem, 5.4vw, 4.8rem); }
 .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(6px); animation: wIn .8s var(--ease) forwards; }
 @keyframes wIn { to { opacity: 1; transform: none; filter: none; } }
-.hero h1 em { font-style: normal; color: var(--blue-l); position: relative; }
-.hero .lead { margin: 28px 0 38px; color: rgba(255,255,255,.72); }
+.hero h1 em { font-style: normal; color: var(--blue-l); }
+.hero .lead { margin: 24px 0 34px; color: rgba(255,255,255,.72); }
 .hero-acts { display: flex; gap: 12px; flex-wrap: wrap; }
-.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(48px, 7vw, 80px); border-top: 1px solid rgba(255,255,255,.12); }
-.facts div { padding: 26px 26px 0 0; }
-.facts b { display: block; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-.facts span { color: rgba(255,255,255,.62); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
-@media (max-width: 720px) { .facts { grid-template-columns: 1fr; } .facts div { padding: 20px 0 0; } }
-@media (prefers-reduced-motion: reduce) { .hero h1 .w { animation: none; opacity: 1; transform: none; filter: none; } .hero::before, .hero .glow { animation: none; } }
-
-/* ¿Qué necesita resolver? */
-.need { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); color: #fff; border-radius: 30px; padding: clamp(24px, 4vw, 44px); margin-top: clamp(48px, 6vw, 72px); }
-.need-top { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 26px; }
-.need h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; }
-.need-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.need a { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); font-weight: 700; font-size: 1.02rem; line-height: 1.35; transition: background .25s, border-color .25s, transform .3s var(--ease); }
-.need a:hover { background: rgba(127,163,255,.16); border-color: rgba(127,163,255,.4); transform: translateY(-3px); }
-.need a .ic { width: 22px; height: 22px; color: var(--blue-l); transition: transform .25s var(--ease); }
-.need a:hover .ic { transform: translateX(4px); }
-@media (max-width: 960px) { .need-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 620px) { .need-grid { grid-template-columns: 1fr; } .need a { padding: 18px; } }
+.hero-vis { position: relative; height: clamp(420px, 44vw, 600px); }
+.hv-ring { position: absolute; left: 50%; top: 46%; width: 88%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; border: 1.5px dashed rgba(127,163,255,.35); animation: spin 40s linear infinite; }
+.hv-disc { position: absolute; left: 50%; top: 46%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle at 50% 40%, #2F5FE6, #173DAE 55%, rgba(16,38,77,0) 72%); }
+@keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+.hero-vis img { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); height: 100%; width: auto; max-width: none; filter: drop-shadow(0 30px 40px rgba(0,0,0,.45)); animation: rise 1.1s var(--ease) .25s both; }
+@keyframes rise { from { opacity: 0; transform: translateX(-50%) translateY(40px); } }
+.bf { position: absolute; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 18px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 20px 40px -16px rgba(0,0,0,.5); animation: bfIn .8s var(--ease) both, bob 6s ease-in-out infinite; }
+.bf b { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+.bf span { font-size: .82rem; line-height: 1.25; color: rgba(255,255,255,.8); font-weight: 600; max-width: 120px; }
+.bf .rg { position: relative; width: 48px; height: 48px; flex-shrink: 0; }
+.bf .rg svg { width: 48px; height: 48px; transform: rotate(-90deg); }
+.bf .rg circle { fill: none; stroke-width: 4; }
+.bf .rg .t { stroke: rgba(255,255,255,.15); }
+.bf .rg .v { stroke: var(--blue-l); stroke-linecap: round; stroke-dasharray: 126; stroke-dashoffset: 126; transition: stroke-dashoffset 1.6s var(--ease); }
+.bf .rg b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 1.05rem; }
+.bf.on .rg .v { stroke-dashoffset: var(--off, 20); }
+.b1 { left: -4%; top: 22%; animation-delay: .8s, .8s; }
+.b2 { right: -2%; top: 46%; animation-delay: 1s, 2s; }
+.b3 { left: 2%; bottom: 12%; animation-delay: 1.2s, 3.2s; }
+.b3 i { width: 10px; height: 10px; border-radius: 50%; background: #3DDC97; animation: blink 2.4s infinite; flex-shrink: 0; margin-left: 4px; }
+@keyframes bfIn { from { opacity: 0; transform: translateY(16px) scale(.9); } }
+@keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+.hv-name { position: absolute; right: 0; bottom: 18px; z-index: 3; font-size: .82rem; color: rgba(255,255,255,.65); font-weight: 600; text-align: right; }
+.hv-name b { display: block; color: #fff; font-size: .95rem; }
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 0; }
+  .hero-txt { padding-bottom: 28px; }
+  .hero-vis { height: 430px; margin: 0 -20px; }
+  .hero-vis::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 120px; z-index: 1; background: linear-gradient(transparent, rgba(10,23,48,.92)); pointer-events: none; }
+  .b1 { left: 12px; top: auto; bottom: 92px; } .b2 { right: 12px; top: 40%; } .b3 { display: none; }
+  .hv-name { left: 20px; right: auto; bottom: 22px; text-align: left; }
+  .bf { padding: 9px 12px 9px 9px; border-radius: 14px; } .bf b { font-size: 1.35rem; } .bf .rg, .bf .rg svg { width: 40px; height: 40px; } .bf span { font-size: .76rem; max-width: 100px; }
+}
+@media (prefers-reduced-motion: reduce) { .hero h1 .w { animation: none; opacity: 1; transform: none; filter: none; } .hero::before, .hero .glow, .hv-ring, .bf { animation: none; } }
 
 /* Estándares */
-.std { display: flex; align-items: center; gap: 12px 28px; flex-wrap: wrap; justify-content: center; padding: 30px 0; border-bottom: 1px solid var(--line); }
-.std span { font-weight: 700; color: var(--muted-2); font-size: .92rem; }
-.std b { font-size: 1.05rem; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+.std { display: flex; align-items: center; gap: 12px 28px; justify-content: center; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.std span { font-weight: 700; color: var(--muted-2); font-size: .9rem; }
+.std b { font-size: 1.02rem; font-weight: 800; white-space: nowrap; }
+@media (max-width: 720px) { .std { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; margin: 0 -20px; padding: 20px; } .std::-webkit-scrollbar { display: none; } }
 
-/* Servicios */
-.svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.svc .card { display: flex; flex-direction: column; padding: 32px; }
-.svc .card h3 { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; margin: 22px 0 10px; }
-.svc .card > p { color: var(--muted); }
-.svc .inc { list-style: none; display: grid; gap: 10px; margin: 22px 0 28px; font-size: .95rem; }
-.svc .inc li { display: flex; gap: 10px; align-items: flex-start; }
-.svc .inc li .ic { width: 18px; height: 18px; color: var(--blue); margin-top: 3px; }
-.svc .acts { margin-top: auto; display: flex; gap: 10px; }
-.svc .acts .b { flex: 1; }
-.svc .card.feat { background: linear-gradient(160deg, var(--navy), var(--ink)); color: #fff; border-color: transparent; }
-.svc .card.feat > p { color: rgba(255,255,255,.7); }
-.svc .card.feat .icon-tile { background: rgba(127,163,255,.16); color: var(--blue-l); }
-.svc .card.feat .inc li .ic { color: var(--blue-l); }
-.svc .card.feat .badge { position: absolute; top: 26px; right: 26px; }
-@media (max-width: 1020px) { .svc { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 680px) { .svc { grid-template-columns: 1fr; } }
-.train { margin-top: 16px; display: flex; align-items: center; gap: 22px; justify-content: space-between; flex-wrap: wrap; }
-.train .l { display: flex; align-items: center; gap: 18px; }
-.train h3 { font-size: 1.2rem; font-weight: 800; }
+/* Servicios condensados: selector + una tarjeta */
+.svw { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: stretch; }
+.svw-tabs { display: grid; gap: 6px; align-content: start; }
+.svw-tab { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; border: 1px solid transparent; background: none; text-align: left; font-weight: 700; font-size: 1rem; cursor: pointer; color: var(--muted); transition: background .25s, color .25s, border-color .25s; }
+.svw-tab .mi { width: 40px; height: 40px; border-radius: 12px; background: var(--soft); color: var(--muted); display: grid; place-items: center; font-size: 20px; flex-shrink: 0; transition: background .25s, color .25s; }
+.svw-tab:hover { color: var(--ink); background: var(--soft); }
+.svw-tab[aria-selected="true"] { color: var(--ink); background: #fff; border-color: var(--line); box-shadow: 0 14px 34px -24px rgba(10,23,48,.4); }
+.svw-tab[aria-selected="true"] .mi { background: var(--blue); color: #fff; }
+.svw-panel { position: relative; overflow: hidden; border-radius: 26px; background: linear-gradient(150deg, var(--navy), var(--ink)); color: #fff; padding: clamp(26px, 4vw, 48px); min-height: 420px; display: flex; flex-direction: column; }
+.svw-panel .big { position: absolute; right: -40px; bottom: -40px; font-size: 280px; color: rgba(127,163,255,.08); }
+.svw-panel .q { font-size: .95rem; font-weight: 700; color: var(--blue-l); margin-bottom: 14px; }
+.svw-panel h3 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 14px; }
+.svw-panel p { color: rgba(255,255,255,.72); font-size: 1.08rem; max-width: 560px; }
+.svw-panel .chips { margin: 24px 0 30px; position: relative; }
+.svw-panel .acts { margin-top: auto; display: flex; gap: 10px; flex-wrap: wrap; position: relative; }
+.svw-pane { animation: paneIn .45s var(--ease); display: flex; flex-direction: column; flex: 1; }
+@media (max-width: 900px) {
+  .svw { grid-template-columns: 1fr; gap: 14px; }
+  .svw-tabs { display: flex; overflow-x: auto; gap: 8px; margin: 0 -20px; padding: 2px 20px 6px; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .svw-tabs::-webkit-scrollbar { display: none; }
+  .svw-tab { flex: 0 0 auto; padding: 9px 14px 9px 9px; border-radius: 999px; border-color: var(--line); background: #fff; font-size: .9rem; scroll-snap-align: start; }
+  .svw-tab .mi { width: 30px; height: 30px; border-radius: 50%; font-size: 15px; }
+  .svw-panel { min-height: 0; border-radius: 22px; }
+  .svw-panel .big { font-size: 180px; right: -30px; bottom: -30px; }
+  .svw-panel p { font-size: 1rem; }
+  .svw-panel .chips { margin: 18px 0 22px; }
+  .svw-panel .acts .b { flex: 1; }
+}
 
-/* Método */
-.steps4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
-.steps4::before { content: ''; position: absolute; left: 0; right: 0; top: 30px; height: 2px; background: rgba(255,255,255,.14); }
-.steps4 .ln { position: absolute; left: 0; top: 30px; height: 2px; width: 0; background: var(--blue-l); transition: width 1.8s var(--ease); }
-.steps4.in .ln { width: 100%; }
-.steps4 > div:not(.ln) { position: relative; padding-right: 28px; }
-.steps4 .no { width: 60px; height: 60px; border-radius: 50%; background: var(--ink); border: 2px solid rgba(255,255,255,.18); display: grid; place-items: center; font-weight: 800; font-size: 1.1rem; margin-bottom: 26px; transition: border-color .6s, background .6s; }
-.steps4.in .no { border-color: var(--blue-l); }
-.steps4 h3 { font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+/* Diagnóstico destacado */
+.dg { margin-top: 18px; display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center; border: 1px solid var(--line); border-radius: 26px; padding: clamp(22px, 3.5vw, 40px); background: #fff; position: relative; overflow: hidden; }
+.dg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(31,79,216,.06) 50%, transparent 70%); background-size: 220% 100%; animation: sweep 5s ease-in-out infinite; }
+@keyframes sweep { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+.dg > * { position: relative; }
+.dg h3 { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; margin: 8px 0; }
+.dg .mg { width: 150px; height: 150px; position: relative; }
+.dg .mg svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.dg .mg circle { fill: none; stroke-width: 12; }
+.dg .mg .t { stroke: var(--soft); }
+.dg .mg .v { stroke: var(--blue); stroke-linecap: round; stroke-dasharray: 402; stroke-dashoffset: 402; animation: gauge 4.5s var(--ease) infinite; }
+@keyframes gauge { 0% { stroke-dashoffset: 402; } 45%, 75% { stroke-dashoffset: 110; } 100% { stroke-dashoffset: 402; } }
+.dg .mg b { position: absolute; inset: 0; display: grid; place-items: center; font-size: .85rem; color: var(--muted); font-weight: 700; text-align: center; line-height: 1.2; }
+.dg .acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+@media (max-width: 720px) { .dg { grid-template-columns: 1fr; text-align: left; gap: 0; } .dg .mg { width: 76px; height: 76px; position: absolute; right: 18px; top: 18px; } .dg .mg b { font-size: 0; } .dg h3 { padding-right: 70px; font-size: 1.35rem; } .dg .acts .b { flex: 1 1 100%; justify-content: center; } }
+@media (max-width: 720px) {
+  .hero { padding-top: 26px !important; }
+  .hero-tag { font-size: .8rem; padding: 6px 12px 6px 8px; margin-bottom: 16px; }
+  .hero h1 { font-size: 2.05rem; }
+  .hero .lead { font-size: 1rem; margin: 14px 0 20px; }
+  .hero-txt { padding-bottom: 8px !important; }
+  .hero-acts { flex-wrap: nowrap; gap: 8px; }
+  .hero-acts .b { flex: 1 1 auto; justify-content: center; padding-left: 14px; padding-right: 14px; font-size: .92rem; white-space: nowrap; }
+  .hero-acts .b .ic { display: none; }
+}
+
+/* Método (sin numeración) */
+.steps4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; position: relative; }
+.steps4 > div { position: relative; padding: 28px; border-radius: 22px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); transition: background .3s, border-color .3s, transform .35s var(--ease); }
+.steps4 > div:hover { background: rgba(127,163,255,.09); border-color: rgba(127,163,255,.3); transform: translateY(-4px); }
+.steps4 .no { width: 52px; height: 52px; border-radius: 16px; background: rgba(127,163,255,.14); color: var(--blue-l); display: grid; place-items: center; font-size: 24px; margin-bottom: 22px; }
+.steps4 h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
 .steps4 p { color: rgba(255,255,255,.65); }
-@media (max-width: 900px) { .steps4 { grid-template-columns: 1fr 1fr; gap: 36px 0; } .steps4::before, .steps4 .ln { display: none; } }
-@media (max-width: 560px) { .steps4 { grid-template-columns: 1fr; } }
+.steps4 .bar { position: absolute; left: 28px; right: 28px; bottom: 0; height: 3px; border-radius: 3px; background: var(--blue-l); transform: scaleX(0); transform-origin: left; transition: transform 1s var(--ease); }
+.steps4.in .bar { transform: scaleX(1); }
+.steps4.in > div:nth-child(2) .bar { transition-delay: .3s; } .steps4.in > div:nth-child(3) .bar { transition-delay: .6s; } .steps4.in > div:nth-child(4) .bar { transition-delay: .9s; }
+@media (max-width: 1020px) { .steps4 { grid-template-columns: 1fr 1fr; } }
 
 /* Clientes */
-.logos { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
-.logos-track { display: flex; gap: 72px; width: max-content; animation: marquee 30s linear infinite; align-items: center; }
-.logos-track > * { height: 46px; display: flex; align-items: center; opacity: .7; filter: grayscale(1); transition: opacity .3s, filter .3s; }
-.logos-track > *:hover { opacity: 1; filter: none; }
-.logos-track img { max-height: 46px; width: auto; }
-.logos-track .txt { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; }
-@keyframes marquee { to { transform: translateX(-50%); } }
+.logos { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.logos-track { display: flex; gap: 14px; width: max-content; animation: marquee 34s linear infinite; }
+.logos-track > div { width: 200px; height: 92px; border-radius: 18px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; padding: 18px 26px; flex-shrink: 0; }
+.logos-track img { max-height: 46px; max-width: 100%; width: auto; object-fit: contain; filter: grayscale(1); opacity: .75; transition: filter .3s, opacity .3s; }
+.logos-track > div:hover img { filter: none; opacity: 1; }
+.logos-track .txt { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; color: var(--muted); }
+.logos:hover .logos-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(calc(-50% - 7px)); } }
+@media (max-width: 720px) { .logos-track > div { width: 150px; height: 72px; padding: 14px 18px; border-radius: 14px; } .logos-track img { max-height: 34px; } .logos-track .txt { font-size: 1.1rem; } }
 
-/* Dirección */
-.dir { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(36px, 6vw, 96px); align-items: center; }
-.dir-photo { position: relative; border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 5; background: radial-gradient(circle at 50% 38%, #2A57D6 0%, #10264D 55%, var(--ink) 100%); }
-.dir-photo::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px); background-size: 40px 40px; }
-.dir-photo img { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); height: 94%; width: auto; max-width: none; transition: transform .8s var(--ease); }
-.dir-photo:hover img { transform: translateX(-50%) scale(1.02); }
-.dir .h2 { margin-bottom: 8px; }
-.dir .role { color: var(--blue); font-weight: 700; margin-bottom: 22px; }
-.dir .lead { margin-bottom: 26px; }
-.dir .contact { display: flex; gap: 10px 24px; flex-wrap: wrap; margin-top: 26px; }
-@media (max-width: 860px) { .dir { grid-template-columns: 1fr; } .dir-photo { max-width: 380px; } }
+/* Dirección (compacta) */
+.dir { display: grid; grid-template-columns: auto 1fr; gap: clamp(22px, 4vw, 48px); align-items: center; background: var(--soft); border-radius: 28px; padding: clamp(22px, 4vw, 44px); }
+.dir-ph { width: 190px; height: 190px; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 35%, #2F5FE6, #10264D 70%); position: relative; flex-shrink: 0; }
+.dir-ph img { position: absolute; left: 50%; top: 6%; transform: translateX(-50%); width: 112%; max-width: none; height: auto; }
+.dir h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; }
+.dir .role { color: var(--blue); font-weight: 700; margin: 6px 0 14px; }
+.dir p.bio { color: var(--muted); max-width: 640px; }
+.dir .chips { margin-top: 16px; }
+.dir .contact { display: flex; gap: 10px 22px; flex-wrap: wrap; margin-top: 18px; }
+@media (max-width: 720px) { .dir { grid-template-columns: 1fr; text-align: left; } .dir-ph { width: 96px; height: 96px; } .dir-top { display: flex; gap: 16px; align-items: center; } .dir p.bio { font-size: .95rem; } }
 
 /* Contacto */
 .ct { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(36px, 6vw, 96px); align-items: start; }
@@ -122,117 +174,127 @@
 @section('content')
 <section class="hero">
   <span class="glow g1" aria-hidden="true"></span><span class="glow g2" aria-hidden="true"></span>
-  <div class="wrap">
-    <div class="hero-tag rv"><i></i> Firma especializada en Lima, Perú</div>
-    <h1 class="display" id="heroTitle">Especialistas en compliance penal y <em>prevención de lavado de activos.</em></h1>
-    <p class="lead rv" style="--d:.35s">Acompañamos a empresas, sujetos obligados y proveedores de activos virtuales en el Perú: diseñamos su sistema de prevención, respondemos ante la UIF y la Fiscalía, y defendemos cuando hay una investigación.</p>
-    <div class="hero-acts rv" style="--d:.45s">
-      <a href="{{ route('services.show', 'compliance-penal') }}#herramienta" class="b b-primary">Hacer mi diagnóstico de riesgo @include('site.partials.icon', ['name' => 'arrow'])</a>
-      <a href="#servicios" class="b b-ghost-dark">Ver servicios</a>
-    </div>
-
-    <div class="need rv" id="necesidad">
-      <div class="need-top"><h2>¿Qué necesita resolver hoy?</h2><span style="color:rgba(255,255,255,.6)">Elija su situación y le llevamos al servicio indicado.</span></div>
-      <div class="need-grid">
-        @foreach($services as $slug => $s)
-          <a href="{{ route('services.show', $slug) }}">{{ $s['situation'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
-        @endforeach
+  <div class="wrap hero-grid">
+    <div class="hero-txt">
+      <div class="hero-tag rv"><i></i> Firma especializada en Lima, Perú</div>
+      <h1 class="display" id="heroTitle">Especialistas en compliance penal y <em>prevención de lavado de activos.</em></h1>
+      <p class="lead rv" style="--d:.35s">Acompañamos a empresas, sujetos obligados y proveedores de activos virtuales, desde la prevención hasta la defensa.</p>
+      <div class="hero-acts rv" style="--d:.45s">
+        <a href="{{ route('services.show', 'compliance-penal') }}#herramienta" class="b b-primary">Hacer mi diagnóstico @include('site.partials.icon', ['name' => 'arrow'])</a>
+        <a href="#servicios" class="b b-ghost-dark">Ver servicios</a>
       </div>
     </div>
-
-    <div class="facts">
-      <div class="rv"><b data-count="15" data-suffix="+">15+</b><span>años de experiencia en investigación financiera y prevención LA/FT</span></div>
-      <div class="rv" style="--d:.06s"><b data-count="6">6</b><span>áreas de práctica, del compliance a la defensa penal</span></div>
-      <div class="rv" style="--d:.12s"><b>GAFI</b><span>estándares internacionales aplicados a la normativa peruana</span></div>
+    <div class="hero-vis" aria-label="Denis Gabriel Romani Seminario, director">
+      <span class="hv-disc"></span><span class="hv-ring"></span>
+      <img src="{{ asset('images/denis-romani.webp') }}" alt="Denis Gabriel Romani Seminario" fetchpriority="high">
+      <div class="bf b1" data-ring><div class="rg"><svg viewBox="0 0 48 48"><circle class="t" cx="24" cy="24" r="20"/><circle class="v" cx="24" cy="24" r="20" style="--off:18"/></svg></div><div><b data-count="15" data-suffix="+">0</b><span>años de experiencia</span></div></div>
+      <div class="bf b2" data-ring><div class="rg"><svg viewBox="0 0 48 48"><circle class="t" cx="24" cy="24" r="20"/><circle class="v" cx="24" cy="24" r="20" style="--off:0"/></svg><b data-count="6">0</b></div><span>áreas de práctica especializadas</span></div>
+      <div class="bf b3"><i></i><span>Estándares GAFI y Ley 30424</span></div>
+      <div class="hv-name"><b>Denis Romani Seminario</b>Director</div>
     </div>
   </div>
 </section>
 
-<div class="wrap"><div class="std rv"><span>Trabajamos con</span><b>Ley 30424</b><b>SBS / UIF</b><b>GAFI</b><b>ISO 37001</b><b>COSO</b></div></div>
+<div class="wrap"><div class="std"><span>Trabajamos con</span><b>Ley 30424</b><b>SBS / UIF</b><b>GAFI</b><b>ISO 37001</b><b>COSO</b></div></div>
 
 <section class="sec" id="servicios">
   <div class="wrap">
     <div class="sec-head">
-      <div><div class="kicker rv"><span class="n">01</span> Servicios</div><h2 class="h2 rv">Seis áreas, un mismo estándar de rigor.</h2></div>
-      <p class="lead rv" style="max-width:440px">Cada servicio tiene su propia página, con herramientas para entender su caso antes de hablar con nosotros.</p>
+      <div><div class="kicker rv">Servicios</div><h2 class="h2 rv">¿Qué necesita resolver?</h2></div>
+      <p class="lead rv m-hide" style="max-width:420px">Elija su situación. Cada servicio tiene su propia página con herramientas para entender su caso.</p>
     </div>
-    <div class="svc">
-      @foreach($services as $slug => $s)
-        <article class="card card-link rv {{ $slug === 'criptoactivos-psav' ? 'feat' : '' }}" style="--d:{{ ($loop->index % 3) * 0.06 }}s;position:relative">
-          @if($slug === 'criptoactivos-psav')<span class="pill info badge" style="background:rgba(127,163,255,.16);color:#fff">Especialidad</span>@endif
-          <div class="icon-tile">@include('site.partials.icon', ['name' => $s['icon']])</div>
-          <h3>{{ $s['name'] }}</h3>
-          <p>{{ $s['card'] }}</p>
-          <ul class="inc">@foreach($s['includes'] as $it)<li>@include('site.partials.icon', ['name' => 'check']) <span>{{ $it }}</span></li>@endforeach</ul>
-          <div class="acts">
-            @if(isset($s['cta2']))
-              <a href="{{ route('services.show', $slug) }}#inmobiliario" class="b b-dark b-sm">{{ $s['cta'] }}</a>
-              <a href="{{ route('services.show', $slug) }}#notarial" class="b b-ghost b-sm">{{ $s['cta2'] }}</a>
-            @else
-              <a href="{{ route('services.show', $slug) }}" class="b {{ $slug === 'criptoactivos-psav' ? 'b-light' : 'b-dark' }} b-sm">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
-            @endif
+    <div class="svw rv">
+      <div class="svw-tabs" role="tablist" aria-label="Servicios">
+        @foreach($services as $slug => $s)
+          <button type="button" class="svw-tab" role="tab" aria-selected="{{ $loop->first ? 'true' : 'false' }}" aria-controls="svp-{{ $slug }}" data-k="{{ $slug }}"><span class="mi">@include('site.partials.icon', ['name' => $s['icon']])</span>{{ $s['short'] ?? $s['name'] }}</button>
+        @endforeach
+      </div>
+      <div class="svw-panel">
+        @foreach($services as $slug => $s)
+          <div class="svw-pane" id="svp-{{ $slug }}" role="tabpanel" @unless($loop->first) hidden @endunless>
+            <span class="big" aria-hidden="true">@include('site.partials.icon', ['name' => $s['icon']])</span>
+            <div class="q">«{{ $s['situation'] }}»</div>
+            <h3>{{ $s['name'] }}</h3>
+            <p>{{ $s['card'] }}</p>
+            <div class="chips">@foreach(array_slice($s['includes'], 0, 3) as $it)<span class="chip">@include('site.partials.icon', ['name' => 'check']) {{ $it }}</span>@endforeach</div>
+            <div class="acts">
+              @if(isset($s['cta2']))
+                <a href="{{ route('services.show', $slug) }}#inmobiliario" class="b b-light">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
+                <a href="{{ route('services.show', $slug) }}#notarial" class="b b-ghost-dark">{{ $s['cta2'] }}</a>
+              @else
+                <a href="{{ route('services.show', $slug) }}" class="b b-light">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
+              @endif
+            </div>
           </div>
-        </article>
-      @endforeach
+        @endforeach
+      </div>
     </div>
-    <div class="card train rv">
-      <div class="l"><div class="icon-tile">@include('site.partials.icon', ['name' => 'cap'])</div><div><h3>Capacitación y certificación</h3><p class="muted">Programas en prevención LA/FT y compliance corporativo para su equipo.</p></div></div>
-      <a href="{{ route('capacitaciones') }}" class="b b-ghost">Ver programas @include('site.partials.icon', ['name' => 'arrow'])</a>
+
+    <div class="dg rv">
+      <div>
+        <span class="pill info">Gratis · 2 minutos</span>
+        <h3>Mida el riesgo de su organización.</h3>
+        <p class="muted">Nueve preguntas, un puntaje de 0 a 100 y sus prioridades en un PDF que puede descargar.</p>
+        <div class="acts">
+          <a href="{{ route('services.show', 'compliance-penal') }}#herramienta" class="b b-primary">Empezar diagnóstico @include('site.partials.icon', ['name' => 'arrow'])</a>
+          <a href="{{ route('capacitaciones') }}" class="b b-ghost">Capacitación</a>
+        </div>
+      </div>
+      <div class="mg" aria-hidden="true"><svg viewBox="0 0 150 150"><circle class="t" cx="75" cy="75" r="64"/><circle class="v" cx="75" cy="75" r="64"/></svg><b>Su<br>puntaje</b></div>
     </div>
   </div>
 </section>
 
 <section class="sec sec-dark on-dark">
   <div class="wrap">
-    <div class="sec-head"><div><div class="kicker rv"><span class="n">02</span> Cómo trabajamos</div><h2 class="h2 rv">Claridad desde la primera conversación.</h2></div></div>
-    <div class="steps4" id="steps4">
-      <span class="ln"></span>
-      @foreach([['Escuchamos', 'Una primera conversación para entender su caso, sus plazos y lo que está en juego.'], ['Diagnosticamos', 'Le decimos con claridad dónde está el riesgo, qué tan urgente es y qué opciones tiene.'], ['Ejecutamos', 'Documentos, defensas y respuestas preparadas con rigor técnico y a tiempo.'], ['Acompañamos', 'Seguimos a su lado hasta cerrar el caso o hasta que su sistema funcione por sí solo.']] as $i => [$t, $d])
-        <div class="rv" style="--d:{{ $i * 0.12 }}s"><div class="no">{{ $i + 1 }}</div><h3>{{ $t }}</h3><p>{{ $d }}</p></div>
+    <div class="sec-head"><div><div class="kicker rv">Cómo trabajamos</div><h2 class="h2 rv">Claridad desde la primera conversación.</h2></div></div>
+    <div class="steps4 m-scroll" id="steps4">
+      @foreach([['chat', 'Escuchamos', 'Entendemos su caso, sus plazos y lo que está en juego.'], ['shield', 'Diagnosticamos', 'Le decimos dónde está el riesgo y qué opciones tiene.'], ['doc', 'Ejecutamos', 'Documentos, defensas y respuestas con rigor técnico y a tiempo.'], ['check', 'Acompañamos', 'Seguimos a su lado hasta cerrar el caso.']] as $i => [$ic, $t, $d])
+        <div class="rv" style="--d:{{ $i * 0.1 }}s"><div class="no">@include('site.partials.icon', ['name' => $ic])</div><h3>{{ $t }}</h3><p>{{ $d }}</p><span class="bar"></span></div>
       @endforeach
     </div>
   </div>
 </section>
 
-<section class="sec" style="padding-bottom:clamp(48px,6vw,80px)">
+<section class="sec" style="padding-bottom:clamp(40px,5vw,72px)">
   <div class="wrap">
-    <div class="sec-head" style="margin-bottom:36px"><div><div class="kicker rv"><span class="n">03</span> Clientes</div><h2 class="h3 rv" style="font-size:clamp(1.4rem,2.6vw,2rem)">Organizaciones que confían en nuestro trabajo.</h2></div></div>
-    <div class="logos rv">
-      <div class="logos-track">
-        @for($i = 0; $i < 2; $i++)
-          <div><img src="{{ asset('images/clientes/red-digital.svg') }}" alt="Red Digital" loading="lazy"></div>
-          <div><img src="{{ asset('images/clientes/qr-pay.png') }}" alt="QR Pay" loading="lazy"></div>
-          <div class="txt">GoldLion</div>
-          <div><img src="{{ asset('images/clientes/san-jorge.png') }}" alt="Créditos San Jorge" loading="lazy"></div>
-        @endfor
-      </div>
+    <div class="sec-head" style="margin-bottom:28px"><div><div class="kicker rv">Clientes</div><h2 class="h3 rv" style="font-size:clamp(1.35rem,2.6vw,2rem)">Organizaciones que confían en nuestro trabajo.</h2></div></div>
+  </div>
+  <div class="logos rv">
+    <div class="logos-track">
+      @for($i = 0; $i < 3; $i++)
+        <div><img src="{{ asset('images/clientes/red-digital.svg') }}" alt="Red Digital"></div>
+        <div><img src="{{ asset('images/clientes/qr-pay.png') }}" alt="QR Pay"></div>
+        <div><span class="txt">GoldLion</span></div>
+        <div><img src="{{ asset('images/clientes/san-jorge.png') }}" alt="Créditos San Jorge"></div>
+      @endfor
     </div>
   </div>
 </section>
 
-<section class="sec sec-soft" id="director">
-  <div class="wrap dir">
-    <div class="dir-photo rv"><img src="{{ asset('images/denis-romani.webp') }}" alt="Denis Gabriel Romani Seminario" loading="lazy"></div>
-    <div>
-      <div class="kicker rv"><span class="n">04</span> Dirección</div>
-      <h2 class="h2 rv">Denis Gabriel Romani Seminario</h2>
-      <div class="role rv">Abogado especialista en compliance corporativo y ALA/CFT</div>
-      <p class="lead rv">Máster en Derecho Penal por la Pontificia Universidad Católica del Perú y Máster en Cumplimiento Normativo Penal por la Universidad de Castilla-La Mancha. Más de quince años de experiencia en investigación financiera, prevención de lavado de activos y compliance corporativo.</p>
-      <div class="chips rv"><span class="chip">PUCP</span><span class="chip">UCLM</span><span class="chip">ISO 37001:2021</span><span class="chip">Compliance Officer</span></div>
-      <div class="contact rv">
-        <a href="mailto:denis@romanicompliance.com" class="lnk">denis@romanicompliance.com</a>
-        <a href="https://www.denisromani.com" class="lnk" target="_blank" rel="noopener">denisromani.com</a>
-        <a href="{{ route('equipo') }}" class="lnk">Conocer al equipo @include('site.partials.icon', ['name' => 'arrow'])</a>
+<section class="sec" style="padding-top:0" id="director">
+  <div class="wrap">
+    <div class="dir rv">
+      <div class="dir-top">
+        <div class="dir-ph"><img src="{{ asset('images/denis-romani.webp') }}" alt="Denis Gabriel Romani Seminario" loading="lazy"></div>
+      </div>
+      <div>
+        <div class="kicker">Dirección</div>
+        <h2>Denis Gabriel Romani Seminario</h2>
+        <div class="role">Abogado especialista en compliance y ALA/CFT</div>
+        <p class="bio">Máster en Derecho Penal (PUCP) y en Cumplimiento Normativo Penal (Universidad de Castilla-La Mancha). Más de quince años en investigación financiera, prevención de lavado de activos y compliance corporativo.</p>
+        <div class="chips"><span class="chip">PUCP</span><span class="chip">UCLM</span><span class="chip">ISO 37001:2021</span><span class="chip">Compliance Officer</span></div>
+        <div class="contact"><a href="mailto:denis@romanicompliance.com" class="lnk">Escribirle</a><a href="{{ route('equipo') }}" class="lnk">Conocer al equipo @include('site.partials.icon', ['name' => 'arrow'])</a></div>
       </div>
     </div>
   </div>
 </section>
 
 @if($featuredCourses->isNotEmpty())
-<section class="sec">
+<section class="sec sec-soft">
   <div class="wrap">
-    <div class="sec-head"><div><div class="kicker rv"><span class="n">05</span> Formación</div><h2 class="h2 rv">Cursos para equipos que previenen.</h2></div><a href="{{ route('courses.catalog') }}" class="lnk rv">Ver todos los cursos @include('site.partials.icon', ['name' => 'arrow'])</a></div>
-    <div class="posts">
+    <div class="sec-head"><div><div class="kicker rv">Formación</div><h2 class="h2 rv">Cursos para equipos que previenen.</h2></div><a href="{{ route('courses.catalog') }}" class="lnk rv">Ver todos @include('site.partials.icon', ['name' => 'arrow'])</a></div>
+    <div class="posts m-scroll">
       @foreach($featuredCourses as $course)
         <a href="{{ route('courses.show', $course) }}" class="post rv" style="--d:{{ $loop->index * 0.06 }}s">
           <div class="cv">@if($course->cover_image)<img src="{{ asset('storage/'.$course->cover_image) }}" alt="{{ $course->title }}" loading="lazy">@endif</div>
@@ -248,11 +310,11 @@
 </section>
 @endif
 
-<section class="sec {{ $featuredCourses->isNotEmpty() ? 'sec-soft' : '' }}" id="noticias">
+<section class="sec" id="noticias">
   <div class="wrap">
     <div class="sec-head"><div><div class="kicker rv">Publicaciones</div><h2 class="h2 rv">Análisis y novedades regulatorias.</h2></div><a href="{{ route('blog.index') }}" class="lnk rv">Ver todas @include('site.partials.icon', ['name' => 'arrow'])</a></div>
     @if($recentArticles->isNotEmpty())
-      <div class="posts">
+      <div class="posts m-scroll">
         @foreach($recentArticles as $article)
           @include('blog._article-card', ['article' => $article])
         @endforeach
@@ -315,6 +377,15 @@
     });
     wrap(h);
   }
+  // Selector de servicios
+  const tabs = [...document.querySelectorAll('.svw-tab')];
+  tabs.forEach((t) => t.addEventListener('click', () => {
+    tabs.forEach((x) => x.setAttribute('aria-selected', x === t));
+    document.querySelectorAll('.svw-pane').forEach((p) => { p.hidden = p.id !== 'svp-' + t.dataset.k; });
+    if (matchMedia('(max-width: 900px)').matches) t.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+  }));
+  // Insignias de la portada: anillos que se llenan
+  setTimeout(() => document.querySelectorAll('[data-ring]').forEach((b) => b.classList.add('on')), 1100);
   // Cifras que cuentan al aparecer
   document.querySelectorAll('[data-count]').forEach((el) => {
     new IntersectionObserver((es, o) => es.forEach((e) => { if (!e.isIntersecting) return; o.disconnect(); const end = +el.dataset.count, suf = el.dataset.suffix || ''; let t0; const step = (t) => { t0 = t0 || t; const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))) + suf; if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }), { threshold: 0.6 }).observe(el);

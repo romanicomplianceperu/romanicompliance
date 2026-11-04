@@ -27,6 +27,7 @@
 @keyframes travel { 0% { left: 10%; } 100% { left: calc(90% - 10px); } }
 .flow .node { text-align: center; padding: 0 10px; position: relative; }
 .flow .node .dot { width: 62px; height: 62px; margin: 0 auto 16px; border-radius: 18px; background: #fff; border: 1.5px solid var(--line); display: grid; place-items: center; color: var(--blue); font-weight: 800; font-size: 1.1rem; position: relative; z-index: 1; }
+.flow .node .dot .ic { width: 26px; height: 26px; }
 .flow .node b { display: block; font-weight: 800; margin-bottom: 4px; }
 .flow .node span { font-size: .9rem; color: var(--muted); }
 @media (max-width: 860px) {
@@ -72,7 +73,7 @@
   <div class="wrap">
     <div class="sec-head"><div><div class="kicker rv">Lo que se espera hoy de un PSAV</div><h2 class="h2 rv">Seis frentes que un supervisor revisa.</h2></div>
       <p class="lead rv" style="max-width:460px">Los estándares del GAFI para activos virtuales y la normativa peruana de prevención LA/FT convergen en estas exigencias.</p></div>
-    <div class="ob">
+    <div class="ob m-scroll">
       @foreach([
         ['shield', 'Enfoque basado en riesgo', 'La Recomendación 15 del GAFI pide identificar, evaluar y mitigar los riesgos de sus productos, clientes, canales y países.'],
         ['check', 'Conocimiento del cliente', 'Identificación y verificación de identidad, beneficiario final, perfil transaccional y monitoreo continuo.'],
@@ -92,7 +93,7 @@
     <div class="flow rv">
       <span class="pulse" aria-hidden="true"></span>
       @foreach([['Alta del cliente', 'Identidad, beneficiario final y nivel de riesgo.'], ['Depósito', 'Origen de los fondos según el perfil.'], ['Monitoreo', 'Alertas por monto, frecuencia y contrapartes.'], ['Transferencia', 'Regla de viaje y análisis on-chain.'], ['Reporte', 'Análisis y comunicación a la UIF cuando corresponde.']] as $n => [$t, $d])
-        <div class="node"><div class="dot">{{ $n + 1 }}</div><div><b>{{ $t }}</b><span>{{ $d }}</span></div></div>
+        <div class="node"><div class="dot">@include('site.partials.icon', ['name' => ['check','coin','alert','arrow','doc'][$n]])</div><div><b>{{ $t }}</b><span>{{ $d }}</span></div></div>
       @endforeach
     </div>
   </div>

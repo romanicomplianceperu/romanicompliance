@@ -25,7 +25,8 @@
 .mem .ln { margin-top: auto; padding-top: 12px; display: flex; gap: 14px; flex-wrap: wrap; font-size: .9rem; }
 .vals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .vals .card { padding: 32px; }
-.vals .no { font-size: .95rem; font-weight: 800; color: var(--blue-l); }
+.vals .no { width: 46px; height: 46px; border-radius: 14px; background: rgba(127,163,255,.14); color: var(--blue-l); display: grid; place-items: center; }
+.vals .no .ic { width: 24px; height: 24px; }
 .vals h3 { font-size: 1.35rem; font-weight: 800; margin: 14px 0 10px; letter-spacing: -0.02em; }
 .vals p { color: rgba(255,255,255,.68); }
 .vals .card { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); }
@@ -65,7 +66,7 @@
 <section class="sec sec-soft">
   <div class="wrap">
     <div class="sec-head"><div><div class="kicker rv">Equipo legal</div><h2 class="h2 rv">Quienes trabajan cada expediente.</h2></div></div>
-    <div class="team">
+    <div class="team m-scroll">
       @foreach($associates as $member)
         <div class="mem rv" style="--d:{{ ($loop->index % 4) * 0.05 }}s">
           <div class="ph"><img src="{{ $member->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $member->name }}" loading="lazy"></div>
@@ -85,10 +86,10 @@
 <section class="sec sec-dark on-dark">
   <div class="wrap">
     <div class="sec-head"><div><div class="kicker rv">Cómo trabajamos</div><h2 class="h2 rv">Tres compromisos con cada cliente.</h2></div></div>
-    <div class="vals">
-      <div class="card rv"><span class="no">01</span><h3>Rigor técnico</h3><p>Cada análisis se apoya en la normativa vigente, la jurisprudencia y los estándares internacionales aplicables.</p></div>
-      <div class="card rv" style="--d:.06s"><span class="no">02</span><h3>Reserva</h3><p>La información que nos confía se maneja con la más estricta confidencialidad, de principio a fin.</p></div>
-      <div class="card rv" style="--d:.12s"><span class="no">03</span><h3>Claridad</h3><p>Le explicamos dónde está el riesgo y qué recomendamos, sin rodeos y por escrito.</p></div>
+    <div class="vals m-scroll">
+      <div class="card rv"><span class="no">@include('site.partials.icon', ['name' => 'scale'])</span><h3>Rigor técnico</h3><p>Cada análisis se apoya en la normativa vigente, la jurisprudencia y los estándares internacionales aplicables.</p></div>
+      <div class="card rv" style="--d:.06s"><span class="no">@include('site.partials.icon', ['name' => 'shield'])</span><h3>Reserva</h3><p>La información que nos confía se maneja con la más estricta confidencialidad, de principio a fin.</p></div>
+      <div class="card rv" style="--d:.12s"><span class="no">@include('site.partials.icon', ['name' => 'check'])</span><h3>Claridad</h3><p>Le explicamos dónde está el riesgo y qué recomendamos, sin rodeos y por escrito.</p></div>
     </div>
     <div style="margin-top:48px" class="rv"><a href="{{ route('home') }}#contacto" class="b b-light">Conversar con el equipo @include('site.partials.icon', ['name' => 'arrow'])</a></div>
   </div>

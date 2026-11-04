@@ -168,11 +168,30 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 .tl-step:last-child { padding-bottom: 0; }
 .tl-dot { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--line); background: #fff; display: grid; place-items: center; font-weight: 800; font-size: 0.95rem; color: var(--muted-2); position: relative; z-index: 1; transition: border-color .4s, color .4s, background .4s; }
 .tl-step.lit .tl-dot { border-color: var(--blue); background: var(--blue); color: #fff; }
+.tl-dot::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: currentColor; transition: transform .4s var(--ease); }
+.tl-step.lit .tl-dot::after { transform: scale(1.3); background: #fff; }
+@media (max-width: 720px) { .tl::before, .tl-fill { left: 15px; } .tl-step { grid-template-columns: 32px 1fr; gap: 16px; padding-bottom: 28px; } .tl-dot { width: 32px; height: 32px; } .tl-dot::after { width: 8px; height: 8px; } .tl-step h3 { font-size: 1.1rem; margin-top: 4px; } }
 .tl-step h3 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; margin: 9px 0 6px; }
 .tl-step p { color: var(--muted); max-width: 560px; }
 .sec-dark .tl::before { background: rgba(255,255,255,.14); }
 .sec-dark .tl-dot { background: var(--ink); border-color: rgba(255,255,255,.2); }
 .sec-dark .tl-step p { color: rgba(255,255,255,.66); }
+
+
+/* Carrusel horizontal en móvil */
+@media (max-width: 720px) {
+  .m-scroll { display: flex !important; grid-template-columns: none !important; gap: 12px !important; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 -20px; padding: 4px 20px 6px; scroll-padding: 0 20px; }
+  .m-scroll::-webkit-scrollbar { display: none; }
+  .m-scroll > * { flex: 0 0 82%; scroll-snap-align: start; min-width: 0; }
+  .m-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+  .m-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: width .3s var(--ease), background .3s; }
+  .m-dots i.on { width: 20px; background: var(--blue); }
+  .on-dark .m-dots i { background: rgba(255,255,255,.2); } .on-dark .m-dots i.on { background: var(--blue-l); }
+  .sec { padding: 64px 0; }
+  .m-hide { display: none !important; }
+  .sec-head { margin-bottom: 24px; }
+}
+@media (min-width: 721px) { .m-dots { display: none; } }
 
 /* Preguntas frecuentes */
 .faq { border-top: 1px solid var(--line); }
@@ -436,6 +455,17 @@ window.RC = (function () {
   const observe = (root) => (root || document).querySelectorAll('.rv:not(.in)').forEach((el) => io.observe(el));
   observe();
 
+  // Puntos indicadores para carruseles móviles
+  const dots = (root) => (root || document).querySelectorAll('.m-scroll:not([data-dots])').forEach((sc) => {
+    sc.dataset.dots = '1';
+    const n = sc.children.length; if (n < 2) return;
+    const d = document.createElement('div'); d.className = 'm-dots'; d.setAttribute('aria-hidden', 'true');
+    d.innerHTML = '<i></i>'.repeat(n); sc.after(d);
+    const paint = () => { const w = sc.children[0].getBoundingClientRect().width + 12; const i = Math.min(n - 1, Math.round(sc.scrollLeft / (w || 1))); d.querySelectorAll('i').forEach((x, k) => x.classList.toggle('on', k === i)); };
+    sc.addEventListener('scroll', paint, { passive: true }); paint();
+  });
+  dots();
+
   // Líneas de tiempo: la barra azul avanza con el scroll y enciende cada paso
   const timelines = [...document.querySelectorAll('.tl')];
   function paintTimelines() {
@@ -494,6 +524,7 @@ window.RC = (function () {
 
   return {
     observe,
+    dots,
     wa: (text) => 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text),
     // Anima un indicador circular (.gauge) hasta un porcentaje
     gauge(el, pct, color) {
