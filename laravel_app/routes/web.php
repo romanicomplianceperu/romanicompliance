@@ -30,6 +30,7 @@ use App\Http\Controllers\CourseQuestionController;
 use App\Http\Controllers\FedericoEditorController;
 use App\Http\Controllers\GuestEnrollController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\InternshipApplicationController;
 use App\Http\Controllers\Admin\InternshipApplicationController as AdminInternshipApplicationController;
 use App\Http\Controllers\PanelController;
@@ -46,7 +47,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/capacitaciones', 'capacitaciones')->name('capacitaciones');
-Route::view('/inmobiliario', 'inmobiliario.index')->name('inmobiliario');
+// Rediseño 2026-11: la antigua landing inmobiliaria vive ahora en /servicios (se conserva el nombre de ruta).
+Route::redirect('/inmobiliario', '/servicios/inmobiliario-notarial', 301)->name('inmobiliario');
+Route::redirect('/servicios', '/#servicios');
+Route::get('/servicios/{slug}', [ServiceController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('services.show');
 Route::prefix('aprendizaje')->name('aprendizaje.')->group(function () {
     Route::view('/', 'aprendizaje.index')->name('index');
     Route::view('/capacitaciones', 'aprendizaje.capacitaciones')->name('capacitaciones');

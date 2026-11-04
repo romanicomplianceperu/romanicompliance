@@ -1,191 +1,110 @@
-@extends('layouts.app')
+@extends('layouts.site')
 
 @section('title', $article->title.' · Romani Compliance')
 @section('description', $article->excerpt)
 
 @section('styles')
-.article-hero { background: var(--ink); padding: 3rem 0 2rem; position: relative; }
-.article-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-.article-hero-category { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gold); color: var(--white); padding: 5px 14px; border-radius: 20px; margin-bottom: 1rem; margin-right: 6px; }
-.article-hero-type { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(255,255,255,0.12); color: var(--gold-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 1rem; margin-right: 6px; }
-.article-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--white); font-weight: 400; line-height: 1.25; margin-bottom: 1rem; max-width: 780px; }
-.article-hero-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.4rem; }
-.article-hero-meta span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; background: rgba(255,255,255,0.08); color: var(--gold-light); padding: 5px 12px; border-radius: 20px; }
-
-.article-cover { max-width: 900px; margin: 2rem auto 0; padding: 0 24px; }
-.article-cover img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; border-radius: 8px; box-shadow: var(--shadow-m); display: block; }
-
-.article-layout { display: grid; grid-template-columns: 2.3fr 1fr; gap: 2.5rem; align-items: start; padding: 3rem 0; }
-.article-body { font-size: 0.95rem; color: var(--ink); line-height: 1.9; white-space: pre-line; }
-.article-body p { margin-bottom: 1.2rem; }
-.article-body h2, .article-body h3, .article-body h4 { color: var(--ink); font-weight: 600; line-height: 1.35; margin: 2rem 0 1rem; }
-.article-body h2 { font-size: 1.4rem; }
-.article-body h3 { font-size: 1.2rem; }
-.article-body h4 { font-size: 1.05rem; }
-.article-body ul, .article-body ol { margin: 0 0 1.2rem 1.4rem; }
-.article-body li { margin-bottom: 0.5rem; }
-.article-body a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
-.article-body a:hover { color: var(--gold-light); }
-.article-body strong, .article-body b { font-weight: 700; color: var(--ink); }
-.article-body blockquote { margin: 1.5rem 0; padding: 0.2rem 1.5rem; border-left: 3px solid var(--gold); color: var(--slate); font-style: italic; }
-.article-body img { max-width: 100%; height: auto; border-radius: 6px; margin: 1.5rem 0; display: block; }
-.article-body pre { background: var(--ivory); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font-family: monospace; white-space: pre; margin-bottom: 1.2rem; }
-.article-body code { font-family: monospace; }
-.article-body sub { vertical-align: sub; font-size: smaller; }
-.article-body sup { vertical-align: super; font-size: smaller; }
-.article-body .ql-size-small { font-size: 0.75em; }
-.article-body .ql-size-large { font-size: 1.5em; }
-.article-body .ql-size-huge { font-size: 2.5em; }
-.article-body .ql-font-serif { font-family: Georgia, 'Times New Roman', serif; }
-.article-body .ql-font-monospace { font-family: Monaco, 'Courier New', monospace; }
-.article-body .ql-indent-1 { padding-left: 3em; }
-.article-body .ql-indent-2 { padding-left: 6em; }
-.article-body .ql-indent-3 { padding-left: 9em; }
-.article-body .ql-indent-4 { padding-left: 12em; }
-.article-body .ql-indent-5 { padding-left: 15em; }
-.article-body .ql-indent-6 { padding-left: 18em; }
-.article-body .ql-indent-7 { padding-left: 21em; }
-.article-body .ql-indent-8 { padding-left: 24em; }
-
-.author-card { display: flex; gap: 1rem; align-items: center; background: var(--ivory); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem; margin-bottom: 2rem; }
-.author-card img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-.author-card a.author-name { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
-.author-card a.author-name:hover { color: var(--gold); }
-.author-card .author-title { font-size: 0.76rem; color: var(--gold); font-weight: 600; margin-bottom: 2px; }
-.author-card p { font-size: 0.8rem; color: var(--slate); margin: 0; }
-
-.tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 2rem 0; }
-.tags-row a { font-size: 0.72rem; padding: 5px 12px; background: var(--ivory-dim); color: var(--slate); border-radius: 20px; }
-.tags-row a:hover { background: var(--gold-pale); color: var(--gold); }
-
-.materials-block { background: var(--ivory); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 2rem; }
-.materials-block h4 { font-size: 0.85rem; color: var(--ink); margin-bottom: 0.9rem; }
-.material-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
-.material-item:first-of-type { border-top: none; padding-top: 0; }
-.material-item svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--gold); }
-.material-item .material-name { font-size: 0.84rem; color: var(--ink); font-weight: 600; }
-.material-item .material-meta { font-size: 0.7rem; color: var(--slate-light); }
-.material-item a.material-download { margin-left: auto; font-size: 0.74rem; font-weight: 700; color: var(--gold); white-space: nowrap; }
-.material-item a.material-download:hover { color: var(--gold-light); }
-
-.share-row { display: flex; align-items: center; gap: 10px; padding: 1.2rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 2.5rem; }
-.share-row span { font-size: 0.78rem; font-weight: 600; color: var(--slate); margin-right: 6px; }
-.share-btn { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--ivory-dim); color: var(--slate); transition: background 0.2s, color 0.2s; }
-.share-btn:hover { background: var(--gold); color: var(--white); }
-.share-btn svg { width: 15px; height: 15px; fill: currentColor; }
-
-.related-section h3, .sidebar-title { font-size: 1rem; margin-bottom: 1.2rem; }
-.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-
-@media (max-width: 900px) {
-  .article-layout { grid-template-columns: 1fr; }
-  .related-grid { grid-template-columns: 1fr; }
-  .article-cover img { height: 220px; }
-  .author-card { flex-direction: column; text-align: center; }
-}
+.ar-hero { padding: clamp(48px, 7vw, 96px) 0 clamp(28px, 4vw, 44px); }
+.ar-hero .wrap { max-width: 920px; }
+.ar-hero h1 { font-size: clamp(2.1rem, 4.6vw, 3.8rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.035em; margin: 18px 0 22px; }
+.ar-meta { display: flex; gap: 8px 18px; flex-wrap: wrap; color: var(--muted); font-weight: 600; font-size: .95rem; }
+.ar-cover { max-width: 1120px; margin: 0 auto 8px; padding: 0 32px; }
+.ar-cover img { width: 100%; max-height: 560px; object-fit: cover; border-radius: 26px; }
+@media (max-width: 720px) { .ar-cover { padding: 0 20px; } .ar-cover img { border-radius: 18px; } }
+.ar-lay { max-width: 1120px; margin: 0 auto; padding: clamp(36px, 5vw, 64px) 32px; display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 56px; }
+@media (max-width: 960px) { .ar-lay { grid-template-columns: 1fr; padding-left: 20px; padding-right: 20px; } }
+.ar-author { display: flex; gap: 16px; align-items: center; padding: 18px 20px; border: 1px solid var(--line); border-radius: 18px; margin-bottom: 36px; }
+.ar-author img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
+.ar-author a { font-weight: 800; }
+.ar-author span { display: block; color: var(--muted); font-size: .9rem; }
+.prose { font-size: 1.12rem; line-height: 1.8; color: #1E2B42; }
+.prose > * + * { margin-top: 1.1em; }
+.prose h2, .prose h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: var(--ink); margin-top: 1.8em; }
+.prose h2 { font-size: 1.7rem; } .prose h3 { font-size: 1.35rem; }
+.prose a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+.prose ul, .prose ol { padding-left: 1.3em; }
+.prose li + li { margin-top: .4em; }
+.prose blockquote { border-left: 3px solid var(--blue); padding: 4px 0 4px 20px; color: var(--muted); }
+.prose img { border-radius: 16px; margin: 1.6em 0; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.prose th, .prose td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; }
+.mats { margin-top: 40px; display: grid; gap: 10px; }
+.mat { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; }
+.mat .icon-tile { width: 44px; height: 44px; font-size: 20px; }
+.mat b { display: block; }
+.mat span { color: var(--muted); font-size: .88rem; }
+.mat a { margin-left: auto; }
+.share { display: flex; align-items: center; gap: 10px; margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); font-weight: 700; }
+.share a { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; transition: border-color .2s, background .2s; }
+.share a:hover { border-color: var(--blue); background: var(--blue-50); }
+.share svg { width: 18px; height: 18px; fill: var(--ink); }
+.ar-side { position: sticky; top: 110px; align-self: start; }
+.ar-side .card { padding: 24px; }
+.ar-side h4 { font-size: 1rem; font-weight: 800; margin-bottom: 12px; }
+.ar-side .rec { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.ar-side .rec:first-of-type { border-top: 0; }
+.ar-side .rec img { width: 54px; height: 54px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+.ar-side .rec a { font-weight: 700; font-size: .92rem; line-height: 1.35; }
+@media (max-width: 960px) { .ar-side { position: static; } }
 @endsection
 
 @section('content')
-<section class="article-hero">
+<section class="ar-hero">
   <div class="wrap">
-    <span class="article-hero-type">{{ $article->typeLabel() }}</span>
-    @if($article->category)
-      <span class="article-hero-category">{{ $article->category->name }}</span>
-    @endif
-    <h1>{{ $article->title }}</h1>
-    <div class="article-hero-meta">
-      <span>{{ $article->published_at?->translatedFormat('d \d\e F \d\e Y') }}</span>
-      @if($article->reading_minutes)<span>{{ $article->reading_minutes }} min de lectura</span>@endif
-    </div>
+    <div class="chips rv"><span class="chip">{{ $article->typeLabel() }}</span>@if($article->category)<span class="chip">{{ $article->category->name }}</span>@endif</div>
+    <h1 class="rv">{{ $article->title }}</h1>
+    <div class="ar-meta rv"><span>{{ $article->published_at?->translatedFormat('d \d\e F \d\e Y') }}</span>@if($article->reading_minutes)<span>{{ $article->reading_minutes }} min de lectura</span>@endif</div>
   </div>
 </section>
 
 @if($article->cover_image)
-  <div class="article-cover">
-    <img src="{{ asset('storage/'.$article->cover_image) }}" alt="{{ $article->title }}">
-  </div>
+  <div class="ar-cover rv"><img src="{{ asset('storage/'.$article->cover_image) }}" alt="{{ $article->title }}"></div>
 @endif
 
-<section class="wrap article-layout">
-  <div>
-    <div class="author-card">
+<div class="ar-lay">
+  <article>
+    <div class="ar-author">
       <img src="{{ $article->author->displayPhoto() ?? asset('images/logos.png') }}" alt="{{ $article->author->name }}">
-      <div>
-        <div class="author-title">{{ $article->author->title }}</div>
-        <a href="{{ route('blog.author', $article->author) }}" class="author-name">{{ $article->author->name }}</a>
-        <p>{{ \Illuminate\Support\Str::limit($article->author->bio, 110) }}</p>
-      </div>
+      <div><a href="{{ route('blog.author', $article->author) }}">{{ $article->author->name }}</a><span>{{ $article->author->title }}</span></div>
     </div>
 
-    <div class="article-body">{!! $article->content !!}</div>
+    <div class="prose">{!! $article->content !!}</div>
 
     @if($article->materials->isNotEmpty())
-      <div class="materials-block">
-        <h4>Material adicional</h4>
+      <div class="mats">
+        <h3 class="h3">Material adicional</h3>
         @foreach($article->materials as $material)
-          <div class="material-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 15h6M9 11h2"></path></svg>
-            <div>
-              <div class="material-name">{{ $material->original_name }}</div>
-              @if($material->humanSize())<div class="material-meta">PDF · {{ $material->humanSize() }}</div>@endif
-            </div>
-            <a class="material-download" href="{{ asset('storage/'.$material->path) }}" target="_blank" download>Descargar →</a>
-          </div>
+          <div class="mat"><span class="icon-tile">@include('site.partials.icon', ['name' => 'doc'])</span><div><b>{{ $material->original_name }}</b>@if($material->humanSize())<span>PDF · {{ $material->humanSize() }}</span>@endif</div><a class="b b-ghost b-sm" href="{{ asset('storage/'.$material->path) }}" target="_blank" download>Descargar</a></div>
         @endforeach
       </div>
     @endif
 
     @if($article->tags->isNotEmpty())
-      <div class="tags-row">
-        @foreach($article->tags as $tag)
-          <a href="{{ route('blog.index', ['etiqueta' => $tag->slug]) }}">#{{ $tag->name }}</a>
-        @endforeach
-      </div>
+      <div class="chips" style="margin-top:32px">@foreach($article->tags as $tag)<a class="chip" href="{{ route('blog.index', ['etiqueta' => $tag->slug]) }}">{{ $tag->name }}</a>@endforeach</div>
     @endif
 
-    <div class="share-row">
-      <span>Compartir:</span>
-      <a class="share-btn" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" aria-label="Compartir en Facebook">
-        <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>
-      </a>
-      <a class="share-btn" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" aria-label="Compartir en LinkedIn">
-        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-      </a>
-      <a class="share-btn" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($article->title) }}" aria-label="Compartir en X">
-        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      </a>
-      <a class="share-btn" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text={{ urlencode($article->title.' '.url()->current()) }}" aria-label="Compartir en WhatsApp">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 22c-1.75 0-3.46-.47-4.96-1.36l-.35-.21-3.68.97.99-3.59-.23-.37a9.86 9.86 0 01-1.51-5.26C2.31 6.73 6.73 2.31 12.05 2.31c2.58 0 5 1.01 6.82 2.83a9.72 9.72 0 012.83 6.86c0 5.32-4.42 9.74-9.65 9.74"/></svg>
-      </a>
+    <div class="share">
+      <span>Compartir</span>
+      <a target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" aria-label="Compartir en LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.13 2.06 2.06 0 010 4.13zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+      <a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" aria-label="Compartir en Facebook"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a>
+      <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($article->title) }}" aria-label="Compartir en X"><svg viewBox="0 0 24 24"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.21-6.82-5.97 6.82H1.68l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.12z"/></svg></a>
+      <a target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text={{ urlencode($article->title.' '.url()->current()) }}" aria-label="Compartir en WhatsApp"><svg viewBox="0 0 24 24"><path d="M12.05 2C6.53 2 2.05 6.48 2.05 12c0 1.77.46 3.5 1.34 5.02L2 22l5.12-1.34A9.94 9.94 0 0012.05 22C17.57 22 22 17.52 22 12S17.57 2 12.05 2zm5.43 13.6c-.23.65-1.36 1.24-1.87 1.32-.48.07-1.08.1-1.74-.11-.4-.13-.92-.3-1.58-.58-2.78-1.2-4.6-4-4.73-4.18-.14-.19-1.13-1.5-1.13-2.87s.72-2.04.97-2.32c.26-.28.56-.35.75-.35h.53c.17 0 .4-.06.62.48.23.55.79 1.9.86 2.04.07.14.11.3.02.49-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.92 1.06.95 1.96 1.24 2.24 1.38.28.14.44.12.6-.07.16-.19.69-.81.88-1.09.18-.28.37-.23.62-.14.26.09 1.62.77 1.9.9.28.14.46.21.53.33.07.12.07.67-.16 1.32z"/></svg></a>
     </div>
 
     @if($related->isNotEmpty())
-      <div class="related-section">
-        <h3>Artículos relacionados</h3>
-        <div class="related-grid">
-          @foreach($related as $item)
-            @include('blog._article-card', ['article' => $item])
-          @endforeach
-        </div>
-      </div>
+      <div style="margin-top:56px"><h2 class="h3" style="margin-bottom:22px">Publicaciones relacionadas</h2><div class="posts" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">@foreach($related as $item)@include('blog._article-card', ['article' => $item])@endforeach</div></div>
     @endif
-  </div>
+  </article>
 
-  <aside>
+  <aside class="ar-side">
     @if($recent->isNotEmpty())
-      <div class="blog-sidebar-block" style="background:var(--white);border:1px solid var(--line);border-radius:8px;padding:1.4rem;">
-        <h4 class="sidebar-title">Artículos recientes</h4>
+      <div class="card"><h4>Recientes</h4>
         @foreach($recent as $item)
-          <div class="recent-item" style="display:flex;gap:10px;align-items:flex-start;margin-bottom:1rem;">
-            <img src="{{ $item->cover_image ? asset('storage/'.$item->cover_image) : asset('images/logos.png') }}" alt="{{ $item->title }}" style="width:52px;height:52px;object-fit:cover;border-radius:4px;flex-shrink:0;">
-            <div>
-              <a href="{{ route('blog.show', $item) }}" style="font-size:0.82rem;color:var(--ink);font-weight:600;line-height:1.4;">{{ $item->title }}</a>
-              <div style="font-size:0.68rem;color:var(--slate-light);margin-top:2px;">{{ $item->published_at?->format('d/m/Y') }}</div>
-            </div>
-          </div>
+          <div class="rec"><img src="{{ $item->cover_image ? asset('storage/'.$item->cover_image) : asset('images/logos.png') }}" alt=""><div><a href="{{ route('blog.show', $item) }}">{{ $item->title }}</a></div></div>
         @endforeach
       </div>
     @endif
+    <div class="card" style="margin-top:16px;background:var(--ink);color:#fff;border-color:transparent"><h4 style="color:#fff">¿Tiene un caso parecido?</h4><p style="color:rgba(255,255,255,.7);font-size:.95rem;margin-bottom:16px">Converse con el equipo sobre su situación.</p><a href="{{ route('home') }}#contacto" class="b b-light b-sm b-block">Agendar consulta</a></div>
   </aside>
-</section>
+</div>
 @endsection

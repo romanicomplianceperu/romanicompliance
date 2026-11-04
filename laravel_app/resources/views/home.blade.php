@@ -1,471 +1,287 @@
-@extends('layouts.app')
+@extends('layouts.site')
 
-@section('title', 'Romani Compliance · Compliance · ALA/CFT · Due Diligence')
-@section('description', 'Romani Compliance: servicios especializados en Compliance corporativo, prevención de lavado de activos, derecho penal, Due Diligence e investigación financiera en Perú.')
+@php $services = \App\Support\ServiceCatalog::all(); @endphp
 
 @section('styles')
-/* ── HERO ── */
-.hero { background: var(--ink); padding: 7rem 0 6rem; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(139,115,64,0.06) 0%, transparent 70%); pointer-events: none; }
-.hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-.hero-content { max-width: 680px; position: relative; z-index: 1; }
-.hero-eyebrow { font-family: var(--sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold-light); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
-.hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--gold); }
-.hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); color: var(--white); font-weight: 400; line-height: 1.12; margin-bottom: 1.5rem; }
-.hero h1 em { font-style: italic; color: var(--gold-light); }
-.hero-sub { font-size: 1rem; color: rgba(255,255,255,0.5); line-height: 1.75; max-width: 520px; margin-bottom: 2.5rem; font-weight: 300; }
-.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+/* Portada */
+.hero { position: relative; overflow: hidden; padding: clamp(64px, 9vw, 128px) 0 clamp(56px, 7vw, 96px); }
+.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 60% 70% at 80% 20%, #000 5%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 60% 70% at 80% 20%, #000 5%, transparent 70%); }
+.hero::after { content: ''; position: absolute; width: 720px; height: 720px; right: -220px; top: -300px; border-radius: 50%; background: radial-gradient(circle, rgba(31,79,216,.18), transparent 62%); animation: drift 16s ease-in-out infinite alternate; }
+@keyframes drift { to { transform: translate(-80px, 70px) scale(1.1); } }
+.hero .wrap { position: relative; z-index: 1; }
+.hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: .9rem; font-weight: 600; color: var(--muted); margin-bottom: 30px; }
+.hero-tag i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px rgba(14,138,95,.15); }
+.hero h1 { max-width: 1000px; }
+.hero h1 em { font-style: normal; background: linear-gradient(90deg, var(--blue), #5B7FFF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero .lead { margin: 28px 0 38px; }
+.hero-acts { display: flex; gap: 12px; flex-wrap: wrap; }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(48px, 7vw, 88px); border-top: 1px solid var(--line); }
+.facts div { padding: 26px 26px 0 0; }
+.facts b { display: block; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+.facts span { color: var(--muted); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
+@media (max-width: 720px) { .facts { grid-template-columns: 1fr; } .facts div { padding: 20px 0 0; } }
 
-/* ── ABOUT STRIP ── */
-.about-strip { background: var(--white); padding: 5rem 0; border-bottom: 1px solid var(--line); }
-.about-grid { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 3rem; align-items: start; }
-.about-divider { background: var(--line); width: 1px; height: 100%; min-height: 80px; justify-self: center; }
-.about-block h3 { font-size: 1.4rem; color: var(--ink); margin-bottom: 0.6rem; }
-.about-block h3 span { color: var(--gold); }
-.about-block p { font-size: 0.88rem; color: var(--slate); line-height: 1.75; }
+/* ¿Qué necesita resolver? */
+.need { background: var(--ink); color: #fff; border-radius: 30px; padding: clamp(28px, 4vw, 52px); margin-top: clamp(48px, 6vw, 80px); }
+.need-top { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 26px; }
+.need h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; }
+.need-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.need a { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 22px; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); font-weight: 700; font-size: 1.02rem; line-height: 1.35; transition: background .25s, border-color .25s, transform .3s var(--ease); }
+.need a:hover { background: rgba(127,163,255,.14); border-color: rgba(127,163,255,.35); transform: translateY(-3px); }
+.need a .ic { width: 22px; height: 22px; color: var(--blue-l); transition: transform .25s var(--ease); }
+.need a:hover .ic { transform: translateX(4px); }
+@media (max-width: 960px) { .need-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px) { .need-grid { grid-template-columns: 1fr; } }
 
-/* ── SERVICES ── */
-.services { padding: 5rem 0; }
-.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-.service-card { background: var(--white); padding: 2rem; border-radius: var(--radius); border: 1px solid var(--line); transition: box-shadow 0.4s, border-color 0.4s, transform 0.4s; display: flex; flex-direction: column; }
-.service-card:hover { box-shadow: var(--shadow-m); border-color: var(--gold); transform: translateY(-4px); }
-.service-card.service-card-feature { border-color: rgba(139,115,64,0.3); background: linear-gradient(165deg, var(--white) 60%, var(--gold-pale) 150%); }
-.service-icon { width: 52px; height: 52px; border-radius: 12px; background: var(--gold-pale); color: var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; flex-shrink: 0; }
-.service-icon svg { width: 26px; height: 26px; }
-.service-card h4 { font-size: 1.15rem; margin-bottom: 0.6rem; }
-.service-card p { font-size: 0.85rem; color: var(--slate); line-height: 1.7; margin-bottom: 1.6rem; flex: 1; }
-.service-link { font-size: 0.78rem; font-weight: 600; color: var(--gold); display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
-.service-link:hover { gap: 10px; }
-.service-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; background: var(--gold); color: var(--white); font-family: var(--sans); font-size: 0.84rem; font-weight: 600; border: none; border-radius: var(--radius); cursor: pointer; text-decoration: none; transition: background 0.3s, transform 0.3s, box-shadow 0.3s; }
-.service-btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(139,115,64,0.28); }
-.service-btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-.service-btn-group .service-btn { flex: 1 1 calc(50% - 5px); min-width: 150px; }
-.service-btn-outline { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); }
-.service-btn-outline:hover { background: var(--gold); color: var(--white); }
+/* Estándares */
+.std { display: flex; align-items: center; gap: 12px 28px; flex-wrap: wrap; justify-content: center; padding: 30px 0; border-bottom: 1px solid var(--line); }
+.std span { font-weight: 700; color: var(--muted-2); font-size: .92rem; }
+.std b { font-size: 1.05rem; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
 
-/* ── CURSOS ONLINE ── */
-.courses-online { padding: 5rem 0; background: var(--white); border-bottom: 1px solid var(--line); }
-.courses-online-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
-.course-preview-card { background: var(--ivory); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: block; transition: box-shadow 0.4s, transform 0.4s, border-color 0.4s; }
-.course-preview-card:hover { box-shadow: var(--shadow-m); transform: translateY(-4px); border-color: var(--gold); }
-.course-preview-cover { aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden; }
-.course-preview-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.course-preview-body { padding: 1.4rem; }
-.course-preview-category { font-size: 0.66rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-.course-preview-body h4 { font-size: 1.02rem; margin-bottom: 0.5rem; line-height: 1.3; }
-.course-preview-body p { font-size: 0.8rem; color: var(--slate); line-height: 1.6; margin-bottom: 0.8rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.course-preview-meta { font-size: 0.72rem; color: var(--slate-light); }
-.courses-online-more { display: flex; justify-content: center; margin-top: 2.2rem; }
+/* Servicios */
+.svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.svc .card { display: flex; flex-direction: column; padding: 32px; }
+.svc .card h3 { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; margin: 22px 0 10px; }
+.svc .card > p { color: var(--muted); }
+.svc .inc { list-style: none; display: grid; gap: 10px; margin: 22px 0 28px; font-size: .95rem; }
+.svc .inc li { display: flex; gap: 10px; align-items: flex-start; }
+.svc .inc li .ic { width: 18px; height: 18px; color: var(--blue); margin-top: 3px; }
+.svc .acts { margin-top: auto; display: flex; gap: 10px; }
+.svc .acts .b { flex: 1; }
+.svc .card.feat { background: linear-gradient(160deg, var(--navy), var(--ink)); color: #fff; border-color: transparent; }
+.svc .card.feat > p { color: rgba(255,255,255,.7); }
+.svc .card.feat .icon-tile { background: rgba(127,163,255,.16); color: var(--blue-l); }
+.svc .card.feat .inc li .ic { color: var(--blue-l); }
+.svc .card.feat .badge { position: absolute; top: 26px; right: 26px; }
+@media (max-width: 1020px) { .svc { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 680px) { .svc { grid-template-columns: 1fr; } }
+.train { margin-top: 16px; display: flex; align-items: center; gap: 22px; justify-content: space-between; flex-wrap: wrap; }
+.train .l { display: flex; align-items: center; gap: 18px; }
+.train h3 { font-size: 1.2rem; font-weight: 800; }
 
-/* ── PLANS ── */
-.plans { padding: 5rem 0; background: var(--ink); }
-.plans .section-header h2 { color: var(--white); }
-.plans .section-header p { color: rgba(255,255,255,0.5); }
-.plans .section-header .gold-line { background: var(--gold-light); }
-.plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
-.plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 2rem; display: flex; flex-direction: column; transition: border-color 0.4s, background 0.4s, transform 0.4s; }
-.plan-card:hover { border-color: var(--gold); background: rgba(255,255,255,0.06); transform: translateY(-4px); }
-.plan-card.highlight { border-color: var(--gold); background: rgba(139,115,64,0.08); }
-.plan-tag { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold-light); margin-bottom: 0.8rem; }
-.plan-card h4 { font-size: 1.15rem; color: var(--white); margin-bottom: 0.4rem; }
-.plan-desc { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; min-height: 44px; }
-.plan-features { list-style: none; flex: 1; }
-.plan-features li { font-size: 0.8rem; color: rgba(255,255,255,0.65); padding: 6px 0; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
-.plan-features li::before { content: '\2713'; color: var(--gold-light); flex-shrink: 0; font-weight: 700; }
-.plan-cta { margin-top: 1.5rem; }
-.btn-plan-cta { display: block; text-align: center; padding: 11px; font-size: 0.8rem; font-weight: 600; border-radius: var(--radius); border: 1px solid var(--gold); color: var(--gold-light); background: transparent; cursor: pointer; font-family: var(--sans); transition: all 0.3s; width: 100%; }
-.btn-plan-cta:hover { background: var(--gold); color: var(--white); }
-.plan-card.highlight .btn-plan-cta { background: var(--gold); color: var(--white); }
-.plan-card.highlight .btn-plan-cta:hover { background: var(--gold-light); }
+/* Método */
+.steps4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+.steps4::before { content: ''; position: absolute; left: 0; right: 0; top: 30px; height: 2px; background: rgba(255,255,255,.14); }
+.steps4 .ln { position: absolute; left: 0; top: 30px; height: 2px; width: 0; background: var(--blue-l); transition: width 1.8s var(--ease); }
+.steps4.in .ln { width: 100%; }
+.steps4 > div:not(.ln) { position: relative; padding-right: 28px; }
+.steps4 .no { width: 60px; height: 60px; border-radius: 50%; background: var(--ink); border: 2px solid rgba(255,255,255,.18); display: grid; place-items: center; font-weight: 800; font-size: 1.1rem; margin-bottom: 26px; transition: border-color .6s, background .6s; }
+.steps4.in .no { border-color: var(--blue-l); }
+.steps4 h3 { font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+.steps4 p { color: rgba(255,255,255,.65); }
+@media (max-width: 900px) { .steps4 { grid-template-columns: 1fr 1fr; gap: 36px 0; } .steps4::before, .steps4 .ln { display: none; } }
+@media (max-width: 560px) { .steps4 { grid-template-columns: 1fr; } }
 
-/* ── DIRECTOR ── */
-.director { padding: 5rem 0; background: var(--white); }
-.director-box { display: flex; gap: 3rem; align-items: flex-start; }
-.director-photo { width: 180px; height: 180px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 3px solid var(--ivory-dim); box-shadow: var(--shadow-s); }
-.director-photo img { width: 100%; height: 100%; object-fit: cover; }
-.director-info h3 { font-size: 1.6rem; margin-bottom: 2px; }
-.director-title { font-size: 0.82rem; color: var(--gold); font-weight: 600; margin-bottom: 1rem; }
-.director-bio { font-size: 0.88rem; color: var(--slate); line-height: 1.75; margin-bottom: 1rem; }
-.director-contact { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 1rem; }
-.director-contact a { font-size: 0.78rem; color: var(--slate); display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
-.director-contact a:hover { color: var(--gold); }
-.director-creds { display: flex; flex-wrap: wrap; gap: 6px; }
-.cred-tag { font-size: 0.65rem; font-weight: 600; padding: 4px 10px; background: var(--gold-pale); color: var(--gold); border-radius: 3px; letter-spacing: 0.02em; }
+/* Clientes */
+.logos { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.logos-track { display: flex; gap: 72px; width: max-content; animation: marquee 30s linear infinite; align-items: center; }
+.logos-track > * { height: 46px; display: flex; align-items: center; opacity: .7; filter: grayscale(1); transition: opacity .3s, filter .3s; }
+.logos-track > *:hover { opacity: 1; filter: none; }
+.logos-track img { max-height: 46px; width: auto; }
+.logos-track .txt { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; }
+@keyframes marquee { to { transform: translateX(-50%); } }
 
-/* ── BLOG ── */
-.blog { padding: 5rem 0; }
-.blog .article-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
-.blog-more { display: flex; justify-content: center; margin-top: 2rem; }
+/* Dirección */
+.dir { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(36px, 6vw, 96px); align-items: center; }
+.dir-photo { border-radius: 28px; overflow: hidden; background: var(--soft); aspect-ratio: 4 / 5; }
+.dir-photo img { width: 100%; height: 100%; object-fit: cover; }
+.dir .h2 { margin-bottom: 8px; }
+.dir .role { color: var(--blue); font-weight: 700; margin-bottom: 22px; }
+.dir .lead { margin-bottom: 26px; }
+.dir .contact { display: flex; gap: 10px 24px; flex-wrap: wrap; margin-top: 26px; }
+@media (max-width: 860px) { .dir { grid-template-columns: 1fr; } .dir-photo { max-width: 380px; } }
 
-/* ── CONTACT SECTION ── */
-.contact-section { padding: 5rem 0; background: var(--ink); }
-.contact-section .section-header h2 { color: var(--white); }
-.contact-section .section-header p { color: rgba(255,255,255,0.5); }
-.contact-section .section-header .gold-line { background: var(--gold-light); }
-.contact-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; margin-top: 2rem; }
-.contact-info h3 { font-size: 1.2rem; color: var(--white); margin-bottom: 1rem; }
-.contact-info p { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.75; margin-bottom: 1.5rem; }
-.contact-detail { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
-.contact-detail a { color: var(--gold-light); font-size: 0.82rem; transition: color 0.2s; }
-.contact-detail a:hover { color: var(--white); }
-.cd-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.3); min-width: 56px; }
-
-.contact-form { display: flex; flex-direction: column; gap: 14px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.contact-form label { font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; display: block; }
-.contact-form input, .contact-form textarea, .contact-form select { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); color: var(--white); font-family: var(--sans); font-size: 0.85rem; transition: border-color 0.3s, background 0.3s; }
-.contact-form input::placeholder, .contact-form textarea::placeholder { color: rgba(255,255,255,0.2); }
-.contact-form input:focus, .contact-form textarea:focus, .contact-form select:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,0.08); }
-.contact-form textarea { resize: vertical; min-height: 80px; }
-.contact-form select option { background: var(--ink); color: var(--white); }
-.btn-submit { padding: 12px 28px; background: var(--gold); color: var(--white); border: none; border-radius: var(--radius); font-family: var(--sans); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.3s, transform 0.3s; align-self: flex-start; }
-.btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
-.form-msg { display: none; padding: 2rem; text-align: center; color: var(--gold-light); font-size: 0.9rem; font-weight: 500; }
-
-/* ── CLIENTES (trust carousel) ── */
-.clients-strip { background: var(--ink); padding: 4rem 0; overflow: hidden; position: relative; }
-.clients-strip .section-header h2 { color: var(--white); }
-.clients-strip .section-header p { color: rgba(255,255,255,0.5); }
-.clients-strip .section-header .gold-line { background: var(--gold-light); }
-.clients-track-wrap { position: relative; margin-top: 2.5rem; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
-.clients-track { display: flex; align-items: center; gap: 4.5rem; width: max-content; animation: clients-scroll 28s linear infinite; }
-.clients-track:hover { animation-play-state: paused; }
-.client-item { display: flex; align-items: center; justify-content: center; height: 64px; flex-shrink: 0; }
-.client-item img { height: 46px; width: auto; max-width: 180px; object-fit: contain; opacity: 0.92; transition: opacity 0.3s, transform 0.3s; }
-.client-item:hover img { opacity: 1; transform: translateY(-2px); }
-.client-item-framed { height: 96px; width: 96px; border-radius: 50%; background: rgba(255,255,255,0.96); border: 2px solid var(--gold-light); box-shadow: 0 6px 18px rgba(0,0,0,0.25); padding: 10px; box-sizing: border-box; }
-.client-item-framed img { height: 100%; width: 100%; max-width: none; opacity: 1; }
-.client-item-framed:hover img { transform: none; }
-.client-item-framed:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,0.3); }
-.client-item.client-text-logo { font-family: var(--serif); font-size: 1.7rem; letter-spacing: 0.02em; color: var(--gold-light); font-weight: 500; white-space: nowrap; transition: transform 0.3s; }
-.client-item.client-text-logo span { font-weight: 300; font-style: italic; color: rgba(255,255,255,0.55); }
-.client-item.client-text-logo:hover { transform: translateY(-2px); }
-@keyframes clients-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .clients-track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; } }
-
-@media (max-width: 900px) {
-  .services-grid, .plans-grid, .blog .article-grid, .courses-online-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
-  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .about-divider { display: none; }
-  .director-box { flex-direction: column; align-items: center; text-align: center; }
-  .director-contact { justify-content: center; }
-  .director-creds { justify-content: center; }
-  .contact-layout { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr !important; }
-  .hero { padding: 4rem 0 3.5rem; }
-  .clients-strip { padding: 3rem 0; }
-}
+/* Contacto */
+.ct { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(36px, 6vw, 96px); align-items: start; }
+.ct-ch { display: grid; gap: 12px; margin-top: 30px; }
+.ct-ch a { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: 16px; border: 1px solid var(--line); background: #fff; font-weight: 700; transition: border-color .25s; }
+.ct-ch a:hover { border-color: var(--blue); }
+.ct-ch a .icon-tile { width: 44px; height: 44px; font-size: 20px; }
+.ct-ch small { display: block; font-weight: 500; color: var(--muted); }
+.form { background: #fff; border: 1px solid var(--line); border-radius: 26px; padding: clamp(24px, 4vw, 44px); }
+.form .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form label { display: block; font-weight: 700; font-size: .92rem; margin-bottom: 8px; }
+.form .f { margin-bottom: 18px; }
+.form input, .form select, .form textarea { width: 100%; padding: 15px 16px; border-radius: 14px; border: 1.5px solid var(--line); font: inherit; font-size: 1rem; background: #fff; color: var(--ink); transition: border-color .2s; }
+.form input:focus, .form select:focus, .form textarea:focus { outline: none; border-color: var(--blue); }
+.form textarea { min-height: 130px; resize: vertical; }
+.form-ok { display: none; text-align: center; padding: 30px 10px; }
+@media (max-width: 860px) { .ct { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .form .row2 { grid-template-columns: 1fr; } }
 @endsection
 
 @section('content')
 <section class="hero">
   <div class="wrap">
-    <div class="hero-content">
-      <div class="hero-eyebrow">{{ \App\Models\SiteSetting::get('home_hero_eyebrow', 'Compliance · ALA/CFT · Due Diligence') }}</div>
-      <h1>{!! \App\Models\SiteSetting::get('home_hero_title', 'Protegemos su organización con <em>estrategia legal</em> y cumplimiento normativo') !!}</h1>
-      <p class="hero-sub">{{ \App\Models\SiteSetting::get('home_hero_subtitle', 'Asesoría especializada en compliance corporativo, prevención de lavado de activos, derecho penal y due diligence para empresas que operan bajo estándares rigurosos.') }}</p>
-      <div class="hero-actions">
-        <button class="btn btn-gold" onclick="irAContacto()">Solicitar asesoría</button>
-        <a href="#servicios" class="btn btn-ghost">Conocer servicios</a>
+    <div class="hero-tag rv"><i></i> Firma especializada en Lima, Perú</div>
+    <h1 class="display rv" style="--d:.05s">Criterio legal para decisiones que <em>no admiten errores.</em></h1>
+    <p class="lead rv" style="--d:.12s">Prevención de lavado de activos, compliance penal y defensa penal económica para empresas y personas. Le decimos con claridad dónde está el riesgo y qué hacer con él.</p>
+    <div class="hero-acts rv" style="--d:.18s">
+      <a href="#necesidad" class="b b-primary">Encontrar mi servicio @include('site.partials.icon', ['name' => 'arrow'])</a>
+      <a href="#contacto" class="b b-ghost">Agendar una consulta</a>
+    </div>
+
+    <div class="need rv" id="necesidad">
+      <div class="need-top"><h2>¿Qué necesita resolver hoy?</h2><span style="color:rgba(255,255,255,.6)">Elija su situación y le llevamos al servicio indicado.</span></div>
+      <div class="need-grid">
+        @foreach($services as $slug => $s)
+          <a href="{{ route('services.show', $slug) }}">{{ $s['situation'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
+        @endforeach
       </div>
+    </div>
+
+    <div class="facts">
+      <div class="rv"><b>15+</b><span>años de experiencia en investigación financiera y prevención LA/FT</span></div>
+      <div class="rv" style="--d:.06s"><b>6</b><span>áreas de práctica, del compliance a la defensa penal</span></div>
+      <div class="rv" style="--d:.12s"><b>GAFI</b><span>estándares internacionales aplicados a la normativa peruana</span></div>
     </div>
   </div>
 </section>
 
-<section class="about-strip" id="nosotros">
+<div class="wrap"><div class="std rv"><span>Trabajamos con</span><b>Ley 30424</b><b>SBS / UIF</b><b>GAFI</b><b>ISO 37001</b><b>COSO</b></div></div>
+
+<section class="sec" id="servicios">
   <div class="wrap">
-    <div class="about-grid">
-      <div class="about-block reveal-left">
-        <h3>Nuestra <span>misión</span></h3>
-        <p>{{ \App\Models\SiteSetting::get('home_mission', 'Brindar asesoría jurídica especializada y de alto nivel en materia de cumplimiento normativo, prevención de lavado de activos y financiamiento del terrorismo, y derecho penal, acompañando a las organizaciones en el diseño, implementación y fortalecimiento de sus sistemas de prevención conforme a las exigencias regulatorias nacionales e internacionales.') }}</p>
-      </div>
-      <div class="about-divider"></div>
-      <div class="about-block reveal-right">
-        <h3>Nuestra <span>visión</span></h3>
-        <p>{{ \App\Models\SiteSetting::get('home_vision', 'Ser el referente peruano en consultoría de compliance corporativo y ALA/CFT, reconocido por la rigurosidad técnica de nuestro equipo, la calidad de nuestros entregables y el compromiso con la cultura de cumplimiento de cada organización que acompañamos.') }}</p>
-      </div>
+    <div class="sec-head">
+      <div><div class="kicker rv"><span class="n">01</span> Servicios</div><h2 class="h2 rv">Seis áreas, un mismo estándar de rigor.</h2></div>
+      <p class="lead rv" style="max-width:440px">Cada servicio tiene su propia página, con herramientas para entender su caso antes de hablar con nosotros.</p>
+    </div>
+    <div class="svc">
+      @foreach($services as $slug => $s)
+        <article class="card card-link rv {{ $slug === 'criptoactivos-psav' ? 'feat' : '' }}" style="--d:{{ ($loop->index % 3) * 0.06 }}s;position:relative">
+          @if($slug === 'criptoactivos-psav')<span class="pill info badge" style="background:rgba(127,163,255,.16);color:#fff">Especialidad</span>@endif
+          <div class="icon-tile">@include('site.partials.icon', ['name' => $s['icon']])</div>
+          <h3>{{ $s['name'] }}</h3>
+          <p>{{ $s['card'] }}</p>
+          <ul class="inc">@foreach($s['includes'] as $it)<li>@include('site.partials.icon', ['name' => 'check']) <span>{{ $it }}</span></li>@endforeach</ul>
+          <div class="acts">
+            @if(isset($s['cta2']))
+              <a href="{{ route('services.show', $slug) }}#inmobiliario" class="b b-dark b-sm">{{ $s['cta'] }}</a>
+              <a href="{{ route('services.show', $slug) }}#notarial" class="b b-ghost b-sm">{{ $s['cta2'] }}</a>
+            @else
+              <a href="{{ route('services.show', $slug) }}" class="b {{ $slug === 'criptoactivos-psav' ? 'b-light' : 'b-dark' }} b-sm">{{ $s['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
+            @endif
+          </div>
+        </article>
+      @endforeach
+    </div>
+    <div class="card train rv">
+      <div class="l"><div class="icon-tile">@include('site.partials.icon', ['name' => 'cap'])</div><div><h3>Capacitación y certificación</h3><p class="muted">Programas en prevención LA/FT y compliance corporativo para su equipo.</p></div></div>
+      <a href="{{ route('capacitaciones') }}" class="b b-ghost">Ver programas @include('site.partials.icon', ['name' => 'arrow'])</a>
     </div>
   </div>
 </section>
 
-<section class="clients-strip" id="clientes">
+<section class="sec sec-dark on-dark">
   <div class="wrap">
-    <div class="section-header reveal">
-      <div class="gold-line"></div>
-      <h2>Clientes que confiaron en nosotros</h2>
-      <p>Organizaciones que respaldan nuestro trabajo en compliance y cumplimiento normativo</p>
+    <div class="sec-head"><div><div class="kicker rv"><span class="n">02</span> Cómo trabajamos</div><h2 class="h2 rv">Claridad desde la primera conversación.</h2></div></div>
+    <div class="steps4" id="steps4">
+      <span class="ln"></span>
+      @foreach([['Escuchamos', 'Una primera conversación para entender su caso, sus plazos y lo que está en juego.'], ['Diagnosticamos', 'Le decimos con claridad dónde está el riesgo, qué tan urgente es y qué opciones tiene.'], ['Ejecutamos', 'Documentos, defensas y respuestas preparadas con rigor técnico y a tiempo.'], ['Acompañamos', 'Seguimos a su lado hasta cerrar el caso o hasta que su sistema funcione por sí solo.']] as $i => [$t, $d])
+        <div class="rv" style="--d:{{ $i * 0.12 }}s"><div class="no">{{ $i + 1 }}</div><h3>{{ $t }}</h3><p>{{ $d }}</p></div>
+      @endforeach
     </div>
-    <div class="clients-track-wrap reveal">
-      <div class="clients-track">
-        @for ($i = 0; $i < 2; $i++)
-          <div class="client-item">
-            <img src="{{ asset('images/clientes/red-digital.svg') }}" alt="Red Digital" loading="lazy">
-          </div>
-          <div class="client-item">
-            <img src="{{ asset('images/clientes/qr-pay.png') }}" alt="QR Pay" loading="lazy">
-          </div>
-          <div class="client-item client-text-logo">Gold<span>Lion</span></div>
-          <div class="client-item client-item-framed">
-            <img src="{{ asset('images/clientes/san-jorge.png') }}" alt="Créditos San Jorge" loading="lazy">
-          </div>
+  </div>
+</section>
+
+<section class="sec" style="padding-bottom:clamp(48px,6vw,80px)">
+  <div class="wrap">
+    <div class="sec-head" style="margin-bottom:36px"><div><div class="kicker rv"><span class="n">03</span> Clientes</div><h2 class="h3 rv" style="font-size:clamp(1.4rem,2.6vw,2rem)">Organizaciones que confían en nuestro trabajo.</h2></div></div>
+    <div class="logos rv">
+      <div class="logos-track">
+        @for($i = 0; $i < 2; $i++)
+          <div><img src="{{ asset('images/clientes/red-digital.svg') }}" alt="Red Digital" loading="lazy"></div>
+          <div><img src="{{ asset('images/clientes/qr-pay.png') }}" alt="QR Pay" loading="lazy"></div>
+          <div class="txt">GoldLion</div>
+          <div><img src="{{ asset('images/clientes/san-jorge.png') }}" alt="Créditos San Jorge" loading="lazy"></div>
         @endfor
       </div>
     </div>
   </div>
 </section>
 
-<section class="services" id="servicios">
-  <div class="wrap">
-    <div class="section-header reveal">
-      <div class="gold-line"></div>
-      <h2>Nuestros servicios</h2>
-      <p>Soluciones jurídicas especializadas para el cumplimiento normativo de su organización</p>
-    </div>
-    <div class="services-grid">
-      <div class="service-card reveal stagger-1">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 3.3v5.4c0 5-3.4 8.8-8 10.3-4.6-1.5-8-5.3-8-10.3V5.8l8-3.3z"/><path d="M9 12l2 2 4-4.5"/></svg></div>
-        <h4>Compliance &amp; Prevención LA/FT</h4>
-        <p>Diseño e implementación de modelos de prevención conforme a la Ley N.° 30424 y sistemas SPLAFT completos: manuales, matrices de riesgo, due diligence e investigación financiera para proteger a su organización frente a la responsabilidad penal y los riesgos de lavado de activos.</p>
-        <button type="button" onclick="irAContacto('Compliance corporativo')" class="service-btn">Consultar →</button>
-      </div>
-      <div class="service-card reveal stagger-2">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
-        <h4>Asesoría Penal &amp; Capacitaciones</h4>
-        <p>Defensa técnica especializada en derecho penal para personas naturales y jurídicas, junto con programas de formación y certificación en prevención LA/FT y compliance corporativo para su equipo.</p>
-        <button type="button" onclick="irAContacto('Asesoría penal')" class="service-btn">Consultar →</button>
-      </div>
-      <div class="service-card service-card-feature reveal stagger-3">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9.5l7-5 7 5V21"/><path d="M9 21v-6h6v6"/><path d="M9 12h.01M15 12h.01M12 9h.01"/></svg></div>
-        <h4>Compliance Inmobiliario / Notarial</h4>
-        <p>Due diligence de propiedades, saneamiento técnico-legal y modelos de prevención para inmobiliarias, agentes y compradores, junto con sistemas SPLAF a medida para notarías.</p>
-        <div class="service-btn-group">
-          <a href="{{ route('inmobiliario') }}" class="service-btn">Compliance Inmobiliario</a>
-          <button type="button" onclick="irAContacto('Compliance Notarial')" class="service-btn service-btn-outline">Compliance Notarial</button>
-        </div>
+<section class="sec sec-soft" id="director">
+  <div class="wrap dir">
+    <div class="dir-photo rv"><img src="{{ asset('images/imagen.png') }}" alt="Denis Gabriel Romani Seminario" loading="lazy"></div>
+    <div>
+      <div class="kicker rv"><span class="n">04</span> Dirección</div>
+      <h2 class="h2 rv">Denis Gabriel Romani Seminario</h2>
+      <div class="role rv">Abogado especialista en compliance corporativo y ALA/CFT</div>
+      <p class="lead rv">Máster en Derecho Penal por la Pontificia Universidad Católica del Perú y Máster en Cumplimiento Normativo Penal por la Universidad de Castilla-La Mancha. Más de quince años de experiencia en investigación financiera, prevención de lavado de activos y compliance corporativo.</p>
+      <div class="chips rv"><span class="chip">PUCP</span><span class="chip">UCLM</span><span class="chip">ISO 37001:2021</span><span class="chip">Compliance Officer</span></div>
+      <div class="contact rv">
+        <a href="mailto:denis@romanicompliance.com" class="lnk">denis@romanicompliance.com</a>
+        <a href="https://www.denisromani.com" class="lnk" target="_blank" rel="noopener">denisromani.com</a>
+        <a href="{{ route('equipo') }}" class="lnk">Conocer al equipo @include('site.partials.icon', ['name' => 'arrow'])</a>
       </div>
     </div>
   </div>
 </section>
 
 @if($featuredCourses->isNotEmpty())
-<section class="courses-online" id="cursos-online">
+<section class="sec">
   <div class="wrap">
-    <div class="section-header reveal">
-      <div class="gold-line"></div>
-      <h2>{{ \App\Models\SiteSetting::get('home_courses_title', 'Cursos y capacitaciones online') }}</h2>
-      <p>{{ \App\Models\SiteSetting::get('home_courses_subtitle', 'Explore nuestro catálogo de cursos y avance a su propio ritmo. Cree una cuenta gratuita para inscribirse.') }}</p>
-    </div>
-    <div class="courses-online-grid">
+    <div class="sec-head"><div><div class="kicker rv"><span class="n">05</span> Formación</div><h2 class="h2 rv">Cursos para equipos que previenen.</h2></div><a href="{{ route('courses.catalog') }}" class="lnk rv">Ver todos los cursos @include('site.partials.icon', ['name' => 'arrow'])</a></div>
+    <div class="posts">
       @foreach($featuredCourses as $course)
-        <a href="{{ route('courses.show', $course) }}" class="course-preview-card reveal stagger-{{ $loop->iteration }}">
-          <div class="course-preview-cover">
-            @if($course->cover_image)
-              <img src="{{ asset('storage/'.$course->cover_image) }}" alt="{{ $course->title }}">
-            @endif
-          </div>
-          <div class="course-preview-body">
-            @if($course->category)
-              <div class="course-preview-category">{{ $course->category->name }}</div>
-            @endif
-            <h4>{{ $course->title }}</h4>
-            <div style="margin-bottom:0.6rem;display:flex;gap:6px;flex-wrap:wrap;">@include('courses._certificate-badge') @include('courses._exclusive-badge')</div>
+        <a href="{{ route('courses.show', $course) }}" class="post rv" style="--d:{{ $loop->index * 0.06 }}s">
+          <div class="cv">@if($course->cover_image)<img src="{{ asset('storage/'.$course->cover_image) }}" alt="{{ $course->title }}" loading="lazy">@endif</div>
+          <div class="bd">
+            <div class="mt">{{ $course->category->name ?? 'Curso' }}@if($course->duration_minutes) · {{ $course->lectiveHours() }} {{ $course->lectiveHours() === 1 ? 'hora' : 'horas' }}@endif</div>
+            <h3>{{ $course->title }}</h3>
             <p>{{ $course->description }}</p>
-            <div class="course-preview-meta">
-              @if($course->instructor_name){{ $course->instructor_name }}@endif
-              @if($course->duration_minutes) · {{ $course->lectiveHours() }} {{ $course->lectiveHours() === 1 ? 'hora' : 'horas' }} @endif
-            </div>
           </div>
         </a>
       @endforeach
-    </div>
-    <div class="courses-online-more">
-      <a href="{{ route('courses.catalog') }}" class="btn btn-gold">Ver todos los cursos</a>
     </div>
   </div>
 </section>
 @endif
 
-<section class="plans" id="planes">
+<section class="sec {{ $featuredCourses->isNotEmpty() ? 'sec-soft' : '' }}" id="noticias">
   <div class="wrap">
-    <div class="section-header reveal">
-      <div class="gold-line"></div>
-      <h2>Programas de capacitación</h2>
-      <p>Formación adaptada a las necesidades de cumplimiento de su organización</p>
-    </div>
-    <div class="plans-grid">
-      <div class="plan-card reveal stagger-1">
-        <div class="plan-tag">Esencial</div>
-        <h4>Capacitación SPLAFT</h4>
-        <p class="plan-desc">Fundamentos normativos y operativos del sistema de prevención LA/FT</p>
-        <ul class="plan-features">
-          <li>Capacitación presencial o virtual (2 horas)</li>
-          <li>Marco normativo SPLAFT aplicable al sector</li>
-          <li>Tipologías LA/FT y señales de alerta</li>
-          <li>Obligaciones del sujeto obligado</li>
-          <li>Material de apoyo digital</li>
-          <li>Acompañamiento posterior de 5 días</li>
-        </ul>
-        <div class="plan-cta">
-          <a href="https://wa.me/51969754983?text=Hola%2C%20solicito%20informaci%C3%B3n%20sobre%20el%20Plan%20Esencial%20de%20capacitaci%C3%B3n%20SPLAFT." class="btn-plan-cta" target="_blank">Solicitar información</a>
-        </div>
-      </div>
-      <div class="plan-card highlight reveal stagger-2">
-        <div class="plan-tag">Recomendado</div>
-        <h4>Capacitación SPLAFT Integral</h4>
-        <p class="plan-desc">Formación completa con módulo dedicado al Oficial de Cumplimiento</p>
-        <ul class="plan-features">
-          <li>Todo lo incluido en el Plan Esencial</li>
-          <li>Guía para documentación exigida por la UIF</li>
-          <li>Manual de Prevención, Código de Conducta y Matriz de Riesgos</li>
-          <li>Módulo: El Oficial de Cumplimiento</li>
-          <li>Debida diligencia del cliente (DDC/KYC)</li>
-          <li>Material editable y certificado</li>
-          <li>Acompañamiento posterior de 10 días</li>
-        </ul>
-        <div class="plan-cta">
-          <a href="https://wa.me/51969754983?text=Hola%2C%20solicito%20informaci%C3%B3n%20sobre%20el%20Plan%20Avanzado%20de%20capacitaci%C3%B3n%20SPLAFT%20Integral." class="btn-plan-cta" target="_blank">Solicitar información</a>
-        </div>
-      </div>
-      <div class="plan-card reveal stagger-3">
-        <div class="plan-tag">Integral</div>
-        <h4>Programa Blindaje 360</h4>
-        <p class="plan-desc">Diseño e implementación completa del sistema SPLAFT de su organización</p>
-        <ul class="plan-features">
-          <li>Todo lo incluido en el Plan Avanzado</li>
-          <li>Manual SPLAFT personalizado</li>
-          <li>Políticas DDC/KYC a medida</li>
-          <li>Procedimiento interno de ROS y RO</li>
-          <li>Programa de capacitación anual</li>
-          <li>Asesoría continua al Oficial de Cumplimiento</li>
-          <li>Auditoría interna del sistema</li>
-          <li>Soporte de 30 días</li>
-        </ul>
-        <div class="plan-cta">
-          <a href="https://wa.me/51969754983?text=Hola%2C%20solicito%20informaci%C3%B3n%20sobre%20el%20Programa%20Blindaje%20360." class="btn-plan-cta" target="_blank">Solicitar información</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="director" id="director">
-  <div class="wrap">
-    <div class="section-header reveal">
-      <div class="gold-line"></div>
-      <h2>Dirección</h2>
-    </div>
-    <div class="director-box">
-      <div class="director-photo reveal-left">
-        <img src="{{ asset('images/imagen.png') }}" alt="Denis Gabriel Romani Seminario">
-      </div>
-      <div class="director-info reveal-right">
-        <h3>Denis Gabriel Romani Seminario</h3>
-        <div class="director-title">Abogado especialista en Compliance corporativo y ALA/CFT</div>
-        <p class="director-bio">Máster en Derecho Penal por la Pontificia Universidad Católica del Perú (PUCP). Máster en Cumplimiento Normativo Penal por la Universidad de Castilla-La Mancha (UCLM), España. Más de 15 años de experiencia en investigación financiera, prevención LA/FT y compliance corporativo.</p>
-        <div class="director-contact">
-          <a href="mailto:denis@romanicompliance.com">denis@romanicompliance.com</a>
-          <a href="mailto:dromani@pucp.pe">dromani@pucp.pe</a>
-          <a href="https://www.denisromani.com" target="_blank">www.denisromani.com</a>
-        </div>
-        <div class="director-creds">
-          <span class="cred-tag">PUCP</span>
-          <span class="cred-tag">UCLM</span>
-          <span class="cred-tag">ISO 37001:2021</span>
-          <span class="cred-tag">Compliance Officer</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="blog" id="noticias">
-  <div class="wrap">
-    <div class="section-header reveal">
-      <div class="gold-line"></div>
-      <h2>Noticias y publicaciones</h2>
-      <p>Análisis jurídico, novedades regulatorias y contenido de interés</p>
-    </div>
+    <div class="sec-head"><div><div class="kicker rv">Publicaciones</div><h2 class="h2 rv">Análisis y novedades regulatorias.</h2></div><a href="{{ route('blog.index') }}" class="lnk rv">Ver todas @include('site.partials.icon', ['name' => 'arrow'])</a></div>
     @if($recentArticles->isNotEmpty())
-      <div class="article-grid">
+      <div class="posts">
         @foreach($recentArticles as $article)
           @include('blog._article-card', ['article' => $article])
         @endforeach
       </div>
     @else
-      <div class="empty-state" style="text-align:center;padding:2rem;color:var(--slate);border:1px dashed var(--line);border-radius:6px;">Próximamente publicaremos nuestros primeros artículos.</div>
+      <p class="muted rv">Pronto publicaremos nuestros primeros análisis.</p>
     @endif
-    <div class="blog-more">
-      <a href="{{ route('blog.index') }}" class="btn btn-ghost" style="border-color:var(--line);color:var(--ink);">Ver todas las publicaciones</a>
-    </div>
   </div>
 </section>
 
-<section class="contact-section" id="contacto">
-  <div class="wrap">
-    <div class="section-header reveal">
-      <div class="gold-line"></div>
-      <h2>Contacto</h2>
-      <p>Coordine una reunión o envíenos su consulta</p>
+<section class="sec" id="contacto">
+  <div class="wrap ct">
+    <div>
+      <div class="kicker rv">Contacto</div>
+      <h2 class="h2 rv">Cuéntenos su caso.</h2>
+      <p class="lead rv" style="margin-top:18px">Responderemos a la brevedad para coordinar una primera conversación. Todo lo que nos cuente se trata con reserva.</p>
+      <div class="ct-ch rv">
+        <a href="https://wa.me/{{ \App\Support\ServiceCatalog::WHATSAPP }}" target="_blank" rel="noopener"><span class="icon-tile">@include('site.partials.icon', ['name' => 'chat'])</span><span>+51 969 754 983<small>WhatsApp</small></span></a>
+        <a href="mailto:denis@romanicompliance.com"><span class="icon-tile">@include('site.partials.icon', ['name' => 'mail'])</span><span>denis@romanicompliance.com<small>Correo</small></span></a>
+        <a href="mailto:dromani@pucp.pe"><span class="icon-tile">@include('site.partials.icon', ['name' => 'mail'])</span><span>dromani@pucp.pe<small>Correo alterno</small></span></a>
+      </div>
     </div>
-    <div class="contact-layout">
-      <div class="contact-info reveal-left">
-        <h3>Romani Compliance</h3>
-        <p>Contáctenos para coordinar una asesoría, solicitar una cotización o resolver cualquier consulta sobre nuestros servicios.</p>
-        <div class="contact-detail">
-          <span class="cd-label">Email</span>
-          <a href="mailto:denis@romanicompliance.com">denis@romanicompliance.com</a>
+    <div class="form rv">
+      <form id="ctForm" data-no-loader novalidate>
+        <div class="row2">
+          <div class="f"><label for="cNombre">Nombre</label><input id="cNombre" name="nombre" autocomplete="name" required></div>
+          <div class="f"><label for="cTel">Teléfono</label><input id="cTel" name="telefono" type="tel" autocomplete="tel" placeholder="+51"></div>
         </div>
-        <div class="contact-detail">
-          <span class="cd-label">Email</span>
-          <a href="mailto:dromani@pucp.pe">dromani@pucp.pe</a>
-        </div>
-        <div class="contact-detail">
-          <span class="cd-label">Tel</span>
-          <a href="https://wa.me/51969754983" target="_blank">+51 969 754 983</a>
-        </div>
-        <div class="contact-detail">
-          <span class="cd-label">Web</span>
-          <a href="https://www.denisromani.com" target="_blank">www.denisromani.com</a>
-        </div>
-      </div>
-      <div class="reveal-right" id="contactFormWrap">
-        <form class="contact-form" id="contactFormInline" onsubmit="return enviarFormulario(event, this, 'contactMsgInline')">
-          <div class="form-row">
-            <div>
-              <label>Nombre completo</label>
-              <input type="text" name="nombre" placeholder="Su nombre" required>
-            </div>
-            <div>
-              <label>Teléfono</label>
-              <input type="tel" name="telefono" placeholder="+51 ...">
-            </div>
-          </div>
-          <div>
-            <label>Correo electrónico</label>
-            <input type="email" name="email" placeholder="correo@empresa.com" required>
-          </div>
-          <div>
-            <label>Servicio de interés</label>
-            <select name="servicio">
-              <option value="Compliance corporativo">Compliance corporativo</option>
-              <option value="Prevención LA/FT (SPLAFT)">Prevención LA/FT (SPLAFT)</option>
-              <option value="Compliance Notarial">Compliance Notarial</option>
-              <option value="Compliance Inmobiliario">Compliance Inmobiliario</option>
-              <option value="Asesoría penal">Asesoría penal</option>
-              <option value="Due Diligence">Due Diligence</option>
-              <option value="Capacitación">Capacitación</option>
-              <option value="Investigación financiera">Investigación financiera</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
-          <div>
-            <label>Mensaje</label>
-            <textarea name="mensaje" placeholder="Describa brevemente su consulta" rows="4"></textarea>
-          </div>
-          <button type="submit" class="btn-submit">Enviar consulta</button>
-        </form>
-        <div class="form-msg" id="contactMsgInline">Mensaje enviado correctamente. Nos pondremos en contacto a la brevedad.</div>
-      </div>
+        <div class="f"><label for="cEmail">Correo</label><input id="cEmail" name="email" type="email" autocomplete="email" required></div>
+        <div class="f"><label for="cServ">Tema</label>
+          <select id="cServ" name="servicio">
+            @foreach($services as $s)<option>{{ $s['name'] }}</option>@endforeach
+            <option>Capacitación</option><option>Otro tema</option>
+          </select></div>
+        <div class="f"><label for="cMsg">Mensaje</label><textarea id="cMsg" name="mensaje" placeholder="Describa brevemente su situación"></textarea></div>
+        <button type="submit" class="b b-primary b-block" id="ctBtn">Enviar consulta @include('site.partials.icon', ['name' => 'arrow'])</button>
+        <p class="note" id="ctErr" style="color:var(--bad);display:none"></p>
+      </form>
+      <div class="form-ok" id="ctOk"><div class="icon-tile" style="margin:0 auto 16px;background:rgba(14,138,95,.1);color:var(--ok)">@include('site.partials.icon', ['name' => 'check'])</div><h3 class="h3">Recibimos su consulta.</h3><p class="muted" style="margin-top:8px">Le escribiremos a la brevedad.</p></div>
     </div>
   </div>
 </section>
@@ -473,41 +289,33 @@
 
 @section('scripts')
 <script>
-function irAContacto(servicio) {
-  const seccion = document.getElementById('contacto');
-  if (!seccion) return;
-  seccion.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  const select = document.querySelector('#contactFormInline select[name="servicio"]');
-  if (servicio && select) select.value = servicio;
-  window.setTimeout(() => {
-    const nombre = document.querySelector('#contactFormInline input[name="nombre"]');
-    if (nombre) nombre.focus({ preventScroll: true });
-  }, 500);
-}
+(function () {
+  // Línea del método: se dibuja al entrar en pantalla
+  const s4 = document.getElementById('steps4');
+  new IntersectionObserver((es, o) => es.forEach((e) => { if (e.isIntersecting) { s4.classList.add('in'); o.disconnect(); } }), { threshold: 0.35 }).observe(s4);
 
-async function enviarFormulario(e, form, msgId) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(form));
-  if (!data.nombre || !data.email) { alert('Complete nombre y correo.'); return false; }
-  const body = `Consulta desde romanicompliance.com\n\nNombre: ${data.nombre}\nTeléfono: ${data.telefono || 'No indicado'}\nCorreo: ${data.email}\nServicio: ${data.servicio}\nMensaje: ${data.mensaje || 'Sin mensaje adicional'}`;
-  try {
-    await fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        name: data.nombre,
-        email: data.email,
-        message: body,
-        _cc: 'dromani@pucp.pe',
-        _subject: 'Consulta web · Romani Compliance'
-      })
-    });
-    form.style.display = 'none';
-    document.getElementById(msgId).style.display = 'block';
-  } catch (err) {
-    alert('Error al enviar. Intente por WhatsApp al +51 969 754 983.');
-  }
-  return false;
-}
+  // ?servicio=... preselecciona el tema del formulario
+  const pre = new URLSearchParams(location.search).get('servicio');
+  if (pre) { const o = [...document.querySelectorAll('#cServ option')].find((x) => x.textContent.toLowerCase().includes(pre.toLowerCase())); if (o) o.selected = true; }
+
+  const form = document.getElementById('ctForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(form));
+    const err = document.getElementById('ctErr');
+    if (!d.nombre || !d.email || !/^\S+@\S+\.\S+$/.test(d.email)) { err.textContent = 'Indique su nombre y un correo válido.'; err.style.display = 'block'; return; }
+    err.style.display = 'none';
+    const btn = document.getElementById('ctBtn'); btn.disabled = true; btn.firstChild.textContent = 'Enviando ';
+    const body = 'Consulta desde romanicompliance.com\n\nNombre: ' + d.nombre + '\nTeléfono: ' + (d.telefono || 'No indicado') + '\nCorreo: ' + d.email + '\nTema: ' + d.servicio + '\nMensaje: ' + (d.mensaje || 'Sin mensaje adicional');
+    try {
+      const r = await fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: d.nombre, email: d.email, message: body, _cc: 'dromani@pucp.pe', _subject: 'Consulta web · Romani Compliance' }) });
+      if (!r.ok) throw new Error();
+      form.style.display = 'none'; document.getElementById('ctOk').style.display = 'block';
+    } catch (_) {
+      btn.disabled = false; btn.firstChild.textContent = 'Enviar consulta ';
+      err.innerHTML = 'No se pudo enviar. Escríbanos por <a href="' + RC.wa(body) + '" target="_blank" rel="noopener" style="text-decoration:underline">WhatsApp</a>.'; err.style.display = 'block';
+    }
+  });
+})();
 </script>
 @endsection
