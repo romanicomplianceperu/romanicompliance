@@ -282,7 +282,8 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 @keyframes waPulse { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.7); opacity: 0; } }
 @keyframes waIn { from { transform: scale(0) rotate(-30deg); } to { transform: none; } }
 @keyframes dot { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
-@media (max-width: 720px) { .wa { right: 16px; bottom: 16px; width: 56px; height: 56px; } @media (prefers-reduced-motion: reduce) { .wa::before, .wa::after { animation: none; } }
+@media (max-width: 720px) { .wa { right: 16px; bottom: 16px; width: 56px; height: 56px; } }
+@media (prefers-reduced-motion: reduce) { .wa::before, .wa::after { animation: none; } }
 
 /* Mensajes y cargador */
 .flash { padding: 14px 24px; text-align: center; font-weight: 600; font-size: 0.95rem; }
