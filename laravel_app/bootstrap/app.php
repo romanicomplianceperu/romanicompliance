@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Formularios públicos de las herramientas: protegidos con campo trampa y límite de envíos,
+        // sin depender de la sesión (evita fallos por página abierta mucho tiempo o en caché).
+        $middleware->validateCsrfTokens(except: ['servicios/*/solicitud']);
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         ]);

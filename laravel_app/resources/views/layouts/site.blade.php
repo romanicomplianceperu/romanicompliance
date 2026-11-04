@@ -515,8 +515,9 @@ window.RC = (function () {
     btn.addEventListener('click', () => set(!card.classList.contains('open')));
     document.getElementById('waClose').addEventListener('click', () => set(false));
     let seen = false; try { seen = sessionStorage.getItem('rcWaSeen') === '1'; } catch (_) {}
+    // El «1» aparece siempre al cargar, como un mensaje recién llegado, hasta abrir el chat.
+    setTimeout(() => { if (!card.classList.contains('open')) badge.classList.add('on'); }, 1200);
     if (!seen) {
-      setTimeout(() => badge.classList.add('on'), 3500);
       // En escritorio se abre solo una vez por visita; en el móvil solo aparece la notificación.
       if (matchMedia('(min-width: 721px)').matches) setTimeout(() => { if (!document.body.classList.contains('menu-open')) set(true); }, 9000);
     }

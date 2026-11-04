@@ -297,7 +297,6 @@ window.RCT = (function () {
   pf.addEventListener('input', () => { pErr.style.display = 'none'; });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !pm.hidden) closePdf(); });
   document.addEventListener('click', (e) => { const t = e.target.closest('[data-pdf]'); if (t) { e.preventDefault(); pdf(); } });
-  const download = (url) => { const a = document.createElement('a'); a.href = url; a.setAttribute('download', ''); document.body.appendChild(a); a.click(); a.remove(); };
   pf.addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = Object.fromEntries(new FormData(pf));
@@ -312,11 +311,19 @@ window.RCT = (function () {
       summary: lines.join('\n'), score: state.extra.score ?? null, level: state.extra.level || null,
       data: { lines, priorities: state.extra.priorities || [], title: state.extra.title || null } };
     try {
-      const r = await fetch(@json(route('services.leads.store', $service['slug'])), { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }, body: JSON.stringify(payload) });
-      const j = await r.json().catch(() => ({}));
-      if (!r.ok || !j.pdf) throw new Error(j.errors ? Object.values(j.errors)[0][0] : (r.status === 429 ? 'Demasiados intentos. Espere un minuto.' : 'No se pudo generar el PDF. Intente nuevamente.'));
-      pf.hidden = true; pOk.hidden = false; document.getElementById('pfAgain').href = j.pdf;
-      download(j.pdf);
+      payload.download = 1;
+      const r = await fetch(@json(route('services.leads.store', $service['slug'])), { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', Accept: 'application/pdf, application/json', 'X-CSRF-TOKEN': (document.querySelector('meta[name=csrf-token]') || {}).content || '' }, body: JSON.stringify(payload) });
+      const type = r.headers.get('content-type') || '';
+      if (!r.ok || !type.includes('pdf')) {
+        const j = await r.json().catch(() => ({}));
+        throw new Error(j.errors ? Object.values(j.errors)[0][0] : (r.status === 429 ? 'Demasiados intentos. Espere un minuto.' : 'No se pudo generar el PDF. Intente nuevamente.'));
+      }
+      const blob = await r.blob();
+      const name = ((r.headers.get('content-disposition') || '').match(/filename="?([^";]+)"?/) || [])[1] || 'informe-romani-compliance.pdf';
+      const url = URL.createObjectURL(blob);
+      pf.hidden = true; pOk.hidden = false;
+      const again = document.getElementById('pfAgain'); again.href = url; again.setAttribute('download', name);
+      const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
       fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: payload.organization, email: 'sin-correo@romanicompliance.com', message: 'Descarga de informe: ' + SERVICE + '\n\nOrganización: ' + payload.organization + '\nTeléfono: ' + payload.phone + '\n\n' + payload.summary, _cc: 'dromani@pucp.pe', _subject: 'Nueva descarga de informe · ' + SERVICE }) }).catch(() => {});
     } catch (x) { b.disabled = false; b.firstChild.textContent = 'Descargar PDF '; fail(x.message); }
   });
