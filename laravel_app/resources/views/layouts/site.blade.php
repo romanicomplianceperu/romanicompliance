@@ -37,8 +37,8 @@
   --ease: cubic-bezier(.22,1,.36,1);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
-body { font-family: var(--font); color: var(--ink); background: var(--bg); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+html { scroll-behavior: smooth; overflow-x: clip; }
+body { font-family: var(--font); color: var(--ink); background: var(--bg); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; }
@@ -82,7 +82,7 @@ button { font: inherit; color: inherit; }
 .nav { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, #000 0%, #04080F 45%, #0A1730 100%); backdrop-filter: saturate(140%) blur(18px); -webkit-backdrop-filter: saturate(140%) blur(18px); color: #fff; transition: box-shadow .3s, background .3s; }
 .nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--blue-l) 30%, #fff 50%, var(--blue-l) 70%, transparent); background-size: 200% 100%; animation: navline 6s linear infinite; opacity: .55; }
 @keyframes navline { from { background-position: 200% 0; } to { background-position: 0 0; } }
-.nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); background: linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.66)); }
+.nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); background: linear-gradient(180deg, rgba(0,0,0,.96), rgba(5,9,20,.9)); }
 .nav-in { max-width: var(--max); margin: 0 auto; padding: 0 32px; height: 70px; display: flex; align-items: center; gap: 28px; }
 .nav-in > * { animation: navIn .7s var(--ease) both; }
 .nav-links > *, .nav-actions > * { animation: navIn .7s var(--ease) both; }
@@ -485,9 +485,9 @@ window.RC = (function () {
   document.addEventListener('click', (e) => {
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
     const a = e.target.closest('a[href]');
-    if (!a || a.target === '_blank' || a.hasAttribute('data-no-loader')) return;
+    if (!a || a.target === '_blank' || a.hasAttribute('data-no-loader') || a.hasAttribute('download')) return;
     const href = a.getAttribute('href');
-    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('blob:') || href.startsWith('data:') || /\/pdf(\?|$)/.test(href)) return;
     let u; try { u = new URL(href, location.href); } catch (_) { return; }
     if (u.origin !== location.origin || (u.pathname === location.pathname && u.hash)) return;
     loader.classList.add('active');

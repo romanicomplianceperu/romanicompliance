@@ -323,7 +323,7 @@ window.RCT = (function () {
       const url = URL.createObjectURL(blob);
       pf.hidden = true; pOk.hidden = false;
       const again = document.getElementById('pfAgain'); again.href = url; again.setAttribute('download', name);
-      const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      const a = document.createElement('a'); a.href = url; a.download = name; a.setAttribute('data-no-loader', ''); document.body.appendChild(a); a.click(); a.remove();
       fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: payload.organization, email: 'sin-correo@romanicompliance.com', message: 'Descarga de informe: ' + SERVICE + '\n\nOrganización: ' + payload.organization + '\nTeléfono: ' + payload.phone + '\n\n' + payload.summary, _cc: 'dromani@pucp.pe', _subject: 'Nueva descarga de informe · ' + SERVICE }) }).catch(() => {});
     } catch (x) { b.disabled = false; b.firstChild.textContent = 'Descargar PDF '; fail(x.message); }
   });

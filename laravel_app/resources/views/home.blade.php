@@ -91,8 +91,8 @@
 .logos-track img { max-height: 46px; max-width: 100%; width: auto; object-fit: contain; transition: transform .3s var(--ease); }
 .logos-track > div:hover img { transform: scale(1.06); }
 .logos-track > div.dk { background: #0D1227; border-color: #0D1227; }
-.logos-track > div.bm { padding: 8px 10px; }
-.logos-track > div.bm img { max-height: 56px; width: 100%; }
+.logos-track > div.bm { padding: 14px 16px; }
+.logos-track > div.bm img { max-height: 40px; }
 .logos-track .txt { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; color: #1A1A1A; }
 .logos-track .txt span { color: #C9971C; }
 .logos:hover .logos-track { animation-play-state: paused; }
@@ -237,7 +237,7 @@
       @for($i = 0; $i < 3; $i++)
         <div class="dk"><img src="{{ asset('images/clientes/red-digital.svg') }}" alt="Red Digital"></div>
         <div><img src="{{ asset('images/clientes/qr-pay.png') }}" alt="QR Pay"></div>
-        <div class="dk bm"><img src="{{ asset('images/clientes/buscamundos.png') }}?v=1" alt="Buscamundos"></div>
+        <div class="bm"><img src="{{ asset('images/clientes/buscamundos.png') }}?v=2" alt="Buscamundos"></div>
         <div><span class="txt">Gold<span>Lion</span></span></div>
         <div><img src="{{ asset('images/clientes/san-jorge.png') }}?v=2" alt="Créditos San Jorge" style="max-height:64px"></div>
       @endfor
