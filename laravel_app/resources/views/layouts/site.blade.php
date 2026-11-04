@@ -79,10 +79,10 @@ button { font: inherit; color: inherit; }
 .lnk:hover .ic { transform: translateX(4px); }
 
 /* Navegación: cabecera azul animada */
-.nav { position: sticky; top: 0; z-index: 100; background: rgba(6,12,28,.97); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); color: #fff; transition: box-shadow .3s, background .3s; }
+.nav { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, #000 0%, #04080F 45%, #0A1730 100%); backdrop-filter: saturate(140%) blur(18px); -webkit-backdrop-filter: saturate(140%) blur(18px); color: #fff; transition: box-shadow .3s, background .3s; }
 .nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--blue-l) 30%, #fff 50%, var(--blue-l) 70%, transparent); background-size: 200% 100%; animation: navline 6s linear infinite; opacity: .55; }
 @keyframes navline { from { background-position: 200% 0; } to { background-position: 0 0; } }
-.nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); background: rgba(10,23,48,.92); }
+.nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); background: linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.66)); }
 .nav-in { max-width: var(--max); margin: 0 auto; padding: 0 32px; height: 70px; display: flex; align-items: center; gap: 28px; }
 .nav-in > * { animation: navIn .7s var(--ease) both; }
 .nav-links > *, .nav-actions > * { animation: navIn .7s var(--ease) both; }

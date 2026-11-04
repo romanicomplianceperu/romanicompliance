@@ -4,11 +4,11 @@
 
 @section('styles')
 /* Portada */
-.hero { position: relative; overflow: hidden; background: linear-gradient(135deg, #0E2766 0%, #143A9C 55%, #2050D6 100%); color: #fff; padding: clamp(44px, 6vw, 80px) 0 clamp(40px, 5vw, 64px); }
+.hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(44px, 6vw, 80px) 0 clamp(40px, 5vw, 64px); }
 .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); animation: gridMove 22s linear infinite; }
 @keyframes gridMove { to { background-position: 64px 64px, 64px 64px; } }
 .hero .glow { position: absolute; border-radius: 50%; filter: blur(10px); pointer-events: none; }
-.hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(127,163,255,.38), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
+.hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
 .hero .g2 { width: 420px; height: 420px; left: -160px; bottom: -200px; background: radial-gradient(circle, rgba(127,163,255,.25), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
 @keyframes drift { to { transform: translate(-70px, 60px) scale(1.12); } }
 .hero .wrap { position: relative; z-index: 1; }
@@ -18,13 +18,13 @@
 .hero h1 { max-width: 900px; font-size: clamp(2.2rem, 4.3vw, 3.9rem); }
 .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(6px); animation: wIn .8s var(--ease) forwards; }
 @keyframes wIn { to { opacity: 1; transform: none; filter: none; } }
-.hero h1 em { font-style: normal; color: #AFC6FF; position: relative; }
-.hero .lead { margin: 20px 0 28px; color: rgba(255,255,255,.82); max-width: 640px; }
+.hero h1 em { font-style: normal; color: var(--blue-l); position: relative; }
+.hero .lead { margin: 20px 0 28px; color: rgba(255,255,255,.72); max-width: 640px; }
 .hero-acts { display: flex; gap: 12px; flex-wrap: wrap; }
 .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(32px, 4.5vw, 52px); border-top: 1px solid rgba(255,255,255,.18); max-width: 900px; }
 .facts div { padding: 20px 26px 0 0; }
 .facts b { display: block; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-.facts span { color: rgba(255,255,255,.75); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
+.facts span { color: rgba(255,255,255,.65); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
 @media (prefers-reduced-motion: reduce) { .hero h1 .w { animation: none; opacity: 1; transform: none; filter: none; } .hero::before, .hero .glow { animation: none; } }
 @media (max-width: 720px) { .facts { grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 36px; border-top: 0; } .facts div { padding: 16px 12px; border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); } .facts b { font-size: 1.7rem; } .facts span { font-size: .76rem; line-height: 1.3; } .hero-acts .b { flex: 1 1 100%; justify-content: center; } }
 
