@@ -52,7 +52,7 @@
 <div class="bar"></div>
 <div class="body">
   <table class="meta">
-    <tr><td class="k">Solicitante</td><td>{{ $lead->name }}</td>@if($lead->organization)<td class="k">Organización</td><td>{{ $lead->organization }}</td>@endif</tr>
+    <tr>@if($lead->name !== $lead->organization)<td class="k">Solicitante</td><td>{{ $lead->name }}</td>@endif @if($lead->organization)<td class="k">Organización</td><td>{{ $lead->organization }}</td>@endif @if($lead->phone)<td class="k">Teléfono</td><td>{{ $lead->phone }}</td>@endif</tr>
     <tr><td class="k">Servicio</td><td>{{ $lead->service_name }}</td><td class="k">N.° de solicitud</td><td>RC-{{ str_pad($lead->id, 5, '0', STR_PAD_LEFT) }}</td></tr>
   </table>
 

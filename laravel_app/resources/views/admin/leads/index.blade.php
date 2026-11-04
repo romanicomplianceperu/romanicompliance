@@ -38,7 +38,7 @@
           @php $badge = ['nuevo' => 'badge-warning', 'contactado' => 'badge-gold', 'propuesta' => 'badge-gold', 'cliente' => 'badge-success', 'descartado' => 'badge-gray'][$lead->status] ?? 'badge-gray'; @endphp
           <tr>
             <td style="white-space:nowrap">{{ $lead->created_at->timezone('America/Lima')->format('d/m/Y H:i') }}</td>
-            <td><strong>{{ $lead->name }}</strong>@if($lead->organization)<br><span class="form-hint">{{ $lead->organization }}</span>@endif</td>
+            <td><strong>{{ $lead->name }}</strong>@if($lead->organization && $lead->organization !== $lead->name)<br><span class="form-hint">{{ $lead->organization }}</span>@endif</td>
             <td>{{ $lead->service_name }}</td>
             <td>@if($lead->score !== null)<strong>{{ $lead->score }}/100</strong><br>@endif<span class="form-hint">{{ $lead->level }}</span></td>
             <td style="font-size:.82rem">{{ $lead->email }}@if($lead->email && $lead->phone)<br>@endif{{ $lead->phone }}</td>

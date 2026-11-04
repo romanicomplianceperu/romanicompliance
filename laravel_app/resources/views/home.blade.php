@@ -3,59 +3,30 @@
 @php $services = \App\Support\ServiceCatalog::all(); @endphp
 
 @section('styles')
-/* Portada azul con la foto del director e insignias animadas */
-.hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(48px, 7vw, 96px) 0 0; }
-.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 80% at 72% 40%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 80% at 72% 40%, #000 5%, transparent 72%); animation: gridMove 22s linear infinite; }
+/* Portada */
+.hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(64px, 9vw, 120px) 0 clamp(56px, 7vw, 96px); }
+.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); animation: gridMove 22s linear infinite; }
 @keyframes gridMove { to { background-position: 64px 64px, 64px 64px; } }
-.hero .glow { position: absolute; border-radius: 50%; pointer-events: none; }
-.hero .g1 { width: 680px; height: 680px; right: -140px; top: -120px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
-.hero .g2 { width: 420px; height: 420px; left: -180px; bottom: -220px; background: radial-gradient(circle, rgba(127,163,255,.22), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
-@keyframes drift { to { transform: translate(-60px, 50px) scale(1.1); } }
-.hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: end; }
-.hero-txt { padding-bottom: clamp(48px, 7vw, 96px); }
-.hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 26px; }
-.hero-tag i { width: 8px; height: 8px; border-radius: 50%; background: #3DDC97; animation: blink 2.4s ease-in-out infinite; }
-@keyframes blink { 0%, 100% { box-shadow: 0 0 0 0 rgba(61,220,151,.5); } 50% { box-shadow: 0 0 0 7px rgba(61,220,151,0); } }
-.hero h1 { font-size: clamp(2.3rem, 5.4vw, 4.8rem); }
+.hero .glow { position: absolute; border-radius: 50%; filter: blur(10px); pointer-events: none; }
+.hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
+.hero .g2 { width: 420px; height: 420px; left: -160px; bottom: -200px; background: radial-gradient(circle, rgba(127,163,255,.25), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
+@keyframes drift { to { transform: translate(-70px, 60px) scale(1.12); } }
+.hero .wrap { position: relative; z-index: 1; }
+.hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 30px; }
+.hero-tag i { width: 8px; height: 8px; border-radius: 50%; background: #3DDC97; box-shadow: 0 0 0 4px rgba(61,220,151,.18); animation: blink 2.4s ease-in-out infinite; }
+@keyframes blink { 50% { box-shadow: 0 0 0 8px rgba(61,220,151,0); } }
+.hero h1 { max-width: 1040px; }
 .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(6px); animation: wIn .8s var(--ease) forwards; }
 @keyframes wIn { to { opacity: 1; transform: none; filter: none; } }
-.hero h1 em { font-style: normal; color: var(--blue-l); }
-.hero .lead { margin: 24px 0 34px; color: rgba(255,255,255,.72); }
+.hero h1 em { font-style: normal; color: var(--blue-l); position: relative; }
+.hero .lead { margin: 28px 0 38px; color: rgba(255,255,255,.72); }
 .hero-acts { display: flex; gap: 12px; flex-wrap: wrap; }
-.hero-vis { position: relative; height: clamp(420px, 44vw, 600px); }
-.hv-ring { position: absolute; left: 50%; top: 46%; width: 88%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; border: 1.5px dashed rgba(127,163,255,.35); animation: spin 40s linear infinite; }
-.hv-disc { position: absolute; left: 50%; top: 46%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle at 50% 40%, #2F5FE6, #173DAE 55%, rgba(16,38,77,0) 72%); }
-@keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-.hero-vis img { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); height: 100%; width: auto; max-width: none; filter: drop-shadow(0 30px 40px rgba(0,0,0,.45)); animation: rise 1.1s var(--ease) .25s both; }
-@keyframes rise { from { opacity: 0; transform: translateX(-50%) translateY(40px); } }
-.bf { position: absolute; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 18px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 20px 40px -16px rgba(0,0,0,.5); animation: bfIn .8s var(--ease) both, bob 6s ease-in-out infinite; }
-.bf b { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-.bf span { font-size: .82rem; line-height: 1.25; color: rgba(255,255,255,.8); font-weight: 600; max-width: 120px; }
-.bf .rg { position: relative; width: 48px; height: 48px; flex-shrink: 0; }
-.bf .rg svg { width: 48px; height: 48px; transform: rotate(-90deg); }
-.bf .rg circle { fill: none; stroke-width: 4; }
-.bf .rg .t { stroke: rgba(255,255,255,.15); }
-.bf .rg .v { stroke: var(--blue-l); stroke-linecap: round; stroke-dasharray: 126; stroke-dashoffset: 126; transition: stroke-dashoffset 1.6s var(--ease); }
-.bf .rg b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 1.05rem; }
-.bf.on .rg .v { stroke-dashoffset: var(--off, 20); }
-.b1 { left: -4%; top: 22%; animation-delay: .8s, .8s; }
-.b2 { right: -2%; top: 46%; animation-delay: 1s, 2s; }
-.b3 { left: 2%; bottom: 12%; animation-delay: 1.2s, 3.2s; }
-.b3 i { width: 10px; height: 10px; border-radius: 50%; background: #3DDC97; animation: blink 2.4s infinite; flex-shrink: 0; margin-left: 4px; }
-@keyframes bfIn { from { opacity: 0; transform: translateY(16px) scale(.9); } }
-@keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
-.hv-name { position: absolute; right: 0; bottom: 18px; z-index: 3; font-size: .82rem; color: rgba(255,255,255,.65); font-weight: 600; text-align: right; }
-.hv-name b { display: block; color: #fff; font-size: .95rem; }
-@media (max-width: 900px) {
-  .hero-grid { grid-template-columns: 1fr; gap: 0; }
-  .hero-txt { padding-bottom: 28px; }
-  .hero-vis { height: 430px; margin: 0 -20px; }
-  .hero-vis::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 120px; z-index: 1; background: linear-gradient(transparent, rgba(10,23,48,.92)); pointer-events: none; }
-  .b1 { left: 12px; top: auto; bottom: 92px; } .b2 { right: 12px; top: 40%; } .b3 { display: none; }
-  .hv-name { left: 20px; right: auto; bottom: 22px; text-align: left; }
-  .bf { padding: 9px 12px 9px 9px; border-radius: 14px; } .bf b { font-size: 1.35rem; } .bf .rg, .bf .rg svg { width: 40px; height: 40px; } .bf span { font-size: .76rem; max-width: 100px; }
-}
-@media (prefers-reduced-motion: reduce) { .hero h1 .w { animation: none; opacity: 1; transform: none; filter: none; } .hero::before, .hero .glow, .hv-ring, .bf { animation: none; } }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(48px, 7vw, 80px); border-top: 1px solid rgba(255,255,255,.12); }
+.facts div { padding: 26px 26px 0 0; }
+.facts b { display: block; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+.facts span { color: rgba(255,255,255,.62); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
+@media (prefers-reduced-motion: reduce) { .hero h1 .w { animation: none; opacity: 1; transform: none; filter: none; } .hero::before, .hero .glow { animation: none; } }
+@media (max-width: 720px) { .facts { grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 36px; border-top: 0; } .facts div { padding: 16px 12px; border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); } .facts b { font-size: 1.7rem; } .facts span { font-size: .76rem; line-height: 1.3; } .hero-acts .b { flex: 1 1 100%; justify-content: center; } }
 
 /* Estándares */
 .std { display: flex; align-items: center; gap: 12px 28px; justify-content: center; padding: 26px 0; border-bottom: 1px solid var(--line); }
@@ -107,16 +78,6 @@
 .dg .mg b { position: absolute; inset: 0; display: grid; place-items: center; font-size: .85rem; color: var(--muted); font-weight: 700; text-align: center; line-height: 1.2; }
 .dg .acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
 @media (max-width: 720px) { .dg { grid-template-columns: 1fr; text-align: left; gap: 0; } .dg .mg { width: 76px; height: 76px; position: absolute; right: 18px; top: 18px; } .dg .mg b { font-size: 0; } .dg h3 { padding-right: 70px; font-size: 1.35rem; } .dg .acts .b { flex: 1 1 100%; justify-content: center; } }
-@media (max-width: 720px) {
-  .hero { padding-top: 26px !important; }
-  .hero-tag { font-size: .8rem; padding: 6px 12px 6px 8px; margin-bottom: 16px; }
-  .hero h1 { font-size: 2.05rem; }
-  .hero .lead { font-size: 1rem; margin: 14px 0 20px; }
-  .hero-txt { padding-bottom: 8px !important; }
-  .hero-acts { flex-wrap: nowrap; gap: 8px; }
-  .hero-acts .b { flex: 1 1 auto; justify-content: center; padding-left: 14px; padding-right: 14px; font-size: .92rem; white-space: nowrap; }
-  .hero-acts .b .ic { display: none; }
-}
 
 /* Método (sin numeración) */
 .steps4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; position: relative; }
@@ -174,23 +135,19 @@
 @section('content')
 <section class="hero">
   <span class="glow g1" aria-hidden="true"></span><span class="glow g2" aria-hidden="true"></span>
-  <div class="wrap hero-grid">
-    <div class="hero-txt">
-      <div class="hero-tag rv"><i></i> Firma especializada en Lima, Perú</div>
-      <h1 class="display" id="heroTitle">Especialistas en compliance penal y <em>prevención de lavado de activos.</em></h1>
-      <p class="lead rv" style="--d:.35s">Acompañamos a empresas, sujetos obligados y proveedores de activos virtuales, desde la prevención hasta la defensa.</p>
-      <div class="hero-acts rv" style="--d:.45s">
-        <a href="{{ route('services.show', 'compliance-penal') }}#herramienta" class="b b-primary">Hacer mi diagnóstico @include('site.partials.icon', ['name' => 'arrow'])</a>
-        <a href="#servicios" class="b b-ghost-dark">Ver servicios</a>
-      </div>
+  <div class="wrap">
+    <div class="hero-tag rv"><i></i> Firma especializada en Lima, Perú</div>
+    <h1 class="display" id="heroTitle">Especialistas en compliance penal y <em>prevención de lavado de activos.</em></h1>
+    <p class="lead rv" style="--d:.35s">Acompañamos a empresas, sujetos obligados y proveedores de activos virtuales en el Perú: diseñamos su sistema de prevención, respondemos ante la UIF y la Fiscalía, y defendemos cuando hay una investigación.</p>
+    <div class="hero-acts rv" style="--d:.45s">
+      <a href="{{ route('services.show', 'compliance-penal') }}#herramienta" class="b b-primary">Hacer mi diagnóstico de riesgo @include('site.partials.icon', ['name' => 'arrow'])</a>
+      <a href="#servicios" class="b b-ghost-dark">Ver servicios</a>
     </div>
-    <div class="hero-vis" aria-label="Denis Gabriel Romani Seminario, director">
-      <span class="hv-disc"></span><span class="hv-ring"></span>
-      <img src="{{ asset('images/denis-romani.webp') }}" alt="Denis Gabriel Romani Seminario" fetchpriority="high">
-      <div class="bf b1" data-ring><div class="rg"><svg viewBox="0 0 48 48"><circle class="t" cx="24" cy="24" r="20"/><circle class="v" cx="24" cy="24" r="20" style="--off:18"/></svg></div><div><b data-count="15" data-suffix="+">0</b><span>años de experiencia</span></div></div>
-      <div class="bf b2" data-ring><div class="rg"><svg viewBox="0 0 48 48"><circle class="t" cx="24" cy="24" r="20"/><circle class="v" cx="24" cy="24" r="20" style="--off:0"/></svg><b data-count="6">0</b></div><span>áreas de práctica especializadas</span></div>
-      <div class="bf b3"><i></i><span>Estándares GAFI y Ley 30424</span></div>
-      <div class="hv-name"><b>Denis Romani Seminario</b>Director</div>
+
+    <div class="facts">
+      <div class="rv"><b data-count="15" data-suffix="+">15+</b><span>años en investigación financiera y prevención LA/FT</span></div>
+      <div class="rv" style="--d:.06s"><b data-count="6">6</b><span>áreas de práctica especializadas</span></div>
+      <div class="rv" style="--d:.12s"><b>GAFI</b><span>estándares internacionales aplicados</span></div>
     </div>
   </div>
 </section>
@@ -384,8 +341,6 @@
     document.querySelectorAll('.svw-pane').forEach((p) => { p.hidden = p.id !== 'svp-' + t.dataset.k; });
     if (matchMedia('(max-width: 900px)').matches) t.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
   }));
-  // Insignias de la portada: anillos que se llenan
-  setTimeout(() => document.querySelectorAll('[data-ring]').forEach((b) => b.classList.add('on')), 1100);
   // Cifras que cuentan al aparecer
   document.querySelectorAll('[data-count]').forEach((el) => {
     new IntersectionObserver((es, o) => es.forEach((e) => { if (!e.isIntersecting) return; o.disconnect(); const end = +el.dataset.count, suf = el.dataset.suffix || ''; let t0; const step = (t) => { t0 = t0 || t; const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))) + suf; if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }), { threshold: 0.6 }).observe(el);

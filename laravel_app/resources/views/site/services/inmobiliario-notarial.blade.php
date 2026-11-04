@@ -53,7 +53,7 @@
       <div id="imFlags"></div>
       <div style="font-weight:800;margin-bottom:10px">Lo que revisaríamos antes de firmar</div>
       <ul class="ticks" id="imChecks"></ul>
-      <a href="#contactar" class="b b-primary b-block" style="margin-top:22px">Revisar esta operación</a>
+      <button type="button" class="b b-primary b-block" data-pdf style="margin-top:22px">Descargar informe en PDF</button><a href="#contactar" class="b b-ghost b-block" style="margin-top:10px">Revisar esta operación</a>
       <p class="note">Lectura orientativa. Las señales de alerta no implican que exista un ilícito: indican dónde verificar.</p>
     </aside>
   </div>
@@ -64,7 +64,7 @@
         <div class="tool-q">¿Su notaría está al día?</div>
         <p class="tool-hint">Active lo que su notaría ya tiene funcionando.</p>
         <div class="nt-list" id="ntList"></div>
-        <div class="tool-nav"><span class="pill" id="ntLvl"></span><a href="#contactar" class="b b-primary">Fortalecer mi notaría</a></div>
+        <div class="tool-nav"><span class="pill" id="ntLvl"></span><button type="button" class="b b-primary" data-pdf>Descargar informe en PDF</button><a href="#contactar" class="b b-ghost">Fortalecer mi notaría</a></div>
       </div>
     </div>
   </div>

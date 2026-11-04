@@ -39,7 +39,6 @@
   const YN = [{ v: 'si', t: 'Sí' }, { v: 'no', t: 'No' }];
   const A = {};
   let i = -1;          // -1 = pantalla de inicio (organización opcional)
-  let orgName = '';
   const bar = document.getElementById('dxBar');
   const pane = document.getElementById('dxPane');
   bar.innerHTML = Q.map(() => '<i></i>').join('') + '<i></i>';
@@ -60,14 +59,9 @@
   }
 
   function intro() {
-    pane.innerHTML = '<div class="tool-pane dx-intro"><div class="tool-q">Antes de empezar</div><div class="tool-hint">Si lo desea, indique el nombre de su organización: aparecerá en su diagnóstico en PDF.</div>'
-      + '<label for="dxOrg" style="font-weight:700;display:block;margin-bottom:8px">Organización <span class="muted" style="font-weight:500">(opcional)</span></label>'
-      + '<input id="dxOrg" class="dx-in" placeholder="Nombre de la empresa o entidad" autocomplete="organization" value="' + orgName.replace(/"/g, '&quot;') + '">'
+    pane.innerHTML = '<div class="tool-pane dx-intro"><div class="tool-q">Mida el riesgo de su organización</div><div class="tool-hint">Responda según lo que existe hoy. Al final verá su puntaje y podrá descargar el informe en PDF.</div>'
       + '<div class="tool-nav"><span class="muted" style="font-size:.9rem">9 preguntas · unos 2 minutos</span><button type="button" class="b b-primary" id="dxGo">Comenzar el diagnóstico</button></div></div>';
-    const inp = document.getElementById('dxOrg');
-    const go = () => { orgName = inp.value.trim(); RCT.setOrg(orgName); i = 0; render(); };
-    document.getElementById('dxGo').onclick = go;
-    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+    document.getElementById('dxGo').onclick = () => { i = 0; render(); };
   }
 
   function result() {
@@ -91,9 +85,8 @@
       + '<p class="note">Resultado orientativo, basado solo en sus respuestas. No reemplaza una evaluación legal.</p></div></div></div>';
     RC.gauge(document.getElementById('dxGauge'), pct, lvl[3]);
     document.getElementById('dxAgain').onclick = () => { for (const k in A) delete A[k]; i = -1; render(); RCT.summary([]); };
-    document.getElementById('dxPdf').onclick = RCT.toForm;
+    document.getElementById('dxPdf').onclick = RCT.pdf;
     RCT.summary([
-      orgName ? 'Organización: ' + orgName : '',
       'Diagnóstico de riesgo: ' + pct + '/100 (' + lvl[1] + ')',
       'Actividad: ' + RCT.label(Q[0].o, A.sector),
       urgent ? 'Tuvimos contacto reciente con una autoridad.' : '',

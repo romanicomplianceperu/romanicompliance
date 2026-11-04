@@ -281,31 +281,8 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 .wa::after { animation-delay: 1.3s; }
 @keyframes waPulse { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.7); opacity: 0; } }
 @keyframes waIn { from { transform: scale(0) rotate(-30deg); } to { transform: none; } }
-.wa-badge { position: absolute; top: -2px; right: -2px; z-index: 2; min-width: 22px; height: 22px; border-radius: 11px; background: #FF3B30; color: #fff; font-size: .75rem; font-weight: 800; display: grid; place-items: center; border: 2px solid #fff; transform: scale(0); transition: transform .4s var(--ease); }
-.wa-badge.on { transform: scale(1); }
-.wa-card { position: fixed; right: 22px; bottom: 96px; z-index: 91; width: 330px; max-width: calc(100vw - 32px); background: #fff; border-radius: 20px; box-shadow: 0 30px 80px -20px rgba(10,23,48,.45); overflow: hidden; transform-origin: bottom right; transform: translateY(14px) scale(.9); opacity: 0; visibility: hidden; transition: transform .45s var(--ease), opacity .3s, visibility .3s; }
-.wa-card.open { transform: none; opacity: 1; visibility: visible; }
-.wa-head { background: #075E54; color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
-.wa-av { width: 42px; height: 42px; border-radius: 50%; background: #fff; display: grid; place-items: center; overflow: hidden; flex-shrink: 0; position: relative; }
-.wa-av img { width: 34px; height: auto; }
-.wa-av::after { content: ''; position: absolute; right: 1px; bottom: 1px; width: 11px; height: 11px; border-radius: 50%; background: #25D366; border: 2px solid #075E54; }
-.wa-head b { display: block; font-size: .98rem; }
-.wa-head small { font-size: .8rem; color: rgba(255,255,255,.78); }
-.wa-x { margin-left: auto; background: none; border: 0; color: #fff; font-size: 1.3rem; cursor: pointer; opacity: .8; line-height: 1; }
-.wa-body { background: #ECE5DD; padding: 18px 16px 14px; min-height: 120px; background-image: radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px); background-size: 14px 14px; }
-.wa-msg { background: #fff; border-radius: 0 12px 12px 12px; padding: 10px 12px 18px; font-size: .93rem; line-height: 1.45; max-width: 88%; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,.08); animation: paneIn .4s var(--ease); }
-.wa-msg b { display: block; color: #075E54; font-size: .8rem; margin-bottom: 3px; }
-.wa-msg time { position: absolute; right: 10px; bottom: 4px; font-size: .7rem; color: #8B97AA; }
-.wa-msg + .wa-msg { margin-top: 8px; border-radius: 12px; }
-.wa-typing { display: inline-flex; gap: 4px; background: #fff; padding: 12px 14px; border-radius: 0 12px 12px 12px; }
-.wa-typing i { width: 7px; height: 7px; border-radius: 50%; background: #A0A8B5; animation: dot 1.2s infinite; }
-.wa-typing i:nth-child(2) { animation-delay: .15s; } .wa-typing i:nth-child(3) { animation-delay: .3s; }
 @keyframes dot { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
-.wa-go { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px 14px 14px; padding: 13px; border-radius: 999px; background: #25D366; color: #fff; font-weight: 800; transition: background .2s; }
-.wa-go:hover { background: #1EBE5A; }
-.wa-go svg { width: 20px; height: 20px; fill: #fff; }
-@media (max-width: 720px) { .wa { right: 16px; bottom: 16px; width: 56px; height: 56px; } .wa-card { right: 16px; bottom: 84px; } }
-@media (prefers-reduced-motion: reduce) { .wa::before, .wa::after { animation: none; } }
+@media (max-width: 720px) { .wa { right: 16px; bottom: 16px; width: 56px; height: 56px; } @media (prefers-reduced-motion: reduce) { .wa::before, .wa::after { animation: none; } }
 
 /* Mensajes y cargador */
 .flash { padding: 14px 24px; text-align: center; font-weight: 600; font-size: 0.95rem; }
@@ -412,16 +389,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
   </div>
 </footer>
 
-<div class="wa-card" id="waCard" role="dialog" aria-label="Chat de WhatsApp con Romani Compliance">
-  <div class="wa-head">
-    <span class="wa-av"><img src="{{ asset('images/logos.png') }}" alt=""></span>
-    <span><b>Romani Compliance</b><small id="waStatus">en línea</small></span>
-    <button type="button" class="wa-x" id="waClose" aria-label="Cerrar">×</button>
-  </div>
-  <div class="wa-body" id="waBody"></div>
-  <a class="wa-go" id="waGo" href="https://wa.me/{{ \App\Support\ServiceCatalog::WHATSAPP }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26C2.16 6.46 6.6 2.03 12.05 2.03c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 012.89 7c0 5.45-4.44 9.88-9.88 9.88zm8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41z"/></svg> Iniciar conversación</a>
-</div>
-<button type="button" class="wa" id="waBtn" aria-label="Abrir chat de WhatsApp" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26C2.16 6.46 6.6 2.03 12.05 2.03c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 012.89 7c0 5.45-4.44 9.88-9.88 9.88zm8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41z"/></svg><span class="wa-badge" id="waBadge">1</span></button>
+<a class="wa" id="waBtn" href="https://wa.me/{{ \App\Support\ServiceCatalog::WHATSAPP }}" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp" data-no-loader><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26C2.16 6.46 6.6 2.03 12.05 2.03c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 012.89 7c0 5.45-4.44 9.88-9.88 9.88zm8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41z"/></svg></a>
 
 <script>
 // Utilidades del sitio (navegación, animaciones, líneas de tiempo, WhatsApp).
@@ -494,32 +462,10 @@ window.RC = (function () {
   }, true);
   addEventListener('pageshow', () => loader.classList.remove('active'));
 
-  // WhatsApp: notificación, «escribiendo…» y mensaje de Romani Compliance
+  // WhatsApp: abre el chat directamente con un saludo
   (function () {
-    const btn = document.getElementById('waBtn'), card = document.getElementById('waCard'), body = document.getElementById('waBody');
-    const badge = document.getElementById('waBadge'), status = document.getElementById('waStatus'), go = document.getElementById('waGo');
     const ctx = document.title.split(' · ')[0];
-    go.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola, quisiera hacer una consulta a Romani Compliance' + (location.pathname !== '/' ? ' sobre «' + ctx + '»' : '') + '.');
-    const hhmm = () => new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
-    let played = false;
-    function play() {
-      if (played) return; played = true;
-      body.innerHTML = '<div class="wa-typing"><i></i><i></i><i></i></div>'; status.textContent = 'escribiendo…';
-      setTimeout(() => {
-        body.innerHTML = '<div class="wa-msg"><b>Romani Compliance</b>Hola, gracias por visitarnos. 👋<time>' + hhmm() + '</time></div>';
-        status.textContent = 'en línea';
-        setTimeout(() => { body.insertAdjacentHTML('beforeend', '<div class="wa-msg">¿En qué podemos ayudarle? Escríbanos y un abogado del equipo le responderá.<time>' + hhmm() + '</time></div>'); }, 900);
-      }, 1400);
-    }
-    const set = (o) => { card.classList.toggle('open', o); btn.setAttribute('aria-expanded', o); if (o) { badge.classList.remove('on'); play(); try { sessionStorage.setItem('rcWaSeen', '1'); } catch (_) {} } };
-    btn.addEventListener('click', () => set(!card.classList.contains('open')));
-    document.getElementById('waClose').addEventListener('click', () => set(false));
-    let seen = false; try { seen = sessionStorage.getItem('rcWaSeen') === '1'; } catch (_) {}
-    if (!seen) {
-      setTimeout(() => badge.classList.add('on'), 3500);
-      // En escritorio se abre solo una vez por visita; en el móvil solo aparece la notificación.
-      if (matchMedia('(min-width: 721px)').matches) setTimeout(() => { if (!document.body.classList.contains('menu-open')) set(true); }, 9000);
-    }
+    document.getElementById('waBtn').href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola, quisiera hacer una consulta a Romani Compliance' + (location.pathname !== '/' ? ' sobre «' + ctx + '»' : '') + '.');
   })();
 
   return {

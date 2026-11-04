@@ -24,7 +24,7 @@ class ServiceLeadController extends Controller
         }
 
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
+            'name' => ['nullable', 'string', 'max:120', 'required_without:organization'],
             'organization' => ['nullable', 'string', 'max:160'],
             'email' => ['nullable', 'email', 'max:255', 'required_without:phone'],
             'phone' => ['nullable', 'string', 'max:30', 'required_without:email'],
@@ -34,7 +34,7 @@ class ServiceLeadController extends Controller
             'level' => ['nullable', 'string', 'max:60'],
             'consent' => ['accepted'],
         ], [
-            'name.required' => 'Indique su nombre.',
+            'name.required_without' => 'Indique su nombre o el de su organización.',
             'email.required_without' => 'Indique un correo o un teléfono para contactarle.',
             'phone.required_without' => 'Indique un correo o un teléfono para contactarle.',
             'email.email' => 'El correo no es válido.',
@@ -46,7 +46,7 @@ class ServiceLeadController extends Controller
         $lead = ServiceLead::create([
             'service_slug' => $slug,
             'service_name' => $service['name'] ?? 'Consulta general',
-            'name' => Str::of($data['name'])->squish()->title(),
+            'name' => filled($data['name'] ?? null) ? (string) Str::of($data['name'])->squish()->title() : Str::limit(Str::squish($data['organization']), 120, ''),
             'organization' => isset($data['organization']) ? Str::squish($data['organization']) : null,
             'email' => $data['email'] ?? null,
             'phone' => isset($data['phone']) ? trim($data['phone']) : null,

@@ -60,6 +60,26 @@
 .lead-ok p { color: rgba(255,255,255,.7); margin-bottom: 18px; }
 @media (max-width: 900px) { .sv-side { display: none; } .sv-hero { padding: 44px 0 52px; } .sv-hero .lead { margin: 16px 0 26px; } }
 @media (max-width: 720px) { .sv-actions .b { flex: 1 1 100%; justify-content: center; } .deliv .card { padding: 18px; } .faq summary { font-size: 1.02rem; padding: 20px 0; } .sv-tool-head { margin-bottom: 24px; } }
+.pdf-m { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 16px; }
+.pdf-bg { position: absolute; inset: 0; background: rgba(10,23,48,.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); animation: fadeIn .25s ease; }
+.pdf-box { position: relative; width: 100%; max-width: 430px; background: #fff; border-radius: 24px; padding: 30px 28px 26px; box-shadow: 0 40px 90px -30px rgba(10,23,48,.6); animation: paneIn .35s var(--ease); }
+.pdf-box h3 { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; margin: 16px 0 6px; }
+.pdf-box > form > p.muted { margin-bottom: 18px; font-size: .95rem; }
+.pdf-x { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--soft); font-size: 1.3rem; cursor: pointer; color: var(--muted); }
+.pf-row { margin-bottom: 12px; }
+.pf-row label { display: block; font-weight: 700; font-size: .9rem; margin-bottom: 6px; }
+.pf-row input { width: 100%; padding: 14px 15px; border-radius: 12px; border: 1.5px solid var(--line); font: inherit; font-size: 1rem; }
+.pf-row input:focus { outline: none; border-color: var(--blue); }
+.pf-ck { display: flex; gap: 10px; align-items: flex-start; font-size: .82rem; color: var(--muted); margin: 4px 0 16px; cursor: pointer; }
+.pf-ck input { width: 17px; height: 17px; margin-top: 2px; accent-color: var(--blue); flex-shrink: 0; }
+.pf-err { color: #C0362C; font-size: .9rem; margin-top: 10px; display: none; }
+.pf-ok { text-align: center; padding: 10px 0 0; }
+.pf-ok .okc { width: 60px; height: 60px; border-radius: 50%; background: #E1F3EC; color: #0E8A5F; display: grid; place-items: center; margin: 0 auto; animation: pop .6s var(--ease); }
+.pf-ok .okc .ic { width: 28px; height: 28px; }
+.pf-ok p { margin-bottom: 16px; }
+@keyframes fadeIn { from { opacity: 0; } }
+@media (max-width: 560px) { .pdf-m { place-items: end center; padding: 0; } .pdf-box { border-radius: 24px 24px 0 0; max-width: none; padding-bottom: calc(26px + env(safe-area-inset-bottom)); animation: sheetUp .4s var(--ease); } }
+@keyframes sheetUp { from { transform: translateY(100%); } }
 @yield('page_styles')
 @endsection
 
@@ -146,12 +166,9 @@
   <div class="wrap">
     <div class="cta-box rv">
       <div>
-        <h2 class="h2">Reciba su resumen y conversemos.</h2>
-        <p class="lead">Déjenos sus datos: guardamos su caso, le enviamos el resumen en PDF y un abogado del equipo le contacta para revisarlo con usted.</p>
+        <h2 class="h2">¿Prefiere que le contactemos?</h2>
+        <p class="lead">Déjenos sus datos y un abogado del equipo le contactará para revisar su caso con usted, con total reserva.</p>
         <div class="cta-sum" id="ctaSum"></div>
-        <div class="cta-acts" style="margin-top:18px">
-          <a href="#" class="b b-ghost-dark" id="ctaWa" target="_blank" rel="noopener">Prefiero escribir por WhatsApp</a>
-        </div>
       </div>
       <div>
         <form class="lead-f" id="leadForm" novalidate data-no-loader>
@@ -163,19 +180,44 @@
           </div>
           <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
           <label class="lf-ck"><input type="checkbox" name="consent" value="1"> <span>Autorizo a Romani Compliance a contactarme sobre esta solicitud y a tratar mis datos con ese fin.</span></label>
-          <button type="submit" class="b b-light b-block" id="lfBtn">Enviar y descargar mi PDF @include('site.partials.icon', ['name' => 'arrow'])</button>
+          <button type="submit" class="b b-light b-block" id="lfBtn">Enviar solicitud @include('site.partials.icon', ['name' => 'arrow'])</button>
           <p class="lf-err" id="lfErr"></p>
         </form>
         <div class="lead-ok" id="leadOk" hidden>
           <div class="okc">@include('site.partials.icon', ['name' => 'check'])</div>
           <h3>Recibimos su solicitud.</h3>
-          <p>Un abogado del equipo le contactará a la brevedad. Su PDF se está descargando.</p>
-          <a href="#" class="b b-light" id="lfPdf" data-no-loader>Descargar el PDF otra vez</a>
+          <p>Un abogado del equipo le contactará a la brevedad.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+
+{{-- Descarga del informe: se piden organización y teléfono solo en este momento --}}
+<div class="pdf-m" id="pdfM" hidden role="dialog" aria-modal="true" aria-labelledby="pdfT">
+  <div class="pdf-bg" data-close></div>
+  <div class="pdf-box">
+    <button type="button" class="pdf-x" data-close aria-label="Cerrar">×</button>
+    <form id="pdfForm" novalidate data-no-loader>
+      <div class="icon-tile">@include('site.partials.icon', ['name' => 'doc'])</div>
+      <h3 id="pdfT">Descargue su informe en PDF</h3>
+      <p class="muted">Indique su organización y un teléfono de contacto. El informe se descarga al instante.</p>
+      <div class="pf-row"><label for="pfOrg">Organización</label><input id="pfOrg" name="organization" autocomplete="organization" placeholder="Nombre de la empresa o entidad" required></div>
+      <div class="pf-row"><label for="pfTel">Teléfono</label><input id="pfTel" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+51 999 999 999" required></div>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+      <label class="pf-ck"><input type="checkbox" name="consent" value="1" checked> <span>Acepto que Romani Compliance guarde estos datos para dar seguimiento a mi consulta.</span></label>
+      <button type="submit" class="b b-primary b-block" id="pfBtn">Descargar PDF @include('site.partials.icon', ['name' => 'arrow'])</button>
+      <p class="pf-err" id="pfErr"></p>
+    </form>
+    <div class="pf-ok" id="pfOk" hidden>
+      <div class="okc">@include('site.partials.icon', ['name' => 'check'])</div>
+      <h3>Su PDF se está descargando.</h3>
+      <p class="muted">Si no empieza en unos segundos, use el botón.</p>
+      <a href="#" class="b b-primary b-block" id="pfAgain" data-no-loader download>Descargar otra vez</a>
+    </div>
+  </div>
+</div>
 
 <section class="sec sec-soft" style="padding-top:0;background:#fff">
   <div class="wrap">
@@ -201,7 +243,6 @@ window.RCT = (function () {
   const SERVICE = @json($service['name']);
   const check = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   const sum = document.getElementById('ctaSum');
-  const wa = document.getElementById('ctaWa');
 
   // Resumen de lo que el cliente eligió: viaja en la solicitud, el PDF y el WhatsApp.
   let state = { lines: [], extra: {} };
@@ -210,7 +251,6 @@ window.RCT = (function () {
     const text = state.lines.join('\n');
     sum.style.display = text ? 'block' : 'none';
     sum.textContent = text ? 'Su resumen\n' + text : '';
-    wa.href = RC.wa('Hola, quisiera conversar sobre ' + SERVICE + '.' + (text ? '\n\n' + text : ''));
   }
   summary([]);
 
@@ -237,16 +277,51 @@ window.RCT = (function () {
       const j = await r.json().catch(() => ({}));
       if (!r.ok) { const m = j.errors ? Object.values(j.errors)[0][0] : (r.status === 429 ? 'Demasiados intentos. Espere un minuto.' : 'No se pudo enviar. Escríbanos por WhatsApp.'); throw new Error(m); }
       form.hidden = true; const ok = document.getElementById('leadOk'); ok.hidden = false;
-      const pdf = document.getElementById('lfPdf'); pdf.href = j.pdf;
-      if (j.pdf) { const a = document.createElement('a'); a.href = j.pdf; a.setAttribute('download', ''); document.body.appendChild(a); a.click(); a.remove(); }
       // aviso por correo al equipo (mismo servicio que el formulario de contacto)
       fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: f.name, email: f.email || 'sin-correo@romanicompliance.com', message: 'Nueva solicitud: ' + SERVICE + '\n\nNombre: ' + f.name + '\nOrganización: ' + (f.organization || '-') + '\nCorreo: ' + (f.email || '-') + '\nTeléfono: ' + (f.phone || '-') + '\n\n' + payload.summary, _cc: 'dromani@pucp.pe', _subject: 'Nueva solicitud web · ' + SERVICE }) }).catch(() => {});
     } catch (x) {
-      btn.disabled = false; btn.firstChild.textContent = 'Enviar y descargar mi PDF '; fail(x.message);
+      btn.disabled = false; btn.firstChild.textContent = 'Enviar solicitud '; fail(x.message);
     }
   });
 
-  // Ir al formulario (desde los resultados de cada herramienta)
+  // Ventana de descarga del PDF
+  const pm = document.getElementById('pdfM'), pf = document.getElementById('pdfForm'), pErr = document.getElementById('pfErr'), pOk = document.getElementById('pfOk');
+  function pdf() {
+    pf.hidden = false; pOk.hidden = true; pErr.style.display = 'none';
+    const b = document.getElementById('pfBtn'); b.disabled = false; b.firstChild.textContent = 'Descargar PDF ';
+    pm.hidden = false; document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('pfOrg').focus(), 250);
+  }
+  const closePdf = () => { pm.hidden = true; document.body.style.overflow = ''; };
+  pm.querySelectorAll('[data-close]').forEach((x) => x.addEventListener('click', closePdf));
+  pf.addEventListener('input', () => { pErr.style.display = 'none'; });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !pm.hidden) closePdf(); });
+  document.addEventListener('click', (e) => { const t = e.target.closest('[data-pdf]'); if (t) { e.preventDefault(); pdf(); } });
+  const download = (url) => { const a = document.createElement('a'); a.href = url; a.setAttribute('download', ''); document.body.appendChild(a); a.click(); a.remove(); };
+  pf.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(pf));
+    const fail = (m) => { pErr.textContent = m; pErr.style.display = 'block'; };
+    if (!f.organization || f.organization.trim().length < 2) return fail('Indique el nombre de su organización.');
+    if ((f.phone || '').replace(/\D/g, '').length < 6) return fail('Indique un teléfono válido.');
+    if (!f.consent) return fail('Marque la casilla para continuar.');
+    pErr.style.display = 'none';
+    const b = document.getElementById('pfBtn'); b.disabled = true; b.firstChild.textContent = 'Preparando su PDF ';
+    const lines = state.lines.length ? state.lines : ['Consulta sobre ' + SERVICE + '.'];
+    const payload = { organization: f.organization.trim(), phone: f.phone.trim(), consent: 1, website: f.website || '',
+      summary: lines.join('\n'), score: state.extra.score ?? null, level: state.extra.level || null,
+      data: { lines, priorities: state.extra.priorities || [], title: state.extra.title || null } };
+    try {
+      const r = await fetch(@json(route('services.leads.store', $service['slug'])), { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }, body: JSON.stringify(payload) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.pdf) throw new Error(j.errors ? Object.values(j.errors)[0][0] : (r.status === 429 ? 'Demasiados intentos. Espere un minuto.' : 'No se pudo generar el PDF. Intente nuevamente.'));
+      pf.hidden = true; pOk.hidden = false; document.getElementById('pfAgain').href = j.pdf;
+      download(j.pdf);
+      fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: payload.organization, email: 'sin-correo@romanicompliance.com', message: 'Descarga de informe: ' + SERVICE + '\n\nOrganización: ' + payload.organization + '\nTeléfono: ' + payload.phone + '\n\n' + payload.summary, _cc: 'dromani@pucp.pe', _subject: 'Nueva descarga de informe · ' + SERVICE }) }).catch(() => {});
+    } catch (x) { b.disabled = false; b.firstChild.textContent = 'Descargar PDF '; fail(x.message); }
+  });
+
+  // Ir al formulario de contacto
   function toForm() { document.getElementById('contactar').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => document.getElementById(document.getElementById('lfName').value ? 'lfMail' : 'lfName').focus({ preventScroll: true }), 600); }
   function setOrg(v) { if (v && !org.value) org.value = v; }
 
@@ -275,7 +350,7 @@ window.RCT = (function () {
   }
 
   const label = (list, v) => (list.find((o) => o.v === v) || {}).t || '';
-  return { summary, options, label, check, toForm, setOrg };
+  return { summary, options, label, check, toForm, setOrg, pdf };
 })();
 </script>
 @yield('tool_scripts')

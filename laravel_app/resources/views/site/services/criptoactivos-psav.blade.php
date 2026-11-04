@@ -61,7 +61,7 @@
       <div style="font-weight:700;font-size:.95rem">Alcance del programa</div>
       <div class="meter" style="margin-top:10px"><i id="psMeter"></i></div>
       <div class="ps-meta"><span id="psCount">0 módulos</span><span id="psScope"></span></div>
-      <a href="#contactar" class="b b-light b-block">Solicitar esta propuesta</a>
+      <button type="button" class="b b-light b-block" data-pdf>Descargar propuesta en PDF</button><a href="#contactar" class="b b-ghost-dark b-block" style="margin-top:10px">Solicitar esta propuesta</a>
       <p class="note" style="color:rgba(255,255,255,.45)">Propuesta orientativa. La definimos con usted después de entender su operación.</p>
     </aside>
   </div>

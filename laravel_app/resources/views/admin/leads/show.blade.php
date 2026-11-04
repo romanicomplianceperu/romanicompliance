@@ -5,7 +5,7 @@
 @section('content')
 <div class="page-head">
   <div>
-    <h2 style="font-size:1.15rem">{{ $lead->name }}@if($lead->organization) · {{ $lead->organization }}@endif</h2>
+    <h2 style="font-size:1.15rem">{{ $lead->name }}@if($lead->organization && $lead->organization !== $lead->name) · {{ $lead->organization }}@endif</h2>
     <div class="form-hint">RC-{{ str_pad($lead->id, 5, '0', STR_PAD_LEFT) }} · {{ $lead->service_name }} · recibida el {{ $lead->created_at->timezone('America/Lima')->format('d/m/Y H:i') }}</div>
   </div>
   <a href="{{ route('admin.leads.index') }}" class="btn btn-outline btn-sm">← Volver</a>

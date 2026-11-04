@@ -62,7 +62,7 @@
       + '<p class="h3" style="margin-top:14px">' + (A.que === 'prev' ? 'Prepararse a tiempo hace la diferencia.' : 'Lo importante ahora es actuar con orden y sin improvisar.') + '</p>'
       + '<div class="caf-cols"><div class="card"><h4>Qué hacer ahora</h4><ol>' + now.map((x) => '<li>' + x + '</li>').join('') + '</ol></div>'
       + '<div class="card"><h4>Lo que haremos</h4><ol>' + we.map((x) => '<li>' + x + '</li>').join('') + '</ol></div></div>'
-      + '<div class="tool-nav"><button type="button" class="b b-ghost b-sm" id="cafAgain">Volver a empezar</button><a href="#contactar" class="b b-primary">Revisar mi caso con el equipo</a></div>'
+      + '<div class="tool-nav"><button type="button" class="b b-ghost b-sm" id="cafAgain">Volver a empezar</button><button type="button" class="b b-primary" data-pdf>Descargar informe en PDF</button><a href="#contactar" class="b b-ghost">Revisar mi caso con el equipo</a></div>'
       + '<p class="note">Orientación general basada en sus respuestas. Cada medida debe revisarse con el documento a la vista.</p></div>';
     setTimeout(() => document.querySelectorAll('#cafUrg i').forEach((b, n) => { if (n < lvl[2]) b.style.background = lvl[3]; }), 80);
     document.getElementById('cafAgain').onclick = () => { for (const k in A) delete A[k]; i = 0; render(); RCT.summary([]); };
