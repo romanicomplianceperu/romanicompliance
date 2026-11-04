@@ -5,11 +5,8 @@
 @section('styles')
 /* Portada */
 .hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(44px, 6vw, 80px) 0 clamp(40px, 5vw, 64px); }
-.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); }
 @keyframes gridMove { to { background-position: 64px 64px, 64px 64px; } }
 .hero .glow { position: absolute; border-radius: 50%; pointer-events: none; will-change: transform; }
-.hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
-.hero .g2 { width: 420px; height: 420px; left: -160px; bottom: -200px; background: radial-gradient(circle, rgba(127,163,255,.25), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
 @keyframes drift { to { transform: translate(-70px, 60px) scale(1.12); } }
 .hero .wrap { position: relative; z-index: 1; }
 .hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 30px; }
@@ -153,7 +150,6 @@
 
 @section('content')
 <section class="hero">
-  <span class="glow g1" aria-hidden="true"></span><span class="glow g2" aria-hidden="true"></span>
   <div class="wrap">
     <h1 class="display" id="heroTitle">Especialistas en compliance penal y <em>prevención de lavado de activos.</em></h1>
     <p class="lead rv" style="--d:.35s">Acompañamos a empresas, sujetos obligados y proveedores de activos virtuales en el Perú: diseñamos su sistema de prevención, respondemos ante la UIF y la Fiscalía, y defendemos cuando hay una investigación.</p>
@@ -269,7 +265,7 @@
         <div class="role">Abogado especialista en compliance y ALA/CFT</div>
         <p class="bio">Máster en Derecho Penal (PUCP) y en Cumplimiento Normativo Penal (Universidad de Castilla-La Mancha). Más de quince años en investigación financiera, prevención de lavado de activos y compliance corporativo.</p>
         <div class="chips"><span class="chip">PUCP</span><span class="chip">UCLM</span><span class="chip">ISO 37001:2021</span><span class="chip">Compliance Officer</span></div>
-        <div class="contact"><a href="mailto:denis@romanicompliance.com" class="b b-primary">Escribirle</a><a href="{{ route('equipo') }}" class="b b-ghost">Conocer al equipo @include('site.partials.icon', ['name' => 'arrow'])</a></div>
+        <div class="contact"><a href="https://www.linkedin.com/in/denis-gabriel-romani-seminario-239637109/" target="_blank" rel="noopener" class="b b-primary"><svg class="ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.13 2.06 2.06 0 010 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg> LinkedIn</a><a href="{{ route('equipo') }}" class="b b-ghost">Conocer al equipo @include('site.partials.icon', ['name' => 'arrow'])</a></div>
       </div>
     </div>
   </div>

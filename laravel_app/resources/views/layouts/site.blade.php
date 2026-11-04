@@ -79,7 +79,7 @@ button { font: inherit; color: inherit; }
 .lnk:hover .ic { transform: translateX(4px); }
 
 /* Navegación: cabecera azul animada */
-.nav { position: sticky; top: 0; z-index: 100; background: var(--ink); color: #fff; transition: box-shadow .3s, background .3s; }
+.nav { position: sticky; top: 0; z-index: 100; background: #000; color: #fff; transition: box-shadow .3s, background .3s; }
 .nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(127,163,255,.22); }
 @keyframes navline { from { background-position: 200% 0; } to { background-position: 0 0; } }
 .nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); }

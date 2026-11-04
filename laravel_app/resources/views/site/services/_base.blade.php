@@ -7,8 +7,6 @@
 
 @section('styles')
 .sv-hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(44px, 6vw, 80px) 0 clamp(48px, 6vw, 80px); }
-.sv-hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 56px 56px; mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, #000 10%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, #000 10%, transparent 75%); opacity: .7; }
-.sv-hero::after { content: ''; position: absolute; width: 560px; height: 560px; right: -160px; top: -200px; border-radius: 50%; background: radial-gradient(circle, rgba(31,79,216,.5), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
 @keyframes gridMove { to { background-position: 56px 56px, 56px 56px; } }
 @keyframes drift { to { transform: translate(-60px, 50px) scale(1.08); } }
 .sv-hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1.35fr 1fr; gap: 56px; align-items: end; }
@@ -29,13 +27,36 @@
 .deliv { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
 .deliv .card { padding: 24px; display: flex; gap: 14px; align-items: center; font-weight: 700; }
 .deliv .card .ic { width: 22px; height: 22px; color: var(--blue); }
-.cta-box { background: var(--ink); color: #fff; border-radius: 30px; padding: clamp(36px, 6vw, 80px); display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center; position: relative; overflow: hidden; }
+.cta-box { overflow: clip; background: var(--ink); color: #fff; border-radius: 30px; padding: clamp(36px, 6vw, 80px); display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center; position: relative; }
 .cta-box::after { content: ''; position: absolute; width: 480px; height: 480px; right: -140px; bottom: -220px; border-radius: 50%; background: radial-gradient(circle, rgba(127,163,255,.28), transparent 65%); }
-.cta-box > * { position: relative; z-index: 1; }
+.cta-box > * { position: relative; z-index: 1; min-width: 0; }
 .cta-box .lead { color: rgba(255,255,255,.7); margin-top: 16px; }
-.cta-sum { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 20px; font-size: 0.95rem; color: rgba(255,255,255,.8); white-space: pre-line; margin-bottom: 16px; display: none; }
+.cta-sum { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 18px; margin: 22px 0 6px; overflow: hidden; }
+.cta-sum summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+.cta-sum summary::-webkit-details-marker { display: none; }
+.cta-sum .si { width: 38px; height: 38px; border-radius: 12px; background: rgba(127,163,255,.18); color: var(--blue-l); display: grid; place-items: center; flex-shrink: 0; }
+.cta-sum .si .ic { width: 20px; height: 20px; }
+.cta-sum .st { flex: 1; min-width: 0; }
+.cta-sum .st b { display: block; font-size: .95rem; }
+.cta-sum .st small { display: block; color: rgba(255,255,255,.62); font-size: .85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cta-sum .chev { width: 9px; height: 9px; border-right: 2px solid rgba(255,255,255,.6); border-bottom: 2px solid rgba(255,255,255,.6); transform: rotate(45deg); margin: 0 6px 4px 0; transition: transform .3s var(--ease); flex-shrink: 0; }
+.cta-sum[open] .chev { transform: rotate(-135deg); margin-bottom: -2px; }
+.cta-sum ul { list-style: none; margin: 0; padding: 2px 16px 14px; display: grid; gap: 8px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 12px; }
+.cta-sum li { display: flex; gap: 10px; align-items: flex-start; font-size: .9rem; color: rgba(255,255,255,.8); line-height: 1.45; }
+.cta-sum li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--blue-l); margin-top: 8px; flex-shrink: 0; }
 .cta-acts { display: grid; gap: 10px; }
-@media (max-width: 900px) { .cta-box { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .cta-box { grid-template-columns: 1fr; gap: 26px; } }
+@media (max-width: 560px) {
+  #contactar .wrap { padding: 0 12px; }
+  .cta-box { border-radius: 24px; padding: 30px 20px 24px; }
+  .cta-box .h2 { font-size: 1.75rem; }
+  .cta-box .lead { font-size: 1rem; margin-top: 10px; }
+  .cta-box .lead-f { background: none; border: 0; padding: 0; border-radius: 0; }
+  .cta-box .lf-row { margin-bottom: 12px; }
+  .cta-box .lf-row input { padding: 13px 14px; }
+  .cta-box .lf-ck { font-size: .84rem; }
+  .cta-box .lead-ok { padding: 24px 8px; }
+}
 .others { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .others .card { display: flex; flex-direction: column; gap: 14px; }
 .others .card h3 { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.015em; }
@@ -168,7 +189,7 @@
       <div>
         <h2 class="h2">¿Prefiere que le contactemos?</h2>
         <p class="lead">Déjenos sus datos y un abogado del equipo le contactará para revisar su caso con usted, con total reserva.</p>
-        <div class="cta-sum" id="ctaSum"></div>
+        <details class="cta-sum" id="ctaSum" hidden></details>
       </div>
       <div>
         <form class="lead-f" id="leadForm" novalidate data-no-loader>
@@ -248,9 +269,14 @@ window.RCT = (function () {
   let state = { lines: [], extra: {} };
   function summary(lines, extra) {
     state = { lines: lines.filter(Boolean), extra: extra || {} };
-    const text = state.lines.join('\n');
-    sum.style.display = text ? 'block' : 'none';
-    sum.textContent = text ? 'Su resumen\n' + text : '';
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const L = state.lines;
+    sum.hidden = !L.length;
+    if (L.length) {
+      sum.innerHTML = '<summary><span class="si">' + @json(view('site.partials.icon', ['name' => 'doc'])->render()) + '</span><span class="st"><b>Su resumen</b><small>' + esc(L[0]) + '</small></span><span class="chev"></span></summary>'
+        + '<ul>' + L.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul>';
+      sum.open = matchMedia('(min-width: 901px)').matches;
+    }
   }
   summary([]);
 
@@ -276,7 +302,7 @@ window.RCT = (function () {
       const r = await fetch(@json(route('services.leads.store', $service['slug'])), { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }, body: JSON.stringify(payload) });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) { const m = j.errors ? Object.values(j.errors)[0][0] : (r.status === 429 ? 'Demasiados intentos. Espere un minuto.' : 'No se pudo enviar. Escríbanos por WhatsApp.'); throw new Error(m); }
-      form.hidden = true; const ok = document.getElementById('leadOk'); ok.hidden = false;
+      form.hidden = true; const ok = document.getElementById('leadOk'); ok.hidden = false; form.closest('.cta-box').scrollTop = 0;
       // aviso por correo al equipo (mismo servicio que el formulario de contacto)
       fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: f.name, email: f.email || 'sin-correo@romanicompliance.com', message: 'Nueva solicitud: ' + SERVICE + '\n\nNombre: ' + f.name + '\nOrganización: ' + (f.organization || '-') + '\nCorreo: ' + (f.email || '-') + '\nTeléfono: ' + (f.phone || '-') + '\n\n' + payload.summary, _cc: 'dromani@pucp.pe', _subject: 'Nueva solicitud web · ' + SERVICE }) }).catch(() => {});
     } catch (x) {
