@@ -135,6 +135,8 @@ img { max-width: 100%; display: block; }
     <a href="{{ route('admin.dashboard') }}" class="sidebar-brand"><img src="{{ asset('images/logos.png') }}" alt="Romani Compliance"></a>
     <nav class="sidebar-nav">
       <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Panel</a>
+      @php $rcNewLeads = \Illuminate\Support\Facades\Schema::hasTable('service_leads') ? \App\Models\ServiceLead::where('status', 'nuevo')->count() : 0; @endphp
+      <a href="{{ route('admin.leads.index') }}" class="{{ request()->routeIs('admin.leads.*') ? 'active' : '' }}">Solicitudes de clientes @if($rcNewLeads)<span style="background:#1F4FD8;color:#fff;border-radius:10px;padding:1px 7px;font-size:.7rem;margin-left:4px">{{ $rcNewLeads }}</span>@endif</a>
       <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">Categorías</a>
       <a href="{{ route('admin.courses.index') }}" class="{{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">Cursos</a>
       <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Alumnos</a>

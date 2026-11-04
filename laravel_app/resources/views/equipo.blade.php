@@ -7,12 +7,12 @@
 .pg-hero { padding: clamp(56px, 8vw, 104px) 0 clamp(36px, 5vw, 56px); }
 .pg-hero .lead { margin-top: 20px; }
 .lead-m { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(36px, 6vw, 96px); align-items: start; }
-.lead-m .ph { border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 5; background: var(--soft); position: sticky; top: 110px; }
-.lead-m .ph img { width: 100%; height: 100%; object-fit: cover; }
+.lead-m .ph { border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 5; position: sticky; top: 110px; background: radial-gradient(circle at 50% 38%, #2A57D6 0%, #10264D 55%, var(--ink) 100%); }
+.lead-m .ph img { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); height: 94%; width: auto; max-width: none; }
 .lead-m .role { color: var(--blue); font-weight: 700; margin: 8px 0 22px; }
 .lead-m p.bio { color: var(--muted); font-size: 1.08rem; margin-bottom: 16px; }
 .lead-m .acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
-@media (max-width: 860px) { .lead-m { grid-template-columns: 1fr; } .lead-m .ph { position: static; max-width: 380px; } }
+@media (max-width: 860px) { .lead-m { grid-template-columns: 1fr; } .lead-m .ph { position: relative; top: 0; max-width: 380px; width: 100%; } }
 .team { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 .mem { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: #fff; display: flex; flex-direction: column; transition: transform .35s var(--ease), border-color .3s; }
 .mem:hover { transform: translateY(-4px); border-color: var(--blue); }
@@ -44,7 +44,7 @@
 @if($director)
 <section class="sec" style="padding-top:0">
   <div class="wrap lead-m">
-    <div class="ph rv"><img src="{{ $director->displayPhoto() ?? asset('images/imagen.png') }}" alt="{{ $director->name }}"></div>
+    <div class="ph rv"><img src="{{ asset('images/denis-romani.webp') }}" alt="{{ $director->name }}"></div>
     <div>
       <div class="kicker rv">Dirección</div>
       <h2 class="h2 rv">{{ $director->name }}</h2>

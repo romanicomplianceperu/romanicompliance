@@ -66,7 +66,7 @@
       + '<p class="note">Orientación general basada en sus respuestas. Cada medida debe revisarse con el documento a la vista.</p></div>';
     setTimeout(() => document.querySelectorAll('#cafUrg i').forEach((b, n) => { if (n < lvl[2]) b.style.background = lvl[3]; }), 80);
     document.getElementById('cafAgain').onclick = () => { for (const k in A) delete A[k]; i = 0; render(); RCT.summary([]); };
-    RCT.summary(['Evaluación CAF: ' + lvl[1], 'Afectado: ' + RCT.label(S[0].o, A.quien), 'Situación: ' + RCT.label(S[1].o, A.que), 'Cuándo: ' + RCT.label(S[2].o, A.cuando), 'Documentos de origen: ' + RCT.label(S[3].o, A.docs)]);
+    RCT.summary(['Evaluación CAF: ' + lvl[1], 'Afectado: ' + RCT.label(S[0].o, A.quien), 'Situación: ' + RCT.label(S[1].o, A.que), 'Cuándo: ' + RCT.label(S[2].o, A.cuando), 'Documentos de origen: ' + RCT.label(S[3].o, A.docs)], { level: lvl[1], title: 'Evaluación de su caso de congelamiento', priorities: now });
   }
   render();
 })();

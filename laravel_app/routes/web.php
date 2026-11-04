@@ -31,6 +31,8 @@ use App\Http\Controllers\FedericoEditorController;
 use App\Http\Controllers\GuestEnrollController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiceLeadController;
+use App\Http\Controllers\Admin\ServiceLeadController as AdminServiceLeadController;
 use App\Http\Controllers\InternshipApplicationController;
 use App\Http\Controllers\Admin\InternshipApplicationController as AdminInternshipApplicationController;
 use App\Http\Controllers\PanelController;
@@ -50,6 +52,8 @@ Route::view('/capacitaciones', 'capacitaciones')->name('capacitaciones');
 // Rediseño 2026-11: la antigua landing inmobiliaria vive ahora en /servicios (se conserva el nombre de ruta).
 Route::redirect('/inmobiliario', '/servicios/inmobiliario-notarial', 301)->name('inmobiliario');
 Route::redirect('/servicios', '/#servicios');
+Route::post('/servicios/{slug}/solicitud', [ServiceLeadController::class, 'store'])->where('slug', '[a-z0-9-]+')->middleware('throttle:8,1')->name('services.leads.store');
+Route::get('/servicios/solicitud/{lead}/pdf', [ServiceLeadController::class, 'pdf'])->middleware('signed:relative')->name('services.leads.pdf');
 Route::get('/servicios/{slug}', [ServiceController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('services.show');
 Route::prefix('aprendizaje')->name('aprendizaje.')->group(function () {
     Route::view('/', 'aprendizaje.index')->name('index');
@@ -203,6 +207,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     Route::get('/preguntas-alumnos', [AdminCourseQuestionController::class, 'index'])->name('questions-support.index');
     Route::post('/preguntas-alumnos/{question}/responder', [AdminCourseQuestionController::class, 'answer'])->name('questions-support.answer');
+
+    Route::get('/solicitudes', [AdminServiceLeadController::class, 'index'])->name('leads.index');
+    Route::get('/solicitudes/{lead}', [AdminServiceLeadController::class, 'show'])->name('leads.show');
+    Route::put('/solicitudes/{lead}', [AdminServiceLeadController::class, 'update'])->name('leads.update');
+    Route::get('/solicitudes/{lead}/pdf', [AdminServiceLeadController::class, 'pdf'])->name('leads.pdf');
 
     Route::get('/academico', [AdminAcademicoController::class, 'index'])->name('academico.index');
     Route::post('/academico/instalar-semana-6', [AdminAcademicoController::class, 'installWeek6'])->name('academico.install-week6');

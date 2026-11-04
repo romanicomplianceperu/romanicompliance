@@ -3,35 +3,42 @@
 @php $services = \App\Support\ServiceCatalog::all(); @endphp
 
 @section('styles')
-/* Portada */
-.hero { position: relative; overflow: hidden; padding: clamp(64px, 9vw, 128px) 0 clamp(56px, 7vw, 96px); }
-.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 60% 70% at 80% 20%, #000 5%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 60% 70% at 80% 20%, #000 5%, transparent 70%); }
-.hero::after { content: ''; position: absolute; width: 720px; height: 720px; right: -220px; top: -300px; border-radius: 50%; background: radial-gradient(circle, rgba(31,79,216,.18), transparent 62%); animation: drift 16s ease-in-out infinite alternate; }
-@keyframes drift { to { transform: translate(-80px, 70px) scale(1.1); } }
+/* Portada azul, continuación de la cabecera */
+.hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(64px, 9vw, 120px) 0 clamp(56px, 7vw, 96px); }
+.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 75% 25%, #000 5%, transparent 72%); animation: gridMove 22s linear infinite; }
+@keyframes gridMove { to { background-position: 64px 64px, 64px 64px; } }
+.hero .glow { position: absolute; border-radius: 50%; filter: blur(10px); pointer-events: none; }
+.hero .g1 { width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(circle, rgba(31,79,216,.55), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
+.hero .g2 { width: 420px; height: 420px; left: -160px; bottom: -200px; background: radial-gradient(circle, rgba(127,163,255,.25), transparent 65%); animation: drift 18s ease-in-out infinite alternate-reverse; }
+@keyframes drift { to { transform: translate(-70px, 60px) scale(1.12); } }
 .hero .wrap { position: relative; z-index: 1; }
-.hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: .9rem; font-weight: 600; color: var(--muted); margin-bottom: 30px; }
-.hero-tag i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px rgba(14,138,95,.15); }
-.hero h1 { max-width: 1000px; }
-.hero h1 em { font-style: normal; background: linear-gradient(90deg, var(--blue), #5B7FFF); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.hero .lead { margin: 28px 0 38px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 30px; }
+.hero-tag i { width: 8px; height: 8px; border-radius: 50%; background: #3DDC97; box-shadow: 0 0 0 4px rgba(61,220,151,.18); animation: blink 2.4s ease-in-out infinite; }
+@keyframes blink { 50% { box-shadow: 0 0 0 8px rgba(61,220,151,0); } }
+.hero h1 { max-width: 1040px; }
+.hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(6px); animation: wIn .8s var(--ease) forwards; }
+@keyframes wIn { to { opacity: 1; transform: none; filter: none; } }
+.hero h1 em { font-style: normal; color: var(--blue-l); position: relative; }
+.hero .lead { margin: 28px 0 38px; color: rgba(255,255,255,.72); }
 .hero-acts { display: flex; gap: 12px; flex-wrap: wrap; }
-.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(48px, 7vw, 88px); border-top: 1px solid var(--line); }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(48px, 7vw, 80px); border-top: 1px solid rgba(255,255,255,.12); }
 .facts div { padding: 26px 26px 0 0; }
 .facts b { display: block; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-.facts span { color: var(--muted); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
+.facts span { color: rgba(255,255,255,.62); font-size: .95rem; display: block; margin-top: 8px; max-width: 240px; }
 @media (max-width: 720px) { .facts { grid-template-columns: 1fr; } .facts div { padding: 20px 0 0; } }
+@media (prefers-reduced-motion: reduce) { .hero h1 .w { animation: none; opacity: 1; transform: none; filter: none; } .hero::before, .hero .glow { animation: none; } }
 
 /* ¿Qué necesita resolver? */
-.need { background: var(--ink); color: #fff; border-radius: 30px; padding: clamp(28px, 4vw, 52px); margin-top: clamp(48px, 6vw, 80px); }
+.need { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); color: #fff; border-radius: 30px; padding: clamp(24px, 4vw, 44px); margin-top: clamp(48px, 6vw, 72px); }
 .need-top { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 26px; }
 .need h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; }
 .need-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.need a { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 22px; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); font-weight: 700; font-size: 1.02rem; line-height: 1.35; transition: background .25s, border-color .25s, transform .3s var(--ease); }
-.need a:hover { background: rgba(127,163,255,.14); border-color: rgba(127,163,255,.35); transform: translateY(-3px); }
+.need a { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); font-weight: 700; font-size: 1.02rem; line-height: 1.35; transition: background .25s, border-color .25s, transform .3s var(--ease); }
+.need a:hover { background: rgba(127,163,255,.16); border-color: rgba(127,163,255,.4); transform: translateY(-3px); }
 .need a .ic { width: 22px; height: 22px; color: var(--blue-l); transition: transform .25s var(--ease); }
 .need a:hover .ic { transform: translateX(4px); }
 @media (max-width: 960px) { .need-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 620px) { .need-grid { grid-template-columns: 1fr; } }
+@media (max-width: 620px) { .need-grid { grid-template-columns: 1fr; } .need a { padding: 18px; } }
 
 /* Estándares */
 .std { display: flex; align-items: center; gap: 12px 28px; flex-wrap: wrap; justify-content: center; padding: 30px 0; border-bottom: 1px solid var(--line); }
@@ -83,8 +90,10 @@
 
 /* Dirección */
 .dir { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(36px, 6vw, 96px); align-items: center; }
-.dir-photo { border-radius: 28px; overflow: hidden; background: var(--soft); aspect-ratio: 4 / 5; }
-.dir-photo img { width: 100%; height: 100%; object-fit: cover; }
+.dir-photo { position: relative; border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 5; background: radial-gradient(circle at 50% 38%, #2A57D6 0%, #10264D 55%, var(--ink) 100%); }
+.dir-photo::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px); background-size: 40px 40px; }
+.dir-photo img { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); height: 94%; width: auto; max-width: none; transition: transform .8s var(--ease); }
+.dir-photo:hover img { transform: translateX(-50%) scale(1.02); }
 .dir .h2 { margin-bottom: 8px; }
 .dir .role { color: var(--blue); font-weight: 700; margin-bottom: 22px; }
 .dir .lead { margin-bottom: 26px; }
@@ -112,13 +121,14 @@
 
 @section('content')
 <section class="hero">
+  <span class="glow g1" aria-hidden="true"></span><span class="glow g2" aria-hidden="true"></span>
   <div class="wrap">
     <div class="hero-tag rv"><i></i> Firma especializada en Lima, Perú</div>
-    <h1 class="display rv" style="--d:.05s">Criterio legal para decisiones que <em>no admiten errores.</em></h1>
-    <p class="lead rv" style="--d:.12s">Prevención de lavado de activos, compliance penal y defensa penal económica para empresas y personas. Le decimos con claridad dónde está el riesgo y qué hacer con él.</p>
-    <div class="hero-acts rv" style="--d:.18s">
-      <a href="#necesidad" class="b b-primary">Encontrar mi servicio @include('site.partials.icon', ['name' => 'arrow'])</a>
-      <a href="#contacto" class="b b-ghost">Agendar una consulta</a>
+    <h1 class="display" id="heroTitle">Especialistas en compliance penal y <em>prevención de lavado de activos.</em></h1>
+    <p class="lead rv" style="--d:.35s">Acompañamos a empresas, sujetos obligados y proveedores de activos virtuales en el Perú: diseñamos su sistema de prevención, respondemos ante la UIF y la Fiscalía, y defendemos cuando hay una investigación.</p>
+    <div class="hero-acts rv" style="--d:.45s">
+      <a href="{{ route('services.show', 'compliance-penal') }}#herramienta" class="b b-primary">Hacer mi diagnóstico de riesgo @include('site.partials.icon', ['name' => 'arrow'])</a>
+      <a href="#servicios" class="b b-ghost-dark">Ver servicios</a>
     </div>
 
     <div class="need rv" id="necesidad">
@@ -131,8 +141,8 @@
     </div>
 
     <div class="facts">
-      <div class="rv"><b>15+</b><span>años de experiencia en investigación financiera y prevención LA/FT</span></div>
-      <div class="rv" style="--d:.06s"><b>6</b><span>áreas de práctica, del compliance a la defensa penal</span></div>
+      <div class="rv"><b data-count="15" data-suffix="+">15+</b><span>años de experiencia en investigación financiera y prevención LA/FT</span></div>
+      <div class="rv" style="--d:.06s"><b data-count="6">6</b><span>áreas de práctica, del compliance a la defensa penal</span></div>
       <div class="rv" style="--d:.12s"><b>GAFI</b><span>estándares internacionales aplicados a la normativa peruana</span></div>
     </div>
   </div>
@@ -202,7 +212,7 @@
 
 <section class="sec sec-soft" id="director">
   <div class="wrap dir">
-    <div class="dir-photo rv"><img src="{{ asset('images/imagen.png') }}" alt="Denis Gabriel Romani Seminario" loading="lazy"></div>
+    <div class="dir-photo rv"><img src="{{ asset('images/denis-romani.webp') }}" alt="Denis Gabriel Romani Seminario" loading="lazy"></div>
     <div>
       <div class="kicker rv"><span class="n">04</span> Dirección</div>
       <h2 class="h2 rv">Denis Gabriel Romani Seminario</h2>
@@ -278,6 +288,8 @@
             <option>Capacitación</option><option>Otro tema</option>
           </select></div>
         <div class="f"><label for="cMsg">Mensaje</label><textarea id="cMsg" name="mensaje" placeholder="Describa brevemente su situación"></textarea></div>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+        <label style="display:flex;gap:10px;align-items:flex-start;font-weight:500;font-size:.9rem;color:var(--muted);margin:-4px 0 18px;cursor:pointer"><input type="checkbox" name="consent" value="1" style="width:18px;height:18px;margin-top:2px;accent-color:var(--blue);flex-shrink:0"> <span>Autorizo a Romani Compliance a contactarme sobre esta consulta y a tratar mis datos con ese fin.</span></label>
         <button type="submit" class="b b-primary b-block" id="ctBtn">Enviar consulta @include('site.partials.icon', ['name' => 'arrow'])</button>
         <p class="note" id="ctErr" style="color:var(--bad);display:none"></p>
       </form>
@@ -290,6 +302,24 @@
 @section('scripts')
 <script>
 (function () {
+  // Titular: las palabras entran una a una
+  const h = document.getElementById('heroTitle');
+  if (h) {
+    let n = 0;
+    const wrap = (node) => [...node.childNodes].forEach((c) => {
+      if (c.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach((t) => { if (!t) return; if (/^\s+$/.test(t)) { frag.append(t); return; } const sp = document.createElement('span'); sp.className = 'w'; sp.style.animationDelay = (0.06 * n++) + 's'; sp.textContent = t; frag.append(sp); });
+        c.replaceWith(frag);
+      } else wrap(c);
+    });
+    wrap(h);
+  }
+  // Cifras que cuentan al aparecer
+  document.querySelectorAll('[data-count]').forEach((el) => {
+    new IntersectionObserver((es, o) => es.forEach((e) => { if (!e.isIntersecting) return; o.disconnect(); const end = +el.dataset.count, suf = el.dataset.suffix || ''; let t0; const step = (t) => { t0 = t0 || t; const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))) + suf; if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }), { threshold: 0.6 }).observe(el);
+  });
+
   // Línea del método: se dibuja al entrar en pantalla
   const s4 = document.getElementById('steps4');
   new IntersectionObserver((es, o) => es.forEach((e) => { if (e.isIntersecting) { s4.classList.add('in'); o.disconnect(); } }), { threshold: 0.35 }).observe(s4);
@@ -304,12 +334,17 @@
     const d = Object.fromEntries(new FormData(form));
     const err = document.getElementById('ctErr');
     if (!d.nombre || !d.email || !/^\S+@\S+\.\S+$/.test(d.email)) { err.textContent = 'Indique su nombre y un correo válido.'; err.style.display = 'block'; return; }
+    if (!d.consent) { err.textContent = 'Marque la autorización para que podamos contactarle.'; err.style.display = 'block'; return; }
     err.style.display = 'none';
     const btn = document.getElementById('ctBtn'); btn.disabled = true; btn.firstChild.textContent = 'Enviando ';
     const body = 'Consulta desde romanicompliance.com\n\nNombre: ' + d.nombre + '\nTeléfono: ' + (d.telefono || 'No indicado') + '\nCorreo: ' + d.email + '\nTema: ' + d.servicio + '\nMensaje: ' + (d.mensaje || 'Sin mensaje adicional');
     try {
-      const r = await fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: d.nombre, email: d.email, message: body, _cc: 'dromani@pucp.pe', _subject: 'Consulta web · Romani Compliance' }) });
-      if (!r.ok) throw new Error();
+      // 1) Queda registrada en el panel admin (Solicitudes de clientes)
+      const saved = await fetch(@json(route('services.leads.store', 'contacto')), { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content },
+        body: JSON.stringify({ name: d.nombre, email: d.email, phone: d.telefono || null, consent: 1, website: d.website || '', summary: 'Tema: ' + d.servicio + '\nMensaje: ' + (d.mensaje || 'Sin mensaje adicional'), data: { lines: ['Tema: ' + d.servicio, 'Mensaje: ' + (d.mensaje || 'Sin mensaje adicional')], title: 'Consulta desde la web' } }) });
+      if (!saved.ok) throw new Error();
+      // 2) Aviso por correo al equipo
+      fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: d.nombre, email: d.email, message: body, _cc: 'dromani@pucp.pe', _subject: 'Consulta web · Romani Compliance' }) }).catch(() => {});   // si el aviso por correo falla, la consulta ya quedó guardada
       form.style.display = 'none'; document.getElementById('ctOk').style.display = 'block';
     } catch (_) {
       btn.disabled = false; btn.firstChild.textContent = 'Enviar consulta ';

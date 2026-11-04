@@ -2,7 +2,7 @@
 
 @section('hero_actions')
   <a href="#inmobiliario" class="b b-primary" data-tab="inmo">Inmobiliario @include('site.partials.icon', ['name' => 'arrow'])</a>
-  <a href="#notarial" class="b b-dark" data-tab="nota">Notarial @include('site.partials.icon', ['name' => 'arrow'])</a>
+  <a href="#notarial" class="b b-light" data-tab="nota">Notarial @include('site.partials.icon', ['name' => 'arrow'])</a>
 @endsection
 
 @section('page_styles')
@@ -130,7 +130,7 @@
     if (s.sit.length) ch.push('Plan de saneamiento técnico-legal');
     if (s.tipo === 'planos') ch.push('Licencias del proyecto y titularidad del terreno');
     document.getElementById('imChecks').innerHTML = ch.map((x) => '<li>' + RCT.check + ' <span>' + x + '</span></li>').join('');
-    RCT.summary(['Operación inmobiliaria: ' + RCT.label(TIPO, s.tipo), 'Valor: ' + AMT[s.amt], s.pago ? 'Pago: ' + RCT.label(PAGO, s.pago) : '', s.parte ? 'Contraparte: ' + RCT.label(PARTE, s.parte) : '', s.sit.length ? 'Inmueble: ' + s.sit.map((v) => RCT.label(SIT, v).toLowerCase()).join(', ') : '', 'Lectura: ' + lvl[1]]);
+    RCT.summary(['Operación inmobiliaria: ' + RCT.label(TIPO, s.tipo), 'Valor: ' + AMT[s.amt], s.pago ? 'Pago: ' + RCT.label(PAGO, s.pago) : '', s.parte ? 'Contraparte: ' + RCT.label(PARTE, s.parte) : '', s.sit.length ? 'Inmueble: ' + s.sit.map((v) => RCT.label(SIT, v).toLowerCase()).join(', ') : '', 'Lectura: ' + lvl[1]], { level: lvl[1], title: 'Lectura de su operación inmobiliaria', priorities: f.map((x) => x[1]).concat(ch.map((c) => 'Revisar: ' + c)) });
   }
 
   // ── Chequeo notarial ──
@@ -148,7 +148,7 @@
     const p = document.getElementById('ntLvl'); p.className = 'pill ' + lvl[0]; p.textContent = lvl[1];
     RC.gauge(document.getElementById('ntGauge'), pct, lvl[2]);
     const miss = NT.filter(([k]) => !on.has(k)).map(([, t]) => t.toLowerCase());
-    RCT.summary(['Chequeo notarial: ' + pct + '/100 (' + lvl[1] + ')', miss.length ? 'Pendiente: ' + miss.join('; ') + '.' : 'Todos los elementos están implementados.']);
+    RCT.summary(['Chequeo notarial: ' + pct + '/100 (' + lvl[1] + ')', miss.length ? 'Pendiente: ' + miss.join('; ') + '.' : 'Todos los elementos están implementados.'], { score: pct, level: lvl[1], title: 'Chequeo de cumplimiento notarial', priorities: NT.filter(([k]) => !on.has(k)).map(([, t]) => 'Implementar: ' + t) });
   }
 
   show(location.hash === '#notarial' ? 'nota' : 'inmo', location.hash === '#notarial' || location.hash === '#inmobiliario');

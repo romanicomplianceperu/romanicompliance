@@ -90,7 +90,7 @@
       + '<div class="card"><h4>' + ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>') + 'Qué hacemos</h4><p>' + s[2] + '</p></div>'
       + '<div class="card err"><h4>' + ic('<path d="M12 3.5l9.5 16.5h-19L12 3.5z"/><path d="M12 10v4.5M12 17.5h.01"/>') + 'Error frecuente</h4><p>' + s[3] + '</p></div></div>'
       + '<div class="tool-nav"><span class="muted">' + (st.m === 'ext' ? 'La extinción de dominio corre por separado del proceso penal.' : 'Toda persona tiene derecho a ser asistida por un abogado desde la primera diligencia.') + '</span><a href="#contactar" class="b b-primary">Evaluar mi caso con el equipo</a></div>';
-    RCT.summary(['Materia: ' + RCT.label(MAT, st.m), 'Etapa: ' + s[0]]);
+    RCT.summary(['Materia: ' + RCT.label(MAT, st.m), 'Etapa: ' + s[0], 'Qué ocurre: ' + s[1]], { level: s[0], title: 'Evaluación de su caso penal', priorities: [s[2]] });
   }
   addEventListener('resize', paint);
   build();

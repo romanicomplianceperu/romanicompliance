@@ -156,7 +156,7 @@
       st.geo ? 'Clientes: ' + RCT.label(GEO, st.geo) : '',
       'Volumen mensual: ' + VOL[st.vol],
       'Módulos sugeridos: ' + m.map((x) => x[0]).join('; '),
-    ] : []);
+    ] : [], m.length ? { level: document.getElementById('psScope').textContent, title: 'Propuesta de programa de cumplimiento PSAV', priorities: m.map((x) => x[0] + ': ' + x[1]) } : {});
   }
   draw();
 })();

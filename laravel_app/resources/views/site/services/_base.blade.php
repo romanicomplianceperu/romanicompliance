@@ -6,13 +6,16 @@
 @section('description', $service['card'])
 
 @section('styles')
-.sv-hero { position: relative; overflow: hidden; padding: clamp(56px, 8vw, 110px) 0 clamp(64px, 8vw, 104px); }
-.sv-hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 56px 56px; mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, #000 10%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, #000 10%, transparent 75%); opacity: .7; }
-.sv-hero::after { content: ''; position: absolute; width: 560px; height: 560px; right: -160px; top: -200px; border-radius: 50%; background: radial-gradient(circle, rgba(31,79,216,.16), transparent 65%); animation: drift 14s ease-in-out infinite alternate; }
+.sv-hero { position: relative; overflow: hidden; background: var(--ink); color: #fff; padding: clamp(56px, 8vw, 110px) 0 clamp(64px, 8vw, 104px); }
+.sv-hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 56px 56px; animation: gridMove 24s linear infinite; mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, #000 10%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, #000 10%, transparent 75%); opacity: .7; }
+.sv-hero::after { content: ''; position: absolute; width: 560px; height: 560px; right: -160px; top: -200px; border-radius: 50%; background: radial-gradient(circle, rgba(31,79,216,.5), transparent 62%); animation: drift 14s ease-in-out infinite alternate; }
+@keyframes gridMove { to { background-position: 56px 56px, 56px 56px; } }
 @keyframes drift { to { transform: translate(-60px, 50px) scale(1.08); } }
 .sv-hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1.35fr 1fr; gap: 56px; align-items: end; }
-.sv-crumb { display: flex; gap: 8px; align-items: center; font-size: 0.9rem; font-weight: 600; color: var(--muted); margin-bottom: 28px; }
-.sv-crumb a:hover { color: var(--ink); }
+.sv-crumb { display: flex; gap: 8px; align-items: center; font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,.6); margin-bottom: 28px; }
+.sv-crumb a:hover { color: #fff; }
+.sv-hero .lead { color: rgba(255,255,255,.72); }
+.sv-side { color: var(--ink); box-shadow: 0 30px 80px -30px rgba(0,0,0,.6); }
 .sv-hero .lead { margin: 24px 0 36px; }
 .sv-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .sv-side { background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 28px; }
@@ -37,6 +40,24 @@
 .others .card { display: flex; flex-direction: column; gap: 14px; }
 .others .card h3 { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.015em; }
 @media (max-width: 900px) { .others { grid-template-columns: 1fr; } }
+
+.lead-f { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 22px; padding: 24px; position: relative; }
+.lf-row { margin-bottom: 14px; }
+.lf-row label { display: block; font-weight: 700; font-size: .9rem; margin-bottom: 7px; color: #fff; }
+.lf-row label span { font-weight: 500; color: rgba(255,255,255,.55); }
+.lf-row input { width: 100%; padding: 14px 15px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,.16); background: rgba(255,255,255,.06); color: #fff; font: inherit; font-size: 1rem; transition: border-color .2s, background .2s; }
+.lf-row input::placeholder { color: rgba(255,255,255,.4); }
+.lf-row input:focus { outline: none; border-color: var(--blue-l); background: rgba(255,255,255,.1); }
+.lf-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .lf-2 { grid-template-columns: 1fr; gap: 0; } }
+.lf-ck { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; color: rgba(255,255,255,.75); margin: 4px 0 18px; cursor: pointer; }
+.lf-ck input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--blue-l); flex-shrink: 0; }
+.lf-err { color: #FFB4AB; font-size: .9rem; margin-top: 10px; display: none; }
+.lead-ok { text-align: center; padding: 30px 20px; background: rgba(255,255,255,.06); border-radius: 22px; animation: paneIn .5s var(--ease); }
+.lead-ok .okc { width: 64px; height: 64px; border-radius: 50%; background: rgba(14,138,95,.25); color: #7CE0B5; display: grid; place-items: center; margin: 0 auto 16px; font-size: 30px; animation: pop .6s var(--ease); }
+@keyframes pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
+.lead-ok h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+.lead-ok p { color: rgba(255,255,255,.7); margin-bottom: 18px; }
 @yield('page_styles')
 @endsection
 
@@ -53,7 +74,7 @@
         @else
           <a href="#herramienta" class="b b-primary">{{ $service['cta'] }} @include('site.partials.icon', ['name' => 'arrow'])</a>
         @endif
-        <a href="{{ \App\Support\ServiceCatalog::whatsapp('Hola, quisiera conversar sobre '.$service['name'].'.') }}" class="b b-ghost" target="_blank" rel="noopener">Hablar con el equipo</a>
+        <a href="{{ \App\Support\ServiceCatalog::whatsapp('Hola, quisiera conversar sobre '.$service['name'].'.') }}" class="b b-ghost-dark" target="_blank" rel="noopener">Hablar con el equipo</a>
       </div>
     </div>
     <aside class="sv-side rv" style="--d:.2s">
@@ -123,14 +144,31 @@
   <div class="wrap">
     <div class="cta-box rv">
       <div>
-        <h2 class="h2">¿Conversamos sobre su caso?</h2>
-        <p class="lead">Escríbanos y un abogado del equipo revisará su situación. La primera conversación sirve para entender el caso y decirle con claridad qué recomendamos.</p>
+        <h2 class="h2">Reciba su resumen y conversemos.</h2>
+        <p class="lead">Déjenos sus datos: guardamos su caso, le enviamos el resumen en PDF y un abogado del equipo le contacta para revisarlo con usted.</p>
+        <div class="cta-sum" id="ctaSum"></div>
+        <div class="cta-acts" style="margin-top:18px">
+          <a href="#" class="b b-ghost-dark" id="ctaWa" target="_blank" rel="noopener">Prefiero escribir por WhatsApp</a>
+        </div>
       </div>
       <div>
-        <div class="cta-sum" id="ctaSum"></div>
-        <div class="cta-acts">
-          <a href="#" class="b b-light" id="ctaWa" target="_blank" rel="noopener">Enviar por WhatsApp @include('site.partials.icon', ['name' => 'arrow'])</a>
-          <a href="mailto:denis@romanicompliance.com?subject={{ rawurlencode('Consulta: '.$service['name']) }}" class="b b-ghost-dark" id="ctaMail">Escribir un correo</a>
+        <form class="lead-f" id="leadForm" novalidate data-no-loader>
+          <div class="lf-row"><label for="lfName">Nombre</label><input id="lfName" name="name" autocomplete="name" required></div>
+          <div class="lf-row"><label for="lfOrg">Organización <span>(opcional)</span></label><input id="lfOrg" name="organization" autocomplete="organization"></div>
+          <div class="lf-2">
+            <div class="lf-row"><label for="lfMail">Correo</label><input id="lfMail" name="email" type="email" autocomplete="email"></div>
+            <div class="lf-row"><label for="lfTel">Teléfono / WhatsApp</label><input id="lfTel" name="phone" type="tel" autocomplete="tel" placeholder="+51"></div>
+          </div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+          <label class="lf-ck"><input type="checkbox" name="consent" value="1"> <span>Autorizo a Romani Compliance a contactarme sobre esta solicitud y a tratar mis datos con ese fin.</span></label>
+          <button type="submit" class="b b-light b-block" id="lfBtn">Enviar y descargar mi PDF @include('site.partials.icon', ['name' => 'arrow'])</button>
+          <p class="lf-err" id="lfErr"></p>
+        </form>
+        <div class="lead-ok" id="leadOk" hidden>
+          <div class="okc">@include('site.partials.icon', ['name' => 'check'])</div>
+          <h3>Recibimos su solicitud.</h3>
+          <p>Un abogado del equipo le contactará a la brevedad. Su PDF se está descargando.</p>
+          <a href="#" class="b b-light" id="lfPdf" data-no-loader>Descargar el PDF otra vez</a>
         </div>
       </div>
     </div>
@@ -162,18 +200,53 @@ window.RCT = (function () {
   const check = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   const sum = document.getElementById('ctaSum');
   const wa = document.getElementById('ctaWa');
-  const mail = document.getElementById('ctaMail');
 
-  // Resumen de lo que el cliente eligió: viaja en el WhatsApp y el correo finales.
-  function summary(lines) {
-    const text = lines.filter(Boolean).join('\n');
+  // Resumen de lo que el cliente eligió: viaja en la solicitud, el PDF y el WhatsApp.
+  let state = { lines: [], extra: {} };
+  function summary(lines, extra) {
+    state = { lines: lines.filter(Boolean), extra: extra || {} };
+    const text = state.lines.join('\n');
     sum.style.display = text ? 'block' : 'none';
     sum.textContent = text ? 'Su resumen\n' + text : '';
-    const msg = 'Hola, quisiera conversar sobre ' + SERVICE + '.' + (text ? '\n\n' + text : '');
-    wa.href = RC.wa(msg);
-    mail.href = 'mailto:denis@romanicompliance.com?subject=' + encodeURIComponent('Consulta: ' + SERVICE) + '&body=' + encodeURIComponent(msg);
+    wa.href = RC.wa('Hola, quisiera conversar sobre ' + SERVICE + '.' + (text ? '\n\n' + text : ''));
   }
   summary([]);
+
+  // Formulario de solicitud: guarda en el panel admin y devuelve el PDF firmado.
+  const form = document.getElementById('leadForm');
+  const err = document.getElementById('lfErr');
+  const org = document.getElementById('lfOrg');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(form));
+    const fail = (m) => { err.textContent = m; err.style.display = 'block'; };
+    if (!f.name || f.name.trim().length < 2) return fail('Indique su nombre.');
+    if (!f.email && !f.phone) return fail('Indique un correo o un teléfono para contactarle.');
+    if (f.email && !/^\S+@\S+\.\S+$/.test(f.email)) return fail('El correo no es válido.');
+    if (!f.consent) return fail('Marque la autorización para que podamos contactarle.');
+    err.style.display = 'none';
+    const btn = document.getElementById('lfBtn'); btn.disabled = true; btn.firstChild.textContent = 'Enviando ';
+    const lines = state.lines.length ? state.lines : ['Consulta sobre ' + SERVICE + ' (sin usar la herramienta).'];
+    const payload = { name: f.name, organization: f.organization || null, email: f.email || null, phone: f.phone || null, consent: 1, website: f.website || '',
+      summary: lines.join('\n'), score: state.extra.score ?? null, level: state.extra.level || null,
+      data: { lines, priorities: state.extra.priorities || [], title: state.extra.title || null } };
+    try {
+      const r = await fetch(@json(route('services.leads.store', $service['slug'])), { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }, body: JSON.stringify(payload) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) { const m = j.errors ? Object.values(j.errors)[0][0] : (r.status === 429 ? 'Demasiados intentos. Espere un minuto.' : 'No se pudo enviar. Escríbanos por WhatsApp.'); throw new Error(m); }
+      form.hidden = true; const ok = document.getElementById('leadOk'); ok.hidden = false;
+      const pdf = document.getElementById('lfPdf'); pdf.href = j.pdf;
+      if (j.pdf) { const a = document.createElement('a'); a.href = j.pdf; a.setAttribute('download', ''); document.body.appendChild(a); a.click(); a.remove(); }
+      // aviso por correo al equipo (mismo servicio que el formulario de contacto)
+      fetch('https://formsubmit.co/ajax/omaroliden1@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: f.name, email: f.email || 'sin-correo@romanicompliance.com', message: 'Nueva solicitud: ' + SERVICE + '\n\nNombre: ' + f.name + '\nOrganización: ' + (f.organization || '-') + '\nCorreo: ' + (f.email || '-') + '\nTeléfono: ' + (f.phone || '-') + '\n\n' + payload.summary, _cc: 'dromani@pucp.pe', _subject: 'Nueva solicitud web · ' + SERVICE }) }).catch(() => {});
+    } catch (x) {
+      btn.disabled = false; btn.firstChild.textContent = 'Enviar y descargar mi PDF '; fail(x.message);
+    }
+  });
+
+  // Ir al formulario (desde los resultados de cada herramienta)
+  function toForm() { document.getElementById('contactar').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => document.getElementById(document.getElementById('lfName').value ? 'lfMail' : 'lfName').focus({ preventScroll: true }), 600); }
+  function setOrg(v) { if (v && !org.value) org.value = v; }
 
   // Pinta opciones seleccionables. list: [{v, t, s?}]. Devuelve {get()}.
   function options(el, list, opts = {}) {
@@ -200,7 +273,7 @@ window.RCT = (function () {
   }
 
   const label = (list, v) => (list.find((o) => o.v === v) || {}).t || '';
-  return { summary, options, label, check };
+  return { summary, options, label, check, toForm, setOrg };
 })();
 </script>
 @yield('tool_scripts')

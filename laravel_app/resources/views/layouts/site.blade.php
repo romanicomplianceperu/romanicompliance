@@ -6,6 +6,7 @@
 <title>@yield('title', 'Romani Compliance · Compliance, prevención LA/FT y defensa penal económica')</title>
 <meta name="description" content="@yield('description', 'Compliance penal, prevención de lavado de activos, criptoactivos y PSAV, y defensa penal económica para empresas y personas en el Perú.')">
 <meta name="theme-color" content="#0A1730">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <link rel="icon" href="{{ asset('images/logos.png') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,40 +78,65 @@ button { font: inherit; color: inherit; }
 .lnk .ic { width: 18px; height: 18px; transition: transform .25s var(--ease); }
 .lnk:hover .ic { transform: translateX(4px); }
 
-/* Navegación */
-.nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.86); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); border-bottom: 1px solid transparent; transition: border-color .3s; }
-.nav.scrolled { border-bottom-color: var(--line); }
-.nav-in { max-width: var(--max); margin: 0 auto; padding: 0 32px; height: 76px; display: flex; align-items: center; gap: 28px; }
-.nav-logo img { height: 34px; }
-.nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
-.nav-links > a, .nav-drop > button { padding: 10px 14px; border-radius: 999px; font-size: 0.95rem; font-weight: 600; color: var(--muted); background: none; border: 0; cursor: pointer; transition: color .2s, background .2s; display: inline-flex; align-items: center; gap: 6px; }
-.nav-links > a:hover, .nav-drop > button:hover, .nav-links > a.on { color: var(--ink); background: var(--soft); }
+/* Navegación: cabecera azul animada */
+.nav { position: sticky; top: 0; z-index: 100; background: rgba(10,23,48,.96); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); color: #fff; transition: box-shadow .3s, background .3s; }
+.nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--blue-l) 30%, #fff 50%, var(--blue-l) 70%, transparent); background-size: 200% 100%; animation: navline 6s linear infinite; opacity: .55; }
+@keyframes navline { from { background-position: 200% 0; } to { background-position: 0 0; } }
+.nav.scrolled { box-shadow: 0 14px 40px -18px rgba(0,0,0,.55); background: rgba(10,23,48,.92); }
+.nav-in { max-width: var(--max); margin: 0 auto; padding: 0 32px; height: 78px; display: flex; align-items: center; gap: 28px; }
+.nav-in > * { animation: navIn .7s var(--ease) both; }
+.nav-links > *, .nav-actions > * { animation: navIn .7s var(--ease) both; }
+.nav-links > *:nth-child(1) { animation-delay: .05s; } .nav-links > *:nth-child(2) { animation-delay: .1s; } .nav-links > *:nth-child(3) { animation-delay: .15s; } .nav-links > *:nth-child(4) { animation-delay: .2s; } .nav-links > *:nth-child(5) { animation-delay: .25s; } .nav-links > *:nth-child(6) { animation-delay: .3s; }
+.nav-actions > *:nth-child(1) { animation-delay: .35s; } .nav-actions > *:nth-child(2) { animation-delay: .42s; }
+@keyframes navIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+.nav-logo img { height: 34px; filter: brightness(0) invert(1); transition: transform .4s var(--ease); }
+.nav-logo:hover img { transform: scale(1.04); }
+.nav-links { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.nav-links > a, .nav-drop > button { position: relative; padding: 10px 14px; border-radius: 999px; font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,.72); background: none; border: 0; cursor: pointer; transition: color .2s, background .2s; display: inline-flex; align-items: center; gap: 6px; }
+.nav-links > a::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 5px; height: 2px; border-radius: 2px; background: var(--blue-l); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease); }
+.nav-links > a:hover, .nav-drop > button:hover, .nav-links > a.on, .nav-drop.open > button { color: #fff; }
+.nav-links > a:hover::after, .nav-links > a.on::after { transform: scaleX(1); }
 .nav-drop { position: relative; }
-.nav-drop > button .chev { width: 14px; height: 14px; transition: transform .2s; }
+.nav-drop > button .chev { width: 14px; height: 14px; transition: transform .3s var(--ease); }
 .nav-drop.open > button .chev { transform: rotate(180deg); }
-.nav-mega { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(6px); width: min(720px, 92vw); background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 14px; box-shadow: 0 30px 80px -20px rgba(10,23,48,.25); display: grid; grid-template-columns: 1fr 1fr; gap: 4px; opacity: 0; visibility: hidden; transition: opacity .2s, transform .2s var(--ease), visibility .2s; }
-.nav-drop.open .nav-mega { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-.nav-mega a { display: flex; gap: 14px; padding: 14px; border-radius: 14px; transition: background .2s; }
+.nav-mega { position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(10px) scale(.98); width: min(740px, 92vw); background: #fff; color: var(--ink); border-radius: 22px; padding: 14px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.45); display: grid; grid-template-columns: 1fr 1fr; gap: 4px; opacity: 0; visibility: hidden; transition: opacity .25s, transform .35s var(--ease), visibility .25s; }
+.nav-drop.open .nav-mega { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0) scale(1); }
+.nav-mega a { display: flex; gap: 14px; padding: 14px; border-radius: 14px; transition: background .2s, transform .25s var(--ease); opacity: 0; transform: translateY(6px); }
+.nav-drop.open .nav-mega a { opacity: 1; transform: none; transition: background .2s, opacity .35s var(--ease), transform .35s var(--ease); }
+.nav-drop.open .nav-mega a:nth-child(2) { transition-delay: .03s; } .nav-drop.open .nav-mega a:nth-child(3) { transition-delay: .06s; } .nav-drop.open .nav-mega a:nth-child(4) { transition-delay: .09s; } .nav-drop.open .nav-mega a:nth-child(5) { transition-delay: .12s; } .nav-drop.open .nav-mega a:nth-child(6) { transition-delay: .15s; }
 .nav-mega a:hover { background: var(--soft); }
-.nav-mega .mi { width: 40px; height: 40px; border-radius: 12px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; flex-shrink: 0; font-size: 20px; }
+.nav-mega .mi { width: 40px; height: 40px; border-radius: 12px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; flex-shrink: 0; font-size: 20px; transition: background .25s, color .25s; }
+.nav-mega a:hover .mi { background: var(--blue); color: #fff; }
 .nav-mega strong { display: block; font-size: 0.95rem; font-weight: 700; color: var(--ink); line-height: 1.3; }
 .nav-mega span.t { display: block; font-size: 0.82rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
 .nav-actions { display: flex; align-items: center; gap: 8px; }
-.nav-burger { display: none; margin-left: auto; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: #fff; cursor: pointer; align-items: center; justify-content: center; }
-.nav-burger span { display: block; width: 18px; height: 2px; background: var(--ink); position: relative; transition: background .2s; }
-.nav-burger span::before, .nav-burger span::after { content: ''; position: absolute; left: 0; width: 18px; height: 2px; background: var(--ink); transition: transform .3s var(--ease); }
+.nav .b-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.25); }
+.nav .b-ghost:hover { border-color: #fff; }
+.nav .b-dark { background: #fff; color: var(--ink); position: relative; overflow: hidden; }
+.nav .b-dark::before { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, rgba(31,79,216,.25), transparent); animation: shine 3.8s ease-in-out infinite; }
+@keyframes shine { 0%, 60% { left: -60%; } 100% { left: 130%; } }
+.nav .b-dark:hover { background: var(--blue-50); }
+.nav-burger { display: none; margin-left: auto; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: transparent; cursor: pointer; align-items: center; justify-content: center; }
+.nav-burger span { display: block; width: 18px; height: 2px; background: #fff; position: relative; transition: background .2s; }
+.nav-burger span::before, .nav-burger span::after { content: ''; position: absolute; left: 0; width: 18px; height: 2px; background: #fff; transition: transform .3s var(--ease); }
 .nav-burger span::before { top: -6px; } .nav-burger span::after { top: 6px; }
 body.menu-open .nav-burger span { background: transparent; }
 body.menu-open .nav-burger span::before { transform: translateY(6px) rotate(45deg); }
 body.menu-open .nav-burger span::after { transform: translateY(-6px) rotate(-45deg); }
-.m-menu { position: fixed; inset: 76px 0 0; z-index: 99; background: #fff; padding: 20px 20px 40px; overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .25s, transform .3s var(--ease), visibility .25s; }
-body.menu-open .m-menu { opacity: 1; visibility: visible; transform: none; }
-.m-menu .m-group { font-size: 0.82rem; font-weight: 700; color: var(--muted-2); margin: 18px 0 6px; }
-.m-menu a.m-l { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; font-size: 1.15rem; font-weight: 700; border-bottom: 1px solid var(--line); }
-.m-menu a.m-s { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-weight: 600; border-bottom: 1px solid var(--line); }
-.m-menu a.m-s .ic { color: var(--blue); width: 20px; height: 20px; }
+.m-menu { position: fixed; inset: 78px 0 0; z-index: 99; background: var(--ink); color: #fff; padding: 20px 20px 40px; overflow-y: auto; opacity: 0; visibility: hidden; clip-path: inset(0 0 100% 0); transition: opacity .3s, clip-path .5s var(--ease), visibility .3s; }
+body.menu-open .m-menu { opacity: 1; visibility: visible; clip-path: inset(0 0 0 0); }
+.m-menu > * { opacity: 0; transform: translateY(12px); transition: opacity .4s var(--ease), transform .4s var(--ease); }
+body.menu-open .m-menu > * { opacity: 1; transform: none; }
+body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-open .m-menu > *:nth-child(n+5) { transition-delay: .1s; } body.menu-open .m-menu > *:nth-child(n+9) { transition-delay: .16s; } body.menu-open .m-menu > *:nth-child(n+13) { transition-delay: .22s; }
+.m-menu .m-group { font-size: 0.82rem; font-weight: 700; color: var(--blue-l); margin: 18px 0 6px; }
+.m-menu a.m-l { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; font-size: 1.15rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,.1); }
+.m-menu a.m-s { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,.1); }
+.m-menu a.m-s .ic { color: var(--blue-l); width: 20px; height: 20px; }
+.m-menu .b-dark { background: #fff; color: var(--ink); }
+.m-menu .b-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.25); }
 @media (max-width: 1080px) { .nav-links, .nav-actions { display: none; } .nav-burger { display: inline-flex; } }
 @media (max-width: 720px) { .nav-in { padding: 0 20px; height: 68px; } .m-menu { inset: 68px 0 0; } .nav-logo img { height: 30px; } }
+@media (prefers-reduced-motion: reduce) { .nav::after, .nav .b-dark::before { animation: none; } .nav-in > *, .nav-links > *, .nav-actions > * { animation: none; } }
 
 /* Secciones */
 .sec { padding: clamp(72px, 10vw, 132px) 0; }
@@ -228,10 +254,39 @@ body.menu-open .m-menu { opacity: 1; visibility: visible; transform: none; }
 .foot-bot a { display: inline; padding: 0; color: rgba(255,255,255,.65); }
 @media (max-width: 900px) { .foot-top { grid-template-columns: 1fr 1fr; } .foot-brand { grid-column: 1 / -1; } }
 
-/* WhatsApp flotante */
-.wa { position: fixed; right: 22px; bottom: 22px; z-index: 90; width: 58px; height: 58px; border-radius: 50%; background: #25D366; display: grid; place-items: center; box-shadow: 0 14px 34px -10px rgba(37,211,102,.6); transition: transform .3s var(--ease); }
-.wa:hover { transform: scale(1.06); }
-.wa svg { width: 28px; height: 28px; fill: #fff; }
+/* WhatsApp flotante con mensaje de Romani Compliance */
+.wa { position: fixed; right: 22px; bottom: 22px; z-index: 90; width: 60px; height: 60px; border-radius: 50%; background: #25D366; display: grid; place-items: center; box-shadow: 0 14px 34px -10px rgba(37,211,102,.7); transition: transform .3s var(--ease); border: 0; cursor: pointer; animation: waIn .6s var(--ease) 1s both; }
+.wa:hover { transform: scale(1.07); }
+.wa svg { width: 30px; height: 30px; fill: #fff; position: relative; z-index: 1; }
+.wa::before, .wa::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #25D366; z-index: 0; animation: waPulse 2.6s ease-out infinite; }
+.wa::after { animation-delay: 1.3s; }
+@keyframes waPulse { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.7); opacity: 0; } }
+@keyframes waIn { from { transform: scale(0) rotate(-30deg); } to { transform: none; } }
+.wa-badge { position: absolute; top: -2px; right: -2px; z-index: 2; min-width: 22px; height: 22px; border-radius: 11px; background: #FF3B30; color: #fff; font-size: .75rem; font-weight: 800; display: grid; place-items: center; border: 2px solid #fff; transform: scale(0); transition: transform .4s var(--ease); }
+.wa-badge.on { transform: scale(1); }
+.wa-card { position: fixed; right: 22px; bottom: 96px; z-index: 91; width: 330px; max-width: calc(100vw - 32px); background: #fff; border-radius: 20px; box-shadow: 0 30px 80px -20px rgba(10,23,48,.45); overflow: hidden; transform-origin: bottom right; transform: translateY(14px) scale(.9); opacity: 0; visibility: hidden; transition: transform .45s var(--ease), opacity .3s, visibility .3s; }
+.wa-card.open { transform: none; opacity: 1; visibility: visible; }
+.wa-head { background: #075E54; color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+.wa-av { width: 42px; height: 42px; border-radius: 50%; background: #fff; display: grid; place-items: center; overflow: hidden; flex-shrink: 0; position: relative; }
+.wa-av img { width: 34px; height: auto; }
+.wa-av::after { content: ''; position: absolute; right: 1px; bottom: 1px; width: 11px; height: 11px; border-radius: 50%; background: #25D366; border: 2px solid #075E54; }
+.wa-head b { display: block; font-size: .98rem; }
+.wa-head small { font-size: .8rem; color: rgba(255,255,255,.78); }
+.wa-x { margin-left: auto; background: none; border: 0; color: #fff; font-size: 1.3rem; cursor: pointer; opacity: .8; line-height: 1; }
+.wa-body { background: #ECE5DD; padding: 18px 16px 14px; min-height: 120px; background-image: radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px); background-size: 14px 14px; }
+.wa-msg { background: #fff; border-radius: 0 12px 12px 12px; padding: 10px 12px 18px; font-size: .93rem; line-height: 1.45; max-width: 88%; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,.08); animation: paneIn .4s var(--ease); }
+.wa-msg b { display: block; color: #075E54; font-size: .8rem; margin-bottom: 3px; }
+.wa-msg time { position: absolute; right: 10px; bottom: 4px; font-size: .7rem; color: #8B97AA; }
+.wa-msg + .wa-msg { margin-top: 8px; border-radius: 12px; }
+.wa-typing { display: inline-flex; gap: 4px; background: #fff; padding: 12px 14px; border-radius: 0 12px 12px 12px; }
+.wa-typing i { width: 7px; height: 7px; border-radius: 50%; background: #A0A8B5; animation: dot 1.2s infinite; }
+.wa-typing i:nth-child(2) { animation-delay: .15s; } .wa-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+.wa-go { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px 14px 14px; padding: 13px; border-radius: 999px; background: #25D366; color: #fff; font-weight: 800; transition: background .2s; }
+.wa-go:hover { background: #1EBE5A; }
+.wa-go svg { width: 20px; height: 20px; fill: #fff; }
+@media (max-width: 720px) { .wa { right: 16px; bottom: 16px; width: 56px; height: 56px; } .wa-card { right: 16px; bottom: 84px; } }
+@media (prefers-reduced-motion: reduce) { .wa::before, .wa::after { animation: none; } }
 
 /* Mensajes y cargador */
 .flash { padding: 14px 24px; text-align: center; font-weight: 600; font-size: 0.95rem; }
@@ -338,9 +393,16 @@ body.menu-open .m-menu { opacity: 1; visibility: visible; transform: none; }
   </div>
 </footer>
 
-<a href="https://wa.me/{{ \App\Support\ServiceCatalog::WHATSAPP }}?text={{ rawurlencode('Hola, quisiera hacer una consulta a Romani Compliance.') }}" class="wa" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
-  <svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26C2.16 6.46 6.6 2.03 12.05 2.03c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 012.89 7c0 5.45-4.44 9.88-9.88 9.88zm8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41z"/></svg>
-</a>
+<div class="wa-card" id="waCard" role="dialog" aria-label="Chat de WhatsApp con Romani Compliance">
+  <div class="wa-head">
+    <span class="wa-av"><img src="{{ asset('images/logos.png') }}" alt=""></span>
+    <span><b>Romani Compliance</b><small id="waStatus">en línea</small></span>
+    <button type="button" class="wa-x" id="waClose" aria-label="Cerrar">×</button>
+  </div>
+  <div class="wa-body" id="waBody"></div>
+  <a class="wa-go" id="waGo" href="https://wa.me/{{ \App\Support\ServiceCatalog::WHATSAPP }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26C2.16 6.46 6.6 2.03 12.05 2.03c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 012.89 7c0 5.45-4.44 9.88-9.88 9.88zm8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41z"/></svg> Iniciar conversación</a>
+</div>
+<button type="button" class="wa" id="waBtn" aria-label="Abrir chat de WhatsApp" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26C2.16 6.46 6.6 2.03 12.05 2.03c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 012.89 7c0 5.45-4.44 9.88-9.88 9.88zm8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41z"/></svg><span class="wa-badge" id="waBadge">1</span></button>
 
 <script>
 // Utilidades del sitio (navegación, animaciones, líneas de tiempo, WhatsApp).
@@ -401,6 +463,34 @@ window.RC = (function () {
     loader.classList.add('active');
   }, true);
   addEventListener('pageshow', () => loader.classList.remove('active'));
+
+  // WhatsApp: notificación, «escribiendo…» y mensaje de Romani Compliance
+  (function () {
+    const btn = document.getElementById('waBtn'), card = document.getElementById('waCard'), body = document.getElementById('waBody');
+    const badge = document.getElementById('waBadge'), status = document.getElementById('waStatus'), go = document.getElementById('waGo');
+    const ctx = document.title.split(' · ')[0];
+    go.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola, quisiera hacer una consulta a Romani Compliance' + (location.pathname !== '/' ? ' sobre «' + ctx + '»' : '') + '.');
+    const hhmm = () => new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+    let played = false;
+    function play() {
+      if (played) return; played = true;
+      body.innerHTML = '<div class="wa-typing"><i></i><i></i><i></i></div>'; status.textContent = 'escribiendo…';
+      setTimeout(() => {
+        body.innerHTML = '<div class="wa-msg"><b>Romani Compliance</b>Hola, gracias por visitarnos. 👋<time>' + hhmm() + '</time></div>';
+        status.textContent = 'en línea';
+        setTimeout(() => { body.insertAdjacentHTML('beforeend', '<div class="wa-msg">¿En qué podemos ayudarle? Escríbanos y un abogado del equipo le responderá.<time>' + hhmm() + '</time></div>'); }, 900);
+      }, 1400);
+    }
+    const set = (o) => { card.classList.toggle('open', o); btn.setAttribute('aria-expanded', o); if (o) { badge.classList.remove('on'); play(); try { sessionStorage.setItem('rcWaSeen', '1'); } catch (_) {} } };
+    btn.addEventListener('click', () => set(!card.classList.contains('open')));
+    document.getElementById('waClose').addEventListener('click', () => set(false));
+    let seen = false; try { seen = sessionStorage.getItem('rcWaSeen') === '1'; } catch (_) {}
+    if (!seen) {
+      setTimeout(() => badge.classList.add('on'), 3500);
+      // En escritorio se abre solo una vez por visita; en el móvil solo aparece la notificación.
+      if (matchMedia('(min-width: 721px)').matches) setTimeout(() => { if (!document.body.classList.contains('menu-open')) set(true); }, 9000);
+    }
+  })();
 
   return {
     observe,

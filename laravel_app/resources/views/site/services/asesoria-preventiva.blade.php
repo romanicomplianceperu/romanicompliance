@@ -69,7 +69,7 @@
       + '<div class="card"><h4>Lo que recibiría</h4><ul class="ticks">' + d.get.map(LI).join('') + LI('Una opinión escrita con medidas concretas') + '</ul></div></div>'
       + '<div class="tool-nav"><span class="muted">Le confirmamos el plazo de entrega en la primera conversación.</span><a href="#contactar" class="b b-primary">Consultar esta decisión</a></div></div>';
     out.querySelectorAll('.ticks .ic').forEach((i) => i.setAttribute('stroke-width', '2'));
-    RCT.summary(['Decisión: ' + d.t, st.w ? 'Plazo: ' + RCT.label(WHEN, st.w) : '']);
+    RCT.summary(['Decisión: ' + d.t, st.w ? 'Plazo: ' + RCT.label(WHEN, st.w) : ''], { level: pr ? pr[1] : null, title: 'Consulta preventiva', priorities: d.review });
   }
 
   // Barras de la comparación: se llenan al entrar en pantalla

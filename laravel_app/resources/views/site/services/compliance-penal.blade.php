@@ -6,6 +6,8 @@
 .dx-gap .ic { color: var(--warn); width: 22px; height: 22px; margin-top: 2px; }
 .dx-gap b { display: block; }
 .dx-gap span { color: var(--muted); font-size: 0.95rem; }
+.dx-in { width: 100%; max-width: 520px; padding: 16px 18px; border-radius: 14px; border: 1.5px solid var(--line); font: inherit; font-size: 1.05rem; }
+.dx-in:focus { outline: none; border-color: var(--blue); }
 @endsection
 
 @section('tool')
@@ -36,7 +38,8 @@
   const YNP = [{ v: 1, t: 'Sí' }, { v: 0.5, t: 'En parte' }, { v: 0, t: 'No' }];
   const YN = [{ v: 'si', t: 'Sí' }, { v: 'no', t: 'No' }];
   const A = {};
-  let i = 0;
+  let i = -1;          // -1 = pantalla de inicio (organización opcional)
+  let orgName = '';
   const bar = document.getElementById('dxBar');
   const pane = document.getElementById('dxPane');
   bar.innerHTML = Q.map(() => '<i></i>').join('') + '<i></i>';
@@ -45,6 +48,7 @@
 
   function render() {
     paintBar();
+    if (i < 0) return intro();
     if (i >= Q.length) return result();
     const q = Q[i];
     pane.innerHTML = '<div class="tool-pane"><div class="muted" style="font-weight:700;margin-bottom:10px">Pregunta ' + (i + 1) + ' de ' + Q.length + '</div>'
@@ -53,6 +57,17 @@
     const list = q.type === 'radio' ? q.o : (q.type === 'yn' ? YN : YNP);
     RCT.options(document.getElementById('dxOpts'), list, { value: A[q.k], onChange: (v) => { A[q.k] = v; setTimeout(() => { i++; render(); }, 260); } });
     document.getElementById('dxBack').onclick = () => { i--; render(); };
+  }
+
+  function intro() {
+    pane.innerHTML = '<div class="tool-pane dx-intro"><div class="tool-q">Antes de empezar</div><div class="tool-hint">Si lo desea, indique el nombre de su organización: aparecerá en su diagnóstico en PDF.</div>'
+      + '<label for="dxOrg" style="font-weight:700;display:block;margin-bottom:8px">Organización <span class="muted" style="font-weight:500">(opcional)</span></label>'
+      + '<input id="dxOrg" class="dx-in" placeholder="Nombre de la empresa o entidad" autocomplete="organization" value="' + orgName.replace(/"/g, '&quot;') + '">'
+      + '<div class="tool-nav"><span class="muted" style="font-size:.9rem">9 preguntas · unos 2 minutos</span><button type="button" class="b b-primary" id="dxGo">Comenzar el diagnóstico</button></div></div>';
+    const inp = document.getElementById('dxOrg');
+    const go = () => { orgName = inp.value.trim(); RCT.setOrg(orgName); i = 0; render(); };
+    document.getElementById('dxGo').onclick = go;
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
   }
 
   function result() {
@@ -72,16 +87,18 @@
       + '<div><span class="pill ' + lvl[0] + '">' + lvl[1] + '</span>' + (urgent ? ' <span class="pill bad">Atención prioritaria</span>' : '')
       + '<p class="h3" style="margin:14px 0 8px">' + lvl[2] + '</p><p class="muted">' + sectorTxt + (urgent ? ' Tuvo contacto reciente con una autoridad: recomendamos revisar el sistema cuanto antes.' : '') + '</p>'
       + (gaps.length ? '<div style="font-weight:800;margin-top:24px">Sus prioridades</div><div class="dx-gaps">' + gaps.slice(0, 4).map((g, n) => '<div class="dx-gap"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5l9.5 16.5h-19L12 3.5z"/><path d="M12 10v4.5M12 17.5h.01"/></svg><div><b>' + (n + 1) + '. ' + g.fix + '</b><span>' + (A[g.k] === 0.5 ? 'Existe en parte.' : 'No existe todavía.') + '</span></div></div>').join('') + '</div>' : '')
-      + '<div class="tool-nav"><button type="button" class="b b-ghost b-sm" id="dxAgain">Volver a empezar</button><a href="#contactar" class="b b-primary">Revisar este resultado con el equipo</a></div>'
+      + '<div class="tool-nav"><button type="button" class="b b-ghost b-sm" id="dxAgain">Volver a empezar</button><button type="button" class="b b-primary" id="dxPdf">Descargar mi diagnóstico en PDF</button></div>'
       + '<p class="note">Resultado orientativo, basado solo en sus respuestas. No reemplaza una evaluación legal.</p></div></div></div>';
     RC.gauge(document.getElementById('dxGauge'), pct, lvl[3]);
-    document.getElementById('dxAgain').onclick = () => { for (const k in A) delete A[k]; i = 0; render(); RCT.summary([]); };
+    document.getElementById('dxAgain').onclick = () => { for (const k in A) delete A[k]; i = -1; render(); RCT.summary([]); };
+    document.getElementById('dxPdf').onclick = RCT.toForm;
     RCT.summary([
+      orgName ? 'Organización: ' + orgName : '',
       'Diagnóstico de riesgo: ' + pct + '/100 (' + lvl[1] + ')',
       'Actividad: ' + RCT.label(Q[0].o, A.sector),
       urgent ? 'Tuvimos contacto reciente con una autoridad.' : '',
       gaps.length ? 'Prioridades: ' + gaps.slice(0, 3).map((g) => g.fix.replace(/\.$/, '').toLowerCase()).join('; ') + '.' : '',
-    ]);
+    ], { score: pct, level: lvl[1], title: 'Diagnóstico de riesgo', priorities: gaps.map((g) => g.fix) });
   }
   render();
 })();
