@@ -60,7 +60,15 @@ class User extends Authenticatable
 
     public function displayPhoto(): ?string
     {
-        return $this->photo ? asset('storage/'.$this->photo) : $this->avatar;
+        // Denis Romani: foto nueva, sin fondo y centrada en el rostro.
+        if ($this->email === 'denis@romanicompliance.com') {
+            return asset('images/denis-romani-avatar.webp').'?v=2';
+        }
+        if ($this->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->photo)) {
+            return asset('storage/'.$this->photo);
+        }
+
+        return $this->avatar;
     }
 
     public function credentialsList(): array

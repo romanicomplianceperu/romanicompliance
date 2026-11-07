@@ -2,7 +2,7 @@
 @if($article)
 <a href="{{ route('blog.show', $article) }}" class="post rv">
   <div class="cv">
-    @if($article->cover_image)<img src="{{ asset('storage/'.$article->cover_image) }}" alt="{{ $article->title }}" loading="lazy">@endif
+    @if($article->cover_image)<img src="{{ $article->coverUrl() }}" alt="{{ $article->title }}" loading="lazy">@endif
   </div>
   <div class="bd">
     <div class="mt">{{ $article->category->name ?? $article->typeLabel() }} · {{ $article->published_at?->translatedFormat('d M Y') }}@if($article->reading_minutes) · {{ $article->reading_minutes }} min @endif</div>

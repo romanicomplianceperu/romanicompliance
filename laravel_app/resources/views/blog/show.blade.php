@@ -2,6 +2,16 @@
 
 @section('title', $article->title.' · Romani Compliance')
 @section('description', $article->excerpt)
+@section('og_type', 'article')
+@section('og_title', $article->title)
+@if($article->coverUrl())
+@section('og_image', $article->coverUrl())
+@endif
+@section('og_extra')
+<meta property="article:published_time" content="{{ $article->published_at?->toIso8601String() }}">
+<meta property="article:author" content="{{ $article->author->name }}">
+@foreach($article->tags as $tag)<meta property="article:tag" content="{{ $tag->name }}">@endforeach
+@endsection
 
 @section('styles')
 .ar-hero { padding: clamp(48px, 7vw, 96px) 0 clamp(28px, 4vw, 44px); }
@@ -17,7 +27,38 @@
 .ar-author img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
 .ar-author a { font-weight: 800; }
 .ar-author span { display: block; color: var(--muted); font-size: .9rem; }
-.prose { font-size: 1.12rem; line-height: 1.8; color: #1E2B42; }
+.prose { font-size: 1.14rem; line-height: 1.85; color: #1E2B42; max-width: 70ch; }
+.prose p { text-wrap: pretty; }
+.prose .lead { font-size: 1.32rem; line-height: 1.65; color: var(--ink); font-weight: 500; letter-spacing: -0.01em; }
+.prose h2 { padding-top: .2em; position: relative; }
+.prose h2::before { content: ''; display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--blue); margin-bottom: 14px; }
+.prose ul.figures { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 1.4em; }
+.prose ul.figures li { margin: 0; background: var(--soft); border-radius: 18px; padding: 18px 20px; font-size: 1rem; line-height: 1.5; color: var(--muted); }
+.prose ul.figures li strong { display: block; font-size: 2.3rem; line-height: 1; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); margin-bottom: 8px; }
+.prose ul.figures li:last-child { grid-column: 1 / -1; background: var(--ink); color: rgba(255,255,255,.78); }
+.prose ul.figures li:last-child strong { color: var(--blue-l); }
+.prose .obs { border-left: 4px solid var(--blue); background: var(--blue-50); border-radius: 0 18px 18px 0; padding: 18px 22px; }
+.prose .obs p { margin: 0; }
+.prose .obs strong { display: block; color: var(--ink); font-size: 1.12rem; line-height: 1.4; margin-bottom: 6px; }
+.prose ul.questions { list-style: none; padding: 0; display: grid; gap: 10px; }
+.prose ul.questions li { margin: 0; display: flex; gap: 14px; align-items: flex-start; padding: 14px 18px; border: 1px solid var(--line); border-radius: 16px; font-weight: 600; color: var(--ink); line-height: 1.5; }
+.prose ul.questions li::before { content: '?'; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: .95rem; margin-top: 1px; }
+.prose .callout { background: var(--ink); color: #fff; border-radius: 22px; padding: 26px 28px; }
+.prose .callout p { margin: 0; font-size: 1.2rem; line-height: 1.65; color: rgba(255,255,255,.9); }
+.prose .sources { margin-top: 2.2em; padding-top: 18px; border-top: 1px solid var(--line); font-size: .92rem; line-height: 1.6; color: var(--muted); font-style: italic; }
+.prose .sources p + p { margin-top: .5em; }
+.prose .sources a { font-style: normal; font-weight: 600; word-break: break-word; }
+@media (max-width: 720px) {
+  .prose { font-size: 1.06rem; line-height: 1.8; }
+  .prose .lead { font-size: 1.16rem; }
+  .prose h2 { font-size: 1.4rem; }
+  .prose ul.figures { gap: 8px; }
+  .prose ul.figures li { padding: 14px; font-size: .9rem; }
+  .prose ul.figures li strong { font-size: 1.9rem; }
+  .prose .obs { padding: 16px 18px; }
+  .prose .callout { padding: 20px; border-radius: 18px; }
+  .prose .callout p { font-size: 1.08rem; }
+}
 .prose > * + * { margin-top: 1.1em; }
 .prose h2, .prose h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: var(--ink); margin-top: 1.8em; }
 .prose h2 { font-size: 1.7rem; } .prose h3 { font-size: 1.35rem; }
@@ -58,7 +99,7 @@
 </section>
 
 @if($article->cover_image)
-  <div class="ar-cover rv"><img src="{{ asset('storage/'.$article->cover_image) }}" alt="{{ $article->title }}"></div>
+  <div class="ar-cover rv"><img src="{{ $article->coverUrl() }}" alt="{{ $article->title }}"></div>
 @endif
 
 <div class="ar-lay">
@@ -100,7 +141,7 @@
     @if($recent->isNotEmpty())
       <div class="card"><h4>Recientes</h4>
         @foreach($recent as $item)
-          <div class="rec"><img src="{{ $item->cover_image ? asset('storage/'.$item->cover_image) : asset('images/logos.png') }}" alt=""><div><a href="{{ route('blog.show', $item) }}">{{ $item->title }}</a></div></div>
+          <div class="rec"><img src="{{ $item->cover_image ? $item->coverUrl() : asset('images/logos.png') }}" alt=""><div><a href="{{ route('blog.show', $item) }}">{{ $item->title }}</a></div></div>
         @endforeach
       </div>
     @endif

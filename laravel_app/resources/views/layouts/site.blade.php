@@ -5,6 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>@yield('title', 'Romani Compliance · Compliance, prevención LA/FT y defensa penal económica')</title>
 <meta name="description" content="@yield('description', 'Compliance penal, prevención de lavado de activos, criptoactivos y PSAV, y defensa penal económica para empresas y personas en el Perú.')">
+@php
+  $ogTitle = trim($__env->yieldContent('og_title')) ?: trim($__env->yieldContent('title', 'Romani Compliance'));
+  $ogDesc = trim($__env->yieldContent('og_description')) ?: trim($__env->yieldContent('description', 'Compliance penal, prevención de lavado de activos, criptoactivos y PSAV, y defensa penal económica para empresas y personas en el Perú.'));
+  $ogImage = trim($__env->yieldContent('og_image')) ?: asset('images/og-romani-compliance.jpg');
+@endphp
+<link rel="canonical" href="{{ url()->current() }}">
+<meta property="og:site_name" content="Romani Compliance">
+<meta property="og:locale" content="es_PE">
+<meta property="og:type" content="@yield('og_type', 'website')">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:title" content="{{ $ogTitle }}">
+<meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($ogDesc), 200) }}">
+<meta property="og:image" content="{{ $ogImage }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ $ogTitle }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $ogTitle }}">
+<meta name="twitter:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($ogDesc), 200) }}">
+<meta name="twitter:image" content="{{ $ogImage }}">
+@yield('og_extra')
 <meta name="theme-color" content="#0A1730">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <link rel="icon" href="{{ asset('images/logos.png') }}">

@@ -59,6 +59,16 @@ class Article extends Model
         return $this->hasMany(ArticleMaterial::class);
     }
 
+    /** URL de la portada: subida desde el admin (storage) o incluida en el sitio (images/...). */
+    public function coverUrl(): ?string
+    {
+        if (! $this->cover_image) {
+            return null;
+        }
+
+        return str_starts_with($this->cover_image, 'images/') ? asset($this->cover_image) : asset('storage/'.$this->cover_image);
+    }
+
     public function isPublished(): bool
     {
         return $this->status === 'published';

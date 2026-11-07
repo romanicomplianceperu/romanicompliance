@@ -78,7 +78,7 @@
       @if($recent->isNotEmpty())
         <div class="card"><h4>Recientes</h4>
           @foreach($recent as $item)
-            <div class="rec"><img src="{{ $item->cover_image ? asset('storage/'.$item->cover_image) : asset('images/logos.png') }}" alt=""><div><a href="{{ route('blog.show', $item) }}">{{ $item->title }}</a><span>{{ $item->published_at?->translatedFormat('d M Y') }}</span></div></div>
+            <div class="rec"><img src="{{ $item->cover_image ? $item->coverUrl() : asset('images/logos.png') }}" alt=""><div><a href="{{ route('blog.show', $item) }}">{{ $item->title }}</a><span>{{ $item->published_at?->translatedFormat('d M Y') }}</span></div></div>
           @endforeach
         </div>
       @endif
