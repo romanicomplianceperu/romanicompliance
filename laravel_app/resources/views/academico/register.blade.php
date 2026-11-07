@@ -62,6 +62,7 @@
 
       <button type="submit" class="ac-btn-primary" style="width:100%;justify-content:center;margin-top:1.2rem;">Continuar a la actividad →</button>
     </form>
+    <p style="font-size:0.8rem;color:var(--slate-light);margin-top:12px;text-align:center;">¿Ya la enviaste antes? Escribe el mismo correo y verás tu resultado.</p>
   </div>
 </div>
 @endsection

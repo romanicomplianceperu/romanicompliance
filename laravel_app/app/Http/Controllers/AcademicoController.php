@@ -54,7 +54,9 @@ class AcademicoController extends Controller
             return $gate;
         }
 
-        return view('academico.course', compact('university', 'course'));
+        $done = $this->doneSubmissions(request(), $course);
+
+        return view('academico.course', compact('university', 'course', 'done'));
     }
 
     public function participacion(string $universitySlug, string $courseSlug)
@@ -271,6 +273,22 @@ class AcademicoController extends Controller
             'members.*.phone' => ['nullable', 'string', 'max:30'],
         ]);
 
+        // ¿Ya registró esta actividad con el mismo correo (otro día, otro celular)?
+        // Se le muestra su envío en lugar de crear uno duplicado.
+        $emails = $data['mode'] === 'individual'
+            ? [$data['email']]
+            : collect($data['members'] ?? [])->pluck('email')->filter()->all();
+        if ($previous = $this->findSubmissionByEmails($activity, $emails)) {
+            $this->rememberSubmission($activity, $previous);
+            if ($previous->isSubmitted()) {
+                session()->flash('academico_success', 'Ya habías enviado esta actividad. Aquí está tu resultado.');
+            } else {
+                session()->flash('academico_just_registered', true);
+            }
+
+            return redirect()->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug]);
+        }
+
         $submission = new AcademicSubmission([
             'academic_activity_id' => $activity->id,
             'mode' => $data['mode'],
@@ -302,7 +320,7 @@ class AcademicoController extends Controller
             }
         }
 
-        session([$this->submissionSessionKey($activity) => $submission->id]);
+        $this->rememberSubmission($activity, $submission);
         // One-shot flag (flash session, read once on the very next request) so the
         // interactive page can greet the student by name right after registering,
         // without showing that welcome screen again on every later visit/reload.
@@ -416,6 +434,7 @@ class AcademicoController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        cookie()->queue(cookie()->forget(self::REMEMBER_COOKIE));
 
         return redirect()->route('academico.index')->with('academico_success', 'Cerraste tu sesión del espacio académico.');
     }
@@ -437,9 +456,63 @@ class AcademicoController extends Controller
 
     private function currentSubmission(Request $request, AcademicActivity $activity): ?AcademicSubmission
     {
-        $id = session($this->submissionSessionKey($activity));
+        $id = session($this->submissionSessionKey($activity)) ?? ($this->rememberedSubmissions($request)[$activity->id] ?? null);
+        $submission = $id ? AcademicSubmission::where('academic_activity_id', $activity->id)->find($id) : null;
+        if ($submission && ! session($this->submissionSessionKey($activity))) {
+            session([$this->submissionSessionKey($activity) => $submission->id]);
+        }
 
-        return $id ? AcademicSubmission::find($id) : null;
+        return $submission;
+    }
+
+    /** Cookie (cifrada, 6 meses) con los envíos de este navegador: actividad => envío. */
+    private const REMEMBER_COOKIE = 'academico_envios';
+
+    private function rememberedSubmissions(Request $request): array
+    {
+        $map = json_decode((string) $request->cookie(self::REMEMBER_COOKIE), true);
+
+        return is_array($map) ? array_filter($map, 'is_int') : [];
+    }
+
+    private function rememberSubmission(AcademicActivity $activity, AcademicSubmission $submission): void
+    {
+        session([$this->submissionSessionKey($activity) => $submission->id]);
+        $map = $this->rememberedSubmissions(request());
+        $map[$activity->id] = $submission->id;
+        cookie()->queue(self::REMEMBER_COOKIE, json_encode(array_slice($map, -60, null, true)), 60 * 24 * 180);
+    }
+
+    /** Envío previo de esta actividad hecho con alguno de estos correos (el enviado primero, si hay varios). */
+    private function findSubmissionByEmails(AcademicActivity $activity, array $emails): ?AcademicSubmission
+    {
+        $emails = array_values(array_unique(array_map(fn ($e) => mb_strtolower(trim((string) $e)), $emails)));
+        if (! $emails) {
+            return null;
+        }
+
+        return AcademicSubmission::where('academic_activity_id', $activity->id)
+            ->whereHas('members', fn ($q) => $q->whereIn(\Illuminate\Support\Facades\DB::raw('LOWER(email)'), $emails))
+            ->orderByRaw('submitted_at IS NULL')->orderBy('submitted_at')->orderByDesc('id')
+            ->first();
+    }
+
+    /** Envíos de este alumno (sesión o cookie) en las actividades del curso, ya enviados. */
+    private function doneSubmissions(Request $request, AcademicCourse $course)
+    {
+        $map = $this->rememberedSubmissions($request);
+        foreach ($course->activities()->pluck('id') as $aid) {
+            if ($sid = session("academico_submission_activity_{$aid}")) {
+                $map[$aid] = $sid;
+            }
+        }
+        if (! $map) {
+            return collect();
+        }
+
+        return AcademicSubmission::whereIn('id', array_values($map))->whereNotNull('submitted_at')
+            ->whereIn('academic_activity_id', $course->activities()->pluck('id'))
+            ->with('activity.exercises')->get()->keyBy('academic_activity_id');
     }
 
     public function identify(Request $request)

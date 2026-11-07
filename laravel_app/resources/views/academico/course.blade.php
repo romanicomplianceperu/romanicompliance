@@ -37,7 +37,7 @@
       </div>
       <div class="ac-widget">
         <div class="k">Participaciones realizadas</div>
-        <div class="v">0 <small>de {{ $course->activities()->visible()->where('type', 'participacion')->count() }}</small></div>
+        <div class="v">{{ ($done ?? collect())->filter(fn ($s) => ! $s->activity->is_hidden && $s->activity->type === 'participacion')->count() }} <small>de {{ $course->activities()->visible()->where('type', 'participacion')->count() }}</small></div>
       </div>
       <div class="ac-widget">
         <div class="k">Actividades pendientes</div>
@@ -54,7 +54,8 @@
             <h4>{{ $activity->title }}</h4>
             <p>{{ $activity->typeLabel() }}{{ $activity->case_title ? ': '.$activity->case_title : '' }}</p>
           </span>
-          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->statusLabel() }}</span>
+@php $mine = ($done ?? collect())->get($activity->id); $g = $mine ? $mine->activity->grade($mine) : null; @endphp
+          @if($mine)<span class="ac-status-badge enviada">✓ Enviada @if($g && $g['total_points'])· {{ rtrim(rtrim(number_format($g['earned_points'], 1), '0'), '.') }}/{{ $g['total_points'] }}@endif</span>@else<span class="ac-status-badge {{ $activity->status }}">{{ $activity->statusLabel() }}</span>@endif
         </a>
       @else
         <div class="ac-activity-card" style="opacity:0.55;cursor:default;">
@@ -63,7 +64,8 @@
             <h4>{{ $activity->title }}</h4>
             <p>{{ $activity->typeLabel() }}{{ $activity->case_title ? ': '.$activity->case_title : '' }}</p>
           </span>
-          <span class="ac-status-badge {{ $activity->status }}">{{ $activity->statusLabel() }}</span>
+@php $mine = ($done ?? collect())->get($activity->id); $g = $mine ? $mine->activity->grade($mine) : null; @endphp
+          @if($mine)<span class="ac-status-badge enviada">✓ Enviada @if($g && $g['total_points'])· {{ rtrim(rtrim(number_format($g['earned_points'], 1), '0'), '.') }}/{{ $g['total_points'] }}@endif</span>@else<span class="ac-status-badge {{ $activity->status }}">{{ $activity->statusLabel() }}</span>@endif
         </div>
       @endif
     @empty
