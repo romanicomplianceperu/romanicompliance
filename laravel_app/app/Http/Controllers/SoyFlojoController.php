@@ -72,10 +72,11 @@ class SoyFlojoController extends Controller
             'close' => ['nullable', 'boolean'],
         ]);
 
+        // Desactivar: deja de recibir envíos al instante; la fecha se conserva para reactivarla luego.
         if ($request->boolean('close')) {
-            $activity->update(['due_at' => now(), 'status' => 'cerrada']);
+            $activity->update(['status' => 'cerrada']);
 
-            return $this->backTo($activity)->with('ok', "«{$activity->title}» quedó cerrada.");
+            return $this->backTo($activity)->with('ok', "«{$activity->title}» quedó desactivada. Los alumnos ya no pueden enviarla.");
         }
 
         if (! empty($data['shift'])) {

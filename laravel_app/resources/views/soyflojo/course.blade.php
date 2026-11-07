@@ -27,6 +27,8 @@
 .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 14px 16px 16px; }
 .acts .btn { padding: 12px; }
 .acts .btn-c { background: var(--c); border-color: var(--c); color: #fff; }
+.acts .off { grid-column: 1 / -1; }
+.acts .btn-off { width: 100%; color: var(--bad); border-color: var(--bad-50); background: #fff; }
 .acts .btn-react { border-color: var(--ok); color: var(--ok); background: var(--ok-50); }
 .edit { border-top: 1px solid var(--line); padding: 14px 16px 16px; background: #FAFBFD; }
 .edit form.f1 { display: flex; gap: 8px; }
@@ -62,6 +64,7 @@
         @if($a->is_hidden)<span class="badge b-gray">Oculta</span>
         @elseif($open)<span class="badge b-ok">● Abierta</span>
         @elseif($a->status === 'proximamente')<span class="badge b-blue">Próximamente</span>
+        @elseif($a->status === 'cerrada' && $a->due_at?->isFuture())<span class="badge b-warn">Desactivada</span>
         @else<span class="badge b-gray">Vencida</span>@endif
       </div>
       <h3>{{ $title }}</h3>
@@ -77,6 +80,9 @@
         @if($open)<button type="button" class="btn" data-toggle="edit-{{ $a->id }}">📅 Cambiar fecha</button>
         @else<button type="button" class="btn btn-react" data-toggle="edit-{{ $a->id }}">🔄 Reactivar</button>@endif
         <a class="btn btn-c" href="{{ route('soyflojo.show', $a) }}">Envíos · {{ $a->sent_count }}</a>
+        @if($open)
+          <form class="off" method="POST" action="{{ route('soyflojo.due', $a) }}" onsubmit="return confirm('¿Desactivar esta actividad? Los alumnos dejarán de poder enviarla hasta que la reactives.')">@csrf<input type="hidden" name="close" value="1"><button class="btn btn-off" type="submit">⏸ Desactivar</button></form>
+        @endif
       </div>
       <div class="edit" id="edit-{{ $a->id }}" hidden>
         <form class="f1" method="POST" action="{{ route('soyflojo.due', $a) }}">
@@ -88,9 +94,6 @@
           @foreach(['1h' => '+1 hora', '1d' => '+1 día', '7d' => '+1 semana'] as $k => $l)
             <form method="POST" action="{{ route('soyflojo.due', $a) }}">@csrf<input type="hidden" name="shift" value="{{ $k }}"><button class="btn" type="submit">{{ $l }}</button></form>
           @endforeach
-          @if($open)
-            <form method="POST" action="{{ route('soyflojo.due', $a) }}" onsubmit="return confirm('¿Cerrar ahora esta actividad? Ya no recibirá envíos.')">@csrf<input type="hidden" name="close" value="1"><button class="btn" type="submit" style="color:var(--bad)">Cerrar ya</button></form>
-          @endif
         </div>
         <p class="hint">@if($open)Hora de Lima.@else Elige la nueva fecha límite (hora de Lima) y toca «Reactivar»: la actividad vuelve a estar abierta y visible para los alumnos.@endif</p>
       </div>
