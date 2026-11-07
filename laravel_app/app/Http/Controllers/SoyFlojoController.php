@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AcademicActivity;
+use App\Models\AcademicCourse;
 use App\Models\AcademicSubmission;
 use App\Models\AcademicUniversity;
 use Carbon\Carbon;
@@ -18,26 +19,36 @@ class SoyFlojoController extends Controller
 
     public function index()
     {
-        $university = AcademicUniversity::where('slug', 'unp')->first() ?? AcademicUniversity::orderBy('order')->first();
-
+        $university = $this->university();
         $courses = $university
             ? $university->courses()->orderBy('name')->with(['activities' => fn ($q) => $q
-                ->withCount([
-                    'submissions as sent_count' => fn ($s) => $s->whereNotNull('submitted_at'),
-                    'submissions as draft_count' => fn ($s) => $s->whereNull('submitted_at'),
-                ])
-                ->withMax('submissions', 'submitted_at')
-                ->reorder()->orderByDesc('week_number')->orderByDesc('id')])->get()
+                ->withCount(['submissions as sent_count' => fn ($s) => $s->whereNotNull('submitted_at')])])->get()
             : collect();
 
-        $all = $courses->flatMap->activities;
-        $stats = [
-            'open' => $all->filter(fn ($a) => $this->isOpen($a))->count(),
-            'sent' => $all->sum('sent_count'),
-            'next' => $all->filter(fn ($a) => $this->isOpen($a) && $a->due_at)->sortBy('due_at')->first(),
-        ];
+        $courses->each(function ($c) {
+            $c->open_count = $c->activities->filter(fn ($a) => self::isOpen($a))->count();
+            $c->sent_total = $c->activities->sum('sent_count');
+            $c->next_due = $c->activities->filter(fn ($a) => self::isOpen($a) && $a->due_at)->sortBy('due_at')->first()?->due_at;
+        });
 
-        return view('soyflojo.index', compact('university', 'courses', 'stats'));
+        return view('soyflojo.index', compact('university', 'courses'));
+    }
+
+    public function course(AcademicCourse $course)
+    {
+        $activities = $course->activities()
+            ->withCount([
+                'submissions as sent_count' => fn ($s) => $s->whereNotNull('submitted_at'),
+                'submissions as draft_count' => fn ($s) => $s->whereNull('submitted_at'),
+            ])
+            ->reorder()->orderByDesc('week_number')->orderByDesc('id')->get();
+
+        return view('soyflojo.course', compact('course', 'activities'));
+    }
+
+    private function university(): ?AcademicUniversity
+    {
+        return AcademicUniversity::where('slug', 'unp')->first() ?? AcademicUniversity::orderBy('order')->first();
     }
 
     public function show(Request $request, AcademicActivity $activity)
@@ -64,7 +75,7 @@ class SoyFlojoController extends Controller
         if ($request->boolean('close')) {
             $activity->update(['due_at' => now(), 'status' => 'cerrada']);
 
-            return back()->with('ok', "«{$activity->title}» quedó cerrada.");
+            return $this->backTo($activity)->with('ok', "«{$activity->title}» quedó cerrada.");
         }
 
         if (! empty($data['shift'])) {
@@ -74,16 +85,25 @@ class SoyFlojoController extends Controller
             $due = ! empty($data['due_at']) ? Carbon::parse($data['due_at'], self::TZ)->utc() : null;
         }
 
+        $wasOpen = self::isOpen($activity);
         $changes = ['due_at' => $due];
-        // Si la nueva fecha está en el futuro, la actividad vuelve a recibir envíos.
-        if ($due && $due->isFuture() && $activity->status === 'cerrada') {
+        // Con una fecha futura la actividad queda activa: abierta y visible para los alumnos.
+        if ($due && $due->isFuture()) {
             $changes['status'] = 'disponible';
+            $changes['is_hidden'] = false;
         }
         $activity->update($changes);
 
-        $msg = $due ? 'Nueva fecha límite: '.$due->copy()->timezone(self::TZ)->translatedFormat('l j \d\e F, g:i a') : 'Sin fecha límite';
+        $when = $due ? $due->copy()->timezone(self::TZ)->translatedFormat('l j \d\e F, g:i a') : null;
+        $msg = ! $due ? 'Sin fecha límite' : (! $wasOpen && self::isOpen($activity->fresh()) ? 'Reactivada hasta el '.$when : 'Nueva fecha límite: '.$when);
 
-        return back()->with('ok', "«{$activity->title}» · ".rtrim($msg, '.').'.');
+        return $this->backTo($activity)->with('ok', "«{$activity->title}» · ".rtrim($msg, '.').'.');
+    }
+
+    /** Vuelve a la página anterior, con la actividad editada a la vista. */
+    private function backTo(AcademicActivity $activity)
+    {
+        return redirect()->to(strtok(url()->previous(), '#').'#act-'.$activity->id);
     }
 
     public function updateSubmission(Request $request, AcademicSubmission $submission)

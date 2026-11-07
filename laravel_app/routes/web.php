@@ -68,13 +68,17 @@ Route::post('/registro', [StudentAuthController::class, 'register'])->name('regi
 Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect')->middleware('guest');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback')->middleware('guest');
 
-// /soyflojo: cursos de la UNP desde el móvil (fechas, códigos y envíos). Pide ingresar como admin si hace falta.
-Route::prefix('soyflojo')->name('soyflojo.')->middleware(\App\Http\Middleware\AdminOrLogin::class)->group(function () {
+// /soyflojo: acceso directo sin contraseña (pedido expreso) para ver y cambiar fechas, códigos y envíos
+// de los cursos de la UNP. No se indexa (robots.txt + noindex) y los cambios tienen límite por minuto.
+Route::prefix('soyflojo')->name('soyflojo.')->group(function () {
     Route::get('/', [\App\Http\Controllers\SoyFlojoController::class, 'index'])->name('index');
+    Route::get('/curso/{course}', [\App\Http\Controllers\SoyFlojoController::class, 'course'])->whereNumber('course')->name('course');
     Route::get('/actividad/{activity}', [\App\Http\Controllers\SoyFlojoController::class, 'show'])->name('show');
     Route::get('/actividad/{activity}/notas.csv', [\App\Http\Controllers\SoyFlojoController::class, 'csv'])->name('csv');
-    Route::post('/actividad/{activity}/fecha', [\App\Http\Controllers\SoyFlojoController::class, 'updateDue'])->name('due');
-    Route::post('/envio/{submission}/estado', [\App\Http\Controllers\SoyFlojoController::class, 'updateSubmission'])->name('submission');
+    Route::middleware('throttle:30,1')->group(function () {
+        Route::post('/actividad/{activity}/fecha', [\App\Http\Controllers\SoyFlojoController::class, 'updateDue'])->name('due');
+        Route::post('/envio/{submission}/estado', [\App\Http\Controllers\SoyFlojoController::class, 'updateSubmission'])->name('submission');
+    });
 });
 Route::get('/admin/login', [AdminAuthController::class, 'show'])->name('admin.login')->middleware('guest');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.attempt')->middleware('guest');

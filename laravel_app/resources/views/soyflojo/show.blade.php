@@ -41,7 +41,7 @@ details.ans .in { padding: 0 14px 14px; font-size: .86rem; display: grid; gap: 8
 
 @section('top')
 <header class="top">
-  <a class="back" href="{{ route('soyflojo.index') }}#act-{{ $activity->id }}" aria-label="Volver"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></a>
+  <a class="back" href="{{ route('soyflojo.course', $activity->course) }}#act-{{ $activity->id }}" aria-label="Volver"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></a>
   <div class="t"><b>{{ $activity->course->name }} · Semana {{ $activity->week_number }}</b><small>{{ $activity->title }}</small></div>
 </header>
 @endsection
