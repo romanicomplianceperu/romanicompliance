@@ -103,7 +103,7 @@ class AcademicoController extends Controller
 
         $activity->update([
             'access_code' => $data['access_code'] ?: null,
-            'due_at' => $data['due_at'] ?: null,
+            'due_at' => ! empty($data['due_at']) ? \Carbon\Carbon::parse($data['due_at'], 'America/Lima')->utc() : null,
             'status' => $data['status'],
             'upload_required' => $request->boolean('upload_required'),
             'is_hidden' => $request->boolean('is_hidden'),

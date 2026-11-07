@@ -68,16 +68,14 @@ Route::post('/registro', [StudentAuthController::class, 'register'])->name('regi
 Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect')->middleware('guest');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback')->middleware('guest');
 
-// Atajo del equipo: /soyflojo abre el panel de actividades académicas (pide ingresar como admin si hace falta).
-Route::get('/soyflojo', function () {
-    $panel = route('admin.academico.index');
-    if (auth()->user()?->isAdmin()) {
-        return redirect($panel);
-    }
-    redirect()->setIntendedUrl($panel);
-
-    return redirect()->route('admin.login');
-})->name('soyflojo');
+// /soyflojo: cursos de la UNP desde el móvil (fechas, códigos y envíos). Pide ingresar como admin si hace falta.
+Route::prefix('soyflojo')->name('soyflojo.')->middleware(\App\Http\Middleware\AdminOrLogin::class)->group(function () {
+    Route::get('/', [\App\Http\Controllers\SoyFlojoController::class, 'index'])->name('index');
+    Route::get('/actividad/{activity}', [\App\Http\Controllers\SoyFlojoController::class, 'show'])->name('show');
+    Route::get('/actividad/{activity}/notas.csv', [\App\Http\Controllers\SoyFlojoController::class, 'csv'])->name('csv');
+    Route::post('/actividad/{activity}/fecha', [\App\Http\Controllers\SoyFlojoController::class, 'updateDue'])->name('due');
+    Route::post('/envio/{submission}/estado', [\App\Http\Controllers\SoyFlojoController::class, 'updateSubmission'])->name('submission');
+});
 Route::get('/admin/login', [AdminAuthController::class, 'show'])->name('admin.login')->middleware('guest');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.attempt')->middleware('guest');
 

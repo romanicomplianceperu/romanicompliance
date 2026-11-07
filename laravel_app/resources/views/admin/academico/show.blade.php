@@ -68,7 +68,7 @@
     </div>
     <div class="form-group">
       <label>Fecha y hora límite</label>
-      <input type="datetime-local" name="due_at" value="{{ $activity->due_at ? $activity->due_at->format('Y-m-d\TH:i') : '' }}">
+      <input type="datetime-local" name="due_at" value="{{ $activity->due_at ? $activity->due_at->copy()->timezone('America/Lima')->format('Y-m-d\TH:i') : '' }}">
     </div>
     <button type="submit" class="btn btn-gold btn-sm">Guardar</button>
   </form>
