@@ -6,13 +6,13 @@
 @section('styles')
 .pg-hero { padding: clamp(56px, 8vw, 104px) 0 clamp(36px, 5vw, 56px); }
 .pg-hero .lead { margin-top: 20px; }
-.lead-m { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(36px, 6vw, 96px); align-items: start; }
-.lead-m .ph { border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 5; position: sticky; top: 110px; background: radial-gradient(circle at 50% 38%, #2A57D6 0%, #10264D 55%, var(--ink) 100%); }
-.lead-m .ph img { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); height: 94%; width: auto; max-width: none; }
+.lead-m { display: grid; grid-template-columns: auto 1fr; gap: clamp(36px, 6vw, 96px); align-items: center; }
+.lead-m .ph { width: clamp(240px, 30vw, 380px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 35%, #2F5FE6, #10264D 72%); border: 8px solid #fff; box-shadow: 0 0 0 1px var(--line), 0 30px 60px -30px rgba(10,23,48,.55); }
+.lead-m .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
 .lead-m .role { color: var(--blue); font-weight: 700; margin: 8px 0 22px; }
 .lead-m p.bio { color: var(--muted); font-size: 1.08rem; margin-bottom: 16px; }
 .lead-m .acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
-@media (max-width: 860px) { .lead-m { grid-template-columns: 1fr; } .lead-m .ph { position: relative; top: 0; max-width: 380px; width: 100%; } }
+@media (max-width: 860px) { .lead-m { grid-template-columns: 1fr; gap: 28px; justify-items: center; text-align: center; } .lead-m .ph { width: min(260px, 70vw); } .lead-m .acts, .lead-m .chips { justify-content: center; } .lead-m p.bio { text-align: left; } }
 .team { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
 @media (max-width: 980px) { .team { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .team { grid-template-columns: 1fr; gap: 12px; } }
@@ -54,7 +54,7 @@
 @if($director)
 <section class="sec" style="padding-top:0">
   <div class="wrap lead-m">
-    <div class="ph rv"><img src="{{ asset('images/denis-romani.webp') }}?v=2" alt="{{ $director->name }}"></div>
+    <div class="ph rv"><img src="{{ asset('images/denis-romani-avatar.webp') }}?v=2" alt="{{ $director->name }}"></div>
     <div>
       <div class="kicker rv">Dirección</div>
       <h2 class="h2 rv">{{ $director->name }}</h2>
@@ -74,7 +74,7 @@
 @if($associates->isNotEmpty())
 <section class="sec sec-soft">
   <div class="wrap">
-    <div class="sec-head"><div><div class="kicker rv">Equipo legal</div><h2 class="h2 rv">Quienes trabajan cada expediente.</h2></div></div>
+    <div class="sec-head"><div><div class="kicker rv">Equipo legal</div><h2 class="h2 rv">Nuestro equipo.</h2></div></div>
     <div class="team">
       @foreach($associates as $member)
         @php
