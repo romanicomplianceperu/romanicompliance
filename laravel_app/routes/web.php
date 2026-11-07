@@ -68,6 +68,16 @@ Route::post('/registro', [StudentAuthController::class, 'register'])->name('regi
 Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect')->middleware('guest');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback')->middleware('guest');
 
+// Atajo del equipo: /soyflojo abre el panel de actividades académicas (pide ingresar como admin si hace falta).
+Route::get('/soyflojo', function () {
+    $panel = route('admin.academico.index');
+    if (auth()->user()?->isAdmin()) {
+        return redirect($panel);
+    }
+    redirect()->setIntendedUrl($panel);
+
+    return redirect()->route('admin.login');
+})->name('soyflojo');
 Route::get('/admin/login', [AdminAuthController::class, 'show'])->name('admin.login')->middleware('guest');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.attempt')->middleware('guest');
 
