@@ -278,6 +278,7 @@ class AcademicoController extends Controller
         $emails = $data['mode'] === 'individual'
             ? [$data['email']]
             : collect($data['members'] ?? [])->pluck('email')->filter()->all();
+        $this->rememberEmails($emails);
         if ($previous = $this->findSubmissionByEmails($activity, $emails)) {
             $this->rememberSubmission($activity, $previous);
             if ($previous->isSubmitted()) {
@@ -435,6 +436,7 @@ class AcademicoController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         cookie()->queue(cookie()->forget(self::REMEMBER_COOKIE));
+        cookie()->queue(cookie()->forget(self::EMAILS_COOKIE));
 
         return redirect()->route('academico.index')->with('academico_success', 'Cerraste tu sesión del espacio académico.');
     }
@@ -483,6 +485,21 @@ class AcademicoController extends Controller
         cookie()->queue(self::REMEMBER_COOKIE, json_encode(array_slice($map, -60, null, true)), 60 * 24 * 180);
     }
 
+    private const EMAILS_COOKIE = 'academico_correos';
+
+    private function rememberedEmails(Request $request): array
+    {
+        $list = json_decode((string) $request->cookie(self::EMAILS_COOKIE), true);
+
+        return is_array($list) ? array_values(array_filter($list, 'is_string')) : [];
+    }
+
+    private function rememberEmails(array $emails): void
+    {
+        $list = array_values(array_unique(array_merge($this->rememberedEmails(request()), array_map(fn ($e) => mb_strtolower(trim((string) $e)), array_filter($emails)))));
+        cookie()->queue(self::EMAILS_COOKIE, json_encode(array_slice($list, -10)), 60 * 24 * 180);
+    }
+
     /** Envío previo de esta actividad hecho con alguno de estos correos (el enviado primero, si hay varios). */
     private function findSubmissionByEmails(AcademicActivity $activity, array $emails): ?AcademicSubmission
     {
@@ -506,13 +523,21 @@ class AcademicoController extends Controller
                 $map[$aid] = $sid;
             }
         }
-        if (! $map) {
+        $emails = $this->rememberedEmails($request);
+        if (! $map && ! $emails) {
             return collect();
         }
 
-        return AcademicSubmission::whereIn('id', array_values($map))->whereNotNull('submitted_at')
+        return AcademicSubmission::whereNotNull('submitted_at')
             ->whereIn('academic_activity_id', $course->activities()->pluck('id'))
-            ->with('activity.exercises')->get()->keyBy('academic_activity_id');
+            ->where(function ($q) use ($map, $emails) {
+                $q->whereIn('id', array_values($map) ?: [0]);
+                if ($emails) {
+                    $q->orWhereHas('members', fn ($m) => $m->whereIn(\Illuminate\Support\Facades\DB::raw('LOWER(email)'), $emails));
+                }
+            })
+            ->with('activity.exercises')->orderBy('submitted_at')->get()
+            ->unique('academic_activity_id')->keyBy('academic_activity_id');
     }
 
     public function identify(Request $request)
