@@ -110,7 +110,7 @@ button { font: inherit; color: inherit; }
 .nav-links > *:nth-child(1) { animation-delay: .05s; } .nav-links > *:nth-child(2) { animation-delay: .1s; } .nav-links > *:nth-child(3) { animation-delay: .15s; } .nav-links > *:nth-child(4) { animation-delay: .2s; } .nav-links > *:nth-child(5) { animation-delay: .25s; } .nav-links > *:nth-child(6) { animation-delay: .3s; }
 .nav-actions > *:nth-child(1) { animation-delay: .35s; } .nav-actions > *:nth-child(2) { animation-delay: .42s; }
 @keyframes navIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
-.nav-logo img { height: 34px; filter: brightness(0) invert(1); transition: transform .4s var(--ease); }
+.nav-logo img { height: 42px; width: auto; filter: brightness(0) invert(1); transition: transform .4s var(--ease); }
 .nav-logo:hover img { transform: scale(1.04); }
 .nav-links { display: flex; align-items: center; gap: 2px; margin-left: auto; }
 .nav-links > a, .nav-drop > button { position: relative; padding: 10px 14px; border-radius: 999px; font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,.72); background: none; border: 0; cursor: pointer; transition: color .2s, background .2s; display: inline-flex; align-items: center; gap: 6px; }
@@ -156,7 +156,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 .m-menu .b-dark { background: #fff; color: var(--ink); }
 .m-menu .b-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.25); }
 @media (max-width: 1080px) { .nav-links, .nav-actions { display: none; } .nav-burger { display: inline-flex; } }
-@media (max-width: 720px) { .nav-in { padding: 0 20px; height: 68px; } .m-menu { inset: 68px 0 0; } .nav-logo img { height: 30px; } }
+@media (max-width: 720px) { .nav-in { padding: 0 20px; height: 68px; } .m-menu { inset: 68px 0 0; } .nav-logo img { height: 36px; } }
 @media (prefers-reduced-motion: reduce) { .nav::after, .nav .b-dark::before { animation: none; } .nav-in > *, .nav-links > *, .nav-actions > * { animation: none; } }
 
 /* Secciones */
@@ -290,7 +290,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 .foot h4 { color: #fff; font-size: 0.95rem; font-weight: 700; margin-bottom: 16px; }
 .foot a { display: block; padding: 5px 0; font-size: 0.95rem; transition: color .2s; }
 .foot a:hover { color: #fff; }
-.foot-brand img { height: 34px; filter: brightness(0) invert(1); margin-bottom: 18px; }
+.foot-brand img { height: 44px; width: auto; filter: brightness(0) invert(1); margin-bottom: 18px; }
 .foot-brand p { max-width: 320px; font-size: 0.95rem; }
 .foot-bot { margin-top: 64px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.1); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 0.85rem; color: rgba(255,255,255,.45); }
 .foot-bot a { display: inline; padding: 0; color: rgba(255,255,255,.65); }
@@ -348,7 +348,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 
 <header class="nav" id="nav">
   <div class="nav-in">
-    <a href="{{ route('home') }}" class="nav-logo" aria-label="Romani Compliance, inicio"><img src="{{ asset('images/logos.png') }}" alt="Romani Compliance"></a>
+    <a href="{{ route('home') }}" class="nav-logo" aria-label="Romani Compliance, inicio"><img src="{{ asset('images/logo-romani.png') }}" alt="Romani Compliance"></a>
     <nav class="nav-links" aria-label="Principal">
       <div class="nav-drop" id="navDrop">
         <button type="button" aria-expanded="false" aria-controls="navMega">Servicios <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -406,7 +406,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand">
-        <img src="{{ asset('images/logos.png') }}" alt="Romani Compliance">
+        <img src="{{ asset('images/logo-romani.png') }}" alt="Romani Compliance">
         <p>Compliance penal, prevención de lavado de activos y defensa penal económica. Lima, Perú.</p>
       </div>
       <div>
