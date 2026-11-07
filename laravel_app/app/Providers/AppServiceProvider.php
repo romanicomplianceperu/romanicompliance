@@ -21,5 +21,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Carbon::setLocale(config('app.locale'));
+
+        // Publica los artículos incluidos en el código la primera vez que se visita el sitio.
+        if (! $this->app->runningInConsole()) {
+            $this->app->booted(fn () => \App\Support\BundledArticles::ensure());
+        }
     }
 }
