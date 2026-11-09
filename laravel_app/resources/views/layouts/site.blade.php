@@ -470,9 +470,10 @@ window.RC = (function () {
     const o = !document.body.classList.contains('menu-open');
     document.body.classList.toggle('menu-open', o);
     burger.setAttribute('aria-expanded', o);
-    document.body.style.overflow = o ? 'hidden' : '';
+    // El bloqueo va en <html>: en <body> rompía la barra fija y hacía saltar la página.
+    document.documentElement.style.overflow = o ? 'hidden' : '';
   });
-  document.querySelectorAll('#mMenu a').forEach((a) => a.addEventListener('click', () => { document.body.classList.remove('menu-open'); document.body.style.overflow = ''; }));
+  document.querySelectorAll('#mMenu a').forEach((a) => a.addEventListener('click', () => { document.body.classList.remove('menu-open'); document.documentElement.style.overflow = ''; burger.setAttribute('aria-expanded', false); }));
 
   // Aparición al hacer scroll
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
