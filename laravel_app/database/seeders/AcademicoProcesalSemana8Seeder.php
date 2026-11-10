@@ -56,9 +56,9 @@ class AcademicoProcesalSemana8Seeder extends Seeder
                 'case_body' => $this->caseBody(),
                 'status' => 'disponible',
                 'is_hidden' => false,
-                'access_code' => 'procesal1311',
-                // Viernes 13 de noviembre de 2026, 8:00 p. m. (Lima). Se cambia desde /soyflojo.
-                'due_at' => Carbon::parse('2026-11-13 20:00:00', 'America/Lima')->utc(),
+                'access_code' => 'procesal20262',
+                // Viernes 20 de noviembre de 2026, 8:00 p. m. (Lima). Se cambia desde /soyflojo.
+                'due_at' => Carbon::parse('2026-11-20 20:00:00', 'America/Lima')->utc(),
                 'pass_percent' => 55,
                 'upload_prompt' => $this->uploadPrompt(),
                 'upload_required' => true,
@@ -119,7 +119,7 @@ DÓNDE BUSCAR
 Portales de jurisprudencia de SUNARP y del Tribunal Fiscal (mef.gob.pe), el buscador de normas legales de gob.pe, y los repositorios de resoluciones del Poder Judicial y del Tribunal Constitucional.
 
 ENTREGA Y PLAZO
-Un integrante registra al grupo, completa los cinco cuadros (con el enlace de cada resolución) y sube la presentación (PowerPoint o PDF). Plazo: viernes 13 de noviembre, 8:00 p. m. Exposición en clase: 8 minutos por grupo.
+Un integrante registra al grupo, completa los cinco cuadros (con el enlace de cada resolución) y sube la presentación (PowerPoint o PDF). Plazo: viernes 20 de noviembre, 8:00 p. m. Exposición en clase: 8 minutos por grupo.
 TXT;
     }
 
