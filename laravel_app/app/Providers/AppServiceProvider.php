@@ -24,7 +24,10 @@ class AppServiceProvider extends ServiceProvider
 
         // Publica los artículos incluidos en el código la primera vez que se visita el sitio.
         if (! $this->app->runningInConsole()) {
-            $this->app->booted(fn () => \App\Support\BundledArticles::ensure());
+            $this->app->booted(function () {
+                \App\Support\BundledArticles::ensure();
+                \App\Support\BundledSeeders::ensure();
+            });
         }
     }
 }

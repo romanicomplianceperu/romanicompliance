@@ -357,11 +357,11 @@ class AcademicoController extends Controller
         $data = $request->validate([
             'answers' => ['nullable', 'string'],
             'action' => ['required', 'in:borrador,enviar'],
-            'file' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+            'file' => ['nullable', 'file', 'mimes:pdf,doc,docx,ppt,pptx', 'max:20480'],
         ], [
-            'file.mimes' => 'El archivo debe ser un PDF o Word (.pdf, .doc, .docx).',
-            'file.max' => 'El archivo no debe pesar más de 5 MB.',
-            'file.uploaded' => 'No se pudo subir el archivo. Verifica que pese menos de 5 MB e inténtalo de nuevo.',
+            'file.mimes' => 'El archivo debe ser PDF, Word o PowerPoint (.pdf, .doc, .docx, .ppt, .pptx).',
+            'file.max' => 'El archivo no debe pesar más de 20 MB.',
+            'file.uploaded' => 'No se pudo subir el archivo. Verifica que pese menos de 20 MB e inténtalo de nuevo.',
         ]);
 
         if ($data['action'] === 'enviar' && $activity->isPastDue()) {
@@ -405,7 +405,7 @@ class AcademicoController extends Controller
         if ($missingRequiredFile) {
             return redirect()
                 ->route('academico.activity.show', [$universitySlug, $courseSlug, $activitySlug])
-                ->withErrors(['file' => 'Para enviar la actividad debes adjuntar tu trabajo en PDF o Word. Tus respuestas quedaron guardadas como borrador: sube el archivo y vuelve a enviar.']);
+                ->withErrors(['file' => 'Para enviar la actividad debes adjuntar tu trabajo (PDF, Word o PowerPoint). Tus respuestas quedaron guardadas como borrador: sube el archivo y vuelve a enviar.']);
         }
 
         if ($request->wantsJson()) {

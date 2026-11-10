@@ -148,13 +148,13 @@
                     <div class="ac-case-highlight-title">{{ $section['heading'] }}</div>
                     <ul>
                       @foreach($section['items'] as $item)
-                        <li>{{ $item }}</li>
+                        <li>{{ \App\Models\AcademicActivity::linkify($item) }}</li>
                       @endforeach
                     </ul>
                   </div>
                 @else
                   @foreach($section['items'] as $item)
-                    <p>{{ $item }}</p>
+                    <p>{{ \App\Models\AcademicActivity::linkify($item) }}</p>
                   @endforeach
                 @endif
               @endforeach
@@ -178,13 +178,13 @@
                   <div class="ac-case-highlight-title">{{ $section['heading'] }}</div>
                   <ul>
                     @foreach($section['items'] as $item)
-                      <li>{{ $item }}</li>
+                      <li>{{ \App\Models\AcademicActivity::linkify($item) }}</li>
                     @endforeach
                   </ul>
                 </div>
               @else
                 @foreach($section['items'] as $item)
-                  <p>{{ $item }}</p>
+                  <p>{{ \App\Models\AcademicActivity::linkify($item) }}</p>
                 @endforeach
               @endif
             @endforeach
@@ -210,11 +210,11 @@
 
       @if($activity->hasUpload())
         <div class="ac-ex-section">
-          <h3>{{ $activity->upload_required ? 'Trabajo del caso · Entrega obligatoria en PDF o Word' : ($activity->questions->count() > 0 ? 'Trabajo del caso · Entrega en PDF o Word (extra opcional)' : 'Ejercicio 6 · Pregunta de desarrollo (extra opcional)') }}</h3>
+          <h3>{{ $activity->upload_required ? 'Trabajo del caso · Entrega obligatoria (PDF, Word o PowerPoint)' : ($activity->questions->count() > 0 ? 'Trabajo del caso · Entrega en PDF o Word (extra opcional)' : 'Ejercicio 6 · Pregunta de desarrollo (extra opcional)') }}</h3>
           <div class="ac-ex-card ac-upload-card">
             <div class="ac-ex-header">
               <span class="ac-ex-points">{{ $activity->upload_required ? 'Obligatorio' : '+'.$activity->upload_bonus_points.' pts extra' }}</span>
-              <div class="ac-ex-prompt">{{ $activity->questions->count() > 0 ? 'Sube el trabajo de tu equipo (PDF o Word)' : 'Responde escribiendo aquí o sube tu archivo (PDF o Word)' }}</div>
+              <div class="ac-ex-prompt">{{ $activity->questions->count() > 0 ? 'Sube el trabajo de tu equipo (PDF, Word o PowerPoint)' : 'Responde escribiendo aquí o sube tu archivo (PDF o Word)' }}</div>
             </div>
             @if($activity->upload_prompt)
               <div class="ac-upload-brief">
@@ -224,7 +224,7 @@
               </div>
             @endif
             @if($activity->upload_required)
-              <div class="ac-optional-notice" style="color:#B3413B;background:rgba(179,65,59,0.08);">📎 La entrega del trabajo en PDF o Word es OBLIGATORIA: no podrás enviar la actividad sin adjuntarlo. Tu docente lo califica (no suma a los {{ $activity->exercises->sum('points') }} puntos autocalificables).</div>
+              <div class="ac-optional-notice" style="color:#B3413B;background:rgba(179,65,59,0.08);">📎 La entrega del trabajo es OBLIGATORIA: no podrás enviar la actividad sin adjuntarlo. Tu docente lo califica{{ $activity->exercises->isNotEmpty() ? ' (no suma a los '.$activity->exercises->sum('points').' puntos autocalificables)' : '' }}.</div>
             @elseif($activity->questions->count() > 0)
               <div class="ac-optional-notice">📎 La entrega del trabajo no afecta tu nota de 0 a 20: si adjuntas tu archivo PDF o Word se suman +{{ $activity->upload_bonus_points }} puntos extra y tu docente lo revisa.</div>
             @else
@@ -256,9 +256,9 @@
               <label class="ac-upload-drop" for="bonusFile">
                 <span class="ac-upload-icon">⬆</span>
                 <span class="ac-upload-label" id="bonusFileLabel">{{ $submission->hasFile() ? 'Elegir otro archivo para reemplazarlo' : 'Toca aquí para elegir tu archivo' }}</span>
-                <span class="ac-upload-meta">PDF, DOC o DOCX · máx. 5 MB</span>
+                <span class="ac-upload-meta">PDF, Word o PowerPoint · máx. 20 MB</span>
               </label>
-              <input type="file" name="file" id="bonusFile" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="ac-upload-input">
+              <input type="file" name="file" id="bonusFile" accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" class="ac-upload-input">
               <p class="ac-ex-hint">El archivo se sube cuando pulses «Guardar avance» o «Enviar actividad».</p>
             @endif
           </div>
@@ -268,11 +268,11 @@
       @if($activity->questions->count() > 0)
         <div class="ac-critica-section">
           <div class="ac-critica-head">
-            <h3>Respuesta crítica</h3>
+            <h3>{{ $activity->exercises->isEmpty() ? 'Sus resoluciones' : 'Respuesta crítica' }}</h3>
           </div>
-          <p class="ac-ex-intro">Estas son las preguntas del caso que revisa directamente su docente; respondan con argumentos propios.</p>
+          <p class="ac-ex-intro">{{ $activity->exercises->isEmpty() ? 'Completen un cuadro por cada tipo de vicio: peguen el enlace de la resolución que encontraron e indiquen lo que se pide.' : 'Estas son las preguntas del caso que revisa directamente su docente; respondan con argumentos propios.' }}</p>
           @if($activity->hasUpload())
-            <div class="ac-optional-notice">📝 Estas preguntas del caso las revisa directamente tu docente: no suman a los {{ $activity->exercises->sum('points') }} puntos autocalificables. Respóndanlas aquí y, además, pueden subir su trabajo completo en PDF o Word más abajo.</div>
+            <div class="ac-optional-notice">📝 Estas respuestas las revisa directamente tu docente{{ $activity->exercises->isNotEmpty() ? ': no suman a los '.$activity->exercises->sum('points').' puntos autocalificables' : '' }}. Respóndanlas aquí y suban también su archivo en la sección de entrega.</div>
           @else
             <div class="ac-optional-notice">📝 Estas preguntas son opcionales y no suman a los {{ $activity->exercises->sum('points') }} puntos autocalificables, pero tu docente las considerará como puntaje adicional para el curso en general.</div>
           @endif
@@ -1101,8 +1101,8 @@
     bonusFile.addEventListener('change', function () {
       const f = bonusFile.files[0];
       if (! f) return;
-      if (! /\.(pdf|docx?)$/i.test(f.name) || f.size > 5 * 1024 * 1024) {
-        alert('El archivo debe ser PDF o Word (.pdf, .doc, .docx) y pesar menos de 5 MB.');
+      if (! /\.(pdf|docx?|pptx?)$/i.test(f.name) || f.size > 20 * 1024 * 1024) {
+        alert('El archivo debe ser PDF, Word o PowerPoint (.pdf, .doc, .docx, .ppt, .pptx) y pesar menos de 20 MB.');
         bonusFile.value = '';
         return;
       }
@@ -1160,7 +1160,7 @@
       if (needsFile && fileInput && ! fileInput.files.length) {
         const card = document.querySelector('.ac-upload-card');
         if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        alert('Para enviar la actividad debes adjuntar tu trabajo en PDF o Word.');
+        alert('Para enviar la actividad debes adjuntar tu trabajo (PDF, Word o PowerPoint).');
         return;
       }
       submitModal.classList.add('active');

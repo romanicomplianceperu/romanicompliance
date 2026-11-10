@@ -129,6 +129,8 @@
 .ac-case-highlight ul { margin: 0; padding-left: 1.1rem; }
 .ac-case-highlight li { font-size: 0.9rem; color: var(--ink); line-height: 1.65; margin-bottom: 0.4rem; }
 .ac-case-highlight li:last-child { margin-bottom: 0; }
+.ac-res-link { display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; padding: 2px 10px; border-radius: 999px; background: rgba(31,79,216,.1); color: #1F4FD8 !important; font-weight: 700; font-size: .82rem; text-decoration: none; white-space: nowrap; }
+.ac-res-link:hover { background: #1F4FD8; color: #fff !important; }
 
 .ac-case-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 1rem; }
 .ac-case-toolbar .ac-deadline-badge { margin-bottom: 0; }

@@ -110,6 +110,19 @@ class AcademicActivity extends Model
      * and the lines under it, so the case text can be rendered with proper
      * visual structure instead of one wall of paragraphs.
      */
+    /** Texto seguro con los enlaces convertidos en «Abrir resolución ↗». */
+    public static function linkify(string $text): \Illuminate\Support\HtmlString
+    {
+        $html = preg_replace_callback('~https?://[^\s<]+~u', function ($m) {
+            $url = rtrim($m[0], '.,;)');
+            $tail = substr($m[0], strlen($url));
+
+            return '<a href="'.$url.'" target="_blank" rel="noopener" class="ac-res-link" data-no-loader>Abrir resolución ↗</a>'.$tail;
+        }, e($text));
+
+        return new \Illuminate\Support\HtmlString($html);
+    }
+
     public function caseBodySections(): array
     {
         $sections = [];
