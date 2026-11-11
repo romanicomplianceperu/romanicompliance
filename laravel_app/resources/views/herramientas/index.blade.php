@@ -59,7 +59,7 @@ a.hr-card:hover { transform: translateY(-4px); border-color: var(--blue); box-sh
     <a href="{{ route('buscador') }}" class="hr-card feat rv">
       <span class="hr-badge">Disponible</span>
       <span class="icon-tile">@include('site.partials.icon', ['name' => 'search'])</span>
-      <h2>Buscador OFAC</h2>
+      <h2>Buscador de listas OFAC</h2>
       <p>Verifique en segundos si una persona, empresa, embarcación o aeronave figura en la lista SDN o en la lista consolidada del Tesoro de EE. UU. Tolera errores de tipeo, sugiere nombres mientras escribe y entrega constancia en PDF.</p>
       <div class="hr-stats"><span><b>Actualización automática</b> desde los archivos oficiales</span><span><b>Varios nombres</b> a la vez</span></div>
       <span class="lnk">Abrir el buscador @include('site.partials.icon', ['name' => 'arrow'])</span>
@@ -67,8 +67,8 @@ a.hr-card:hover { transform: translateY(-4px); border-color: var(--blue); box-sh
     <a href="{{ route('herramientas.normas') }}" class="hr-card rv" style="--d:.05s">
       <span class="hr-badge">Disponible</span>
       <span class="icon-tile">@include('site.partials.icon', ['name' => 'book'])</span>
-      <h2>Normas LA/FT</h2>
-      <p>Resoluciones SBS, decretos y leyes de prevención de lavado de activos con su resumen, a quién aplican, qué las modificó y el enlace a la fuente. {{ $normasCount }} normas clave.</p>
+      <h2>Buscador de normas LA/FT</h2>
+      <p>Busque por número, tema o sujeto obligado entre {{ $normasCount }} resoluciones SBS, decretos y leyes de prevención LA/FT, y abra la norma original publicada en El Peruano.</p>
       <span class="lnk">Buscar normas @include('site.partials.icon', ['name' => 'arrow'])</span>
     </a>
     <a href="{{ route('services.show', 'compliance-penal') }}#herramienta" class="hr-card rv">

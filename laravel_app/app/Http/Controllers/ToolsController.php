@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Support\Normas\ElPeruano;
 use App\Support\ServiceCatalog;
+use Illuminate\Http\Request;
 
 /** Sección «Herramientas y recursos» y mapa del sitio para buscadores. */
 class ToolsController extends Controller
@@ -16,14 +18,24 @@ class ToolsController extends Controller
     public function normas()
     {
         $data = self::catalog();
-        $normas = collect($data['normas'] ?? [])->sortByDesc('anio')->values();
+        $normas = collect($data['normas'] ?? [])->sortByDesc(fn ($n) => $n['fecha_iso'] ?? (string) $n['anio'])->values();
 
         return view('herramientas.normas', [
             'normas' => $normas,
             'updated' => $data['updated_at'] ?? null,
-            'tipos' => $normas->pluck('tipo')->unique()->values(),
-            'anios' => $normas->pluck('anio')->unique()->sortDesc()->values(),
+            'initial' => mb_substr(trim((string) request()->query('q', '')), 0, 120),
         ]);
+    }
+
+    /** Búsqueda de un número de norma en el Diario Oficial El Peruano (complementa al catálogo). */
+    public function normasElPeruano(Request $request)
+    {
+        $q = mb_substr(trim((string) $request->query('q', '')), 0, 120);
+        if (mb_strlen($q) < 3 || ! ElPeruano::number($q)) {
+            return response()->json(['results' => [], 'url' => ElPeruano::searchUrl($q)]);
+        }
+
+        return response()->json(ElPeruano::search($q))->header('Cache-Control', 'public, max-age=1800');
     }
 
     public function sitemap()

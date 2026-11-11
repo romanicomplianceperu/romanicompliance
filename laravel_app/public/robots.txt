@@ -1,6 +1,7 @@
 User-agent: *
 Disallow: /soyflojo
 Disallow: /admin
+Disallow: /herramientas/normas-laft/el-peruano
 Disallow: /buscador/api
 Disallow: /buscador/sugerencias
 Disallow: /buscador/constancia

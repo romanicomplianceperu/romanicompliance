@@ -127,12 +127,11 @@ button { font: inherit; color: inherit; }
 .nav-drop.open .nav-mega a { opacity: 1; transform: none; transition: background .2s, opacity .35s var(--ease), transform .35s var(--ease); }
 .nav-drop.open .nav-mega a:nth-child(2) { transition-delay: .03s; } .nav-drop.open .nav-mega a:nth-child(3) { transition-delay: .06s; } .nav-drop.open .nav-mega a:nth-child(4) { transition-delay: .09s; } .nav-drop.open .nav-mega a:nth-child(5) { transition-delay: .12s; } .nav-drop.open .nav-mega a:nth-child(6) { transition-delay: .15s; }
 .nav-mega a:hover { background: var(--soft); }
-.nav-mega .mega-tools { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; padding: 10px; border-radius: 14px; background: var(--ink); }
-.nav-mega .mega-tools .mt-l { color: var(--blue-l); font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin-right: 6px; }
-.nav-mega .mega-tools a { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 999px; color: #fff; font-size: .88rem; font-weight: 700; background: rgba(255,255,255,.08); opacity: 1; transform: none; }
-.nav-mega .mega-tools a:hover { background: var(--blue); }
-.nav-mega .mega-tools a.all { margin-left: auto; background: none; color: var(--blue-l); }
-.nav-mega .mega-tools .ic { width: 16px; height: 16px; }
+.nav-mega.sm { width: 400px; grid-template-columns: 1fr; left: 0; transform: translateY(10px) scale(.98); }
+.nav-drop.open .nav-mega.sm { transform: translateY(0) scale(1); }
+.nav-mega.sm a.all { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; padding: 12px 14px; border-top: 1px solid var(--line); border-radius: 0 0 12px 12px; font-size: .9rem; font-weight: 700; color: var(--blue); }
+.nav-mega.sm a.all .ic { width: 16px; height: 16px; }
+.nav-drop > button.on { color: #fff; }
 .nav-mega .mi { width: 40px; height: 40px; border-radius: 12px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; flex-shrink: 0; font-size: 20px; transition: background .25s, color .25s; }
 .nav-mega a:hover .mi { background: var(--blue); color: #fff; }
 .nav-mega strong { display: block; font-size: 0.95rem; font-weight: 700; color: var(--ink); line-height: 1.3; }
@@ -369,15 +368,22 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
               <span><strong>{{ $s['short'] ?? $s['name'] }}</strong><span class="t">{{ $s['card'] }}</span></span>
             </a>
           @endforeach
-          <div class="mega-tools">
-            <span class="mt-l">Herramientas gratuitas</span>
-            <a href="{{ route('buscador') }}">@include('site.partials.icon', ['name' => 'search']) Buscador OFAC</a>
-            <a href="{{ route('herramientas.normas') }}">@include('site.partials.icon', ['name' => 'book']) Normas LA/FT</a>
-            <a href="{{ route('herramientas') }}" class="all">Ver todas @include('site.partials.icon', ['name' => 'arrow'])</a>
-          </div>
         </div>
       </div>
-      <a href="{{ route('buscador') }}" class="{{ request()->routeIs('buscador') ? 'on' : '' }}">Buscador OFAC</a>
+      <div class="nav-drop" id="navTools">
+        <button type="button" aria-expanded="false" aria-controls="navToolsMenu" class="{{ request()->routeIs('buscador', 'herramientas', 'herramientas.*') ? 'on' : '' }}">Herramientas <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="nav-mega sm" id="navToolsMenu">
+          <a href="{{ route('buscador') }}">
+            <span class="mi">@include('site.partials.icon', ['name' => 'search'])</span>
+            <span><strong>Buscador de listas OFAC</strong><span class="t">Personas, empresas, naves y aeronaves sancionadas por el Tesoro de EE. UU.</span></span>
+          </a>
+          <a href="{{ route('herramientas.normas') }}">
+            <span class="mi">@include('site.partials.icon', ['name' => 'book'])</span>
+            <span><strong>Buscador de normas LA/FT</strong><span class="t">Resoluciones SBS, decretos y leyes, con la norma original de El Peruano</span></span>
+          </a>
+          <a href="{{ route('herramientas') }}" class="all">Ver todas las herramientas @include('site.partials.icon', ['name' => 'arrow'])</a>
+        </div>
+      </div>
       <a href="{{ route('capacitaciones') }}">Capacitación</a>
       <a href="{{ route('courses.catalog') }}">Cursos</a>
       <a href="{{ route('equipo') }}" class="{{ request()->routeIs('equipo') ? 'on' : '' }}">Equipo</a>
@@ -401,9 +407,9 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
   @foreach($rcServices as $slug => $s)
     <a class="m-s" href="{{ route('services.show', $slug) }}">@include('site.partials.icon', ['name' => $s['icon']]) {{ $s['short'] ?? $s['name'] }}</a>
   @endforeach
-  <div class="m-group">Herramientas gratuitas</div>
-  <a class="m-s" href="{{ route('buscador') }}">@include('site.partials.icon', ['name' => 'search']) Buscador OFAC</a>
-  <a class="m-s" href="{{ route('herramientas.normas') }}">@include('site.partials.icon', ['name' => 'book']) Normas LA/FT</a>
+  <div class="m-group">Herramientas</div>
+  <a class="m-s" href="{{ route('buscador') }}">@include('site.partials.icon', ['name' => 'search']) Buscador de listas OFAC</a>
+  <a class="m-s" href="{{ route('herramientas.normas') }}">@include('site.partials.icon', ['name' => 'book']) Buscador de normas LA/FT</a>
   <a class="m-s" href="{{ route('herramientas') }}">@include('site.partials.icon', ['name' => 'arrow']) Todas las herramientas</a>
   <div class="m-group">Firma</div>
   <a class="m-l" href="{{ route('capacitaciones') }}">Capacitación @include('site.partials.icon', ['name' => 'arrow'])</a>
@@ -441,8 +447,8 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
         <a href="{{ route('capacitaciones') }}">Capacitación</a>
         <a href="{{ route('courses.catalog') }}">Cursos</a>
         <a href="{{ route('herramientas') }}">Herramientas y recursos</a>
-        <a href="{{ route('buscador') }}">Buscador OFAC</a>
-        <a href="{{ route('herramientas.normas') }}">Normas LA/FT</a>
+        <a href="{{ route('buscador') }}">Buscador de listas OFAC</a>
+        <a href="{{ route('herramientas.normas') }}">Buscador de normas LA/FT</a>
         <a href="{{ route('certificates.verify.form') }}">Verificar certificado</a>
       </div>
       <div>
@@ -479,16 +485,17 @@ window.RC = (function () {
   addEventListener('scroll', () => { if (navTick) return; navTick = true; requestAnimationFrame(() => { nav.classList.toggle('scrolled', scrollY > 8); navTick = false; }); }, { passive: true });
 
   // Menú de servicios (escritorio) y menú móvil
-  const drop = document.getElementById('navDrop');
-  if (drop) {
+  const drops = [...document.querySelectorAll('.nav-drop')];
+  drops.forEach((drop) => {
     const btn = drop.querySelector('button');
     const set = (o) => { drop.classList.toggle('open', o); btn.setAttribute('aria-expanded', o); };
-    btn.addEventListener('click', (e) => { e.stopPropagation(); set(!drop.classList.contains('open')); });
-    drop.addEventListener('mouseenter', () => matchMedia('(hover:hover)').matches && set(true));
+    drop._set = set;
+    btn.addEventListener('click', (e) => { e.stopPropagation(); const o = !drop.classList.contains('open'); drops.forEach((d) => d !== drop && d._set(false)); set(o); });
+    drop.addEventListener('mouseenter', () => { if (matchMedia('(hover:hover)').matches) { drops.forEach((d) => d !== drop && d._set(false)); set(true); } });
     drop.addEventListener('mouseleave', () => matchMedia('(hover:hover)').matches && set(false));
-    document.addEventListener('click', () => set(false));
-    document.addEventListener('keydown', (e) => e.key === 'Escape' && set(false));
-  }
+  });
+  document.addEventListener('click', () => drops.forEach((d) => d._set(false)));
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && drops.forEach((d) => d._set(false)));
   const burger = document.getElementById('burger');
   burger.addEventListener('click', () => {
     const o = !document.body.classList.contains('menu-open');

@@ -64,6 +64,7 @@ Route::get('/equipo', [TeamController::class, 'index'])->name('equipo');
 // Herramientas y recursos gratuitos (buscador OFAC, normas LA/FT, diagnósticos).
 Route::get('/herramientas', [\App\Http\Controllers\ToolsController::class, 'index'])->name('herramientas');
 Route::get('/herramientas/normas-laft', [\App\Http\Controllers\ToolsController::class, 'normas'])->name('herramientas.normas');
+Route::get('/herramientas/normas-laft/el-peruano', [\App\Http\Controllers\ToolsController::class, 'normasElPeruano'])->middleware('throttle:40,1')->name('herramientas.normas.elperuano');
 Route::redirect('/herramientas/buscador-ofac', '/buscador', 301);
 Route::get('/sitemap.xml', [\App\Http\Controllers\ToolsController::class, 'sitemap'])->name('sitemap');
 
