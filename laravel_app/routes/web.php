@@ -61,6 +61,12 @@ Route::prefix('aprendizaje')->name('aprendizaje.')->group(function () {
 });
 Route::get('/equipo', [TeamController::class, 'index'])->name('equipo');
 
+// Buscador en las listas de sanciones de OFAC (SDN y consolidada).
+Route::get('/buscador', [\App\Http\Controllers\OfacSearchController::class, 'index'])->name('buscador');
+Route::get('/buscador/api', [\App\Http\Controllers\OfacSearchController::class, 'search'])->middleware('throttle:120,1')->name('buscador.api');
+Route::post('/buscador/lote', [\App\Http\Controllers\OfacSearchController::class, 'batch'])->middleware('throttle:20,1')->name('buscador.lote');
+Route::get('/buscador/constancia', [\App\Http\Controllers\OfacSearchController::class, 'certificate'])->middleware('throttle:20,1')->name('buscador.constancia');
+
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
 Route::post('/login', [StudentAuthController::class, 'authenticate'])->name('login.attempt')->middleware('guest');
 Route::get('/registro', [StudentAuthController::class, 'showRegister'])->name('register')->middleware('guest');

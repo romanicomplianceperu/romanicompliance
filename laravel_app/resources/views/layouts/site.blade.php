@@ -155,7 +155,10 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
 .m-menu a.m-s .ic { color: var(--blue-l); width: 20px; height: 20px; }
 .m-menu .b-dark { background: #fff; color: var(--ink); }
 .m-menu .b-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.25); }
-@media (max-width: 1080px) { .nav-links, .nav-actions { display: none; } .nav-burger { display: inline-flex; } }
+.nav-links > a, .nav-links > .nav-drop > button { white-space: nowrap; }
+.nav-logo { flex-shrink: 0; }
+@media (max-width: 1400px) { .nav-in { gap: 16px; padding: 0 24px; } .nav-links > a, .nav-drop > button { padding: 10px 9px; font-size: .92rem; } .nav-links > a::after { left: 9px; right: 9px; } .nav-actions .b { padding-left: 14px; padding-right: 14px; } }
+@media (max-width: 1199px) { .nav-links, .nav-actions { display: none; } .nav-burger { display: inline-flex; } }
 @media (max-width: 720px) { .nav-in { padding: 0 20px; height: 68px; } .m-menu { inset: 68px 0 0; } .nav-logo img { height: 36px; } }
 @media (prefers-reduced-motion: reduce) { .nav::after, .nav .b-dark::before { animation: none; } .nav-in > *, .nav-links > *, .nav-actions > * { animation: none; } }
 
@@ -361,6 +364,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
           @endforeach
         </div>
       </div>
+      <a href="{{ route('buscador') }}" class="{{ request()->routeIs('buscador') ? 'on' : '' }}">Buscador OFAC</a>
       <a href="{{ route('capacitaciones') }}">Capacitación</a>
       <a href="{{ route('courses.catalog') }}">Cursos</a>
       <a href="{{ route('equipo') }}" class="{{ request()->routeIs('equipo') ? 'on' : '' }}">Equipo</a>
@@ -385,6 +389,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
     <a class="m-s" href="{{ route('services.show', $slug) }}">@include('site.partials.icon', ['name' => $s['icon']]) {{ $s['short'] ?? $s['name'] }}</a>
   @endforeach
   <div class="m-group">Firma</div>
+  <a class="m-l" href="{{ route('buscador') }}">Buscador OFAC @include('site.partials.icon', ['name' => 'arrow'])</a>
   <a class="m-l" href="{{ route('capacitaciones') }}">Capacitación @include('site.partials.icon', ['name' => 'arrow'])</a>
   <a class="m-l" href="{{ route('courses.catalog') }}">Cursos @include('site.partials.icon', ['name' => 'arrow'])</a>
   <a class="m-l" href="{{ route('equipo') }}">Equipo @include('site.partials.icon', ['name' => 'arrow'])</a>
@@ -419,6 +424,7 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
         <a href="{{ route('blog.index') }}">Publicaciones</a>
         <a href="{{ route('capacitaciones') }}">Capacitación</a>
         <a href="{{ route('courses.catalog') }}">Cursos</a>
+        <a href="{{ route('buscador') }}">Buscador OFAC</a>
         <a href="{{ route('certificates.verify.form') }}">Verificar certificado</a>
       </div>
       <div>
