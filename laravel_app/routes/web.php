@@ -64,6 +64,8 @@ Route::get('/equipo', [TeamController::class, 'index'])->name('equipo');
 // Buscador en las listas de sanciones de OFAC (SDN y consolidada).
 Route::get('/buscador', [\App\Http\Controllers\OfacSearchController::class, 'index'])->name('buscador');
 Route::get('/buscador/api', [\App\Http\Controllers\OfacSearchController::class, 'search'])->middleware('throttle:120,1')->name('buscador.api');
+Route::get('/buscador/sugerencias', [\App\Http\Controllers\OfacSearchController::class, 'suggest'])->middleware('throttle:240,1')->name('buscador.sugerencias');
+Route::get('/buscador/ficha/{id}', [\App\Http\Controllers\OfacSearchController::class, 'record'])->whereNumber('id')->middleware('throttle:30,1')->name('buscador.ficha');
 Route::post('/buscador/lote', [\App\Http\Controllers\OfacSearchController::class, 'batch'])->middleware('throttle:20,1')->name('buscador.lote');
 Route::get('/buscador/constancia', [\App\Http\Controllers\OfacSearchController::class, 'certificate'])->middleware('throttle:20,1')->name('buscador.constancia');
 

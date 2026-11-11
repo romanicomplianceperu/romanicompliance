@@ -40,6 +40,39 @@ class OfacSearchController extends Controller
         return response()->json(OfacList::search($q, $f + ['limit' => 40]));
     }
 
+    /** Autocompletado mientras se escribe. */
+    public function suggest(Request $request)
+    {
+        $q = trim((string) $request->query('q', ''));
+        if (mb_strlen($q) < 2) {
+            return response()->json([]);
+        }
+        OfacList::ensure();
+
+        return response()->json(OfacList::suggest(mb_substr($q, 0, 80)));
+    }
+
+    /** Ficha en PDF de un resultado: todos sus datos y la búsqueda que lo encontró. */
+    public function record(Request $request, int $id)
+    {
+        OfacList::ensure();
+        $e = OfacList::entity($id);
+        abort_unless($e, 404);
+        $r = OfacList::present($e);
+        $q = mb_substr(trim((string) $request->query('q', '')), 0, 120);
+        $score = $request->filled('score') ? max(0, min(100, (int) $request->query('score'))) : null;
+        $matched = mb_substr(trim((string) $request->query('via', '')), 0, 200);
+        $meta = OfacList::meta();
+        $now = now()->timezone('America/Lima');
+        $code = strtoupper(substr(hash('sha256', $id.$q.$now->toIso8601String()), 0, 10));
+        $logo = 'data:image/png;base64,'.base64_encode((string) @file_get_contents(public_path('images/logos.png')));
+
+        $pdf = Pdf::loadView('buscador.ficha', compact('r', 'q', 'score', 'matched', 'meta', 'now', 'code', 'logo'))
+            ->setPaper('a4')->setOption('isFontSubsettingEnabled', true);
+
+        return $pdf->download('ficha-ofac-'.$id.'-'.Str::slug(Str::limit($r['name'], 50, '')).'.pdf');
+    }
+
     /** Varios nombres a la vez (uno por línea): el mejor resultado de cada uno. */
     public function batch(Request $request)
     {

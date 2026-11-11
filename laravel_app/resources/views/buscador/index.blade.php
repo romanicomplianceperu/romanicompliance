@@ -15,9 +15,19 @@
 .bz-hero .lead { color: rgba(255,255,255,.72); margin: 14px 0 26px; max-width: 720px; }
 .bz-box { position: relative; max-width: 860px; }
 .bz-box input { width: 100%; padding: 22px 140px 22px 60px; border-radius: 20px; border: 0; font: inherit; font-size: 1.15rem; font-weight: 600; color: var(--ink); background: #fff; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+.bz-box input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
 .bz-box input:focus { outline: 3px solid var(--blue-l); outline-offset: 2px; }
 .bz-box .ic-s { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; color: var(--muted-2); }
 .bz-box .clr { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); border: 0; background: var(--soft); color: var(--muted); font: inherit; font-weight: 700; font-size: .85rem; padding: 8px 12px; border-radius: 12px; cursor: pointer; }
+.bz-ac { position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 40; background: #fff; color: var(--ink); border-radius: 18px; box-shadow: 0 30px 70px -24px rgba(0,0,0,.55); padding: 6px; max-height: 380px; overflow-y: auto; }
+.bz-ac button { display: flex; width: 100%; align-items: center; gap: 12px; text-align: left; border: 0; background: none; font: inherit; padding: 10px 12px; border-radius: 12px; cursor: pointer; color: var(--ink); }
+.bz-ac button.on, .bz-ac button:hover { background: var(--soft); }
+.bz-ac .ti { width: 34px; height: 34px; border-radius: 10px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; font-weight: 800; font-size: .78rem; flex-shrink: 0; }
+.bz-ac .nm { flex: 1; min-width: 0; }
+.bz-ac .nm b { display: block; font-weight: 700; font-size: .96rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bz-ac .nm b mark { background: none; color: var(--blue); font-weight: 800; }
+.bz-ac .nm small { display: block; color: var(--muted); font-size: .8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bz-ac .hint { padding: 8px 12px 6px; font-size: .78rem; color: var(--muted-2); }
 .bz-meta { display: flex; gap: 8px 18px; flex-wrap: wrap; margin-top: 16px; font-size: .88rem; color: rgba(255,255,255,.66); }
 .bz-meta b { color: #fff; }
 .bz-meta .dot { width: 8px; height: 8px; border-radius: 50%; background: #3DDC97; display: inline-block; margin-right: 6px; vertical-align: 1px; box-shadow: 0 0 0 4px rgba(61,220,151,.18); }
@@ -74,7 +84,11 @@
 .bz-more li { line-height: 1.45; }
 .bz-more .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 640px) { .bz-more .grid2 { grid-template-columns: 1fr; } .bz-card .top { grid-template-columns: 54px 1fr; gap: 12px; padding: 16px 14px 12px; } .bz-ring { width: 52px; height: 52px; font-size: .92rem; } }
-.bz-toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; border: 0; border-top: 1px solid var(--line); background: #fff; font: inherit; font-weight: 700; font-size: .88rem; color: var(--blue); padding: 11px 18px; cursor: pointer; }
+.bz-actions { display: flex; border-top: 1px solid var(--line); }
+.bz-toggle { display: flex; flex: 1; justify-content: space-between; align-items: center; border: 0; background: #fff; font: inherit; font-weight: 700; font-size: .88rem; color: var(--blue); padding: 11px 18px; cursor: pointer; }
+.bz-pdf { display: inline-flex; align-items: center; gap: 6px; padding: 11px 18px; border-left: 1px solid var(--line); font-weight: 700; font-size: .88rem; color: var(--ink); white-space: nowrap; }
+.bz-pdf:hover { background: var(--soft); color: var(--blue); }
+.bz-pdf svg { width: 16px; height: 16px; }
 .bz-empty { text-align: center; padding: 44px 20px; border: 1px dashed #C9D3E6; border-radius: 22px; background: #fff; }
 .bz-empty .ok { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 14px; background: var(--ok-50, #E1F3EC); color: #0E8A5F; font-size: 30px; }
 .bz-empty h3 { font-size: 1.25rem; font-weight: 800; }
@@ -114,8 +128,9 @@
     <div id="modeOne">
       <div class="bz-box">
         <svg class="ic-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-        <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Nombre de la persona, empresa o embarcación" value="{{ $initial }}" aria-label="Nombre a buscar">
+        <input id="q" type="search" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="ac" aria-expanded="false" placeholder="Nombre de la persona, empresa o embarcación" value="{{ $initial }}" aria-label="Nombre a buscar">
         <button type="button" class="clr" id="clr" hidden>Borrar</button>
+        <div class="bz-ac" id="ac" role="listbox" hidden></div>
       </div>
       <div class="bz-loading" id="loading"></div>
       <div class="bz-try">Pruebe con: @foreach(['Nicolás Maduro', 'Banco Nacional de Cuba', 'Rosneft', 'Joaquín Guzmán'] as $ex)<button type="button" data-ex="{{ $ex }}">{{ $ex }}</button>@endforeach</div>
@@ -174,6 +189,7 @@
 <script>
 (function () {
   const API = @json(route('buscador.api')), LOTE = @json(route('buscador.lote')), PDF = @json(route('buscador.constancia'));
+  const SUG = @json(route('buscador.sugerencias')), FICHA = @json(route('buscador.ficha', ['id' => '__ID__']));
   const $ = (s) => document.querySelector(s), out = $('#out'), q = $('#q'), loading = $('#loading');
   const state = { tipo: '', lista: '', programa: '', pais: '', min: 85 };
   const introHtml = out.innerHTML;
@@ -187,7 +203,8 @@
   const VAL = { Male: 'Masculino', Female: 'Femenino' };
   const tr = (f) => { for (const k in FACT) { if (f.startsWith(k + ' ')) { const v = f.slice(k.length + 1); return '<b>' + FACT[k] + ':</b> ' + esc(VAL[v] || v); } } return esc(f); };
 
-  function card(r) {
+  function card(r, term) {
+    const fichaUrl = FICHA.replace('__ID__', r.id) + '?' + new URLSearchParams({ q: term, score: r.score, via: r.matched }).toString();
     const facts = r.facts.filter((f) => KEY.test(f)).slice(0, 3).map(tr).join(' · ');
     const lv = r.list === 'S' ? '<span class="bz-tag lv" style="background:#0A1730">SDN</span>' : '<span class="bz-tag lv" style="background:#55647C">No SDN</span>';
     const progs = r.programs.slice(0, 3).map((p) => '<span class="bz-tag pg" title="' + esc(p.code) + '">' + esc(p.label) + '</span>').join('');
@@ -204,7 +221,8 @@
       + (facts ? '<div class="bz-facts">' + facts + '</div>' : '') + '</div></div>'
       + '<div class="bz-more" hidden><div class="grid2">' + progsAll + allFacts + '</div><div class="grid2">' + aliases + addr + '</div>' + vessel
       + '<div><a class="b b-primary" style="padding:10px 16px" href="' + esc(r.ofac_url) + '" target="_blank" rel="noopener">Ver ficha oficial en OFAC ↗</a></div></div>'
-      + '<button type="button" class="bz-toggle" data-open><span>Ver ficha completa</span><span>▾</span></button></article>';
+      + '<div class="bz-actions"><button type="button" class="bz-toggle" data-open><span>Ver ficha completa</span><span>▾</span></button>'
+      + '<a class="bz-pdf" href="' + esc(fichaUrl) + '" data-no-loader title="Descargar la ficha de este resultado en PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Ficha PDF</a></div></article>';
   }
 
   let timer, seq = 0, last = '';
@@ -223,12 +241,41 @@
       }
       out.innerHTML = '<div class="bz-head"><div><h2>' + d.total + (d.total === 1 ? ' coincidencia' : ' coincidencias') + ' para «' + esc(term) + '»</h2>'
         + (d.total > d.results.length ? '<div class="muted">Se muestran las ' + d.results.length + ' más parecidas. Use los filtros para acotar.</div>' : '') + '</div>' + btn + '</div>'
-        + '<div class="bz-list">' + d.results.map(card).join('') + '</div>';
+        + '<div class="bz-list">' + d.results.map((r) => card(r, term)).join('') + '</div>';
     }).catch(() => { loading.classList.remove('on'); out.innerHTML = '<div class="bz-empty"><h3>No se pudo buscar</h3><p>Revise su conexión e intente de nuevo.</p></div>'; });
   }
   const go = () => { clearTimeout(timer); timer = setTimeout(run, 250); };
-  q.addEventListener('input', go);
-  q.addEventListener('keydown', (e) => { if (e.key === 'Enter') { clearTimeout(timer); run(); } });
+
+  // Autocompletado: nombres de la lista que empiezan como lo que se escribe
+  const ac = $('#ac'); let acItems = [], acOn = -1, acTimer, acSeq = 0;
+  const closeAc = () => { ac.hidden = true; acOn = -1; q.setAttribute('aria-expanded', 'false'); };
+  const mark = (name, term) => {
+    const words = term.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().split(/\s+/).filter((w) => w.length > 1);
+    return esc(name).replace(/[A-Za-zÀ-ÿ0-9]+/g, (w) => { const n = w.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); const hit = words.find((x) => n.startsWith(x)); return hit ? '<mark>' + w.slice(0, hit.length) + '</mark>' + w.slice(hit.length) : w; });
+  };
+  function paintAc() { ac.querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === acOn)); }
+  function suggest() {
+    const term = q.value.trim(); const my = ++acSeq;
+    if (term.length < 2 || document.activeElement !== q) { closeAc(); return; }
+    fetch(SUG + '?q=' + encodeURIComponent(term), { headers: { Accept: 'application/json' } }).then((r) => r.json()).then((list) => {
+      if (my !== acSeq || document.activeElement !== q) return;
+      acItems = list; acOn = -1;
+      if (!list.length) { closeAc(); return; }
+      ac.innerHTML = '<div class="hint">' + (list[0].fuzzy ? 'Nombres parecidos en la lista' : 'Nombres en la lista de OFAC') + '</div>' + list.map((s, i) => '<button type="button" role="option" data-i="' + i + '"><span class="ti">' + esc((s.type || '?').slice(0, 2).toUpperCase()) + '</span><span class="nm"><b>' + mark(s.name, term) + '</b><small>' + esc(s.type) + ' · ' + esc(s.list) + (s.of ? ' · alias de ' + esc(s.of) : '') + '</small></span></button>').join('');
+      ac.hidden = false; q.setAttribute('aria-expanded', 'true');
+    }).catch(closeAc);
+  }
+  function pick(i) { const s = acItems[i]; if (!s) return; q.value = s.name; closeAc(); clearTimeout(timer); run(); }
+  ac.addEventListener('mousedown', (e) => e.preventDefault());
+  ac.addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) pick(+b.dataset.i); });
+  q.addEventListener('input', () => { go(); clearTimeout(acTimer); acTimer = setTimeout(suggest, 120); });
+  q.addEventListener('focus', () => { if (q.value.trim().length >= 2) suggest(); });
+  q.addEventListener('blur', () => setTimeout(closeAc, 120));
+  q.addEventListener('keydown', (e) => {
+    if (!ac.hidden && acItems.length && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) { e.preventDefault(); acOn = (acOn + (e.key === 'ArrowDown' ? 1 : -1) + acItems.length) % acItems.length; paintAc(); return; }
+    if (e.key === 'Escape') { closeAc(); return; }
+    if (e.key === 'Enter') { e.preventDefault(); if (!ac.hidden && acOn >= 0) { pick(acOn); return; } closeAc(); clearTimeout(timer); run(); }
+  });
   $('#clr').addEventListener('click', () => { q.value = ''; q.focus(); run(); });
   document.querySelectorAll('[data-ex]').forEach((b) => b.addEventListener('click', () => { q.value = b.dataset.ex; run(); }));
   out.addEventListener('click', (e) => {

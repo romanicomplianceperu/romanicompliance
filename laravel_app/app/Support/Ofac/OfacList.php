@@ -463,6 +463,74 @@ class OfacList
         return ['total' => $total, 'results' => $out];
     }
 
+    /**
+     * Autocompletado: nombres cuya última palabra empieza con lo que se está escribiendo
+     * (y las anteriores coinciden). Si no hay, recurre a la búsqueda aproximada.
+     */
+    public static function suggest(string $query, int $limit = 8): array
+    {
+        $idx = self::index();
+        $norm = self::normalize($query);
+        if (! $idx || strlen($norm) < 2) {
+            return [];
+        }
+        $words = explode(' ', $norm);
+        $last = array_pop($words);
+        $words = array_values(array_filter($words, fn ($w) => ! in_array($w, self::STOPWORDS, true)));
+
+        // Nombres con alguna palabra que empieza con la última palabra escrita.
+        $pref = [];
+        $count = 0;
+        foreach ($idx['tokens'] as $t => $packed) {
+            $t = (string) $t;
+            if (strncmp($t, $last, strlen($last)) === 0) {
+                foreach (unpack('V*', $packed) as $k) {
+                    $pref[$k] = true;
+                }
+                if (++$count > 400) {
+                    break;
+                }
+            }
+        }
+        $hits = [];
+        foreach (array_keys($pref) as $k) {
+            [$id, $primary, $type, $list, , , , $toks, $display] = explode("\t", $idx['names'][$k]);
+            $nt = explode(' ', $toks);
+            foreach ($words as $w) {
+                $ok = false;
+                foreach ($nt as $x) {
+                    if ($x === $w || (strlen($w) > 3 && self::jaroWinkler($w, $x) >= 0.9)) {
+                        $ok = true;
+                        break;
+                    }
+                }
+                if (! $ok) {
+                    continue 2;
+                }
+            }
+            // Mejor si la palabra que empieza así es la primera del nombre y si es el nombre principal.
+            $rank = (str_starts_with(self::normalize($display), $norm) ? 0 : 10) + ($primary === '1' ? 0 : 3) + min(9, (int) (strlen($display) / 12));
+            $id = (int) $id;
+            if (! isset($hits[$id]) || $rank < $hits[$id]['rank']) {
+                $hits[$id] = ['rank' => $rank, 'name' => $display, 'type' => $type, 'list' => $list, 'alias' => $primary !== '1'];
+            }
+        }
+        uasort($hits, fn ($a, $b) => $a['rank'] <=> $b['rank'] ?: strcmp($a['name'], $b['name']));
+        $labels = ['i' => 'Persona', 'e' => 'Entidad', 'v' => 'Embarcación', 'a' => 'Aeronave'];
+        $out = [];
+        foreach (array_slice($hits, 0, $limit, true) as $id => $h) {
+            $e = $h['alias'] ? self::entity($id) : null;
+            $out[] = ['id' => $id, 'name' => $h['name'], 'type' => $labels[$h['type']] ?? '', 'list' => $h['list'] === 'S' ? 'SDN' : 'No SDN', 'of' => $e['n'] ?? null];
+        }
+        if (! $out && strlen($norm) >= 4) {
+            foreach (self::search($query, ['min' => 85, 'limit' => $limit])['results'] ?? [] as $r) {
+                $out[] = ['id' => $r['id'], 'name' => $r['matched'], 'type' => $r['type_label'], 'list' => $r['list'] === 'S' ? 'SDN' : 'No SDN', 'of' => $r['matched_alias'] ? $r['name'] : null, 'fuzzy' => true];
+            }
+        }
+
+        return $out;
+    }
+
     private static function score(array $q, array $n, array $tokenSim, string $qCompact = '', string $nCompact = ''): float
     {
         $sum = 0;
