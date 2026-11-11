@@ -61,6 +61,12 @@ Route::prefix('aprendizaje')->name('aprendizaje.')->group(function () {
 });
 Route::get('/equipo', [TeamController::class, 'index'])->name('equipo');
 
+// Herramientas y recursos gratuitos (buscador OFAC, normas LA/FT, diagnósticos).
+Route::get('/herramientas', [\App\Http\Controllers\ToolsController::class, 'index'])->name('herramientas');
+Route::get('/herramientas/normas-laft', [\App\Http\Controllers\ToolsController::class, 'normas'])->name('herramientas.normas');
+Route::redirect('/herramientas/buscador-ofac', '/buscador', 301);
+Route::get('/sitemap.xml', [\App\Http\Controllers\ToolsController::class, 'sitemap'])->name('sitemap');
+
 // Buscador en las listas de sanciones de OFAC (SDN y consolidada).
 Route::get('/buscador', [\App\Http\Controllers\OfacSearchController::class, 'index'])->name('buscador');
 Route::get('/buscador/api', [\App\Http\Controllers\OfacSearchController::class, 'search'])->middleware('throttle:120,1')->name('buscador.api');

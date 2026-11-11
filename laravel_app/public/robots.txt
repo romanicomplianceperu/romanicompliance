@@ -1,2 +1,9 @@
 User-agent: *
 Disallow: /soyflojo
+Disallow: /admin
+Disallow: /buscador/api
+Disallow: /buscador/sugerencias
+Disallow: /buscador/constancia
+Disallow: /buscador/ficha
+
+Sitemap: https://romanicompliance.com/sitemap.xml

@@ -14,6 +14,8 @@
   @case('chat')<path d="M4 5h16v11H9l-5 4z"/>@break
   @case('mail')<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6 8.5-6"/>@break
   @case('alert')<path d="M12 3.5l9.5 16.5h-19L12 3.5z"/><path d="M12 10v4.5M12 17.5h.01"/>@break
+  @case('search')<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>@break
+  @case('book')<path d="M5 4.5A1.5 1.5 0 016.5 3H19v15H6.5A1.5 1.5 0 005 19.5v-15z"/><path d="M5 19.5A1.5 1.5 0 006.5 21H19"/><path d="M9 7.5h6M9 11h6"/>@break
   @case('clock')<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>@break
   @default<circle cx="12" cy="12" r="8"/>
 @endswitch

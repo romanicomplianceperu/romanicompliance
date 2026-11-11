@@ -26,6 +26,7 @@
 <meta name="twitter:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($ogDesc), 200) }}">
 <meta name="twitter:image" content="{{ $ogImage }}">
 @yield('og_extra')
+<script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'LegalService', 'name' => 'Romani Compliance', 'url' => url('/'), 'logo' => asset('images/logos.png'), 'image' => asset('images/og-romani-compliance.jpg'), 'telephone' => '+51 969 754 983', 'email' => 'denis@romanicompliance.com', 'areaServed' => 'PE', 'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Lima', 'addressCountry' => 'PE'], 'knowsAbout' => ['Compliance penal', 'Prevención de lavado de activos', 'OFAC', 'Ley 30424', 'Criptoactivos y PSAV']], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 <meta name="theme-color" content="#0A1730">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <link rel="icon" href="{{ asset('images/logos.png') }}">
@@ -126,6 +127,12 @@ button { font: inherit; color: inherit; }
 .nav-drop.open .nav-mega a { opacity: 1; transform: none; transition: background .2s, opacity .35s var(--ease), transform .35s var(--ease); }
 .nav-drop.open .nav-mega a:nth-child(2) { transition-delay: .03s; } .nav-drop.open .nav-mega a:nth-child(3) { transition-delay: .06s; } .nav-drop.open .nav-mega a:nth-child(4) { transition-delay: .09s; } .nav-drop.open .nav-mega a:nth-child(5) { transition-delay: .12s; } .nav-drop.open .nav-mega a:nth-child(6) { transition-delay: .15s; }
 .nav-mega a:hover { background: var(--soft); }
+.nav-mega .mega-tools { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; padding: 10px; border-radius: 14px; background: var(--ink); }
+.nav-mega .mega-tools .mt-l { color: var(--blue-l); font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin-right: 6px; }
+.nav-mega .mega-tools a { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 999px; color: #fff; font-size: .88rem; font-weight: 700; background: rgba(255,255,255,.08); opacity: 1; transform: none; }
+.nav-mega .mega-tools a:hover { background: var(--blue); }
+.nav-mega .mega-tools a.all { margin-left: auto; background: none; color: var(--blue-l); }
+.nav-mega .mega-tools .ic { width: 16px; height: 16px; }
 .nav-mega .mi { width: 40px; height: 40px; border-radius: 12px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; flex-shrink: 0; font-size: 20px; transition: background .25s, color .25s; }
 .nav-mega a:hover .mi { background: var(--blue); color: #fff; }
 .nav-mega strong { display: block; font-size: 0.95rem; font-weight: 700; color: var(--ink); line-height: 1.3; }
@@ -362,6 +369,12 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
               <span><strong>{{ $s['short'] ?? $s['name'] }}</strong><span class="t">{{ $s['card'] }}</span></span>
             </a>
           @endforeach
+          <div class="mega-tools">
+            <span class="mt-l">Herramientas gratuitas</span>
+            <a href="{{ route('buscador') }}">@include('site.partials.icon', ['name' => 'search']) Buscador OFAC</a>
+            <a href="{{ route('herramientas.normas') }}">@include('site.partials.icon', ['name' => 'book']) Normas LA/FT</a>
+            <a href="{{ route('herramientas') }}" class="all">Ver todas @include('site.partials.icon', ['name' => 'arrow'])</a>
+          </div>
         </div>
       </div>
       <a href="{{ route('buscador') }}" class="{{ request()->routeIs('buscador') ? 'on' : '' }}">Buscador OFAC</a>
@@ -388,8 +401,11 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
   @foreach($rcServices as $slug => $s)
     <a class="m-s" href="{{ route('services.show', $slug) }}">@include('site.partials.icon', ['name' => $s['icon']]) {{ $s['short'] ?? $s['name'] }}</a>
   @endforeach
+  <div class="m-group">Herramientas gratuitas</div>
+  <a class="m-s" href="{{ route('buscador') }}">@include('site.partials.icon', ['name' => 'search']) Buscador OFAC</a>
+  <a class="m-s" href="{{ route('herramientas.normas') }}">@include('site.partials.icon', ['name' => 'book']) Normas LA/FT</a>
+  <a class="m-s" href="{{ route('herramientas') }}">@include('site.partials.icon', ['name' => 'arrow']) Todas las herramientas</a>
   <div class="m-group">Firma</div>
-  <a class="m-l" href="{{ route('buscador') }}">Buscador OFAC @include('site.partials.icon', ['name' => 'arrow'])</a>
   <a class="m-l" href="{{ route('capacitaciones') }}">Capacitación @include('site.partials.icon', ['name' => 'arrow'])</a>
   <a class="m-l" href="{{ route('courses.catalog') }}">Cursos @include('site.partials.icon', ['name' => 'arrow'])</a>
   <a class="m-l" href="{{ route('equipo') }}">Equipo @include('site.partials.icon', ['name' => 'arrow'])</a>
@@ -424,7 +440,9 @@ body.menu-open .m-menu > *:nth-child(n+2) { transition-delay: .04s; } body.menu-
         <a href="{{ route('blog.index') }}">Publicaciones</a>
         <a href="{{ route('capacitaciones') }}">Capacitación</a>
         <a href="{{ route('courses.catalog') }}">Cursos</a>
+        <a href="{{ route('herramientas') }}">Herramientas y recursos</a>
         <a href="{{ route('buscador') }}">Buscador OFAC</a>
+        <a href="{{ route('herramientas.normas') }}">Normas LA/FT</a>
         <a href="{{ route('certificates.verify.form') }}">Verificar certificado</a>
       </div>
       <div>

@@ -40,6 +40,7 @@
 .svw-tab[aria-selected="true"] { color: var(--ink); background: #fff; border-color: var(--line); box-shadow: 0 14px 34px -24px rgba(10,23,48,.4); }
 .svw-tab[aria-selected="true"] .mi { background: var(--blue); color: #fff; }
 .svw-panel { position: relative; overflow: hidden; border-radius: 26px; background: linear-gradient(150deg, var(--navy), var(--ink)); color: #fff; padding: clamp(26px, 4vw, 48px); min-height: 340px; display: flex; flex-direction: column; }
+.svw-new { margin-left: auto; font-size: .7rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: #E1F3EC; color: #0E8A5F; }
 .svw-panel .big { position: absolute; right: -40px; bottom: -40px; font-size: 280px; color: rgba(127,163,255,.08); }
 .svw-panel .q { font-size: .95rem; font-weight: 700; color: var(--blue-l); margin-bottom: 14px; }
 .svw-panel h3 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 14px; }
@@ -178,6 +179,7 @@
         @foreach($services as $slug => $s)
           <button type="button" class="svw-tab" role="tab" aria-selected="{{ $loop->first ? 'true' : 'false' }}" aria-controls="svp-{{ $slug }}" data-k="{{ $slug }}"><span class="mi">@include('site.partials.icon', ['name' => $s['icon']])</span>{{ $s['short'] ?? $s['name'] }}</button>
         @endforeach
+        <button type="button" class="svw-tab" role="tab" aria-selected="false" aria-controls="svp-buscador" data-k="buscador"><span class="mi">@include('site.partials.icon', ['name' => 'search'])</span>Buscador OFAC <span class="svw-new">Gratis</span></button>
       </div>
       <div class="svw-panel">
         @foreach($services as $slug => $s)
@@ -196,6 +198,16 @@
             </div>
           </div>
         @endforeach
+          <div class="svw-pane" id="svp-buscador" role="tabpanel" hidden>
+            <span class="big" aria-hidden="true">@include('site.partials.icon', ['name' => 'search'])</span>
+            <div class="q">«Necesito saber si un cliente o proveedor está en la lista OFAC»</div>
+            <h3>Buscador OFAC</h3>
+            <p>Busque gratis en la lista SDN y en la consolidada del Tesoro de EE. UU.: tolera errores de tipeo, sugiere nombres mientras escribe y entrega constancia en PDF.</p>
+            <div class="acts">
+              <a href="{{ route('buscador') }}" class="b b-primary">Abrir el buscador @include('site.partials.icon', ['name' => 'arrow'])</a>
+              <a href="{{ route('herramientas') }}" class="b b-ghost-dark">Más herramientas</a>
+            </div>
+          </div>
       </div>
     </div>
 

@@ -1,7 +1,27 @@
 @extends('layouts.site')
 
-@section('title', 'Buscador OFAC · Romani Compliance')
-@section('description', 'Busque gratis en las listas de sanciones de OFAC (SDN y consolidada): personas, empresas, embarcaciones y aeronaves, con tolerancia a errores de tipeo y constancia en PDF.')
+@section('title', 'Buscador OFAC gratis en español: lista SDN y consolidada · Romani Compliance')
+@section('description', 'Busque gratis y en español en las listas de sanciones de OFAC (SDN y consolidada): personas, empresas, embarcaciones y aeronaves. Tolera errores de tipeo, sugiere nombres y entrega constancia en PDF.')
+@section('og_image', asset('images/og-buscador.jpg'))
+@php
+  $faqs = [
+    ['¿Qué es la lista OFAC?', 'Es la relación de personas, empresas, embarcaciones y aeronaves sancionadas por la Oficina de Control de Activos Extranjeros (OFAC) del Departamento del Tesoro de EE. UU. La más conocida es la lista SDN (Specially Designated Nationals); OFAC publica además una lista consolidada de sanciones no SDN.'],
+    ['¿Cómo sé si una persona o empresa está en la lista OFAC?', 'Escriba su nombre en el buscador. Aparecerán los registros parecidos con su porcentaje de similitud. Una coincidencia debe confirmarse con otros datos, como el documento de identidad, la fecha de nacimiento, la nacionalidad o la dirección, revisando la ficha oficial.'],
+    ['¿El buscador es gratuito?', 'Sí. Puede buscar sin registrarse, revisar varios nombres a la vez y descargar la constancia de la búsqueda y la ficha de cada resultado en PDF.'],
+    ['¿Cada cuánto se actualiza la información?', 'Las listas se descargan de los archivos oficiales de OFAC y se actualizan automáticamente varias veces al día. La fecha de la versión vigente aparece junto al buscador y en cada constancia.'],
+    ['¿Por qué un oficial de cumplimiento en el Perú debe revisar la lista OFAC?', 'Porque operar con personas sancionadas por OFAC expone a la empresa a riesgos legales, de reputación y de bloqueo de operaciones con bancos y contrapartes internacionales. Revisar las listas de sanciones es parte de la debida diligencia del cliente en un sistema de prevención LA/FT.'],
+  ];
+@endphp
+@section('og_extra')
+<script type="application/ld+json">
+{!! json_encode([
+  ['@context' => 'https://schema.org', '@type' => 'WebApplication', 'name' => 'Buscador OFAC', 'url' => route('buscador'), 'applicationCategory' => 'BusinessApplication', 'operatingSystem' => 'Web', 'inLanguage' => 'es-PE', 'description' => 'Búsqueda gratuita en las listas de sanciones de OFAC (SDN y consolidada) con tolerancia a errores de tipeo y constancia en PDF.', 'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'PEN'], 'publisher' => ['@type' => 'Organization', 'name' => 'Romani Compliance', 'url' => url('/')]],
+  ['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => 'Romani Compliance', 'url' => url('/'), 'potentialAction' => ['@type' => 'SearchAction', 'target' => ['@type' => 'EntryPoint', 'urlTemplate' => route('buscador').'?q={search_term_string}'], 'query-input' => 'required name=search_term_string']],
+  ['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => array_map(fn ($f) => ['@type' => 'Question', 'name' => $f[0], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f[1]]], $faqs)],
+  ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [['@type' => 'ListItem', 'position' => 1, 'name' => 'Inicio', 'item' => url('/')], ['@type' => 'ListItem', 'position' => 2, 'name' => 'Herramientas', 'item' => route('herramientas')], ['@type' => 'ListItem', 'position' => 3, 'name' => 'Buscador OFAC', 'item' => route('buscador')]]],
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+@endsection
 
 @php
   $published = !empty($meta['published_at']) ? \Carbon\Carbon::parse($meta['published_at'])->timezone('America/Lima') : null;
@@ -116,7 +136,7 @@
 @section('content')
 <section class="bz-hero">
   <div class="wrap">
-    <div class="kicker rv">Herramienta gratuita</div>
+    <div class="kicker rv"><a href="{{ route('herramientas') }}" style="color:inherit">Herramientas y recursos</a> · Gratis</div>
     <h1 class="display rv">Buscador OFAC</h1>
     <p class="lead rv">Verifique en segundos si una persona, empresa, embarcación o aeronave figura en las listas de sanciones del Departamento del Tesoro de EE. UU. Escriba el nombre como lo tenga: no importan las tildes, el orden de las palabras ni los errores de tipeo.</p>
 
@@ -176,6 +196,10 @@
 
     <div class="bz-note">
       <b>Importante:</b> esta herramienta consulta los archivos públicos de la Oficina de Control de Activos Extranjeros (OFAC) del Tesoro de EE. UU. Una coincidencia no confirma por sí sola que se trate de la misma persona: verifique con otros datos (documento, fecha de nacimiento, nacionalidad, dirección) y consulte la ficha oficial. Romani Compliance no está afiliada a OFAC.
+    </div>
+    <div class="bz-faq">
+      <h2 class="h3" style="margin:40px 0 14px">Preguntas frecuentes sobre la lista OFAC</h2>
+      <div class="faq">@foreach($faqs as [$qq, $aa])<details><summary>{{ $qq }}<span class="pm">+</span></summary><p style="color:var(--muted);padding:0 0 22px">{{ $aa }}</p></details>@endforeach</div>
     </div>
     <div class="bz-cta">
       <div><h3>¿Encontró una coincidencia?</h3><p>Le ayudamos a confirmarla, documentarla y a actuar a tiempo: congelamiento, reporte y defensa.</p></div>
