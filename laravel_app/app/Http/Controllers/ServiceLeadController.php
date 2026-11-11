@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ServiceLead;
 use App\Support\ServiceCatalog;
+use App\Support\TrainingCatalog;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -42,10 +43,11 @@ class ServiceLeadController extends Controller
         ]);
 
         $service = ServiceCatalog::find($slug);
+        $training = TrainingCatalog::findByLeadSlug($slug);
 
         $attrs = [
             'service_slug' => $slug,
-            'service_name' => $service['name'] ?? 'Consulta general',
+            'service_name' => $training ? 'Capacitación: '.$training['name'] : ($service['name'] ?? 'Consulta general'),
             'name' => filled($data['name'] ?? null) ? (string) Str::of($data['name'])->squish()->title() : Str::limit(Str::squish($data['organization']), 120, ''),
             'organization' => isset($data['organization']) ? Str::squish($data['organization']) : null,
             'email' => $data['email'] ?? null,

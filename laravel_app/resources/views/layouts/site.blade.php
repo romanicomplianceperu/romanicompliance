@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>@yield('title', 'Romani Compliance · Compliance, prevención LA/FT y defensa penal económica')</title>
 <meta name="description" content="@yield('description', 'Compliance penal, prevención de lavado de activos, criptoactivos y PSAV, y defensa penal económica para empresas y personas en el Perú.')">
+@hasSection('robots')<meta name="robots" content="@yield('robots')">@endif
 @php
   $ogTitle = trim($__env->yieldContent('og_title')) ?: trim($__env->yieldContent('title', 'Romani Compliance'));
   $ogDesc = trim($__env->yieldContent('og_description')) ?: trim($__env->yieldContent('description', 'Compliance penal, prevención de lavado de activos, criptoactivos y PSAV, y defensa penal económica para empresas y personas en el Perú.'));

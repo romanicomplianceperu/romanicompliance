@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\ServiceCatalog;
+use App\Support\TrainingCatalog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -72,6 +73,10 @@ class ServiceLead extends Model
 
     public function documentTitle(): string
     {
+        if (str_starts_with((string) $this->service_slug, TrainingCatalog::LEAD_PREFIX)) {
+            return 'Solicitud de inscripción';
+        }
+
         return $this->service_slug === 'compliance-penal' ? 'Diagnóstico de riesgo' : 'Resumen de su caso';
     }
 
@@ -83,6 +88,6 @@ class ServiceLead extends Model
 
     public static function allowedSlug(string $slug): bool
     {
-        return $slug === 'contacto' || ServiceCatalog::find($slug) !== null;
+        return $slug === 'contacto' || ServiceCatalog::find($slug) !== null || TrainingCatalog::findByLeadSlug($slug) !== null;
     }
 }

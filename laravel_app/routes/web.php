@@ -49,6 +49,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/capacitaciones', 'capacitaciones')->name('capacitaciones');
+Route::get('/capacitaciones/{slug}', [\App\Http\Controllers\TrainingController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('capacitaciones.show');
 // Rediseño 2026-11: la antigua landing inmobiliaria vive ahora en /servicios (se conserva el nombre de ruta).
 Route::redirect('/inmobiliario', '/servicios/inmobiliario-notarial', 301)->name('inmobiliario');
 Route::redirect('/servicios', '/#servicios');
